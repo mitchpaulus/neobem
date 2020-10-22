@@ -71,17 +71,29 @@ public partial class IdfplusBaseListener : IIdfplusListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitList([NotNull] IdfplusParser.ListContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="IdfplusParser.function_definition"/>.
+	/// Enter a parse tree produced by <see cref="IdfplusParser.template_statement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFunction_definition([NotNull] IdfplusParser.Function_definitionContext context) { }
+	public virtual void EnterTemplate_statement([NotNull] IdfplusParser.Template_statementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="IdfplusParser.function_definition"/>.
+	/// Exit a parse tree produced by <see cref="IdfplusParser.template_statement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFunction_definition([NotNull] IdfplusParser.Function_definitionContext context) { }
+	public virtual void ExitTemplate_statement([NotNull] IdfplusParser.Template_statementContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="IdfplusParser.map_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMap_statement([NotNull] IdfplusParser.Map_statementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="IdfplusParser.map_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMap_statement([NotNull] IdfplusParser.Map_statementContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.import_statement"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -94,6 +106,18 @@ public partial class IdfplusBaseListener : IIdfplusListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitImport_statement([NotNull] IdfplusParser.Import_statementContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="IdfplusParser.print_statment"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPrint_statment([NotNull] IdfplusParser.Print_statmentContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="IdfplusParser.print_statment"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPrint_statment([NotNull] IdfplusParser.Print_statmentContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.data_statement"/>.
 	/// <para>The default implementation does nothing.</para>

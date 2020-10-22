@@ -11,9 +11,7 @@ template sdvav $var1 $var2
    $var1,
    $var2;'
 
-map $myList sdvav
-
-sdvav 'Hello' 123
+print map sdvav $myList
 
 import 'myfile.js'
 

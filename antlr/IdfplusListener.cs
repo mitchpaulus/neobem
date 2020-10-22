@@ -61,15 +61,25 @@ public interface IIdfplusListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitList([NotNull] IdfplusParser.ListContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="IdfplusParser.function_definition"/>.
+	/// Enter a parse tree produced by <see cref="IdfplusParser.template_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterFunction_definition([NotNull] IdfplusParser.Function_definitionContext context);
+	void EnterTemplate_statement([NotNull] IdfplusParser.Template_statementContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="IdfplusParser.function_definition"/>.
+	/// Exit a parse tree produced by <see cref="IdfplusParser.template_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitFunction_definition([NotNull] IdfplusParser.Function_definitionContext context);
+	void ExitTemplate_statement([NotNull] IdfplusParser.Template_statementContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="IdfplusParser.map_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMap_statement([NotNull] IdfplusParser.Map_statementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="IdfplusParser.map_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMap_statement([NotNull] IdfplusParser.Map_statementContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.import_statement"/>.
 	/// </summary>
@@ -80,6 +90,16 @@ public interface IIdfplusListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitImport_statement([NotNull] IdfplusParser.Import_statementContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="IdfplusParser.print_statment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPrint_statment([NotNull] IdfplusParser.Print_statmentContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="IdfplusParser.print_statment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPrint_statment([NotNull] IdfplusParser.Print_statmentContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.data_statement"/>.
 	/// </summary>

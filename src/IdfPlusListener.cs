@@ -18,6 +18,8 @@ namespace src
         public StringBuilder Output = new StringBuilder();
         private readonly VariableRegex _variableRegex = new VariableRegex();
 
+        Dictionary<string, Template> templates = new Dictionary<string, Template>();
+
         public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
             var name = context.VARIABLE().GetText();
@@ -49,6 +51,15 @@ namespace src
             Output.Append(builder.ToString() + '\n');
         }
 
+        public override void EnterTemplate_statement(IdfplusParser.Template_statementContext context)
+        {
+            string name = context.FUNCTION_NAME().GetText();
+            string contents = context.STRING().GetText();
+            var parameters = context.VARIABLE().Select(node => node.ToString()).ToList();
+            Template template = new Template( name, contents, parameters );
+
+            templates[name] = template;
+        }
 
         public Expression ExpressionEvaluator(IdfplusParser.ExpressionContext context)
         {
@@ -68,6 +79,19 @@ namespace src
             if (context.list() != null)
                 return new ListExpression(context.list().expression().Select(ExpressionEvaluator).ToList());
 
+            if (context.map_statement() != null)
+            {
+                Template template = templates[context.map_statement().FUNCTION_NAME().GetText()];
+
+                if (context.map_statement().list() != null)
+                {
+                    foreach (IdfplusParser.ExpressionContext expression in context.map_statement().list().expression())
+                    {
+                        Expression evaluatedExpression = ExpressionEvaluator(expression);
+                    }
+                }
+            }
+
             throw new NotImplementedException();
         }
 
@@ -83,6 +107,7 @@ namespace src
         }
 
         public override string ToString() => Text;
+        public override string AsString() => Text;
     }
 
     public class ListExpression : Expression
@@ -93,6 +118,9 @@ namespace src
         {
             Expressions = expressions;
         }
+
+        public override string AsString() => string.Join(",", Expressions);
+
     }
 
     public class NumericExpression : Expression
@@ -107,9 +135,13 @@ namespace src
         }
 
         public override string ToString() => Text;
+        public override string AsString() => Value.ToString();
     }
 
-    public class Expression {  }
+    public abstract class Expression
+    {
+        public abstract string AsString();
+    }
 
     public class IdfType
     {
@@ -129,7 +161,7 @@ namespace src
     public class TemplateListener : IdfplusBaseListener
     {
         Dictionary<string, Template> templates = new Dictionary<string, Template>();
-        public override void EnterFunction_definition(IdfplusParser.Function_definitionContext context)
+        public override void EnterTemplate_statement(IdfplusParser.Template_statementContext context)
         {
             var name = context.FUNCTION_NAME().GetText();
 

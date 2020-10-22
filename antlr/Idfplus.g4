@@ -7,23 +7,21 @@ options {
 variable_declaration : 
     VARIABLE '=' expression;
 
-expression : STRING | NUMERIC | VARIABLE | list | data_statement ;
+expression : STRING | NUMERIC | VARIABLE | list | data_statement | map_statement ;
 
 list : '[' expression* ']' ;
 
-function_definition : TEMPLATE_KEYWORD FUNCTION_NAME VARIABLE* STRING ;
+template_statement : TEMPLATE_KEYWORD FUNCTION_NAME VARIABLE* STRING ;
 
 map_statement : MAP_KEYWORD FUNCTION_NAME (list | VARIABLE) ;
 
 import_statement : 'import' STRING ;
 
-template_statement : FUNCTION_NAME expression*
+print_statment : 'print' expression ;
 
 data_statement : 'data' STRING ;
 
-FUNCTION_NAME : [a-zA-Z][a-zA-Z0-9]* ;
-
-idf : (COMMENT | object | variable_declaration | function_definition | import_statement)* EOF;
+idf : (COMMENT | object | variable_declaration | template_statement | import_statement | print_statment)* EOF;
 
 /*object : ALPHA FIELD_SEPARATOR COMMENT* fields ;*/
 
@@ -31,8 +29,10 @@ object : OBJECT ;
 
 OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
 
-MAP_KEYWORD : 'map'
-TEMPLATE_KEYWORD : 'template'
+MAP_KEYWORD : 'map' ;
+TEMPLATE_KEYWORD : 'template' ;
+
+FUNCTION_NAME : [a-zA-Z][a-zA-Z0-9]* ;
 
 COMMENT :  '!' .*? '\n' ;
 

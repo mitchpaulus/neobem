@@ -41,15 +41,125 @@ public interface IIdfplusListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitVariable_declaration([NotNull] IdfplusParser.Variable_declarationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="IdfplusParser.expression"/>.
+	/// Enter a parse tree produced by the <c>MapExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression([NotNull] IdfplusParser.ExpressionContext context);
+	void EnterMapExp([NotNull] IdfplusParser.MapExpContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="IdfplusParser.expression"/>.
+	/// Exit a parse tree produced by the <c>MapExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression([NotNull] IdfplusParser.ExpressionContext context);
+	void ExitMapExp([NotNull] IdfplusParser.MapExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ParensExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParensExp([NotNull] IdfplusParser.ParensExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ParensExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParensExp([NotNull] IdfplusParser.ParensExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>VariableExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVariableExp([NotNull] IdfplusParser.VariableExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>VariableExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVariableExp([NotNull] IdfplusParser.VariableExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>StringExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterStringExp([NotNull] IdfplusParser.StringExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>StringExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitStringExp([NotNull] IdfplusParser.StringExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>AddSub</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAddSub([NotNull] IdfplusParser.AddSubContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>AddSub</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAddSub([NotNull] IdfplusParser.AddSubContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>NumericExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNumericExp([NotNull] IdfplusParser.NumericExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>NumericExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNumericExp([NotNull] IdfplusParser.NumericExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Exponientiate</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExponientiate([NotNull] IdfplusParser.ExponientiateContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Exponientiate</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExponientiate([NotNull] IdfplusParser.ExponientiateContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>DataExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDataExp([NotNull] IdfplusParser.DataExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>DataExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDataExp([NotNull] IdfplusParser.DataExpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>MultDivide</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMultDivide([NotNull] IdfplusParser.MultDivideContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>MultDivide</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMultDivide([NotNull] IdfplusParser.MultDivideContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ListExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterListExp([NotNull] IdfplusParser.ListExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ListExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitListExp([NotNull] IdfplusParser.ListExpContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.list"/>.
 	/// </summary>

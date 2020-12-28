@@ -47,17 +47,145 @@ public partial class IdfplusBaseListener : IIdfplusListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVariable_declaration([NotNull] IdfplusParser.Variable_declarationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="IdfplusParser.expression"/>.
+	/// Enter a parse tree produced by the <c>MapExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpression([NotNull] IdfplusParser.ExpressionContext context) { }
+	public virtual void EnterMapExp([NotNull] IdfplusParser.MapExpContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="IdfplusParser.expression"/>.
+	/// Exit a parse tree produced by the <c>MapExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpression([NotNull] IdfplusParser.ExpressionContext context) { }
+	public virtual void ExitMapExp([NotNull] IdfplusParser.MapExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ParensExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterParensExp([NotNull] IdfplusParser.ParensExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ParensExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitParensExp([NotNull] IdfplusParser.ParensExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>VariableExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVariableExp([NotNull] IdfplusParser.VariableExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>VariableExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVariableExp([NotNull] IdfplusParser.VariableExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>StringExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStringExp([NotNull] IdfplusParser.StringExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>StringExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStringExp([NotNull] IdfplusParser.StringExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>AddSub</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAddSub([NotNull] IdfplusParser.AddSubContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>AddSub</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAddSub([NotNull] IdfplusParser.AddSubContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>NumericExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNumericExp([NotNull] IdfplusParser.NumericExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>NumericExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNumericExp([NotNull] IdfplusParser.NumericExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>Exponientiate</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExponientiate([NotNull] IdfplusParser.ExponientiateContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>Exponientiate</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExponientiate([NotNull] IdfplusParser.ExponientiateContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>DataExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDataExp([NotNull] IdfplusParser.DataExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>DataExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDataExp([NotNull] IdfplusParser.DataExpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>MultDivide</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMultDivide([NotNull] IdfplusParser.MultDivideContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>MultDivide</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMultDivide([NotNull] IdfplusParser.MultDivideContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ListExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterListExp([NotNull] IdfplusParser.ListExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ListExp</c>
+	/// labeled alternative in <see cref="IdfplusParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitListExp([NotNull] IdfplusParser.ListExpContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="IdfplusParser.list"/>.
 	/// <para>The default implementation does nothing.</para>

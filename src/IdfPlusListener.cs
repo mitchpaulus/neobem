@@ -23,13 +23,13 @@ namespace src
         public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
             var name = context.VARIABLE().GetText();
-            Expression value = ExpressionEvaluator(context.expression());
-            variables[name] = value;
+            // Expression value = ExpressionEvaluator(context.expression());
+            // variables[name] = value;
         }
 
         public override void EnterObject(IdfplusParser.ObjectContext context)
         {
-            var text = context.OBJECT().GetText();
+            var text = context.GetText();
 
             StringBuilder builder = new StringBuilder();
 
@@ -61,39 +61,39 @@ namespace src
             templates[name] = template;
         }
 
-        public Expression ExpressionEvaluator(IdfplusParser.ExpressionContext context)
-        {
-            if (context.STRING() != null)
-            {
-                var text = context.STRING().GetText();
-                return new StringExpression(text.Substring(1, text.Length - 2));
-            }
-
-            if (context.NUMERIC() != null)
-            {
-                return new NumericExpression(double.Parse(context.NUMERIC().GetText()), context.NUMERIC().GetText());
-            };
-
-            if (context.VARIABLE() != null) return variables[context.VARIABLE().GetText()];
-
-            if (context.list() != null)
-                return new ListExpression(context.list().expression().Select(ExpressionEvaluator).ToList());
-
-            if (context.map_statement() != null)
-            {
-                Template template = templates[context.map_statement().FUNCTION_NAME().GetText()];
-
-                if (context.map_statement().list() != null)
-                {
-                    foreach (IdfplusParser.ExpressionContext expression in context.map_statement().list().expression())
-                    {
-                        Expression evaluatedExpression = ExpressionEvaluator(expression);
-                    }
-                }
-            }
-
-            throw new NotImplementedException();
-        }
+        // public Expression ExpressionEvaluator(IdfplusParser.ExpressionContext context)
+        // {
+        //     if (context.STRING() != null)
+        //     {
+        //         var text = context.STRING().GetText();
+        //         return new StringExpression(text.Substring(1, text.Length - 2));
+        //     }
+        //
+        //     if (context.NUMERIC() != null)
+        //     {
+        //         return new NumericExpression(double.Parse(context.NUMERIC().GetText()), context.NUMERIC().GetText());
+        //     };
+        //
+        //     if (context.VARIABLE() != null) return variables[context.VARIABLE().GetText()];
+        //
+        //     if (context.list() != null)
+        //         return new ListExpression(context.list().expression().Select(ExpressionEvaluator).ToList());
+        //
+        //     if (context.map_statement() != null)
+        //     {
+        //         Template template = templates[context.map_statement().FUNCTION_NAME().GetText()];
+        //
+        //         if (context.map_statement().list() != null)
+        //         {
+        //             foreach (IdfplusParser.ExpressionContext expression in context.map_statement().list().expression())
+        //             {
+        //                 Expression evaluatedExpression = ExpressionEvaluator(expression);
+        //             }
+        //         }
+        //     }
+        //
+        //     throw new NotImplementedException();
+        // }
 
     }
 

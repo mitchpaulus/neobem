@@ -8,7 +8,6 @@ $mylist.another = 'a string'
 $test = ( 56 - -45 + 'Hello' * 123^2^3 )
 
 template sdvav $var1 $var2 (
-
 Second,
    Version,
    $var1,
@@ -17,7 +16,7 @@ Second,
 
 print map sdvav $myList
 
-import 'myfile.js'
+import 'myfile.idf'
 
 $mydata = data 'datafile.tsv' + data 'anotherfile.tsv'
 

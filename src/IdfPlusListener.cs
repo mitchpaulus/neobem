@@ -13,7 +13,7 @@ namespace src
 
     public class IdfPlusListener : IdfplusBaseListener
     {
-        Dictionary<string, Expression> variables = new Dictionary<string, Expression>();
+        readonly Dictionary<string, Expression> _variables = new Dictionary<string, Expression>();
 
         public StringBuilder Output = new StringBuilder();
         private readonly VariableRegex _variableRegex = new VariableRegex();
@@ -22,9 +22,20 @@ namespace src
 
         public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables);
             var name = context.VARIABLE().GetText();
+            var expression = visitor.Visit(context.expression());
+
+            _variables[name] = expression;
             // Expression value = ExpressionEvaluator(context.expression());
             // variables[name] = value;
+        }
+
+        public override void EnterPrint_statment(IdfplusParser.Print_statmentContext context)
+        {
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables);
+            var expression = visitor.Visit(context.expression());
+            Output.Append(expression.AsString() + '\n');
         }
 
         public override void EnterObject(IdfplusParser.ObjectContext context)
@@ -41,7 +52,7 @@ namespace src
             {
                 builder.Append(text.Substring(currentIndex, match.Index - currentIndex));
 
-                if (variables.ContainsKey(match.Value)) builder.Append(variables[match.Value]);
+                if (_variables.ContainsKey(match.Value)) builder.Append(_variables[match.Value]);
 
                 currentIndex = match.Index + match.Length;
             }
@@ -132,6 +143,12 @@ namespace src
         {
             Value = value;
             Text = text;
+        }
+
+        public NumericExpression(double value)
+        {
+            Value = value;
+            Text = value.ToString();
         }
 
         public override string ToString() => Text;

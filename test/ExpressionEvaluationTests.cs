@@ -70,6 +70,21 @@ namespace test
         }
 
         [Test]
+        public void TestListConcatenation()
+        {
+            string test = "$var1 = [2 3 4]\n$var2 = [5 6 7]\n$var3 = $var1 + $var2\nprint $var3\n";
+            var parser = test.ToParser();
+
+            var tree = parser.idf();
+
+            ParseTreeWalker walker = new ParseTreeWalker();
+            IdfPlusListener listener = new IdfPlusListener();
+            walker.Walk(listener, tree);
+
+            Console.WriteLine(listener.Output);
+        }
+
+        [Test]
         public void TestVariablePrinting()
         {
             string file = "$myvariable = 12\nprint $myvariable / 6";
@@ -79,6 +94,22 @@ namespace test
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             IdfplusParser parser = new IdfplusParser(tokens);
             IdfplusParser.IdfContext tree = parser.idf();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            IdfPlusListener listener = new IdfPlusListener();
+            walker.Walk(listener, tree);
+
+            Console.WriteLine(listener.Output);
+        }
+
+        [Test]
+        public void TestVariableReplacement()
+        {
+            string testFile = "$versionNum = 2\nVersion,\n  $versionNum;\n";
+            // string testFile = "$versionNum = 2\n\nVersion, 2;\n";
+
+            var parser = testFile.ToParser();
+            var tree = parser.idf();
+
             ParseTreeWalker walker = new ParseTreeWalker();
             IdfPlusListener listener = new IdfPlusListener();
             walker.Walk(listener, tree);

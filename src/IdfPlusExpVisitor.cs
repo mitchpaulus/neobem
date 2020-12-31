@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace src
 {
@@ -60,6 +61,12 @@ namespace src
             return new NumericExpression(newValue);
         }
 
+        public override Expression VisitListExp(IdfplusParser.ListExpContext context)
+        {
+            var expressions = context.list().expression().Select(Visit).ToList();
+            return new ListExpression(expressions);
+        }
+
         public override Expression VisitAddSub(IdfplusParser.AddSubContext context)
         {
             var op = context.op.Text;
@@ -67,10 +74,23 @@ namespace src
             Expression lhs = Visit(context.expression(0));
             Expression rhs = Visit(context.expression(1));
 
-            var operatorFunction = _numericOperatorMapping[op];
+            if (lhs is NumericExpression numericLhs && rhs is NumericExpression numericRhs)
+            {
+                var operatorFunction = _numericOperatorMapping[op];
+                double newValue = operatorFunction(numericLhs.Value, numericRhs.Value);
+                return new NumericExpression(newValue);
+            }
 
-            double newValue = operatorFunction(((NumericExpression)lhs).Value, ((NumericExpression) rhs).Value);
-            return new NumericExpression(newValue);
+            if (lhs is ListExpression lhsList && rhs is ListExpression rhsList && op == "+")
+            {
+                var expressions = new List<Expression>();
+                expressions.AddRange(lhsList.Expressions);
+                expressions.AddRange(rhsList.Expressions);
+                return new ListExpression(expressions);
+            }
+
+            throw new NotImplementedException(
+                $"The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
         }
     }
 }

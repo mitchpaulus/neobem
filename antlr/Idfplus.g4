@@ -35,9 +35,9 @@ idf : (COMMENT | object | variable_declaration | template_statement | import_sta
 
 /*object : ALPHA FIELD_SEPARATOR COMMENT* fields ;*/
 
-/*object : OBJECT ;*/
+object : OBJECT ;
 
-object : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
+OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
 
 MAP_KEYWORD : 'map' ;
 TEMPLATE_KEYWORD : 'template' ;
@@ -83,7 +83,7 @@ fragment X:('x'|'X');
 fragment Y:('y'|'Y');
 fragment Z:('z'|'Z');
 
-OBJECT_TYPE :
+fragment OBJECT_TYPE :
   V E R S I O N |
   S I M U L A T I O N C O N T R O L |
   P E R F O R M A N C E P R E C I S I O N T R A D E O F F S |
@@ -890,3 +890,5 @@ OBJECT_TYPE :
   O U T P U T ':' D I A G N O S T I C S |
   O U T P U T ':' D E B U G G I N G D A T A |
   O U T P U T ':' P R E P R O C E S S O R M E S S A G E ;
+
+

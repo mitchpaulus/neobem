@@ -81,6 +81,7 @@ namespace src
                 return new NumericExpression(newValue);
             }
 
+            // Concatenate lists on '+' operation
             if (lhs is ListExpression lhsList && rhs is ListExpression rhsList && op == "+")
             {
                 var expressions = new List<Expression>();
@@ -88,6 +89,10 @@ namespace src
                 expressions.AddRange(rhsList.Expressions);
                 return new ListExpression(expressions);
             }
+
+            // Concatenate Strings on '+' operation
+            if (lhs is StringExpression lhsString && rhs is StringExpression rhsString && op == "+")
+                return new StringExpression(lhsString.Text + rhsString.Text);
 
             throw new NotImplementedException(
                 $"The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");

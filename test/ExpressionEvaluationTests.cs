@@ -85,6 +85,21 @@ namespace test
         }
 
         [Test]
+        public void TestStringConcatenation()
+        {
+            string test = "'My string 1 ' + 'is great'";
+            var parser = test.ToParser();
+            var tree = parser.expression();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+
+            Expression expression = visitor.Visit(tree);
+
+            Assert.IsTrue(expression is StringExpression);
+            Assert.IsTrue(((StringExpression)expression).Text == "My string 1 is great");
+
+        }
+
+        [Test]
         public void TestVariablePrinting()
         {
             string file = "$myvariable = 12\nprint $myvariable / 6";

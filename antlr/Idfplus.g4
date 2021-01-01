@@ -17,13 +17,19 @@ expression :  <assoc=right> expression '^' expression    # Exponientiate
              | data_statement                            # DataExp
              | map_statement                             # MapExp
              | '(' expression ')'                        # ParensExp
+             | if_exp                                    # IfExp
+             | idfplus_object                            # ObjExp
              ;
+
+if_exp : 'if' expression 'then' expression 'else' expression ;
+
+idfplus_object : '{' (STRING ':' expression)* '}' ;
 
 list : '[' expression* ']' ;
 
-template_statement : TEMPLATE_KEYWORD FUNCTION_NAME VARIABLE* STRING ;
+template_statement : TEMPLATE_KEYWORD IDENTIFIER VARIABLE* STRING ;
 
-map_statement : MAP_KEYWORD FUNCTION_NAME (list | VARIABLE) ;
+map_statement : MAP_KEYWORD IDENTIFIER (list | VARIABLE) ;
 
 import_statement : 'import' STRING ;
 
@@ -42,7 +48,7 @@ OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
 MAP_KEYWORD : 'map' ;
 TEMPLATE_KEYWORD : 'template' ;
 
-FUNCTION_NAME : [a-zA-Z][a-zA-Z0-9]* ;
+IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 
 COMMENT :  '!' .*? '\n' ;
 

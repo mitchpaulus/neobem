@@ -64,7 +64,7 @@ namespace src
 
         public override void EnterTemplate_statement(IdfplusParser.Template_statementContext context)
         {
-            string name = context.FUNCTION_NAME().GetText();
+            string name = context.IDENTIFIER().GetText();
             string contents = context.STRING().GetText();
             var parameters = context.VARIABLE().Select(node => node.ToString()).ToList();
             Template template = new Template( name, contents, parameters );
@@ -180,7 +180,7 @@ namespace src
         Dictionary<string, Template> templates = new Dictionary<string, Template>();
         public override void EnterTemplate_statement(IdfplusParser.Template_statementContext context)
         {
-            var name = context.FUNCTION_NAME().GetText();
+            var name = context.IDENTIFIER().GetText();
 
             var parameters = context.VARIABLE().Select(node => node.GetText()).ToList();
 

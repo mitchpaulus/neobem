@@ -19,10 +19,11 @@ namespace src
         private readonly VariableRegex _variableRegex = new VariableRegex();
 
         Dictionary<string, Template> templates = new Dictionary<string, Template>();
+        private readonly Dictionary<string, IFunction> _functions = new Dictionary<string, IFunction>();
 
         public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables, _functions);
             var name = context.VARIABLE().GetText();
             var expression = visitor.Visit(context.expression());
 
@@ -33,7 +34,7 @@ namespace src
 
         public override void EnterPrint_statment(IdfplusParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables, _functions);
             var expression = visitor.Visit(context.expression());
             Output.Append(expression.AsString() + '\n');
         }
@@ -108,72 +109,6 @@ namespace src
 
     }
 
-    public class StringExpression : Expression
-    {
-        public string Text;
-
-        public StringExpression(string text)
-        {
-            Text = text;
-        }
-
-        public override string ToString() => Text;
-        public override string AsString() => Text;
-    }
-
-    public class ListExpression : Expression
-    {
-        public List<Expression> Expressions;
-
-        public ListExpression(List<Expression> expressions)
-        {
-            Expressions = expressions;
-        }
-
-        public override string AsString() => string.Join(",", Expressions);
-
-    }
-
-    public class NumericExpression : Expression
-    {
-        public double Value;
-        public string Text;
-
-        public NumericExpression(double value, string text)
-        {
-            Value = value;
-            Text = text;
-        }
-
-        public NumericExpression(double value)
-        {
-            Value = value;
-            Text = value.ToString();
-        }
-
-        public override string ToString() => Text;
-        public override string AsString() => Value.ToString();
-    }
-
-    public abstract class Expression
-    {
-        public abstract string AsString();
-    }
-
-    public class IdfType
-    {
-        public int Id { get; }
-        public string Description { get; }
-        public static IdfType String = new IdfType(1, "String");
-        public static IdfType Numeric = new IdfType(2, "Numeric");
-        public static IdfType List = new IdfType(3, "List");
-
-        public IdfType(int id, string description)
-        {
-            Id = id;
-            Description = description;
-        }
-    }
 
     public class TemplateListener : IdfplusBaseListener
     {

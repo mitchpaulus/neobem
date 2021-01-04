@@ -8,8 +8,19 @@ namespace src
     {
         private readonly Dictionary<string, Expression> _variables;
 
-        public IdfPlusExpVisitor(Dictionary<string, Expression> variables) => _variables = variables;
-        public IdfPlusExpVisitor() => _variables = new Dictionary<string, Expression>();
+        private readonly Dictionary<string, IFunction> _functions;
+
+        public IdfPlusExpVisitor(Dictionary<string, Expression> variables, Dictionary<string, IFunction> functions)
+        {
+            _variables = variables;
+
+            _functions = MathematicalFunction.FunctionDict;
+        }
+        public IdfPlusExpVisitor()
+        {
+            _variables = new Dictionary<string, Expression>();
+            _functions = MathematicalFunction.FunctionDict;
+        }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =
             new Dictionary<string, Func<double, double, double>>
@@ -96,6 +107,17 @@ namespace src
 
             throw new NotImplementedException(
                 $"The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
+        }
+
+        public override Expression VisitFunctionExp(IdfplusParser.FunctionExpContext functionExpContext)
+        {
+            string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
+            var function = _functions[functionName];
+
+            var expressions = functionExpContext.function_application().expression().Select(Visit).ToList();
+            var result = function.Evaluate(expressions);
+
+            return result;
         }
     }
 }

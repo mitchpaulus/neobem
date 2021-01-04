@@ -20,7 +20,7 @@ namespace test
             IdfplusParser parser = new IdfplusParser(tokens);
 
             IdfplusParser.ExpressionContext tree =  parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(variables);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(variables, new Dictionary<string, IFunction>());
             return  visitor.Visit(tree);
         }
 
@@ -132,5 +132,18 @@ namespace test
             Console.WriteLine(listener.Output);
         }
 
+        [Test]
+        public void TestFunctionApplication()
+        {
+            string test = "sin(3.1415926 / 2)";
+            var parser = test.ToParser();
+            var tree = parser.expression();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+
+            Expression expression = visitor.Visit(tree);
+
+            Assert.IsTrue(expression is NumericExpression);
+            Assert.IsTrue(Math.Abs(((NumericExpression)expression).Value - 1) < 0.00001);
+        }
     }
 }

@@ -4,12 +4,15 @@ options {
     language=CSharp;
 }
 
-variable_declaration : VARIABLE '=' expression;
+variable_declaration : VARIABLE member_access* '=' expression;
 
 // See pg. 41 of Antlr reference
-expression :  <assoc=right> expression '^' expression    # Exponientiate
+expression :   expression member_access                  # MemberAccessExp
+             | <assoc=right> expression '^' expression    # Exponientiate
              | expression op=('*'|'/') expression        # MultDivide
              | expression op=('+'|'-') expression        # AddSub
+             | expression op=('<'|'>'|'=='|'!=') expression  # BooleanExp
+             | expression op=('&'|'|') expression        # LogicExp
              | STRING                                    # StringExp
              | NUMERIC                                   # NumericExp
              | VARIABLE                                  # VariableExp
@@ -19,9 +22,12 @@ expression :  <assoc=right> expression '^' expression    # Exponientiate
              | '(' expression ')'                        # ParensExp
              | if_exp                                    # IfExp
              | idfplus_object                            # ObjExp
+             | function_application                      # FunctionExp
              ;
 
 if_exp : 'if' expression 'then' expression 'else' expression ;
+
+function_application : IDENTIFIER '(' expression* ')' ;
 
 idfplus_object : '{' (STRING ':' expression)* '}' ;
 
@@ -39,6 +45,8 @@ data_statement : 'data' STRING ;
 
 idf : (COMMENT | object | variable_declaration | template_statement | import_statement | print_statment)* EOF;
 
+member_access : '.' IDENTIFIER ;
+
 /*object : ALPHA FIELD_SEPARATOR COMMENT* fields ;*/
 
 object : OBJECT ;
@@ -48,7 +56,7 @@ OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
 MAP_KEYWORD : 'map' ;
 TEMPLATE_KEYWORD : 'template' ;
 
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
+IDENTIFIER : [a-zA-Z][a-zA-Z0-9_]* ;
 
 COMMENT :  '!' .*? '\n' ;
 
@@ -58,7 +66,8 @@ NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? | ('.'[0-9]+))([eE]'-'?[0-9]+)? ;
 
 STRING : '\'' .*? '\'' ;
 
-VARIABLE : '$' [a-zA-Z0-9]+ ('.' [a-zA-Z0-9]+)* ;
+/*VARIABLE : '$' [a-zA-Z0-9]+ ('.' [a-zA-Z0-9]+)* ;*/
+VARIABLE : '$' [a-zA-Z0-9]+ ;
 
 WS : [ \t\r\n]+ -> skip ;
 

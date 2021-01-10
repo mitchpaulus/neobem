@@ -4,7 +4,8 @@ options {
     language=CSharp;
 }
 
-variable_declaration : VARIABLE member_access* '=' expression;
+/*variable_declaration : VARIABLE member_access* '=' expression;*/
+variable_declaration : IDENTIFIER member_access* '=' expression;
 
 // See pg. 41 of Antlr reference
 expression :   expression member_access                  # MemberAccessExp
@@ -15,13 +16,14 @@ expression :   expression member_access                  # MemberAccessExp
              | expression op=('&'|'|') expression        # LogicExp
              | STRING                                    # StringExp
              | NUMERIC                                   # NumericExp
-             | VARIABLE                                  # VariableExp
+             | IDENTIFIER                                  # VariableExp
              | list                                      # ListExp
              | data_statement                            # DataExp
-             | map_statement                             # MapExp
+             /*| map_statement                             # MapExp*/
              | '(' expression ')'                        # ParensExp
              | if_exp                                    # IfExp
              | idfplus_object                            # ObjExp
+             | lambda_def                                # LambdaExp
              | function_application                      # FunctionExp
              ;
 
@@ -29,13 +31,17 @@ if_exp : 'if' expression 'then' expression 'else' expression ;
 
 function_application : IDENTIFIER '(' expression* ')' ;
 
+function_definition : 'fn' IDENTIFIER IDENTIFIER* '{' base_idf* '}' ;
+
+lambda_def : '\\' IDENTIFIER* '{' (expression | base_idf*) '}' ;
+
+return_statement : 'return' expression ;
+
 idfplus_object : '{' (STRING ':' expression)* '}' ;
 
 list : '[' expression* ']' ;
 
-template_statement : TEMPLATE_KEYWORD IDENTIFIER VARIABLE* STRING ;
-
-map_statement : MAP_KEYWORD IDENTIFIER (list | VARIABLE) ;
+/*map_statement : MAP_KEYWORD IDENTIFIER (list | VARIABLE) ;*/
 
 import_statement : 'import' STRING ;
 
@@ -43,7 +49,15 @@ print_statment : 'print' expression ;
 
 data_statement : 'data' STRING ;
 
-idf : (COMMENT | object | variable_declaration | template_statement | import_statement | print_statment)* EOF;
+base_idf : COMMENT |
+           object |
+           variable_declaration |
+           /*function_definition |*/
+           return_statement |
+           import_statement |
+           print_statment ;
+
+idf : (base_idf)* EOF;
 
 member_access : '.' IDENTIFIER ;
 
@@ -53,10 +67,9 @@ object : OBJECT ;
 
 OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
 
-MAP_KEYWORD : 'map' ;
-TEMPLATE_KEYWORD : 'template' ;
+/*MAP_KEYWORD : 'map' ;*/
 
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9_]* ;
+IDENTIFIER : [a-z][a-zA-Z0-9_]* ;
 
 COMMENT :  '!' .*? '\n' ;
 

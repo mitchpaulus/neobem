@@ -112,7 +112,7 @@ namespace src
         public override Expression VisitFunctionExp(IdfplusParser.FunctionExpContext functionExpContext)
         {
             string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
-            var function = _functions[functionName];
+            IFunction function = _functions[functionName];
 
             var expressions = functionExpContext.function_application().expression().Select(Visit).ToList();
             var result = function.Evaluate(expressions);

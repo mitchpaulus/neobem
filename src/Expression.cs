@@ -11,6 +11,9 @@ namespace src
 
     public class MathematicalFunction : IFunction
     {
+        public static List<MathematicalFunction> List = new List<MathematicalFunction>();
+        public static Dictionary<string, IFunction> FunctionDict = new Dictionary<string, IFunction>();
+
         public readonly string Name;
         public readonly Func<List<double>, double> Function;
 
@@ -20,6 +23,7 @@ namespace src
         public static MathematicalFunction Atan2 = new MathematicalFunction("atan2", inputs => Math.Atan2(inputs[0], inputs[1]));
         public static MathematicalFunction Ceiling = new MathematicalFunction("ceiling", inputs => Math.Ceiling(inputs[0]));
         public static MathematicalFunction Cos = new MathematicalFunction("cos", inputs => Math.Cos(inputs[0]));
+        public static MathematicalFunction Floor = new MathematicalFunction("floor", inputs => Math.Floor(inputs[0]));
         public static MathematicalFunction Log = new MathematicalFunction("ln", inputs => Math.Log(inputs[0]));
         public static MathematicalFunction Log10 = new MathematicalFunction("log10", inputs => Math.Log10(inputs[0]));
         public static MathematicalFunction Log2 = new MathematicalFunction("log2", inputs => Math.Log2(inputs[0]));
@@ -28,8 +32,6 @@ namespace src
 
         public static MathematicalFunction Tan = new MathematicalFunction("tan", inputs => Math.Tan(inputs[0]));
 
-        public static List<MathematicalFunction> List = new List<MathematicalFunction>();
-        public static Dictionary<string, IFunction> FunctionDict = new Dictionary<string, IFunction>();
 
         public MathematicalFunction(string name, Func<List<double>, double> function)
         {
@@ -55,10 +57,32 @@ namespace src
         }
     }
 
-    public class FunctionExpression : Expression
+    public class FunctionExpression : Expression, IFunction
     {
+        private readonly IdfplusParser.Lambda_defContext _lambdaDefContext;
+        private readonly List<Dictionary<string, Expression>> _environments;
+        private readonly List<string> _parameters;
 
         public override string AsString() => "";
+
+        public FunctionExpression(IdfplusParser.Lambda_defContext lambdaDefContext)
+        {
+            _lambdaDefContext = lambdaDefContext;
+        }
+
+        public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters)
+        {
+            _environments = environments;
+            _parameters = parameters;
+        }
+
+        public Expression Evaluate(List<Expression> inputs)
+        {
+            var boundParameters = inputs.Zip(_parameters, (expression, name) => (expression, name))
+                .ToDictionary(tuple => tuple.name, tuple => tuple.expression);
+
+            throw new NotImplementedException();
+        }
     }
 
     public class StringExpression : Expression

@@ -1,46 +1,42 @@
-$coolingLoad = 123
-$myName = 'Hello'
+myName = 'Hello'
 
-$myList = [
-    [$coolingLoad 'Hello']
+myList = [
+    [coolingLoad 'Hello']
     123
 ]
 
-$mylist.another = 'a string'
+mylist.another = 'a string'
 
-$test = ( 56 - -45 + 'Hello' * 123^2^3 )
+test = ( 56 - -45 + 'Hello' * 123^2^3 )
 
-$testy = if $test == 1 | $mylist.another < 2 then sin (5) else cos (6)
+testy = if test == 1 | mylist.another < 2 then sin (5) else cos (6)
 
-!fn sdvav $var1 $var3 {
-    !return $var1 + $var3
+!fn sdvav var1 var3 {
+    !return var1 + var3
 !}
 
-!print map $ sdvav (filter -> (\ahu -> ahu.Name == "Yes") $mylist)
+filter = \ x { x < 2 }
+
+func = \ var1 var2 { return var1 + var2 }
+
+!print map  sdvav (filter -> (\ahu -> ahu.Name == "Yes") mylist)
 
 !print sdvav -> 2 3
 
-template sdvav $var1 $var2
-'Second,
-   Version,
-   $var1,
-   $var2;
-'
-
-$myObj =
+myObj =
 {
-    'hello' : if $test then 'go' else 2
+    'hello' : if test then 'go' else 2
 }
 
-print $myObj.hello
+print myObj.hello
 
-print map sdvav $myList
+!print map sdvav myList
 
 import 'myfile.idf'
 
-$mydata = data 'datafile.tsv' + data 'anotherfile.tsv'
+mydata = data 'datafile.tsv' + data 'anotherfile.tsv'
 
 Version,
-    { $versionNum },
+    { versionNum },
     $coolingLoad,
     $myName;

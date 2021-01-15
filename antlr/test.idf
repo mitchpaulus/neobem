@@ -1,7 +1,7 @@
 myName = 'Hello'
 
 myList = [
-    [coolingLoad 'Hello']
+    [coolingLoad, 'Hello'],
     123
 ]
 
@@ -9,19 +9,18 @@ mylist.another = 'a string'
 
 test = ( 56 - -45 + 'Hello' * 123^2^3 )
 
-testy = if test == 1 | mylist.another < 2 then sin (5) else cos (6)
+testy = if test == 1 or mylist.another < 2 then sin (5) else cos (6)
 
-!fn sdvav var1 var3 {
-    !return var1 + var3
-!}
+filter = λ x { x < 2 }
 
-filter = \ x { x < 2 }
+func = λ var1 var2 { return var1 + var2 }
 
-func = \ var1 var2 { return var1 + var2 }
-
-!print map  sdvav (filter -> (\ahu -> ahu.Name == "Yes") mylist)
-
-!print sdvav -> 2 3
+thermostat = λ name {
+ZoneControl:Humidistat,
+   { name },
+   Zone 1,
+   Schedule;
+}
 
 myObj =
 {

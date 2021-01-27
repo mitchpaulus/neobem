@@ -23,7 +23,10 @@ namespace src
 
         public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables, _functions);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>>()
+            {
+                _variables
+            }, _functions);
             var name = context.IDENTIFIER().GetText();
             var expression = visitor.Visit(context.expression());
 
@@ -34,7 +37,8 @@ namespace src
 
         public override void EnterPrint_statment(IdfplusParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(_variables, _functions);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(
+                new List<Dictionary<string, Expression>>() { _variables }, _functions);
             var expression = visitor.Visit(context.expression());
             Output.Append(expression.AsString() + '\n');
         }
@@ -53,7 +57,7 @@ namespace src
             {
                 builder.Append(text.Substring(currentIndex, match.Index - currentIndex));
 
-                if (_variables.ContainsKey(match.Value)) builder.Append(_variables[match.Value]);
+                if (_variables.ContainsKey(match.Value.Substring(1))) builder.Append(_variables[match.Value.Substring(1)]);
 
                 currentIndex = match.Index + match.Length;
             }
@@ -63,14 +67,9 @@ namespace src
             Output.Append(builder.ToString() + '\n');
         }
 
-        public override void EnterFunction_definition(IdfplusParser.Function_definitionContext context)
-        {
-            base.EnterFunction_definition(context);
-        }
-
         public override void EnterLambda_def(IdfplusParser.Lambda_defContext context)
         {
-            FunctionExpression funcExpression = new FunctionExpression(context);
+            // FunctionExpression funcExpression = new FunctionExpression(context);
         }
     }
 }

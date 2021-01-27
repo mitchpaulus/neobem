@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace src
 {
@@ -48,26 +49,22 @@ namespace src
             return new NumericExpression(value);
         }
     }
-    public class SinFunction : IFunction
-    {
-        public Expression Evaluate(List<Expression> inputs)
-        {
-            var sin = Math.Sin(((NumericExpression) inputs[0]).Value);
-            return new NumericExpression(sin);
-        }
-    }
 
-    public class FunctionExpression : Expression, IFunction
+    public class FunctionExpression : Expression
     {
-        private readonly IdfplusParser.Lambda_defContext _lambdaDefContext;
+        private readonly IdfplusParser.LambdaExpContext _context;
         private readonly List<Dictionary<string, Expression>> _environments;
+
+
         private readonly List<string> _parameters;
 
         public override string AsString() => "";
 
-        public FunctionExpression(IdfplusParser.Lambda_defContext lambdaDefContext)
+        public FunctionExpression(IdfplusParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments)
         {
-            _lambdaDefContext = lambdaDefContext;
+            _context = lambdaDefContext;
+            _environments = environments;
+            _parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
         }
 
         public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters)
@@ -76,12 +73,55 @@ namespace src
             _parameters = parameters;
         }
 
-        public Expression Evaluate(List<Expression> inputs)
+        public (string, Expression) Evaluate(List<Expression> inputs)
         {
-            var boundParameters = inputs.Zip(_parameters, (expression, name) => (expression, name))
-                .ToDictionary(tuple => tuple.name, tuple => tuple.expression);
+            Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
 
-            throw new NotImplementedException();
+            if (inputs.Count != _parameters.Count) throw new InvalidOperationException( $"Expected {_parameters.Count} parameters, received {inputs.Count}");
+
+            for (int i = 0; i < inputs.Count; i++) locals[_parameters[i]] = inputs[i];
+
+            var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
+            updatedEnvironments.Insert(0, locals);
+
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments, new Dictionary<string, IFunction>());
+
+            StringBuilder builder = new StringBuilder();
+
+            ObjectVariableReplacer replacer = new ObjectVariableReplacer();
+
+            if (_context.lambda_def().expression() != null)
+            {
+                return ("", visitor.Visit(_context.lambda_def().expression()));
+            }
+            else
+            {
+                foreach (IdfplusParser.Function_statementContext item in _context.lambda_def().function_statement())
+                {
+                    switch (item)
+                    {
+                        case IdfplusParser.FunctionIdfCommentContext commentContext:
+                            builder.Append(commentContext.GetText());
+                            break;
+                        case IdfplusParser.FunctionObjectDeclarationContext objectDeclarationContext:
+                            var replacedObject = replacer.Replace(objectDeclarationContext.GetText(), updatedEnvironments);
+                            builder.AppendLine(replacedObject);
+                            break;
+                        case IdfplusParser.FunctionVariableDeclarationContext variableDeclarationContext:
+                            var expressionResult = visitor.Visit(variableDeclarationContext.variable_declaration().expression());
+                            var identifier = variableDeclarationContext.variable_declaration().IDENTIFIER().GetText();
+                            locals[identifier] = expressionResult;
+                            break;
+                        case IdfplusParser.ReturnStatementContext returnStatementContext:
+                            Expression returnExpression = visitor.Visit(returnStatementContext.return_statement().expression());
+                            return (builder.ToString(), returnExpression);
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+
+                return (builder.ToString(), new StringExpression(""));
+            }
         }
     }
 

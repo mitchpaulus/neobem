@@ -1,0 +1,4 @@
+myadd = \x { x + 2 }
+versionnum = myadd(2)
+Version,
+ $versionnum;

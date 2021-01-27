@@ -1,4 +1,4 @@
-myName = 'Hello'
+my_name = 'Hello'
 
 myList = [
     [coolingLoad, 'Hello'],

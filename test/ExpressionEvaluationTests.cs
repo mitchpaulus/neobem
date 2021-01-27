@@ -20,7 +20,7 @@ namespace test
             IdfplusParser parser = new IdfplusParser(tokens);
 
             IdfplusParser.ExpressionContext tree =  parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(variables, new Dictionary<string, IFunction>());
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables}, new Dictionary<string, IFunction>());
             return  visitor.Visit(tree);
         }
 
@@ -145,5 +145,49 @@ namespace test
             Assert.IsTrue(expression is NumericExpression);
             Assert.IsTrue(Math.Abs(((NumericExpression)expression).Value - 1) < 0.00001);
         }
+
+        [Test]
+        public void TestFunctionDefinition()
+        {
+            string test = "(\\x { x + 2 })(2)";
+            var parser = test.ToParser();
+            var tree = parser.expression();
+
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+            Expression expression = visitor.Visit(tree);
+
+            Assert.IsTrue(expression is NumericExpression);
+            Assert.IsTrue(Math.Abs(((NumericExpression)expression).Value - 4) < 0.00001);
+        }
+
+        [Test]
+        public void TestBasicFunctionApplication()
+        {
+            string test = "myadd = \\x { x + 2 }\nversionnum = myadd(2)\nVersion, $versionnum;\n";
+            var parser = test.ToParser();
+            var tree = parser.idf();
+
+            ParseTreeWalker walker = new ParseTreeWalker();
+            IdfPlusListener listener = new IdfPlusListener();
+            walker.Walk(listener, tree);
+
+            Console.WriteLine(listener.Output);
+        }
+
+        [Test]
+        public void TestNestedFunctionApplication()
+        {
+            string test = "myadd = \\x { \\y { x + y } }\nversionnum = myadd(2)(3)\nVersion, $versionnum;\n";
+            var parser = test.ToParser();
+            var tree = parser.idf();
+
+            ParseTreeWalker walker = new ParseTreeWalker();
+            IdfPlusListener listener = new IdfPlusListener();
+            walker.Walk(listener, tree);
+
+            Console.WriteLine(listener.Output);
+            Assert.AreEqual("Version, 5;\n", listener.Output.ToString());
+        }
+
     }
 }

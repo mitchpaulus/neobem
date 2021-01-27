@@ -1,24 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace src
 {
     public class IdfPlusExpVisitor : IdfplusBaseVisitor<Expression>
     {
-        private readonly Dictionary<string, Expression> _variables;
+        private readonly List<Dictionary<string, Expression>> _variables;
 
         private readonly Dictionary<string, IFunction> _functions;
 
-        public IdfPlusExpVisitor(Dictionary<string, Expression> variables, Dictionary<string, IFunction> functions)
+        public StringBuilder output = new StringBuilder();
+
+        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables, Dictionary<string, IFunction> functions)
         {
             _variables = variables;
-
             _functions = MathematicalFunction.FunctionDict;
         }
         public IdfPlusExpVisitor()
         {
-            _variables = new Dictionary<string, Expression>();
+            _variables = new List<Dictionary<string, Expression>>() { new Dictionary<string, Expression>() };
             _functions = MathematicalFunction.FunctionDict;
         }
 
@@ -44,7 +46,16 @@ namespace src
             return new NumericExpression(exponentValue, exponentValue.ToString());
         }
 
-        public override Expression VisitVariableExp(IdfplusParser.VariableExpContext context) => _variables[context.GetText()];
+        public override Expression VisitVariableExp(IdfplusParser.VariableExpContext context)
+        {
+
+            foreach (var scope in _variables)
+            {
+                var found = scope.TryGetValue(context.GetText(), out Expression value);
+                if (found) return value;
+            }
+            throw new InvalidOperationException($"Could not find variable {context.GetText()} in scope.");
+        }
 
         public override Expression VisitNumericExp(IdfplusParser.NumericExpContext context)
         {
@@ -111,13 +122,25 @@ namespace src
 
         public override Expression VisitFunctionExp(IdfplusParser.FunctionExpContext functionExpContext)
         {
-            string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
-            IFunction function = _functions[functionName];
+            Expression func = Visit(functionExpContext.funcexp);
 
-            var expressions = functionExpContext.function_application().expression().Select(Visit).ToList();
-            var result = function.Evaluate(expressions);
+            if (!(func is FunctionExpression functionExpression))
+                throw new InvalidOperationException("Attempt to apply function to non function application.");
 
-            return result;
+            // string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
+            // IFunction function = _functions[functionName];
+            //
+            var expressions = functionExpContext.expression().Skip(1).Select(Visit).ToList();
+            (string text, Expression expression) = functionExpression.Evaluate(expressions);
+
+            output.Append(text);
+
+            return expression;
+        }
+
+        public override Expression VisitLambdaExp(IdfplusParser.LambdaExpContext context)
+        {
+            return new FunctionExpression(context, _variables);
         }
     }
 }

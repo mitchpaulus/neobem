@@ -13,35 +13,30 @@ expression :   expression member_access                  # MemberAccessExp
              | expression op=('*'|'/') expression        # MultDivide
              | expression op=('+'|'-') expression        # AddSub
              | expression op=('<'|'>'|'=='|'!=') expression  # BooleanExp
-             | expression op=('&'|'|') expression        # LogicExp
+             | expression op=('and'|'or') expression        # LogicExp
+             | funcexp=expression ( '(' ')' |  '(' expression (',' expression)* ')' ) # FunctionExp
              | STRING                                    # StringExp
              | NUMERIC                                   # NumericExp
              | IDENTIFIER                                  # VariableExp
              | list                                      # ListExp
              | data_statement                            # DataExp
              /*| map_statement                             # MapExp*/
-             | '(' expression ')'                        # ParensExp
              | if_exp                                    # IfExp
              | idfplus_object                            # ObjExp
              | lambda_def                                # LambdaExp
-             | function_application                      # FunctionExp
+             | '(' expression ')'                        # ParensExp
              ;
 
 if_exp : 'if' expression 'then' expression 'else' expression ;
 
-function_application : IDENTIFIER '(' expression* ')' ;
-
-function_definition : 'fn' IDENTIFIER IDENTIFIER* '{' base_idf* '}' ;
-
-lambda_def : '\\' IDENTIFIER* '{' (expression | base_idf*) '}' ;
+lambda_def : ('\\' | 'λ' ) IDENTIFIER* '{' (expression | function_statement*) '}' ;
 
 return_statement : 'return' expression ;
 
 idfplus_object : '{' (STRING ':' expression)* '}' ;
 
-list : '[' expression* ']' ;
-
-/*map_statement : MAP_KEYWORD IDENTIFIER (list | VARIABLE) ;*/
+list :  '[' ']' |
+        '[' expression (',' expression)* ']' ;
 
 import_statement : 'import' STRING ;
 
@@ -49,13 +44,18 @@ print_statment : 'print' expression ;
 
 data_statement : 'data' STRING ;
 
-base_idf : COMMENT |
-           object |
-           variable_declaration |
-           /*function_definition |*/
-           return_statement |
-           import_statement |
-           print_statment ;
+function_statement :  COMMENT   # FunctionIdfComment
+                    | object    # FunctionObjectDeclaration
+                    | variable_declaration # FunctionVariableDeclaration
+                    | return_statement # ReturnStatement
+                    ;
+
+base_idf : COMMENT                # IdfComment
+           | object               # ObjectDeclaration
+           | variable_declaration # VariableDeclaration
+           | import_statement     # ImportStatement
+           | print_statment       # PrintStatment
+           ;
 
 idf : (base_idf)* EOF;
 
@@ -65,7 +65,7 @@ member_access : '.' IDENTIFIER ;
 
 object : OBJECT ;
 
-OBJECT : OBJECT_TYPE .*? OBJECT_TERMINATOR COMMENT* ;
+OBJECT : OBJECT_TYPE ',' .*? OBJECT_TERMINATOR COMMENT* ;
 
 /*MAP_KEYWORD : 'map' ;*/
 

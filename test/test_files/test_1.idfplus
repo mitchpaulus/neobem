@@ -1,0 +1,6 @@
+template = λ number {
+    Version,
+    { number };
+}
+
+print template('9.2')

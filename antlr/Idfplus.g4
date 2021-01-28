@@ -9,12 +9,12 @@ variable_declaration : IDENTIFIER member_access* '=' expression;
 
 // See pg. 41 of Antlr reference
 expression :   expression member_access                  # MemberAccessExp
+             | funcexp=expression ( '(' ')' |  '(' expression (',' expression)* ')' ) # FunctionExp
              | <assoc=right> expression '^' expression    # Exponientiate
              | expression op=('*'|'/') expression        # MultDivide
              | expression op=('+'|'-') expression        # AddSub
              | expression op=('<'|'>'|'=='|'!=') expression  # BooleanExp
              | expression op=('and'|'or') expression        # LogicExp
-             | funcexp=expression ( '(' ')' |  '(' expression (',' expression)* ')' ) # FunctionExp
              | STRING                                    # StringExp
              | NUMERIC                                   # NumericExp
              | IDENTIFIER                                  # VariableExp

@@ -24,5 +24,22 @@ namespace test
 
             Assert.AreEqual("Version,\n    9.2;\n", output);
         }
+
+        [Test]
+        public void TestRecursiveFunction()
+        {
+            string file = "factorial = \\ n { if n == 0 then 1 else n * factorial(n - 1)  }\nVersion,{ factorial(4) };\n";
+            var visitor = new IdfPlusVisitor();
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            Assert.AreEqual("Version,24;", output);
+
+        }
+
     }
 }

@@ -142,5 +142,40 @@ namespace src
         {
             return new FunctionExpression(context, _variables);
         }
+
+        public override Expression VisitIfExp(IdfplusParser.IfExpContext context)
+        {
+            var expressionOutput = Visit(context.if_exp().expression(0));
+
+            if (!(expressionOutput is BooleanExpression booleanExpression))
+            {
+                var expressionText = context.if_exp().expression(0).GetText();
+                throw new NotSupportedException($"'{expressionText}' is not a boolean expression");
+            }
+
+            return Visit(booleanExpression.Value ? context.if_exp().expression(1) : context.if_exp().expression(2));
+        }
+
+        public override Expression VisitBooleanExp(IdfplusParser.BooleanExpContext context)
+        {
+            var lhs = Visit(context.expression(0));
+            var rhs = Visit(context.expression(1));
+
+            string oper = context.op.Text;
+
+            switch (oper)
+            {
+                case "==":
+
+                    if (lhs is NumericExpression numericLhs && rhs is NumericExpression numericRhs)
+                    {
+                        bool areEqual = Math.Abs(numericLhs.Value - numericRhs.Value) < 0.000000001;
+                        return new BooleanExpression(areEqual);
+                    }
+                    break;
+            }
+
+            throw new NotImplementedException($"{context.GetText()} not implemented.");
+        }
     }
 }

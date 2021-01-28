@@ -188,6 +188,5 @@ namespace test
             Console.WriteLine(listener.Output);
             Assert.AreEqual("Version, 5;\n", listener.Output.ToString());
         }
-
     }
 }

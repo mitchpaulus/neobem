@@ -180,7 +180,7 @@ namespace src
 
     public class BooleanExpression : Expression
     {
-        private bool Value;
+        public bool Value;
 
         public BooleanExpression(bool value) => Value = value;
         public override string AsString() => Value.ToString();

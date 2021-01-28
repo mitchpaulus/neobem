@@ -1,4 +1,10 @@
 README.pdf
+# Redo files
+.redo/
+*.aux
+*.fls
+*.old
+
 # Generated antlr files
 antlr/IdfplusBaseListener.cs
 antlr/IdfplusBaseVisitor.cs

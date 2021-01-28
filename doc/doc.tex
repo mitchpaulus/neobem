@@ -1,5 +1,8 @@
 \documentclass{article}
 
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
 \author{Mitchell T. Paulus}
 \title{idf-plus}
 \date{2020-12-31}
@@ -14,19 +17,10 @@
 
 \section{Introduction}
 
-Have you ever desired to have one of the following when creating
-EnergyPlus input files?
+\input{intro}
 
+\section{Design Goals}
 
-\begin{enumerate}
-    \item Variables?
-    \item Arithmetic Expressions?
-    \item Logic?
-    \item Custom Templates?
-    \item Use data from a spreadsheet as input?
-\end{enumerate}
-
-Then what you've wanted all along is idf-plus. It can do all of this and
-more.
+\input{design_goals}
 
 \end{document}

@@ -20,7 +20,7 @@ namespace test
             IdfplusParser parser = new IdfplusParser(tokens);
 
             IdfplusParser.ExpressionContext tree =  parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables}, new Dictionary<string, IFunction>());
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables});
             return  visitor.Visit(tree);
         }
 
@@ -135,7 +135,7 @@ namespace test
         [Test]
         public void TestFunctionApplication()
         {
-            string test = "sin(3.1415926 / 2)";
+            string test = "ceiling(3.1415926 / 2)";
             var parser = test.ToParser();
             var tree = parser.expression();
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();

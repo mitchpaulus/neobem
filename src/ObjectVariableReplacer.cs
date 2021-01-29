@@ -31,7 +31,7 @@ namespace src
                     var startIndex = leftCurlyBraceIndicies.Pop();
                     var expressionText = objectText.Substring(startIndex + 1, i - startIndex - 1);
 
-                    IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables, new Dictionary<string, IFunction>());
+                    IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables);
 
                     var parser = expressionText.ToParser();
                     var tree = parser.expression();

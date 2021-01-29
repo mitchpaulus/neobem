@@ -26,7 +26,7 @@ namespace src
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>>()
             {
                 _variables
-            }, _functions);
+            });
             var name = context.IDENTIFIER().GetText();
             var expression = visitor.Visit(context.expression());
 
@@ -37,8 +37,7 @@ namespace src
 
         public override void EnterPrint_statment(IdfplusParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(
-                new List<Dictionary<string, Expression>>() { _variables }, _functions);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor( new List<Dictionary<string, Expression>>() { _variables });
             var expression = visitor.Visit(context.expression());
             Output.Append(expression.AsString() + '\n');
         }

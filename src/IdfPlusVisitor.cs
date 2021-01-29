@@ -7,7 +7,7 @@ namespace src
     {
         private readonly List<Dictionary<string, Expression>> _environments = new List<Dictionary<string, Expression>>()
         {
-            new Dictionary<string, Expression>()
+            new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
         };
 
         public override string VisitIdf(IdfplusParser.IdfContext context)
@@ -30,14 +30,14 @@ namespace src
 
         public override string VisitVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, new Dictionary<string, IFunction>());
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments);
             _environments[0][context.IDENTIFIER().GetText()] = expressionVisitor.Visit(context.expression());
             return "";
         }
 
         public override string VisitPrint_statment(IdfplusParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, new Dictionary<string, IFunction>());
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments);
             expressionVisitor.Visit(context.expression());
             return expressionVisitor.output.ToString();
         }

@@ -9,19 +9,18 @@ namespace src
     {
         private readonly List<Dictionary<string, Expression>> _variables;
 
-        private readonly Dictionary<string, IFunction> _functions;
-
         public StringBuilder output = new StringBuilder();
 
-        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables, Dictionary<string, IFunction> functions)
+        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables)
         {
             _variables = variables;
-            _functions = MathematicalFunction.FunctionDict;
         }
         public IdfPlusExpVisitor()
         {
-            _variables = new List<Dictionary<string, Expression>>() { new Dictionary<string, Expression>() };
-            _functions = MathematicalFunction.FunctionDict;
+            _variables = new List<Dictionary<string, Expression>>
+            {
+                new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
+            };
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =
@@ -48,7 +47,6 @@ namespace src
 
         public override Expression VisitVariableExp(IdfplusParser.VariableExpContext context)
         {
-
             foreach (var scope in _variables)
             {
                 var found = scope.TryGetValue(context.GetText(), out Expression value);

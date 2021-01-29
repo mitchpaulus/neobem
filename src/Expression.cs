@@ -10,10 +10,10 @@ namespace src
         Expression Evaluate(List<Expression> inputs);
     }
 
-    public class MathematicalFunction : IFunction
+    public class MathematicalFunction : FunctionExpression
     {
         public static List<MathematicalFunction> List = new List<MathematicalFunction>();
-        public static Dictionary<string, IFunction> FunctionDict = new Dictionary<string, IFunction>();
+        public static Dictionary<string, Expression> FunctionDict = new Dictionary<string, Expression>();
 
         public readonly string Name;
         public readonly Func<List<double>, double> Function;
@@ -34,7 +34,7 @@ namespace src
         public static MathematicalFunction Tan = new MathematicalFunction("tan", inputs => Math.Tan(inputs[0]));
 
 
-        public MathematicalFunction(string name, Func<List<double>, double> function)
+        public MathematicalFunction(string name, Func<List<double>, double> function) : base(new List<Dictionary<string, Expression>>(), new List<string>())
         {
             Name = name;
             Function = function;
@@ -43,10 +43,10 @@ namespace src
             FunctionDict[name] = this;
         }
 
-        public Expression Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs)
         {
             var value = Function(inputs.Cast<NumericExpression>().Select(expression => expression.Value).ToList());
-            return new NumericExpression(value);
+            return ("", new NumericExpression(value));
         }
     }
 
@@ -73,7 +73,7 @@ namespace src
             _parameters = parameters;
         }
 
-        public (string, Expression) Evaluate(List<Expression> inputs)
+        public virtual (string, Expression) Evaluate(List<Expression> inputs)
         {
             Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
 
@@ -84,7 +84,7 @@ namespace src
             var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
             updatedEnvironments.Insert(0, locals);
 
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments, new Dictionary<string, IFunction>());
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments);
 
             StringBuilder builder = new StringBuilder();
 

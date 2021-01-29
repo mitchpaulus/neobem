@@ -38,7 +38,22 @@ namespace test
             string output = visitor.Visit(tree);
 
             Assert.AreEqual("Version,24;", output);
+        }
 
+        [Test]
+        public void TestFileWithMathFunction()
+        {
+            string file = "myangle = ceiling(2.1)\nVersion,{ myangle };\n";
+            var visitor = new IdfPlusVisitor();
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            Console.WriteLine(output);
+            Assert.AreEqual("Version,3;", output);
         }
 
     }

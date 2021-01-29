@@ -1,0 +1,4 @@
+#!/bin/sh
+
+java -jar /usr/local/lib/antlr-4.8-complete.jar -Dlanguage=Java *.g4
+javac *.java

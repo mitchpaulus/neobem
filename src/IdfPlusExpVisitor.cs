@@ -21,6 +21,7 @@ namespace src
             {
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
+            _variables[0]["map"] = new MapFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

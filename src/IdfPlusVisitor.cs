@@ -5,10 +5,16 @@ namespace src
 {
     public class IdfPlusVisitor : IdfplusBaseVisitor<string>
     {
-        private readonly List<Dictionary<string, Expression>> _environments = new List<Dictionary<string, Expression>>()
+        private readonly List<Dictionary<string, Expression>> _environments;
+
+        public IdfPlusVisitor()
         {
-            new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
-        };
+            _environments = new List<Dictionary<string, Expression>>()
+            {
+                new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
+            };
+            _environments[0]["map"] = new MapFunctionExpression();
+        }
 
         public override string VisitIdf(IdfplusParser.IdfContext context)
         {

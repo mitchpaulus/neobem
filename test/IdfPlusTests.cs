@@ -56,5 +56,21 @@ namespace test
             Assert.AreEqual("Version,3;", output);
         }
 
+        [Test]
+        public void TestMapFunction()
+        {
+            string file = "list = ['9.1', '9.2']\nprint map(\\x {\nVersion,{x};\n}\n, list) ";
+
+            var visitor = new IdfPlusVisitor();
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            Console.WriteLine(output);
+            Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
+        }
     }
 }

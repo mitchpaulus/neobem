@@ -24,6 +24,7 @@ expression :   expression member_access                  # MemberAccessExp
              | if_exp                                    # IfExp
              | idfplus_object                            # ObjExp
              | lambda_def                                # LambdaExp
+             | inline_table                              # InlineTable
              | '(' expression ')'                        # ParensExp
              ;
 
@@ -43,6 +44,20 @@ import_statement : 'import' STRING ;
 print_statment : 'print' expression ;
 
 data_statement : 'data' STRING ;
+
+
+// 3 or more underscores to begin
+INLINE_TABLE_BEGIN_END : '___' '_'* ;
+
+INLINE_TABLE_HEADER_SEP : '---' '-'* ;
+
+inline_table_header : IDENTIFIER ('|' IDENTIFIER)* ;
+
+inline_table_header_separator : INLINE_TABLE_HEADER_SEP ('|' INLINE_TABLE_HEADER_SEP)* ;
+
+inline_table_data_row : expression ('|' expression)* ;
+
+inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
 
 function_statement :  COMMENT   # FunctionIdfComment
                     | object    # FunctionObjectDeclaration

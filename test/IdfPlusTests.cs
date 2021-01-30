@@ -72,5 +72,20 @@ namespace test
             Console.WriteLine(output);
             Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
         }
+
+        [Test]
+        public void TestMemberAccess()
+        {
+            var file = File.ReadAllText(Path.Combine(TestDir.Dir, "member_access.idfplus"));
+            var visitor = new IdfPlusVisitor();
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
+        }
     }
 }

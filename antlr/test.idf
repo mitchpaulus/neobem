@@ -5,7 +5,7 @@ myList = [
     123 - hello
 ]
 
-mylist.another = 'a string'
+mylist.another.another.hello = 'a string'
 
 test = ( 56 - -45 + 'Hello' * 123^2^3 )
 
@@ -33,7 +33,7 @@ ZoneControl:Humidistat,
 
 myObj =
 {
-    'hello' : if test then 'go' else 2
+    hello: if test then 'go' else 2
 }
 
 print myObj.hello

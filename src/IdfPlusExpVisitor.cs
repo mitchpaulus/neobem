@@ -69,6 +69,28 @@ namespace src
 
         public override Expression VisitParensExp(IdfplusParser.ParensExpContext context) => Visit(context.expression());
 
+        public override Expression VisitMemberAccessExp(IdfplusParser.MemberAccessExpContext context)
+        {
+            Expression expression = Visit(context.expression());
+            if (expression is IdfPlusObjectExpression objectExpression)
+            {
+                var memberName = context.member_access().IDENTIFIER().GetText();
+                if (objectExpression.Members.TryGetValue(memberName, out Expression memberExpression))
+                {
+                    return memberExpression;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"{memberName} is not a member of the object {context.expression().GetText()}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"{context.expression().GetText()} is not an object.");
+            }
+        }
+
         public override Expression VisitMultDivide(IdfplusParser.MultDivideContext context)
         {
             var op = context.op.Text;
@@ -175,6 +197,21 @@ namespace src
             }
 
             throw new NotImplementedException($"{context.GetText()} not implemented.");
+        }
+
+        public override Expression VisitObjExp(IdfplusParser.ObjExpContext context)
+        {
+            var props = context.idfplus_object().idfplus_object_property_def();
+
+            IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
+            foreach (IdfplusParser.Idfplus_object_property_defContext prop in props)
+            {
+                var name = prop.IDENTIFIER().GetText();
+                var expression = Visit(prop.expression());
+                objectExpression.Members[name] = expression;
+            }
+
+            return objectExpression;
         }
     }
 }

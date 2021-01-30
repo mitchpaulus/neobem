@@ -34,7 +34,9 @@ lambda_def : ('\\' | 'λ' ) IDENTIFIER* '{' (expression | function_statement*) '
 
 return_statement : 'return' expression ;
 
-idfplus_object : '{' (STRING ':' expression)* '}' ;
+idfplus_object : '{' (idfplus_object_property_def) (',' idfplus_object_property_def)* '}' ;
+
+idfplus_object_property_def : IDENTIFIER ':' expression ;
 
 list :  '[' ']' |
         '[' expression (',' expression)* ']' ;

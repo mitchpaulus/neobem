@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- See https://docs.kde.org/stable5/en/applications/katepart/highlight.html -->
+
+<language name="bemp" version="1" kateversion="2.4" section="Sources" extensions="*.bemp;*.idf" author="Mitchell T. Paulus" >
+    <highlighting>
+        <list name="keywords1">
+            <item>print</item>
+            <item>import</item>
+            <item>data</item>
+        </list>
+        <list name="controlflow">
+            <item>if</item>
+            <item>then</item>
+            <item>else</item>
+        </list>
+        <list name="logical">
+            <item>and</item>
+            <item>or</item>
+        </list>
+        <list name="constants">
+            <item>autocalculate</item>
+        </list>
+        <contexts>
+            <context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
+                <keyword attribute="Keyword" context="#stay" String="keywords1" />
+                <keyword attribute="ControlFlow" context="#stay" String="controlflow" />
+                <keyword attribute="Logical" context="#stay" String="logical" />
+                <keyword attribute="Constants" context="#stay" String="constants" />
+
+
+                <DetectChar attribute="String" context="String" char="&apos;" />
+                <DetectChar char="!" attribute="Comment" context="Comment"/>
+                <RegExpr String="^[A-Z][a-zA-Z0-9:]+," attribute="Label" context="#stay" />
+                <RegExpr String="\b-?([1-9][0-9]*|0)(\.[0-9]+)?\b" attribute="Numeric" context="#stay" />
+            </context>
+            <!--<context attribute="String" lineEndContext="#stay" name="string" >-->
+                <!--<DetectChar attribute="String" context="#pop" char="&quot;" />-->
+            <!--</context>-->
+            <context name="Comment" attribute="Comment" lineEndContext="#pop">
+            </context>
+            <context name="String" attribute="String" lineEndContext="#stay">
+                <DetectChar attribute="String" context="#pop" char="&apos;" />
+            </context>
+        </contexts>
+        <itemDatas>
+            <itemData name="Normal Text" defStyleNum="dsNormal" />
+            <itemData name="Keyword" defStyleNum="dsKeyword" />
+            <itemData name="String" defStyleNum="dsString" />
+            <itemData name="Comment" defStyleNum="dsComment" />
+            <itemData name="ControlFlow" defStyleNum="dsControlFlow" />
+            <itemData name="Label" defStyleNum="dsFunction" />
+            <itemData name="Numeric" defStyleNum="dsFloat" />
+            <itemData name="Logical" defStyleNum="dsOperator" />
+            <itemData name="Constants" defStyleNum="dsConstant" />
+        </itemDatas>
+    </highlighting>
+    <general>
+        <comments>
+            <comment name="singleLine" start="!"/>
+        </comments>
+        <keywords casesensitive="1" />
+    </general>
+</language>
+
+
+
+

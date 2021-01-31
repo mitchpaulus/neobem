@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+
+name: bemp
+file_extensions: [bemp, idf]
+scope: source.bemp
+
+contexts:
+    main:
+     - match: "^[A-Z][a-zA-Z:]*,"
+       scope: entity.name.label.bemp
+     - match: "!.*"
+       scope: comment.line.bemp
+     - match: '\b(if|then|else|and|or|return|data|print|import)\b'
+       scope: keyword.control.bemp
+
+# vim:ft=yaml

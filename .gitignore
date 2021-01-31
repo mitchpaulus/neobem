@@ -4,6 +4,12 @@ README.pdf
 *.aux
 *.fls
 *.old
+*.out
+
+doc/doc.md
+doc/doc.pdf
+
+kde-syntax/test.pdf
 
 # Generated antlr files
 antlr/IdfplusBaseListener.cs

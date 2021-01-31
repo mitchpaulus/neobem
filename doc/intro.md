@@ -6,4 +6,4 @@ Have you ever wanted to:
 - Loop over lists?
 - Easily incorporate work from others?
 
-If so, `idf-plus` is what you have always wanted.
+If so, `bemp` is what you have always wanted.

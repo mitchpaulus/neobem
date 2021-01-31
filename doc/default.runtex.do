@@ -12,7 +12,12 @@ exec >&2
 #redo-ifchange "$2.tex" "$2.deps"
 redo-ifchange "$2.tex"
 
-redo-ifchange design_goals.tex intro.tex
+awk '/input{/' doc.tex | \
+awk 'BEGIN { FS="{|}" } { print $2 ".tex" }' | \
+xargs redo-ifchange
+
+#redo-ifchange design_goals.tex intro.tex
+
 
 # Next, we have to depend on each dependency in
 # the .deps file.

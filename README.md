@@ -1,6 +1,6 @@
-# idf-plus
+# BEMP
 
-`idf-plus` is a preprocessor programming language intended for the idf input files for EnergyPlus.
+`BEMP` is a preprocessor programming language intended for the idf input files for EnergyPlus.
 
 Have you ever wanted to:
 
@@ -10,7 +10,7 @@ Have you ever wanted to:
 - Loop over lists?
 - Easily incorporate work from others?
 
-If so, `idf-plus` is what you have always wanted.
+If so, `BEMP` is what you have always wanted.
 
 # Design Goals
 

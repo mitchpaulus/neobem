@@ -29,8 +29,6 @@ namespace src
                 return;
             }
 
-            // string input = File.ReadAllText(file.FullName);
-
             AntlrInputStream inputStream = new AntlrFileStream(file.FullName);
             IdfplusLexer lexer = new IdfplusLexer(inputStream);
 
@@ -38,15 +36,13 @@ namespace src
 
             IdfplusParser parser = new IdfplusParser(commonTokenStream);
 
-            IdfPlusListener listener = new IdfPlusListener();
-
-            ParseTreeWalker walker = new ParseTreeWalker();
+            IdfPlusVisitor visitor = new IdfPlusVisitor();
 
             IdfplusParser.IdfContext tree = parser.idf();
 
-            walker.Walk(listener, tree);
+            string result = visitor.Visit(tree);
 
-            Console.WriteLine(listener.Output);
+            Console.WriteLine(result);
         }
     }
 }

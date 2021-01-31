@@ -11,6 +11,8 @@ doc/doc.pdf
 
 kde-syntax/test.pdf
 
+test/TestFileDirectory.cs
+
 # Generated antlr files
 antlr/IdfplusBaseListener.cs
 antlr/IdfplusBaseVisitor.cs

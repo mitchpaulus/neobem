@@ -3,6 +3,7 @@
 DIR="$(pwd)"
 
 cat <<EOF
+// This file is generated. Edit at your own risk.
 namespace test
 {
     public static class TestDir

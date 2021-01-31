@@ -3,6 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>bemp</AssemblyName>
+    <Company>Mitchell T. Paulus</Company>
+    <Product>bemp</Product>
   </PropertyGroup>
 
   <ItemGroup>

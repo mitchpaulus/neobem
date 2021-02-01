@@ -1,0 +1,4 @@
+import 'import1.bemp'
+import 'import2.bemp'
+
+print my_template()

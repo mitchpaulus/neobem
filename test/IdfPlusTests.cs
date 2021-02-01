@@ -87,5 +87,13 @@ namespace test
 
             Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
         }
+
+        public void TestImport()
+        {
+
+
+
+
+        }
     }
 }

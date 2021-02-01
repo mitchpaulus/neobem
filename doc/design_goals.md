@@ -47,14 +47,14 @@
 
   Projects in building construction last *years* and the buildings
   themselves last *decades*. You should expect to be able to run your
-  simulation model years later and it should work.
+  simulation model years later and it should still work.
 
 - There must always be a sole commander-in-chief in charge of the
-  language.
+  language (Inspired by the [KISS Linux Guidestones](https://k1ss.org/guidestones)).
 
   This language shall not be designed by committee. This does not
   mean feedback, feature requests, criticism are not welcome!
   Contributions of all kinds are wanted.
 
-  This statement simply means that it is ultimately one persons decision
-  on the future direction of the language.
+  This statement simply means that it is ultimately one person who
+  determines the future direction of the language.

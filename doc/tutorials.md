@@ -598,3 +598,129 @@ cases this is not convenient. We can wrap values in functions, so that
 our entry is in the units we want, but the output correctly matches the
 energy simulation requirements.
 
+
+## Tutorial 5: Importing From Other Files
+
+Large software projects are not built in one monolithic file. Engineers
+break the code up into smaller pieces so that it is more manageable.
+Building simulation files can get quite large, thousands of lines of
+code, so it makes sense that we should be able to do the same thing in
+`bemp`.
+
+A small, but typical example of breaking out the input file in multiple
+files could be this.
+
+**in.bemp**
+```bemp
+import 'defaults.bemp'
+
+print simulation_params()
+
+import 'chillers.bemp'
+```
+
+where in the same directory as the `in.bemp` file is the two files
+
+1. `defaults.bemp`
+2. `chillers.bemp`
+
+If the contents of those are
+
+**defaults.bemp**
+```bemp
+simulation_params = λ {
+Version,9.4;
+
+Timestep,6;
+
+ZoneAirHeatBalanceAlgorithm,EulerMethod;
+}
+```
+
+**chillers.bemp**
+```bemp
+chiller = λ unit_number {
+
+chiller_name = 'Chiller ' + unit_number
+
+tons_to_watts = λ tons { tons * 3516.8528 }
+
+Chiller:ConstantCOP,
+  { chiller_name },            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
+  { tons_to_watts(1000) },     ! Nominal Capacity {W}, AS, REQ, #2
+  6,                           ! Nominal COP {W/W}, REQ, #3
+  autosize,                    ! Design Chilled Water Flow Rate {m3/s}, AS, #4
+  autosize,                    ! Design Condenser Water Flow Rate {m3/s}, AS, #5
+  { chiller_name } CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
+  { chiller_name } CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
+  { chiller_name } CW Inlet,   ! Condenser Inlet Node Name #8
+  { chiller_name } CW Outlet,  ! Condenser Outlet Node Name #9
+  AirCooled,                   ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
+  NotModulated,                ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
+  1.0;                         ! Sizing Factor Def: 1.0, #12
+}
+
+print map(chiller, [1, 2, 3])
+```
+
+then the resulting output would be:
+
+
+```bemp
+Version,9.4;
+
+Timestep,6;
+
+ZoneAirHeatBalanceAlgorithm,EulerMethod;
+
+Chiller:ConstantCOP,
+  Chiller 1,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
+  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
+  6,                    ! Nominal COP {W/W}, REQ, #3
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
+  Chiller 1 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
+  Chiller 1 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
+  Chiller 1 CW Inlet,   ! Condenser Inlet Node Name #8
+  Chiller 1 CW Outlet,  ! Condenser Outlet Node Name #9
+  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
+  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
+  1.0;                  ! Sizing Factor Def: 1.0, #12
+
+Chiller:ConstantCOP,
+  Chiller 2,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
+  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
+  6,                    ! Nominal COP {W/W}, REQ, #3
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
+  Chiller 2 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
+  Chiller 2 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
+  Chiller 2 CW Inlet,   ! Condenser Inlet Node Name #8
+  Chiller 2 CW Outlet,  ! Condenser Outlet Node Name #9
+  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
+  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
+  1.0;                  ! Sizing Factor Def: 1.0, #12
+
+Chiller:ConstantCOP,
+  Chiller 3,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
+  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
+  6,                    ! Nominal COP {W/W}, REQ, #3
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
+  Chiller 3 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
+  Chiller 3 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
+  Chiller 3 CW Inlet,   ! Condenser Inlet Node Name #8
+  Chiller 3 CW Outlet,  ! Condenser Outlet Node Name #9
+  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
+  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
+  1.0;                  ! Sizing Factor Def: 1.0, #12
+
+```
+
+Neat, right? So perhaps the simplest way that `bemp` can help you with
+your current files is by breaking them up into smaller pieces.
+
+To note here:
+
+- The string is a relative file path to the file to import.
+- All variables are carried along through the import.

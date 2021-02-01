@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -7,29 +8,52 @@ namespace src
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            FileInfo file = null;
+            BempOptions options = new BempOptions();
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] == "-h" || args[i] == "--help")
                 {
-                    Console.WriteLine("idfplus\n\nA better way to EnergyPlus.\n");
-                    return;
+                    Console.WriteLine(Help.Text());
+                    return 0;
+                }
+                if (args[i] == "-v" || args[i] == "--version")
+                {
+                    Console.WriteLine("0.1");
+                    return 0;
+                }
+
+                if (args[i] == "-o" || args[i] == "--output")
+                {
+                    if (i + 1 < args.Length)
+                    {
+                        options.OutputFile = args[i + 1];
+                    }
+                    else
+                    {
+                        Console.WriteLine("No file path given for output option.");
+                        return 1;
+                    }
+                    i++;
                 }
                 else
                 {
-                    file = new FileInfo(args[i]);
+                    options.InputFile = args[i];
                 }
             }
 
-            if (file == null)
+            AntlrInputStream inputStream;
+            if (options.InputFile != "-")
             {
-                Console.WriteLine("No file specified.");
-                return;
+                FileInfo fileInfo = new FileInfo(options.InputFile);
+                inputStream = new AntlrFileStream(fileInfo.FullName);
+            }
+            else
+            {
+                throw new NotImplementedException("Input from standard input not implemented yet.");
             }
 
-            AntlrInputStream inputStream = new AntlrFileStream(file.FullName);
             IdfplusLexer lexer = new IdfplusLexer(inputStream);
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
@@ -40,9 +64,39 @@ namespace src
 
             IdfplusParser.IdfContext tree = parser.idf();
 
-            string result = visitor.Visit(tree);
+            string result;
+            try
+            {
+                result = visitor.Visit(tree);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                return 1;
+            }
+            if (string.IsNullOrWhiteSpace(options.OutputFile))
+            {
+                Console.WriteLine(result);
+            }
+            else
+            {
+                try
+                {
+                    File.WriteAllText(options.OutputFile, result);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine($"Could not write output to {options.OutputFile}.");
+                }
+            }
 
-            Console.WriteLine(result);
+            return 0;
+        }
+
+        public class BempOptions
+        {
+            public string OutputFile = "";
+            public string InputFile = "in.bemp";
         }
     }
 }

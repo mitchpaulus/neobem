@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace src
@@ -16,6 +18,11 @@ namespace src
             _environments[0]["map"] = new MapFunctionExpression();
         }
 
+        public IdfPlusVisitor(List<Dictionary<string, Expression>> environments)
+        {
+            _environments = environments;
+        }
+
         public override string VisitIdf(IdfplusParser.IdfContext context)
         {
             var items = context.base_idf().Select(Visit).ToList();
@@ -31,7 +38,7 @@ namespace src
         public override string VisitObjectDeclaration(IdfplusParser.ObjectDeclarationContext context)
         {
             ObjectVariableReplacer replacer = new ObjectVariableReplacer();
-            return replacer.Replace(context.GetText(), _environments);
+            return replacer.Replace(context.GetText(), _environments) + "\n\n";
         }
 
         public override string VisitVariable_declaration(IdfplusParser.Variable_declarationContext context)
@@ -80,7 +87,30 @@ namespace src
 
         public override string VisitImport_statement(IdfplusParser.Import_statementContext context)
         {
-            return "";
+            var fullStringWithQuotes = context.STRING().GetText();
+            string filePath = fullStringWithQuotes.Substring(1, fullStringWithQuotes.Length - 2);
+
+            FileInfo fileInfo = new FileInfo(filePath);
+
+            string contents;
+            try
+            {
+                contents = File.ReadAllText(fileInfo.FullName);
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                throw new Exception($"Could not find file {filePath} for import statement, line {context.Start.Line}.");
+            }
+            catch (Exception exception)
+            {
+                throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
+            }
+
+            IdfPlusVisitor visitor = new IdfPlusVisitor(_environments);
+
+            IdfplusParser parser =  contents.ToParser();
+            var tree = parser.idf();
+            return visitor.VisitIdf(tree);
         }
     }
 }

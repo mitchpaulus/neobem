@@ -8,24 +8,23 @@ options {
 variable_declaration : IDENTIFIER member_access* '=' expression;
 
 // See pg. 41 of Antlr reference
-expression :   expression member_access                  # MemberAccessExp
+expression :   expression member_access                                               # MemberAccessExp
              | funcexp=expression ( '(' ')' |  '(' expression (',' expression)* ')' ) # FunctionExp
-             | <assoc=right> expression '^' expression    # Exponientiate
-             | expression op=('*'|'/') expression        # MultDivide
-             | expression op=('+'|'-') expression        # AddSub
-             | expression op=('<'|'>'|'=='|'!=') expression  # BooleanExp
-             | expression op=('and'|'or') expression        # LogicExp
-             | STRING                                    # StringExp
-             | NUMERIC                                   # NumericExp
-             | IDENTIFIER                                  # VariableExp
-             | list                                      # ListExp
-             | data_statement                            # DataExp
-             /*| map_statement                             # MapExp*/
-             | if_exp                                    # IfExp
-             | idfplus_object                            # ObjExp
-             | lambda_def                                # LambdaExp
-             | inline_table                              # InlineTable
-             | '(' expression ')'                        # ParensExp
+             | <assoc=right> expression '^' expression                                # Exponientiate
+             | expression op=('*'|'/') expression                                     # MultDivide
+             | expression op=('+'|'-') expression                                     # AddSub
+             | expression op=('<'|'>'|'=='|'!=') expression                           # BooleanExp
+             | expression op=('and'|'or') expression                                  # LogicExp
+             | STRING                                                                 # StringExp
+             | NUMERIC                                                                # NumericExp
+             | IDENTIFIER                                                             # VariableExp
+             | list                                                                   # ListExp
+             | data_statement                                                         # DataExp
+             | if_exp                                                                 # IfExp
+             | idfplus_object                                                         # ObjExp
+             | lambda_def                                                             # LambdaExp
+             | inline_table                                                           # InlineTable
+             | '(' expression ')'                                                     # ParensExp
              ;
 
 if_exp : 'if' expression 'then' expression 'else' expression ;
@@ -47,6 +46,7 @@ print_statment : 'print' expression ;
 
 data_statement : 'data' STRING ;
 
+inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
 
 // 3 or more underscores to begin
 INLINE_TABLE_BEGIN_END : '___' '_'* ;
@@ -59,7 +59,6 @@ inline_table_header_separator : INLINE_TABLE_HEADER_SEP ('|' INLINE_TABLE_HEADER
 
 inline_table_data_row : expression ('|' expression)* ;
 
-inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
 
 function_statement :  COMMENT   # FunctionIdfComment
                     | object    # FunctionObjectDeclaration

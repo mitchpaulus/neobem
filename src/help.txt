@@ -1,0 +1,10 @@
+Usage: bemp [options..] [input file]
+Transpile bemp file to idf output
+
+With no [input file], input is read from in.bemp file in current
+directory.
+
+OPTIONS:
+
+-h, --help      show this help and exit
+-o, --output    output file name, default is standard output

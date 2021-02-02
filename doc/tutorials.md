@@ -1,3 +1,9 @@
+Instead of starting with the boring details about installation and
+reference material, let's jump right into the good stuff. This will
+focus on the basics, giving you a general understanding of what this
+tool is all about, without worrying too much about the details.^[Took
+this idea straight from the TikZ-PGF manual.]
+
 ## Tutorial 1: Variables
 
 You are building your EnergyPlus input file using conventional tools,
@@ -35,25 +41,25 @@ name, you can easily do it in one place. How do you do it? Like so:
 atrium_name = 'Atrium'
 
 Zone,
-  { atrium_name }, ! Name
-  0,               ! Direction of Relative North {deg}
-  0,               ! X Origin {m}
-  0,               ! Y Origin {m}
-  0,               ! Z Origin {m}
-  1,               ! Type
-  1,               ! Multiplier
-  autocalculate,   ! Ceiling Height {m}
-  autocalculate,   ! Volume {m3}
-  autocalculate,   ! Floor Area {m2}
-  ,                ! Zone Inside Convection Algorithm
-  ,                ! Zone Outside Convection Algorithm
-  Yes;             ! Part of Total Floor Area
+  <atrium_name>, ! Name
+  0,             ! Direction of Relative North {deg}
+  0,             ! X Origin {m}
+  0,             ! Y Origin {m}
+  0,             ! Z Origin {m}
+  1,             ! Type
+  1,             ! Multiplier
+  autocalculate, ! Ceiling Height {m}
+  autocalculate, ! Volume {m3}
+  autocalculate, ! Floor Area {m2}
+  ,              ! Zone Inside Convection Algorithm
+  ,              ! Zone Outside Convection Algorithm
+  Yes;           ! Part of Total Floor Area
 
 
 Schedule:Constant,
-  { atrium_name } Schedule, ! Name
-  { atrium_name } Limits,   ! Schedule Type Limits Name
-  1;                        ! Hourly Value
+  <atrium_name> Schedule, ! Name
+  <atrium_name> Limits,   ! Schedule Type Limits Name
+  1;                      ! Hourly Value
 
 ```
 
@@ -69,12 +75,12 @@ A few pieces of syntax to see here:
 
 2. Expression placeholders
 
-    `{ <expression> }`
+    `< <expression> >`
 
 
    In our Object declaration, we can insert expressions anywhere by
-   putting them in curly braces '`{ }`'. If you really need to have a
-   curly brace, you can escape them by doubling them up, like '`{{`'.
+   putting them in angle brackets '`< >`'. If you really need to have a
+   angle bracket, you can escape them by doubling them up, like '`<<`'.
 
 
 ## Tutorial 2: Functions
@@ -126,18 +132,18 @@ schedule limits, in which the names match. We can make this situation
 better by introducing a *function*.
 
 ```bemp
-const_temp_schedule = \ name, value, lower, upper {
+const_temp_schedule = \ name value lower upper {
 Schedule:Constant,
-  { name } Schedule, ! Name
-  { name } Limits,   ! Schedule Type Limits Name
-  { value };         ! Hourly Value
+  <name> Schedule, ! Name
+  <name> Limits,   ! Schedule Type Limits Name
+  <value>;         ! Hourly Value
 
 ScheduleTypeLimits,
-  { name } Limits, ! Name
-  { lower },       ! Lower Limit Value
-  { upper },       ! Upper Limit Value
-  Continuous,      ! Numeric Type [Continuous, Discrete]
-  Temperature;     ! Unit Type
+  <name> Limits, ! Name
+  <lower>,       ! Lower Limit Value
+  <upper>,       ! Upper Limit Value
+  Continuous,    ! Numeric Type [Continuous, Discrete]
+  Temperature;   ! Unit Type
 }
 
 print const_temp_schedule('Zone Space Temperature', 22, 20, 24)
@@ -146,8 +152,8 @@ print const_temp_schedule('CHW Supply Temp'       , 7 , 5 , 10)
 ```
 
 This will produce the exact same objects as before. But we now can trust
-that our names will be correct, we went from 35 lines to 17, and added a
-new constant schedule like this is just one more line.
+that our names will be correct, we went from 35 lines to 17, and adding
+a new constant schedule like this is just one more line.
 
 Let's discuss what we've seen here - Here's the official grammar for
 defining a function (named `lambda_def` in the grammar):
@@ -222,7 +228,7 @@ and the other just computes a value.
 ```bemp
 version_template = \ ver {
 Version,
-    { ver };
+    <ver>;
 }
 
 math_function = \ x { (x + 2)^3 }
@@ -273,19 +279,19 @@ ________________________________________
 
 zone_template = λ zone {
 Zone,
-  { zone.name },     ! Name
-  0,                 ! Direction of Relative North {deg}
-  { zone.x_origin }, ! X Origin {m}
-  { zone.y_origin }, ! Y Origin {m}
-  0,                 ! Z Origin {m}
-  1,                 ! Type
-  1,                 ! Multiplier
-  autocalculate,     ! Ceiling Height {m}
-  autocalculate,     ! Volume {m3}
-  autocalculate,     ! Floor Area {m2}
-  ,                  ! Zone Inside Convection Algorithm
-  ,                  ! Zone Outside Convection Algorithm
-  Yes;               ! Part of Total Floor Area
+  <zone.name>,     ! Name
+  0,               ! Direction of Relative North {deg}
+  <zone.x_origin>, ! X Origin {m}
+  <zone.y_origin>, ! Y Origin {m}
+  0,               ! Z Origin {m}
+  1,               ! Type
+  1,               ! Multiplier
+  autocalculate,   ! Ceiling Height {m}
+  autocalculate,   ! Volume {m3}
+  autocalculate,   ! Floor Area {m2}
+  ,                ! Zone Inside Convection Algorithm
+  ,                ! Zone Outside Convection Algorithm
+  Yes;             ! Part of Total Floor Area
 }
 
 print map(zone_template, zones)
@@ -404,19 +410,19 @@ The second variable declaration
 ```bemp
 zone_template = λ zone {
 Zone,
-  { zone.name },     ! Name
-  0,                 ! Direction of Relative North {deg}
-  { zone.x_origin }, ! X Origin {m}
-  { zone.y_origin }, ! Y Origin {m}
-  0,                 ! Z Origin {m}
-  1,                 ! Type
-  1,                 ! Multiplier
-  autocalculate,     ! Ceiling Height {m}
-  autocalculate,     ! Volume {m3}
-  autocalculate,     ! Floor Area {m2}
-  ,                  ! Zone Inside Convection Algorithm
-  ,                  ! Zone Outside Convection Algorithm
-  Yes;               ! Part of Total Floor Area
+  <zone.name>,     ! Name
+  0,               ! Direction of Relative North {deg}
+  <zone.x_origin>, ! X Origin {m}
+  <zone.y_origin>, ! Y Origin {m}
+  0,               ! Z Origin {m}
+  1,               ! Type
+  1,               ! Multiplier
+  autocalculate,   ! Ceiling Height {m}
+  autocalculate,   ! Volume {m3}
+  autocalculate,   ! Floor Area {m2}
+  ,                ! Zone Inside Convection Algorithm
+  ,                ! Zone Outside Convection Algorithm
+  Yes;             ! Part of Total Floor Area
 }
 
 ```
@@ -526,40 +532,40 @@ use for a given fan.
 in_h2o_2_pa = \ in_h2o { in_h2o * 249.08891 }
 cfm_2_m3s = \ cfm { cfm / 2118.88 }
 
-variable_fan = \name, cfm, press {
+variable_fan = \name cfm press {
 Fan:VariableVolume,
-  { name },               ! Name
-  ,                       ! Availability Schedule Name
-  0.7,                    ! Fan Total Efficiency
-  { in_h2o_2_pa(press) }, ! Pressure Rise {Pa}
-  { cfm_2_m3s(cfm) },     ! Maximum Flow Rate {m3/s}
-  Fraction,               ! Fan Power Minimum Flow Rate Input Method
-  0.25,                   ! Fan Power Minimum Flow Fraction
-  ,                       ! Fan Power Minimum Air Flow Rate {m3/s}
-  0.9,                    ! Motor Efficiency
-  1.0,                    ! Motor In Airstream Fraction
-  0,                      ! Fan Power Coefficient 1
-  0,                      ! Fan Power Coefficient 2
-  1,                      ! Fan Power Coefficient 3
-  0,                      ! Fan Power Coefficient 4
-  0,                      ! Fan Power Coefficient 5
-  { name } Inlet,         ! Air Inlet Node Name
-  { name } Outlet,        ! Air Outlet Node Name
-  General;                ! End-Use Subcategory
+  <name>,               ! Name
+  ,                     ! Availability Schedule Name
+  0.7,                  ! Fan Total Efficiency
+  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa}
+  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s}
+  Fraction,             ! Fan Power Minimum Flow Rate Input Method
+  0.25,                 ! Fan Power Minimum Flow Fraction
+  ,                     ! Fan Power Minimum Air Flow Rate {m3/s}
+  0.9,                  ! Motor Efficiency
+  1.0,                  ! Motor In Airstream Fraction
+  0,                    ! Fan Power Coefficient 1
+  0,                    ! Fan Power Coefficient 2
+  1,                    ! Fan Power Coefficient 3
+  0,                    ! Fan Power Coefficient 4
+  0,                    ! Fan Power Coefficient 5
+  <name> Inlet,         ! Air Inlet Node Name
+  <name> Outlet,        ! Air Outlet Node Name
+  General;              ! End-Use Subcategory
 }
 
-constant_fan = \name, cfm, press {
+constant_fan = \name cfm press {
 Fan:ConstantVolume,
-  { name },               ! Name
-  ,                       ! Availability Schedule Name
-  0.7,                    ! Fan Total Efficiency
-  { in_h2o_2_pa(press) }, ! Pressure Rise {Pa}
-  { cfm_2_m3s(cfm) },     ! Maximum Flow Rate {m3/s}
-  0.9,                    ! Motor Efficiency
-  1.0,                    ! Motor In Airstream Fraction
-  { name } Inlet,         ! Air Inlet Node Name
-  { name } Outlet,        ! Air Outlet Node Name
-  General;                ! End-Use Subcategory
+  <name>,               ! Name
+  ,                     ! Availability Schedule Name
+  0.7,                  ! Fan Total Efficiency
+  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa}
+  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s}
+  0.9,                  ! Motor Efficiency
+  1.0,                  ! Motor In Airstream Fraction
+  <name> Inlet,         ! Air Inlet Node Name
+  <name> Outlet,        ! Air Outlet Node Name
+  General;              ! End-Use Subcategory
 }
 
 
@@ -646,18 +652,18 @@ chiller_name = 'Chiller ' + unit_number
 tons_to_watts = λ tons { tons * 3516.8528 }
 
 Chiller:ConstantCOP,
-  { chiller_name },            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
-  { tons_to_watts(1000) },     ! Nominal Capacity {W}, AS, REQ, #2
-  6,                           ! Nominal COP {W/W}, REQ, #3
-  autosize,                    ! Design Chilled Water Flow Rate {m3/s}, AS, #4
-  autosize,                    ! Design Condenser Water Flow Rate {m3/s}, AS, #5
-  { chiller_name } CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
-  { chiller_name } CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
-  { chiller_name } CW Inlet,   ! Condenser Inlet Node Name #8
-  { chiller_name } CW Outlet,  ! Condenser Outlet Node Name #9
-  AirCooled,                   ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
-  NotModulated,                ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
-  1.0;                         ! Sizing Factor Def: 1.0, #12
+  <chiller_name>,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
+  <tons_to_watts(1000)>,     ! Nominal Capacity {W}, AS, REQ, #2
+  6,                         ! Nominal COP {W/W}, REQ, #3
+  autosize,                  ! Design Chilled Water Flow Rate {m3/s}, AS, #4
+  autosize,                  ! Design Condenser Water Flow Rate {m3/s}, AS, #5
+  <chiller_name> CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
+  <chiller_name> CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
+  <chiller_name> CW Inlet,   ! Condenser Inlet Node Name #8
+  <chiller_name> CW Outlet,  ! Condenser Outlet Node Name #9
+  AirCooled,                 ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
+  NotModulated,              ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
+  1.0;                       ! Sizing Factor Def: 1.0, #12
 }
 
 print map(chiller, [1, 2, 3])

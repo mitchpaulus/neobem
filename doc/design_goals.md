@@ -26,6 +26,31 @@
   All users should be able to use tool regardless of OS. The Windows,
   Mac, and Linux experience should be first class.
 
+- Once initial stability is reached, backwards compatibility should be
+  taken *extremely* seriously.
+
+  Projects in building construction last *years* and the buildings
+  themselves last *decades*. You should expect to be able to run your
+  simulation model years later and it should still work.
+
+- Installation and getting started should feel easy. The same should be
+  for the uninstall process.
+
+  There should be efforts taken to make sure new users can get up and
+  running quickly. This means offering convenient methods of
+  installation - This may include:
+
+    - Different flavors of package managers for Linux
+    - Windows Store
+    - `scoop`, `chocolately`, and the new Windows Package Manager
+      `winget`
+    - Standalone `.exe` installers
+    - `brew` for MacOS
+    - Documentation on building from source
+
+  It may be difficult for me to accomplish this goal by myself, may
+  reach out to others for help!
+
 - High quality documentation.
 
   Building energy modeling professionals shouldn't have to also be
@@ -41,13 +66,8 @@
      1. Provide syntax highlighting/autocompletion files for various
         text editors.
      2. Provide GUI wrappers around the program.
+     3. Provide an implementation of the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/)
 
-- Once initial stability is reached, backwards compatibility should be
-  taken *extremely* seriously.
-
-  Projects in building construction last *years* and the buildings
-  themselves last *decades*. You should expect to be able to run your
-  simulation model years later and it should still work.
 
 - There must always be a sole commander-in-chief in charge of the
   language (Inspired by the [KISS Linux Guidestones](https://k1ss.org/guidestones)).
@@ -58,3 +78,7 @@
 
   This statement simply means that it is ultimately one person who
   determines the future direction of the language.
+
+
+And to be clear, these are the goals and driving principles, it doesn't
+mean all this is finished already :)

@@ -4,7 +4,7 @@ versions = [
 ]
 
 version_temp = \ obj {
-Version,{ obj.ver };
+Version,< obj.ver >;
 }
 
 print map(version_temp, versions)

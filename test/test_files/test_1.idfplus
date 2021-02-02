@@ -1,6 +1,6 @@
 template = λ number {
 Version,
-    { number };
+    < number >;
 }
 
 print template('9.2')

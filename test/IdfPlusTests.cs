@@ -28,7 +28,7 @@ namespace test
         [Test]
         public void TestRecursiveFunction()
         {
-            string file = "factorial = \\ n { if n == 0 then 1 else n * factorial(n - 1)  }\nVersion,{ factorial(4) };\n";
+            string file = "factorial = \\ n { if n == 0 then 1 else n * factorial(n - 1)  }\nVersion,< factorial(4) >;\n";
             var visitor = new IdfPlusVisitor();
 
             var parser = file.ToParser();
@@ -37,13 +37,13 @@ namespace test
 
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,24;", output);
+            Assert.AreEqual("Version,24;\n\n", output);
         }
 
         [Test]
         public void TestFileWithMathFunction()
         {
-            string file = "myangle = ceiling(2.1)\nVersion,{ myangle };\n";
+            string file = "myangle = ceiling(2.1)\nVersion,< myangle >;\n";
             var visitor = new IdfPlusVisitor();
 
             var parser = file.ToParser();
@@ -53,13 +53,13 @@ namespace test
             string output = visitor.Visit(tree);
 
             Console.WriteLine(output);
-            Assert.AreEqual("Version,3;", output);
+            Assert.AreEqual("Version,3;\n\n", output);
         }
 
         [Test]
         public void TestMapFunction()
         {
-            string file = "list = ['9.1', '9.2']\nprint map(\\x {\nVersion,{x};\n}\n, list) ";
+            string file = "list = ['9.1', '9.2']\nprint map(\\x {\nVersion,<x>;\n}\n, list) ";
 
             var visitor = new IdfPlusVisitor();
 
@@ -88,12 +88,18 @@ namespace test
             Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
         }
 
-        public void TestImport()
+        [Test]
+        public void TestInlineDataTable()
         {
+            var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.bemp");
 
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor();
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
 
-
-
+            Console.WriteLine(output);
         }
     }
 }

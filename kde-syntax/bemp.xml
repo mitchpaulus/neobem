@@ -20,6 +20,7 @@
         </list>
         <list name="constants">
             <item>autocalculate</item>
+            <item>autosize</item>
         </list>
         <contexts>
             <context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >

@@ -65,7 +65,7 @@ namespace src
                 }
             }
 
-            return "";
+            return expressionVisitor.output.ToString();
         }
 
         public IdfPlusObjectExpression AddObjectMembers(IdfPlusObjectExpression objectExpression,

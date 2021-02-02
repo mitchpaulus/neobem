@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -207,11 +208,41 @@ namespace src
             foreach (IdfplusParser.Idfplus_object_property_defContext prop in props)
             {
                 var name = prop.IDENTIFIER().GetText();
-                var expression = Visit(prop.expression());
+                Expression expression = Visit(prop.expression());
                 objectExpression.Members[name] = expression;
             }
 
             return objectExpression;
+        }
+
+        public override Expression VisitInlineTable(IdfplusParser.InlineTableContext context)
+        {
+            var names = context.inline_table().inline_table_header().IDENTIFIER().Select(node => node.GetText()).ToList();
+
+            var expressions = context.inline_table()
+                .inline_table_data_row()
+                .SelectMany(rowContext => rowContext.expression())
+                .Select(Visit)
+                .ToList();
+
+
+            if (expressions.Count % names.Count != 0)
+            {
+                throw new InvalidDataException(
+                    "The number of expressions in the inline table need to be divisible by the number of identifiers.");
+            }
+
+            var objectExpressions = new List<Expression>();
+            for (var rowIndex = 0; rowIndex < expressions.Count / names.Count; rowIndex++)
+            {
+                IdfPlusObjectExpression expression = new IdfPlusObjectExpression();
+                for (var colIndex = 0; colIndex < names.Count; colIndex++)
+                {
+                    expression.Members[names[colIndex]] = expressions[rowIndex * names.Count + colIndex];
+                }
+                objectExpressions.Add(expression);
+            }
+            return new ListExpression(objectExpressions);
         }
     }
 }

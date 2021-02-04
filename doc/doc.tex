@@ -4,6 +4,11 @@
 %
 \documentclass[
 ]{article}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage[top=1in,bottom=1in,width=6in]{geometry}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{ifxetex,ifluatex}
@@ -45,7 +50,7 @@
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
 % Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}{}{}
+\newenvironment{Shaded}{\begin{tcolorbox}[breakable,colback=black!1!white]}{\end{tcolorbox}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
@@ -97,8 +102,8 @@
 \maketitle
 
 \begin{abstract}
-    `bemp` is a preprocessor language for compiling to the input files for
-    building energy simulation files, such as the idf file syntax expected by EnergyPlus.
+    \texttt{bemp} is a preprocessor language for compiling to the input files for
+    building energy simulation programs, such as the idf file syntax expected by EnergyPlus.
 \end{abstract}
 
 \section{Introduction}

@@ -162,9 +162,9 @@ defining a function (named `lambda_def` in the grammar):
 lambda_def : ('\\' | 'λ' ) IDENTIFIER* '{' (expression | function_statement*) '}' ;
 ```
 
-In words, a lambda definition is a backslash character, followed by 0 or
-more identifiers, with a single expression or one or more function
-statements in curly braces.
+In words, a lambda definition is a backslash character (or $\lambda$ symbol),
+followed by 0 or more identifiers, with a single expression *or* one or
+more function statements in curly braces.
 
 So technically, in our example with the schedule, this is a *variable
 declaration* where the expression on the right hand side being assigned
@@ -523,7 +523,7 @@ The syntax for the if expression is
 if <expression> then <expression> else <expression>
 ```
 
-The `else` is required because there must always be a result.
+The `else`{.bemp} is required because there must always be a result.
 
 For this tutorial, let's use logic to determine which template we want to
 use for a given fan.
@@ -652,18 +652,18 @@ chiller_name = 'Chiller ' + unit_number
 tons_to_watts = λ tons { tons * 3516.8528 }
 
 Chiller:ConstantCOP,
-  <chiller_name>,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
-  <tons_to_watts(1000)>,     ! Nominal Capacity {W}, AS, REQ, #2
-  6,                         ! Nominal COP {W/W}, REQ, #3
-  autosize,                  ! Design Chilled Water Flow Rate {m3/s}, AS, #4
-  autosize,                  ! Design Condenser Water Flow Rate {m3/s}, AS, #5
-  <chiller_name> CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
-  <chiller_name> CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
-  <chiller_name> CW Inlet,   ! Condenser Inlet Node Name #8
-  <chiller_name> CW Outlet,  ! Condenser Outlet Node Name #9
-  AirCooled,                 ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
-  NotModulated,              ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
-  1.0;                       ! Sizing Factor Def: 1.0, #12
+  <chiller_name>,            ! Name
+  <tons_to_watts(1000)>,     ! Nominal Capacity {W}
+  6,                         ! Nominal COP {W/W}
+  autosize,                  ! Design Chilled Water Flow Rate {m3/s}
+  autosize,                  ! Design Condenser Water Flow Rate {m3/s}
+  <chiller_name> CHW Inlet,  ! Chilled Water Inlet Node Name
+  <chiller_name> CHW Outlet, ! Chilled Water Outlet Node Name
+  <chiller_name> CW Inlet,   ! Condenser Inlet Node Name
+  <chiller_name> CW Outlet,  ! Condenser Outlet Node Name
+  AirCooled,                 ! Condenser Type
+  NotModulated,              ! Chiller Flow Mode
+  1.0;                       ! Sizing Factor
 }
 
 print map(chiller, [1, 2, 3])
@@ -680,46 +680,46 @@ Timestep,6;
 ZoneAirHeatBalanceAlgorithm,EulerMethod;
 
 Chiller:ConstantCOP,
-  Chiller 1,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
-  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
-  6,                    ! Nominal COP {W/W}, REQ, #3
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
-  Chiller 1 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
-  Chiller 1 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
-  Chiller 1 CW Inlet,   ! Condenser Inlet Node Name #8
-  Chiller 1 CW Outlet,  ! Condenser Outlet Node Name #9
-  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
-  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
-  1.0;                  ! Sizing Factor Def: 1.0, #12
+  Chiller 1,            ! Name
+  3516852.8,            ! Nominal Capacity {W}
+  6,                    ! Nominal COP {W/W}
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}
+  Chiller 1 CHW Inlet,  ! Chilled Water Inlet Node Name
+  Chiller 1 CHW Outlet, ! Chilled Water Outlet Node Name
+  Chiller 1 CW Inlet,   ! Condenser Inlet Node Name
+  Chiller 1 CW Outlet,  ! Condenser Outlet Node Name
+  AirCooled,            ! Condenser Type
+  NotModulated,         ! Chiller Flow Mode
+  1.0;                  ! Sizing Factor
 
 Chiller:ConstantCOP,
-  Chiller 2,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
-  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
-  6,                    ! Nominal COP {W/W}, REQ, #3
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
-  Chiller 2 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
-  Chiller 2 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
-  Chiller 2 CW Inlet,   ! Condenser Inlet Node Name #8
-  Chiller 2 CW Outlet,  ! Condenser Outlet Node Name #9
-  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
-  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
-  1.0;                  ! Sizing Factor Def: 1.0, #12
+  Chiller 2,            ! Name
+  3516852.8,            ! Nominal Capacity {W}
+  6,                    ! Nominal COP {W/W}
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}
+  Chiller 2 CHW Inlet,  ! Chilled Water Inlet Node Name
+  Chiller 2 CHW Outlet, ! Chilled Water Outlet Node Name
+  Chiller 2 CW Inlet,   ! Condenser Inlet Node Name
+  Chiller 2 CW Outlet,  ! Condenser Outlet Node Name
+  AirCooled,            ! Condenser Type
+  NotModulated,         ! Chiller Flow Mode
+  1.0;                  ! Sizing Factor
 
 Chiller:ConstantCOP,
-  Chiller 3,            ! Name RefList: [Chillers, validPlantEquipmentNames, validBranchEquipmentNames], RefClassList: [validPlantEquipmentTypes, validBranchEquipmentTypes], REQ, #1
-  3516852.8,            ! Nominal Capacity {W}, AS, REQ, #2
-  6,                    ! Nominal COP {W/W}, REQ, #3
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}, AS, #4
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}, AS, #5
-  Chiller 3 CHW Inlet,  ! Chilled Water Inlet Node Name REQ, #6
-  Chiller 3 CHW Outlet, ! Chilled Water Outlet Node Name REQ, #7
-  Chiller 3 CW Inlet,   ! Condenser Inlet Node Name #8
-  Chiller 3 CW Outlet,  ! Condenser Outlet Node Name #9
-  AirCooled,            ! Condenser Type Def: AirCooled, [AirCooled, WaterCooled, EvaporativelyCooled], #10
-  NotModulated,         ! Chiller Flow Mode Def: NotModulated, [ConstantFlow, LeavingSetpointModulated, NotModulated], #11
-  1.0;                  ! Sizing Factor Def: 1.0, #12
+  Chiller 3,            ! Name
+  3516852.8,            ! Nominal Capacity {W}
+  6,                    ! Nominal COP {W/W}
+  autosize,             ! Design Chilled Water Flow Rate {m3/s}
+  autosize,             ! Design Condenser Water Flow Rate {m3/s}
+  Chiller 3 CHW Inlet,  ! Chilled Water Inlet Node Name
+  Chiller 3 CHW Outlet, ! Chilled Water Outlet Node Name
+  Chiller 3 CW Inlet,   ! Condenser Inlet Node Name
+  Chiller 3 CW Outlet,  ! Condenser Outlet Node Name
+  AirCooled,            ! Condenser Type
+  NotModulated,         ! Chiller Flow Mode
+  1.0;                  ! Sizing Factor
 
 ```
 

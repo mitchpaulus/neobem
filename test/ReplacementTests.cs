@@ -11,7 +11,7 @@ namespace test
         [Test]
         public void TestBasicExpressionReplacement()
         {
-            string objectText = "Version\n  { versionNum };\n";
+            string objectText = "Version\n  < versionNum >;\n";
 
             ObjectVariableReplacer replacer = new ObjectVariableReplacer();
 

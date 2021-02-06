@@ -13,7 +13,7 @@ expression :   expression member_access                                         
              | <assoc=right> expression '^' expression                                # Exponientiate
              | expression op=('*'|'/') expression                                     # MultDivide
              | expression op=('+'|'-') expression                                     # AddSub
-             | expression op=('<'|'>'|'=='|'!=') expression                           # BooleanExp
+             | expression op=('<'|'>'|'=='|'!='|'<='|'>=') expression                 # BooleanExp
              | expression op=('and'|'or') expression                                  # LogicExp
              | STRING                                                                 # StringExp
              | NUMERIC                                                                # NumericExp

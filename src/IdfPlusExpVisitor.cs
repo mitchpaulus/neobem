@@ -57,6 +57,26 @@ namespace src
             throw new InvalidOperationException($"Could not find variable {context.GetText()} in scope.");
         }
 
+        public override Expression VisitLogicExp(IdfplusParser.LogicExpContext context)
+        {
+            Dictionary<string, Func<bool, bool, bool>> conditional = new Dictionary<string, Func<bool, bool, bool>>()
+            {
+                {"and", (b, b1) => b && b1},
+                {"or", (b, b1) => b || b1},
+            };
+
+            var lhs = Visit(context.expression(0));
+            var rhs = Visit(context.expression(1));
+
+            if (lhs is BooleanExpression lhsBooleanExp && rhs is BooleanExpression rhsBooleanExp)
+            {
+                return new BooleanExpression(conditional[context.op.Text](lhsBooleanExp.Value, rhsBooleanExp.Value));
+            }
+
+            throw new NotImplementedException(
+                $"The logic expression is not defined for types {lhs.GetType()} and {rhs.GetType()}.");
+        }
+
         public override Expression VisitNumericExp(IdfplusParser.NumericExpContext context)
         {
             string numericText = context.GetText();
@@ -189,6 +209,7 @@ namespace src
                 new Dictionary<string, Func<double, double, bool>>()
                 {
                     {"==", (lhs, rhs) => Math.Abs(lhs - rhs) < 0.000000001},
+                    {"!=", (lhs, rhs) => Math.Abs(lhs - rhs) > 0.000000001},
                     {"<=", (lhs, rhs) => lhs <= rhs },
                     {"<", (lhs, rhs) => lhs < rhs },
                     {">=", (lhs, rhs) => lhs >= rhs },
@@ -202,6 +223,7 @@ namespace src
                 new Dictionary<string, Func<string, string, bool>>()
                 {
                     { "==", (s, s1) => s == s1 },
+                    { "!=", (s, s1) => s != s1 },
                     { "<=", (s, s1) => (s == s1) || string.Compare(s, s1, StringComparison.Ordinal) <= 0 },
                     { "<", (s, s1) =>  string.Compare(s, s1, StringComparison.Ordinal) < 0 },
                     { ">=", (s, s1) =>  (s == s1 ) || string.Compare(s, s1, StringComparison.Ordinal) >= 0 },

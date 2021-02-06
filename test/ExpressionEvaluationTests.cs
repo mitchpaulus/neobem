@@ -143,7 +143,7 @@ namespace test
             Expression expression = visitor.Visit(tree);
 
             Assert.IsTrue(expression is NumericExpression);
-            Assert.IsTrue(Math.Abs(((NumericExpression)expression).Value - 1) < 0.00001);
+            Assert.IsTrue(Math.Abs(((NumericExpression)expression).Value - 2) < 0.00001);
         }
 
         [Test]
@@ -201,18 +201,36 @@ namespace test
                 return booleanExpression.Value;
             }
 
-            string test = "2 == 2";
-            Assert.IsTrue(GetBooleanExpression(test));
+            void True(string test) => Assert.IsTrue(GetBooleanExpression(test));
+            void False(string test) => Assert.IsFalse(GetBooleanExpression(test));
 
-            test = "2 == 3";
-            Assert.IsFalse(GetBooleanExpression(test));
+            True("2 == 2");
+            False("2 == 3");
 
-            test = "'Test1' == 'Test1'";
-            Assert.IsTrue(GetBooleanExpression(test));
+            True("2 != 3");
+            False("2 != 2");
 
-            test = "'Test1' == 'Test2'";
-            Assert.IsFalse(GetBooleanExpression(test));
+            True("'Test1' == 'Test1'");
+            False("'Test1' == 'Test2'");
 
+            False("'Test1' != 'Test1'");
+            True("'Test1' != 'Test2'");
+
+            True("1 < 2");
+            False("3 < 2");
+            False("2 < 2");
+
+            True("2 > 1");
+            False("2 > 3");
+            False("2 > 2");
+
+            True("1 <= 2");
+            False("3 <= 2");
+            True("2 <= 2");
+
+            False("1 >= 2");
+            True("3 >= 2");
+            True("2 >= 2");
         }
     }
 }

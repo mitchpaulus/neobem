@@ -188,5 +188,31 @@ namespace test
             Console.WriteLine(listener.Output);
             Assert.AreEqual("Version, 5;\n", listener.Output.ToString());
         }
+
+        [Test]
+        public void TestBooleanExpressions()
+        {
+            bool GetBooleanExpression(string s)
+            {
+                var parser = s.ToParser();
+                var expressionTree = parser.expression();
+                IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor();
+                BooleanExpression booleanExpression = (BooleanExpression) expVisitor.Visit(expressionTree);
+                return booleanExpression.Value;
+            }
+
+            string test = "2 == 2";
+            Assert.IsTrue(GetBooleanExpression(test));
+
+            test = "2 == 3";
+            Assert.IsFalse(GetBooleanExpression(test));
+
+            test = "'Test1' == 'Test1'";
+            Assert.IsTrue(GetBooleanExpression(test));
+
+            test = "'Test1' == 'Test2'";
+            Assert.IsFalse(GetBooleanExpression(test));
+
+        }
     }
 }

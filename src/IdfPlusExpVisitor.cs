@@ -185,19 +185,36 @@ namespace src
 
             string oper = context.op.Text;
 
-            switch (oper)
-            {
-                case "==":
+            Dictionary<string, Func<double, double, bool>> numericOperations =
+                new Dictionary<string, Func<double, double, bool>>()
+                {
+                    {"==", (lhs, rhs) => Math.Abs(lhs - rhs) < 0.000000001},
+                    {"<=", (lhs, rhs) => lhs <= rhs },
+                    {"<", (lhs, rhs) => lhs < rhs },
+                    {">=", (lhs, rhs) => lhs >= rhs },
+                    {">", (lhs, rhs) => lhs > rhs }
+                };
 
-                    if (lhs is NumericExpression numericLhs && rhs is NumericExpression numericRhs)
-                    {
-                        bool areEqual = Math.Abs(numericLhs.Value - numericRhs.Value) < 0.000000001;
-                        return new BooleanExpression(areEqual);
-                    }
-                    break;
+            if (lhs is NumericExpression numericLhs && rhs is NumericExpression numericRhs)
+                return new BooleanExpression(numericOperations[oper](numericLhs.Value, numericRhs.Value));
+
+            Dictionary<string, Func<string, string, bool>> stringOperations =
+                new Dictionary<string, Func<string, string, bool>>()
+                {
+                    { "==", (s, s1) => s == s1 },
+                    { "<=", (s, s1) => (s == s1) || string.Compare(s, s1, StringComparison.Ordinal) <= 0 },
+                    { "<", (s, s1) =>  string.Compare(s, s1, StringComparison.Ordinal) < 0 },
+                    { ">=", (s, s1) =>  (s == s1 ) || string.Compare(s, s1, StringComparison.Ordinal) >= 0 },
+                    { ">", (s, s1) =>  string.Compare(s, s1, StringComparison.Ordinal) > 0 },
+                };
+
+            if (lhs is StringExpression lhsStringExpression && rhs is StringExpression rhsStringExpression)
+            {
+                return new BooleanExpression(stringOperations[oper](lhsStringExpression.Text,
+                    rhsStringExpression.Text));
             }
 
-            throw new NotImplementedException($"{context.GetText()} not implemented.");
+            throw new NotImplementedException($"Boolean expression like '{context.GetText()}' not implemented.");
         }
 
         public override Expression VisitObjExp(IdfplusParser.ObjExpContext context)

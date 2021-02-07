@@ -17,6 +17,10 @@ namespace src
             };
             _environments[0]["map"] = new MapFunctionExpression();
             _environments[0]["load"] = new LoadFunctionExpression();
+            _environments[0]["head"] = new ListHeadFunctionExpression();
+            _environments[0]["tail"] = new ListTailFunctionExpression();
+            _environments[0]["index"] = new ListIndexFunctionExpression();
+            _environments[0]["length"] = new ListLengthFunctionExpression();
         }
 
         public IdfPlusVisitor(List<Dictionary<string, Expression>> environments)

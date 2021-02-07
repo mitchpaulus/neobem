@@ -23,6 +23,11 @@ namespace src
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
             _variables[0]["map"] = new MapFunctionExpression();
+            _variables[0]["load"] = new LoadFunctionExpression();
+            _variables[0]["head"] = new ListHeadFunctionExpression();
+            _variables[0]["tail"] = new ListTailFunctionExpression();
+            _variables[0]["index"] = new ListIndexFunctionExpression();
+            _variables[0]["length"] = new ListLengthFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =
@@ -54,7 +59,7 @@ namespace src
                 var found = scope.TryGetValue(context.GetText(), out Expression value);
                 if (found) return value;
             }
-            throw new InvalidOperationException($"Could not find variable {context.GetText()} in scope.");
+            throw new InvalidOperationException($"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
         }
 
         public override Expression VisitLogicExp(IdfplusParser.LogicExpContext context)
@@ -73,8 +78,7 @@ namespace src
                 return new BooleanExpression(conditional[context.op.Text](lhsBooleanExp.Value, rhsBooleanExp.Value));
             }
 
-            throw new NotImplementedException(
-                $"The logic expression is not defined for types {lhs.GetType()} and {rhs.GetType()}.");
+            throw new NotImplementedException($"Line {context.Start.Line}: The logic expression is not defined for types {lhs.GetType()} and {rhs.GetType()}.");
         }
 
         public override Expression VisitNumericExp(IdfplusParser.NumericExpContext context)
@@ -159,7 +163,7 @@ namespace src
                 return new StringExpression(lhsString.Text + rhsString.Text);
 
             throw new NotImplementedException(
-                $"The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
+                $"Line {context.Start.Line}: The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
         }
 
         public override Expression VisitFunctionExp(IdfplusParser.FunctionExpContext functionExpContext)
@@ -167,13 +171,22 @@ namespace src
             Expression func = Visit(functionExpContext.funcexp);
 
             if (!(func is FunctionExpression functionExpression))
-                throw new InvalidOperationException("Attempt to apply function to non function application.");
+                throw new InvalidOperationException($"Line {functionExpContext.Start.Line}: Attempt to apply function to non function application.");
 
             // string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
             // IFunction function = _functions[functionName];
             //
-            var expressions = functionExpContext.expression().Skip(1).Select(Visit).ToList();
-            (string text, Expression expression) = functionExpression.Evaluate(expressions);
+            string text;
+            Expression expression;
+            try
+            {
+                var expressions = functionExpContext.expression().Skip(1).Select(Visit).ToList();
+                (text, expression) = functionExpression.Evaluate(expressions);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {functionExpContext.Start.Line}: {exception.Message}");
+            }
 
             output.Append(text);
 

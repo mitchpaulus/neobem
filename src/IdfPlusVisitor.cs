@@ -16,6 +16,7 @@ namespace src
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
             _environments[0]["map"] = new MapFunctionExpression();
+            _environments[0]["load"] = new LoadFunctionExpression();
         }
 
         public IdfPlusVisitor(List<Dictionary<string, Expression>> environments)

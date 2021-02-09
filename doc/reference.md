@@ -34,6 +34,48 @@ There are 4 higher order expression types.
 3. Structure expressions
 4. Boolean expressions
 
+## Replacements
+
+Within object definitions, arbitrary expressions can be inserted using
+angle brackets '`<`' and '`>`'.
+
+What is output *is a string representation of the expression*. As a
+reminder, all expressions must evaluate to one of the 6 types listed
+above (e.g. String expression, Numeric expression, List expression,
+etc.).
+
+The representation of each is as follows:
+
+- *String Expression*: The literal text that makes up the string. This
+  is the most straightforward.
+
+- *Numeric Expression*: The value of the numeric expression, currently
+  using a default formatting (This will be updated in future versions to
+  use a certain number of significant figures by default).
+
+- *List Expression*: The string representation of each element,
+  *separated by a comma*. This is critical, as it allows a list to be
+  used to fill in the fields for objects in which the final length is
+  not known. Examples would be the fields for floor coordinates.
+
+- *Function Expression*: Nothing, the empty string `''`. This should
+  rarely be used.
+
+- *Structure Expression*: Returns the string representation of each
+  expression for each member of the structure, separated by a comma.
+  Note that there is currently no way to specify the order here, unlike
+  the list expression, so this is rarely something that you would want
+  to do.
+
+- *Boolean Expression*: Returns either `True` or `False`, as one would
+  reasonably expect.
+
+
+The most common types that are expected to be used in replacements are
+the string expression, numeric expression, and list expression. The
+others are there for consistency, but the usage should be rare.
+
+
 ## Operators
 
 - Exponentiation: '`^`'
@@ -117,3 +159,30 @@ A number of mathematical functions are built in.
 - `sin(x)`{.bemp}: Returns the sine of the angle specified in radians
 - `sqrt(x)`{.bemp}: Returns the positive root of the value (always remember there are 2 roots!)
 - `tan(x)`{.bemp}: Returns the tangent of the angle specified in radians
+
+## Functions on Lists
+
+- `length(list)`{.bemp}: number of elements in the list
+- `head(list)`{.bemp}: Returns the first element of the list
+- `tail(list)`{.bemp}: Returns all elements *except* the first element in the list
+- `index(list, integer)`{.bemp}: Returns the element the specified index. The
+  index is 0-based, so getting the first element of the list would be
+  `index(list, 0)`{.bemp}. The index can also be negative to index from the
+  end. `index(list, -1)`{.bemp} returns the last element of the list and
+  `index(list, -2)`{.bemp} returns the second to last element.
+
+## Loading Data
+
+- `load('file.txt')`{.bemp}: Load data from a file to a list of structures.
+
+   The parameter can be a relative file path location - `..` represents
+   the parent folder.
+
+## Functional Programming Functions
+
+Several functions are staples of functional programming languages.
+`bemp` has a few of the most important ones.
+
+- `map(function, list)`{.bemp}: Returns a new list in which the `function` has
+  been applied to each element.
+    - EX: `map(\x { x + 2}, [1, 2, 3])`{.bemp} will equal `[3, 4, 5]`.

@@ -64,8 +64,9 @@ namespace test
         public void TestNumericExpressionWithVariable()
         {
             var variables = new Dictionary<string, Expression>();
-            variables["$tons"] = new NumericExpression(2);
-            Expression output = Evaluate("2 * (3 + 4 / $tons)^2", variables);
+            variables["tons"] = new NumericExpression(2);
+            Expression output = Evaluate("2 * (3 + 4 / tons)^2", variables);
+            Assert.AreEqual(50, ((NumericExpression)output).Value);
             Console.WriteLine(output.ToString());
         }
 

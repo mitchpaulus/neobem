@@ -92,7 +92,8 @@ namespace src
 
             if (_context.lambda_def().expression() != null)
             {
-                return ("", visitor.Visit(_context.lambda_def().expression()));
+                Expression expression = visitor.Visit(_context.lambda_def().expression());
+                return (visitor.output.ToString(), expression);
             }
             else
             {

@@ -1,0 +1,10 @@
+template = λ zone {
+    if zone.is_true
+    then (λ { Version,9.1; })()
+    else (λ { Version,9.2; })()
+}
+
+zone = { is_true: ✓ }
+
+print template(zone)
+

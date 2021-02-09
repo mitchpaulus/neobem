@@ -296,5 +296,12 @@ namespace src
             }
             return new ListExpression(objectExpressions);
         }
+
+        public override Expression VisitBooleanLiteralExp(IdfplusParser.BooleanLiteralExpContext context)
+        {
+            var text = context.BOOLEAN_LITERAL().GetText();
+            if (text == "true" || text == "✓") return new BooleanExpression(true);
+            return new BooleanExpression(false);
+        }
     }
 }

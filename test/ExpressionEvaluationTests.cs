@@ -233,5 +233,22 @@ namespace test
             True("3 >= 2");
             True("2 >= 2");
         }
+
+        [Test]
+        public void TestBooleanLiteral()
+        {
+            string test_filepath = Path.Combine(TestDir.Dir, "boolean_literal_test.bemp");
+            string file = File.ReadAllText(test_filepath);
+
+            var visitor = new IdfPlusVisitor();
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            Console.WriteLine(output);
+        }
     }
 }

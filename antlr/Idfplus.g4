@@ -17,6 +17,7 @@ expression :   expression member_access                                         
              | expression op=('and'|'or') expression                                  # LogicExp
              | STRING                                                                 # StringExp
              | NUMERIC                                                                # NumericExp
+             | BOOLEAN_LITERAL                                                        # BooleanLiteralExp
              | IDENTIFIER                                                             # VariableExp
              | list                                                                   # ListExp
              | data_statement                                                         # DataExp
@@ -76,6 +77,8 @@ base_idf : COMMENT                # IdfComment
 idf : (base_idf)* EOF;
 
 member_access : '.' IDENTIFIER ;
+
+BOOLEAN_LITERAL : 'true' | 'false' | '✓' | '✗' ;
 
 /*object : ALPHA FIELD_SEPARATOR COMMENT* fields ;*/
 

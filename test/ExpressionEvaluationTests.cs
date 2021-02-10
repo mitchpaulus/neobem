@@ -178,7 +178,7 @@ namespace test
         [Test]
         public void TestNestedFunctionApplication()
         {
-            string test = "myadd = \\x { \\y { x + y } }\nversionnum = myadd(2)(3)\nVersion, $versionnum;\n";
+            string test = "myadd = \\x { \\y { x + y } }\nversionnum = myadd(2)(3)\nVersion, <versionnum>;\n";
             var parser = test.ToParser();
             var tree = parser.idf();
 

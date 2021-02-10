@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Antlr4.Runtime.Tree;
 
 namespace src
 {
     public class IdfPlusVisitor : IdfplusBaseVisitor<string>
     {
         private readonly List<Dictionary<string, Expression>> _environments;
+        private readonly ObjectVariableReplacer _objectVariableReplacer = new ObjectVariableReplacer();
 
         public IdfPlusVisitor()
         {
@@ -37,13 +39,14 @@ namespace src
 
         public override string VisitIdfComment(IdfplusParser.IdfCommentContext context)
         {
-            return context.GetText();
+            return _objectVariableReplacer.Replace(context.GetText(), _environments);
         }
 
         public override string VisitObjectDeclaration(IdfplusParser.ObjectDeclarationContext context)
         {
-            ObjectVariableReplacer replacer = new ObjectVariableReplacer();
-            return replacer.Replace(context.GetText(), _environments) + "\n\n";
+            var replaced = _objectVariableReplacer.Replace(context.GetText(), _environments);
+            ITerminalNode comment = context.@object().COMMENT();
+            return replaced + "\n\n";
         }
 
         public override string VisitVariable_declaration(IdfplusParser.Variable_declarationContext context)

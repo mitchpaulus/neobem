@@ -101,5 +101,19 @@ namespace test
 
             Console.WriteLine(output);
         }
+
+        [Test]
+        public void TestObjectFormatting()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "object_format_test.bemp");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor();
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Console.WriteLine(output);
+        }
     }
 }

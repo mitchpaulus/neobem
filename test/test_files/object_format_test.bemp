@@ -1,0 +1,14 @@
+Zone,
+  ,   ! Name RefList: [ZoneNames, OutFaceEnvNames, ZoneAndZoneListNames, AirflowNetworkNodeAndZoneNames], REQ, #1
+  0,   ! Direction of Relative North {deg}, Def: 0, #2
+  0,   ! X Origin {m}, Def: 0, #3
+  0,   ! Y Origin {m}, Def: 0, #4
+  0,   ! Z Origin {m}, Def: 0, #5
+  1,   ! Type Def: 1, #6
+  1,   ! Multiplier Def: 1, #7
+  autocalculate,   ! Ceiling Height {m}, Def: autocalculate, AC, #8
+  autocalculate,   ! Volume {m3}, Def: autocalculate, AC, #9
+  autocalculate,   ! Floor Area {m2}, Def: autocalculate, AC, #10
+  ,   ! Zone Inside Convection Algorithm [Simple, TARP, CeilingDiffuser, AdaptiveConvectionAlgorithm, TrombeWall], #11
+  ,   ! Zone Outside Convection Algorithm [SimpleCombined, TARP, DOE-2, MoWiTT, AdaptiveConvectionAlgorithm], #12
+  Yes;   ! Part of Total Floor Area Def: Yes, [Yes, No], #13

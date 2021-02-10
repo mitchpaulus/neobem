@@ -20,7 +20,6 @@ expression :   expression member_access                                         
              | BOOLEAN_LITERAL                                                        # BooleanLiteralExp
              | IDENTIFIER                                                             # VariableExp
              | list                                                                   # ListExp
-             | data_statement                                                         # DataExp
              | if_exp                                                                 # IfExp
              | idfplus_object                                                         # ObjExp
              | lambda_def                                                             # LambdaExp
@@ -44,8 +43,6 @@ list :  '[' ']' |
 import_statement : 'import' STRING ;
 
 print_statment : 'print' expression ;
-
-data_statement : 'data' STRING ;
 
 inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
 

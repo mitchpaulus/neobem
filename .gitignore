@@ -5,9 +5,14 @@ README.pdf
 *.fls
 *.old
 *.out
+src/Help.cs
+doc/getting_started.tex
+doc/pandoc_latex.tex
+doc/reference.tex
 
 doc/doc.md
 doc/doc.pdf
+
 
 zips/
 

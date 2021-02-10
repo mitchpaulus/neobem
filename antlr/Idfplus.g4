@@ -23,7 +23,7 @@ expression :   expression member_access                                         
              | if_exp                                                                 # IfExp
              | idfplus_object                                                         # ObjExp
              | lambda_def                                                             # LambdaExp
-             | let_binding
+             | let_binding                                                            # LetBindingExp
              | inline_table                                                           # InlineTable
              | '(' expression ')'                                                     # ParensExp
              ;
@@ -78,7 +78,7 @@ member_access : '.' IDENTIFIER ;
 
 BOOLEAN_LITERAL : 'true' | 'false' | '✓' | '✗' ;
 
-let_binding : 'let' variable_declaration (',' variable_declaration)* 'in' expression ;
+let_binding : 'let' IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* 'in' expression ;
 
 /*object : OBJECT ;*/
 

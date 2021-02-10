@@ -297,6 +297,23 @@ namespace src
             return new ListExpression(objectExpressions);
         }
 
+        public override Expression VisitLet_binding(IdfplusParser.Let_bindingContext context)
+        {
+            var boundExpressions = context.expression().Take(context.expression().Length - 1).Select(Visit);
+            var names = context.IDENTIFIER().Select(node => node.GetText());
+
+            var dictionary = boundExpressions.Zip(names).ToDictionary(tuple => tuple.Second, tuple => tuple.First);
+
+            List<Dictionary<string, Expression>> variableContext = new List<Dictionary<string, Expression>>();
+            foreach (var dict in _variables) variableContext.Add(dict);
+            variableContext.Insert(0, dictionary);
+
+            IdfPlusExpVisitor newVisitor = new IdfPlusExpVisitor(variableContext);
+            Expression evaluatedExpression = newVisitor.Visit(context.expression().Last());
+            output.Append(newVisitor.output.ToString());
+            return evaluatedExpression;
+        }
+
         public override Expression VisitBooleanLiteralExp(IdfplusParser.BooleanLiteralExpContext context)
         {
             var text = context.BOOLEAN_LITERAL().GetText();

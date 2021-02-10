@@ -250,5 +250,22 @@ namespace test
 
             Console.WriteLine(output);
         }
+
+        [Test]
+        public void TestLetBindings()
+        {
+             string test_filepath = Path.Combine(TestDir.Dir, "test_let_bindings.bemp");
+             string file = File.ReadAllText(test_filepath);
+
+             var visitor = new IdfPlusVisitor();
+
+             var parser = file.ToParser();
+
+             var tree = parser.idf();
+
+             string output = visitor.Visit(tree);
+
+             Assert.AreEqual("Version,1;\n\n", output);
+        }
     }
 }

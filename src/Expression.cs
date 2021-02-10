@@ -148,7 +148,7 @@ namespace src
             Expressions = expressions;
         }
 
-        public override string AsString() => string.Join(",", Expressions);
+        public override string AsString() => string.Join(",", Expressions.Select(expression => expression.AsString()));
 
     }
 

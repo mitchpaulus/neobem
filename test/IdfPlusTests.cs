@@ -89,6 +89,20 @@ namespace test
         }
 
         [Test]
+        public void TestListOfListInReplacement()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.bemp");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor();
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.AreEqual("Version,1,2,Hello,3,4,There;\n\n", output);
+        }
+
+        [Test]
         public void TestInlineDataTable()
         {
             var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.bemp");

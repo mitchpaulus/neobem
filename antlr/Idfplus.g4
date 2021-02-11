@@ -88,6 +88,8 @@ IDENTIFIER : [a-z][a-zA-Z0-9_]* ;
 
 COMMENT :  '!' .*? '\r'?'\n' ;
 
+NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> skip ;
+
 OBJECT_TERMINATOR : ';' ;
 
 NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? | ('.'[0-9]+))([eE]'-'?[0-9]+)? ;

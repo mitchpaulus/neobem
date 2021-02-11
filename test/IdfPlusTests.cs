@@ -103,6 +103,21 @@ namespace test
         }
 
         [Test]
+        public void TestFilterFunction()
+        {
+             var filepath = Path.Combine(TestDir.Dir, "test_filter_function.bemp");
+             var file = File.ReadAllText(filepath);
+             var visitor = new IdfPlusVisitor();
+             var parser = file.ToParser();
+             var tree = parser.idf();
+             string output = visitor.Visit(tree);
+
+             Console.WriteLine(output);
+             Assert.AreEqual("Version,1,2;\n\n", output);
+
+        }
+
+        [Test]
         public void TestInlineDataTable()
         {
             var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.bemp");

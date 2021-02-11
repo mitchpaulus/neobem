@@ -23,6 +23,7 @@ namespace src
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
             _variables[0]["map"] = new MapFunctionExpression();
+            _variables[0]["filter"] = new FilterFunctionExpression();
             _variables[0]["load"] = new LoadFunctionExpression();
             _variables[0]["head"] = new ListHeadFunctionExpression();
             _variables[0]["tail"] = new ListTailFunctionExpression();

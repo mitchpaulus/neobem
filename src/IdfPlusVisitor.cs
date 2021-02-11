@@ -18,6 +18,7 @@ namespace src
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
             _environments[0]["map"] = new MapFunctionExpression();
+            _environments[0]["filter"] = new FilterFunctionExpression();
             _environments[0]["load"] = new LoadFunctionExpression();
             _environments[0]["head"] = new ListHeadFunctionExpression();
             _environments[0]["tail"] = new ListTailFunctionExpression();

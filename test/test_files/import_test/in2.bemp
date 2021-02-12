@@ -1,0 +1,5 @@
+import 'import1.bemp'
+import 'import2.bemp' as 'euler'
+
+print euler.my_template()
+

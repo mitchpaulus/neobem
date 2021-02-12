@@ -8,11 +8,13 @@ namespace src
 {
     public class IdfPlusVisitor : IdfplusBaseVisitor<string>
     {
+        private readonly string _baseDirectory;
         private readonly List<Dictionary<string, Expression>> _environments;
         private readonly ObjectVariableReplacer _objectVariableReplacer = new ObjectVariableReplacer();
 
-        public IdfPlusVisitor()
+        public IdfPlusVisitor(string baseDirectory = null)
         {
+            _baseDirectory = baseDirectory;
             _environments = new List<Dictionary<string, Expression>>()
             {
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
@@ -24,11 +26,6 @@ namespace src
             _environments[0]["tail"] = new ListTailFunctionExpression();
             _environments[0]["index"] = new ListIndexFunctionExpression();
             _environments[0]["length"] = new ListLengthFunctionExpression();
-        }
-
-        public IdfPlusVisitor(List<Dictionary<string, Expression>> environments)
-        {
-            _environments = environments;
         }
 
         public override string VisitIdf(IdfplusParser.IdfContext context)
@@ -99,7 +96,8 @@ namespace src
             var fullStringWithQuotes = context.STRING().GetText();
             string filePath = fullStringWithQuotes.Substring(1, fullStringWithQuotes.Length - 2);
 
-            FileInfo fileInfo = new FileInfo(filePath);
+            string fullFilePath = Path.GetFullPath(filePath, _baseDirectory);
+            FileInfo fileInfo = new FileInfo(fullFilePath);
 
             string contents;
             try
@@ -115,11 +113,29 @@ namespace src
                 throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
             }
 
-            IdfPlusVisitor visitor = new IdfPlusVisitor(_environments);
+            var options = context.import_option();
 
+            string prefix = "";
+            foreach (IdfplusParser.Import_optionContext importOptionContext in options)
+            {
+                if (importOptionContext is IdfplusParser.AsOptionContext asOption)
+                {
+                    prefix = asOption.STRING().GetText().Substring(1, asOption.STRING().GetText().Length - 2);
+                }
+            }
+
+            IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
             IdfplusParser parser =  contents.ToParser();
             var tree = parser.idf();
-            return visitor.VisitIdf(tree);
+            string  outputResult = visitor.VisitIdf(tree);
+
+            foreach (var item in visitor._environments.Last().Keys)
+            {
+                string updatedName = string.IsNullOrWhiteSpace(prefix) ? item : $"{prefix}.{item}";
+                _environments.Last()[updatedName] = visitor._environments.Last()[item];
+            }
+
+            return outputResult;
         }
     }
 }

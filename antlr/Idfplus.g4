@@ -41,7 +41,13 @@ idfplus_object_property_def : IDENTIFIER ':' expression ;
 list :  '[' ']' |
         '[' expression (',' expression)* ']' ;
 
-import_statement : 'import' STRING ;
+import_statement : 'import' STRING import_option* ;
+
+import_option : 'as' STRING                #AsOption   |
+                'only' '(' IDENTIFIER+ ')' #OnlyOption |
+                'not' '(' IDENTIFIER+ ')'  #NotOption  ;
+
+export_statement : 'export' IDENTIFIER+ ;
 
 print_statment : 'print' expression ;
 
@@ -84,7 +90,7 @@ let_binding : 'let' IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* '
 
 object : OBJECT_TYPE ',' .*? OBJECT_TERMINATOR COMMENT? ;
 
-IDENTIFIER : [a-z][a-zA-Z0-9_]* ;
+IDENTIFIER : [a-z][a-zA-Z0-9._]* ;
 
 COMMENT :  '!' .*? '\r'?'\n' ;
 

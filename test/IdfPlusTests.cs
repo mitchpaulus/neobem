@@ -114,7 +114,19 @@ namespace test
 
              Console.WriteLine(output);
              Assert.AreEqual("Version,1,2;\n\n", output);
+        }
 
+        [Test]
+        public void TestQualifiedImport()
+        {
+              var filepath = Path.Combine(TestDir.Dir, "import_test/in2.bemp");
+              var file = File.ReadAllText(filepath);
+              var visitor = new IdfPlusVisitor(TestDir.Dir + "/import_test");
+              var parser = file.ToParser();
+              var tree = parser.idf();
+              string output = visitor.Visit(tree);
+
+              Console.WriteLine(output);
         }
 
         [Test]

@@ -44,9 +44,11 @@ namespace src
             }
 
             AntlrInputStream inputStream;
+
+            FileInfo fileInfo;
             if (options.InputFile != "-")
             {
-                FileInfo fileInfo = new FileInfo(options.InputFile);
+                fileInfo = new FileInfo(options.InputFile);
                 inputStream = new AntlrFileStream(fileInfo.FullName);
             }
             else
@@ -60,7 +62,7 @@ namespace src
 
             IdfplusParser parser = new IdfplusParser(commonTokenStream);
 
-            IdfPlusVisitor visitor = new IdfPlusVisitor();
+            IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
 
             IdfplusParser.IdfContext tree = parser.idf();
 

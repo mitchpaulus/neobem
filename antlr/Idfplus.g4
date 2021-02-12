@@ -47,7 +47,7 @@ import_option : 'as' STRING                #AsOption   |
                 'only' '(' IDENTIFIER+ ')' #OnlyOption |
                 'not' '(' IDENTIFIER+ ')'  #NotOption  ;
 
-export_statement : 'export' IDENTIFIER+ ;
+export_statement : 'export' '(' IDENTIFIER+ ')' ;
 
 print_statment : 'print' expression ;
 
@@ -75,6 +75,7 @@ base_idf : COMMENT                # IdfComment
            | object               # ObjectDeclaration
            | variable_declaration # VariableDeclaration
            | import_statement     # ImportStatement
+           | export_statement     # ExportStatment
            | print_statment       # PrintStatment
            ;
 
@@ -90,7 +91,7 @@ let_binding : 'let' IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* '
 
 object : OBJECT_TYPE ',' .*? OBJECT_TERMINATOR COMMENT? ;
 
-IDENTIFIER : [a-z][a-zA-Z0-9._]* ;
+IDENTIFIER : [a-z][a-zA-Z0-9@_]* ;
 
 COMMENT :  '!' .*? '\r'?'\n' ;
 

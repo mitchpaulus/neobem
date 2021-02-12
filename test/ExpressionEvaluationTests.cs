@@ -182,12 +182,12 @@ namespace test
             var parser = test.ToParser();
             var tree = parser.idf();
 
-            ParseTreeWalker walker = new ParseTreeWalker();
-            IdfPlusListener listener = new IdfPlusListener();
-            walker.Walk(listener, tree);
+            var visitor = new IdfPlusVisitor();
 
-            Console.WriteLine(listener.Output);
-            Assert.AreEqual("Version, 5;\n", listener.Output.ToString());
+            string output = visitor.Visit(tree);
+
+            Console.WriteLine(output);
+            Assert.AreEqual("Version,5;\n\n", output);
         }
 
         [Test]

@@ -22,7 +22,7 @@ namespace test
 
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,\n    9.2;\n", output);
+            Assert.AreEqual("Version,9.2;\n", output);
         }
 
         [Test]

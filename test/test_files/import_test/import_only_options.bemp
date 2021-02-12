@@ -3,7 +3,9 @@ Version,
     Can Import;
 }
 
-to_not_import λ  {
+to_not_import = λ  {
 Version,
     No Import;
 }
+
+export ( to_import )

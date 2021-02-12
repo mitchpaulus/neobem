@@ -2,3 +2,5 @@ my_template = \ {
 ZoneAirHeatBalanceAlgorithm,
    EulerMethod;
 }
+
+export ( my_template )

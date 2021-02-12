@@ -13,6 +13,8 @@ namespace src
         private readonly List<Dictionary<string, Expression>> _environments;
         private readonly ObjectVariableReplacer _objectVariableReplacer = new ObjectVariableReplacer();
 
+        public HashSet<string> exports = new HashSet<string>();
+
         public IdfPlusVisitor(string baseDirectory = null)
         {
             _baseDirectory = baseDirectory;
@@ -149,16 +151,30 @@ namespace src
             var tree = parser.idf();
             string  outputResult = visitor.VisitIdf(tree);
 
-            foreach (var item in visitor._environments.Last().Keys)
+            foreach (var item in visitor.exports)
             {
                 if (!onlyOptions.Any() || onlyOptions.Contains(item))
                 {
-                    string updatedName = string.IsNullOrWhiteSpace(prefix) ? item : $"{prefix}.{item}";
+                    string updatedName = string.IsNullOrWhiteSpace(prefix) ? item : $"{prefix}@{item}";
                     _environments.Last()[updatedName] = visitor._environments.Last()[item];
                 }
             }
 
             return outputResult;
+        }
+
+        public override string VisitExport_statement(IdfplusParser.Export_statementContext context)
+        {
+            foreach (var identifierNode in context.IDENTIFIER())
+            {
+                string identifier = identifierNode.GetText();
+                if (_environments.Last().ContainsKey(identifier))
+                {
+                    exports.Add(identifier);
+                }
+            }
+
+            return "";
         }
     }
 }

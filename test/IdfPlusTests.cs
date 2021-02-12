@@ -127,6 +127,7 @@ namespace test
               string output = visitor.Visit(tree);
 
               Console.WriteLine(output);
+              Assert.AreEqual("Version,9.2;\n\nZoneAirHeatBalanceAlgorithm,EulerMethod;\n", output);
         }
 
         [Test]

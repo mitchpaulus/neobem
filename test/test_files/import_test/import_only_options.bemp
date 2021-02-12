@@ -1,0 +1,9 @@
+to_import = λ {
+Version,
+    Can Import;
+}
+
+to_not_import λ  {
+Version,
+    No Import;
+}

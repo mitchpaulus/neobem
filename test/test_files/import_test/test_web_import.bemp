@@ -1,0 +1,3 @@
+import 'https://raw.githubusercontent.com/mitchpaulus/dotfiles/master/neobem/test.bemp'
+
+print template(10.1)

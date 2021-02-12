@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Antlr4.Runtime.Tree;
 
 namespace src
@@ -95,44 +96,66 @@ namespace src
         {
             var fullStringWithQuotes = context.STRING().GetText();
             string filePath = fullStringWithQuotes.Substring(1, fullStringWithQuotes.Length - 2);
-
-            string fullFilePath = Path.GetFullPath(filePath, _baseDirectory);
-            FileInfo fileInfo = new FileInfo(fullFilePath);
-
             string contents;
-            try
+
+            IdfPlusVisitor visitor;
+            if (filePath.Contains("http"))
             {
-                contents = File.ReadAllText(fileInfo.FullName);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(filePath);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream resStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(resStream);
+                contents = reader.ReadToEnd();
+                visitor = new IdfPlusVisitor(null);
             }
-            catch (FileNotFoundException fileNotFoundException)
+            else
             {
-                throw new Exception($"Could not find file {filePath} for import statement, line {context.Start.Line}.");
-            }
-            catch (Exception exception)
-            {
-                throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
+                string fullFilePath = Path.GetFullPath(filePath, _baseDirectory);
+                FileInfo fileInfo = new FileInfo(fullFilePath);
+
+                try
+                {
+                    contents = File.ReadAllText(fileInfo.FullName);
+                }
+                catch (FileNotFoundException fileNotFoundException)
+                {
+                    throw new Exception($"Could not find file {filePath} for import statement, line {context.Start.Line}.");
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
+                }
+                visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
             }
 
             var options = context.import_option();
 
             string prefix = "";
+            List<string> onlyOptions = new List<string>();
             foreach (IdfplusParser.Import_optionContext importOptionContext in options)
             {
                 if (importOptionContext is IdfplusParser.AsOptionContext asOption)
                 {
                     prefix = asOption.STRING().GetText().Substring(1, asOption.STRING().GetText().Length - 2);
                 }
+
+                if (importOptionContext is IdfplusParser.OnlyOptionContext onlyOptionContext)
+                {
+                    onlyOptions.AddRange(onlyOptionContext.IDENTIFIER().Select(node => node.GetText()).ToList());
+                }
             }
 
-            IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
             IdfplusParser parser =  contents.ToParser();
             var tree = parser.idf();
             string  outputResult = visitor.VisitIdf(tree);
 
             foreach (var item in visitor._environments.Last().Keys)
             {
-                string updatedName = string.IsNullOrWhiteSpace(prefix) ? item : $"{prefix}.{item}";
-                _environments.Last()[updatedName] = visitor._environments.Last()[item];
+                if (!onlyOptions.Any() || onlyOptions.Contains(item))
+                {
+                    string updatedName = string.IsNullOrWhiteSpace(prefix) ? item : $"{prefix}.{item}";
+                    _environments.Last()[updatedName] = visitor._environments.Last()[item];
+                }
             }
 
             return outputResult;

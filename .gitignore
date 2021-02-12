@@ -13,6 +13,8 @@ doc/reference.tex
 doc/doc.md
 doc/doc.pdf
 
+# Deafult compiled file
+out.idf
 
 zips/
 

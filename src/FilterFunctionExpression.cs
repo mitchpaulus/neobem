@@ -12,14 +12,14 @@ namespace src
 
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 2)
                 throw new ArgumentException($"filter function expects 2 parameters, function and list, received {inputs.Count}.");
             if (inputs[0] is FunctionExpression function && inputs[1] is ListExpression list)
             {
                 List<(string, Expression)> mappedList = list.Expressions
-                    .Select(expression => function.Evaluate(new List<Expression>() {expression})).ToList();
+                    .Select(expression => function.Evaluate(new List<Expression>() {expression}, baseDirectory)).ToList();
 
                 var returnString = string.Join("", mappedList.Select(tuple => tuple.Item1));
 

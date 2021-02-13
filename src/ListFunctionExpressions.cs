@@ -10,7 +10,7 @@ namespace src
         {
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 1) throw new ArgumentException($"'head' expects one parameter, saw {inputs.Count}");
             if (!(inputs[0] is ListExpression listExpression)) throw new NotImplementedException($"'head' is not defined for types other than list.");
@@ -25,7 +25,7 @@ namespace src
         {
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 1) throw new ArgumentException($"'tail' expects one parameter, saw {inputs.Count}");
             if (!(inputs[0] is ListExpression listExpression)) throw new NotImplementedException($"'tail' is not defined for types other than list.");
@@ -40,7 +40,7 @@ namespace src
         {
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 2)
                 throw new ArgumentException(
@@ -77,7 +77,7 @@ namespace src
         {
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 1) throw new ArgumentException( $"'length' expects 1 list parameter, saw {inputs.Count} parameters.");
             if (!(inputs[0] is ListExpression listExpression)) throw new ArgumentException( $"'length' expects a list as the parameter.");

@@ -14,7 +14,7 @@ namespace test
         public void TestBasicTemplate()
         {
             string file = File.ReadAllText("/home/mitch/repos/idf-plus/test/test_files/test_1.idfplus");
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "test_files"));
 
             var parser = file.ToParser();
 
@@ -29,7 +29,7 @@ namespace test
         public void TestRecursiveFunction()
         {
             string file = "factorial = \\ n { if n == 0 then 1 else n * factorial(n - 1)  }\nVersion,< factorial(4) >;\n";
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(null);
 
             var parser = file.ToParser();
 
@@ -44,7 +44,7 @@ namespace test
         public void TestFileWithMathFunction()
         {
             string file = "myangle = ceiling(2.1)\nVersion,< myangle >;\n";
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(null);
 
             var parser = file.ToParser();
 
@@ -61,7 +61,7 @@ namespace test
         {
             string file = "list = ['9.1', '9.2']\nprint map(\\x {\nVersion,<x>;\n}\n, list) ";
 
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(null);
 
             var parser = file.ToParser();
 
@@ -77,7 +77,7 @@ namespace test
         public void TestMemberAccess()
         {
             var file = File.ReadAllText(Path.Combine(TestDir.Dir, "member_access.idfplus"));
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
 
             var parser = file.ToParser();
 
@@ -94,7 +94,7 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.bemp");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
             var parser = file.ToParser();
             var tree = parser.idf();
             string output = visitor.Visit(tree);
@@ -107,7 +107,7 @@ namespace test
         {
              var filepath = Path.Combine(TestDir.Dir, "test_filter_function.bemp");
              var file = File.ReadAllText(filepath);
-             var visitor = new IdfPlusVisitor();
+             var visitor = new IdfPlusVisitor(TestDir.Dir);
              var parser = file.ToParser();
              var tree = parser.idf();
              string output = visitor.Visit(tree);
@@ -121,7 +121,7 @@ namespace test
         {
               var filepath = Path.Combine(TestDir.Dir, "import_test/in2.bemp");
               var file = File.ReadAllText(filepath);
-              var visitor = new IdfPlusVisitor(TestDir.Dir + "/import_test");
+              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"));
               var parser = file.ToParser();
               var tree = parser.idf();
               string output = visitor.Visit(tree);
@@ -136,7 +136,7 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.bemp");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
             var parser = file.ToParser();
             var tree = parser.idf();
             string output = visitor.Visit(tree);
@@ -150,7 +150,7 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "object_format_test.bemp");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
             var parser = file.ToParser();
             var tree = parser.idf();
             string output = visitor.Visit(tree);

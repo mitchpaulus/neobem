@@ -20,7 +20,7 @@ namespace test
             IdfplusParser parser = new IdfplusParser(tokens);
 
             IdfplusParser.ExpressionContext tree =  parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables});
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables}, null);
             return  visitor.Visit(tree);
         }
 
@@ -45,7 +45,7 @@ namespace test
             IdfplusParser parser = new IdfplusParser(tokens);
 
             IdfplusParser.ExpressionContext tree =  parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null);
 
             Expression expression = visitor.Visit(tree);
 
@@ -91,7 +91,7 @@ namespace test
             string test = "'My string 1 ' + 'is great'";
             var parser = test.ToParser();
             var tree = parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null);
 
             Expression expression = visitor.Visit(tree);
 
@@ -139,7 +139,7 @@ namespace test
             string test = "ceiling(3.1415926 / 2)";
             var parser = test.ToParser();
             var tree = parser.expression();
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null);
 
             Expression expression = visitor.Visit(tree);
 
@@ -154,7 +154,7 @@ namespace test
             var parser = test.ToParser();
             var tree = parser.expression();
 
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null);
             Expression expression = visitor.Visit(tree);
 
             Assert.IsTrue(expression is NumericExpression);
@@ -182,7 +182,7 @@ namespace test
             var parser = test.ToParser();
             var tree = parser.idf();
 
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(null);
 
             string output = visitor.Visit(tree);
 
@@ -197,7 +197,7 @@ namespace test
             {
                 var parser = s.ToParser();
                 var expressionTree = parser.expression();
-                IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor();
+                IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(null);
                 BooleanExpression booleanExpression = (BooleanExpression) expVisitor.Visit(expressionTree);
                 return booleanExpression.Value;
             }
@@ -240,7 +240,7 @@ namespace test
             string test_filepath = Path.Combine(TestDir.Dir, "boolean_literal_test.bemp");
             string file = File.ReadAllText(test_filepath);
 
-            var visitor = new IdfPlusVisitor();
+            var visitor = new IdfPlusVisitor(null);
 
             var parser = file.ToParser();
 
@@ -257,7 +257,7 @@ namespace test
              string test_filepath = Path.Combine(TestDir.Dir, "test_let_bindings.bemp");
              string file = File.ReadAllText(test_filepath);
 
-             var visitor = new IdfPlusVisitor();
+             var visitor = new IdfPlusVisitor(TestDir.Dir);
 
              var parser = file.ToParser();
 

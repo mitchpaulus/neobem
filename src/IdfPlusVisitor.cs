@@ -11,11 +11,11 @@ namespace src
     {
         private readonly string _baseDirectory;
         private readonly List<Dictionary<string, Expression>> _environments;
-        private readonly ObjectVariableReplacer _objectVariableReplacer = new ObjectVariableReplacer();
+        private readonly ObjectVariableReplacer _objectVariableReplacer;
 
         public HashSet<string> exports = new HashSet<string>();
 
-        public IdfPlusVisitor(string baseDirectory = null)
+        public IdfPlusVisitor(string baseDirectory)
         {
             _baseDirectory = baseDirectory;
             _environments = new List<Dictionary<string, Expression>>()
@@ -24,11 +24,13 @@ namespace src
             };
             _environments[0]["map"] = new MapFunctionExpression();
             _environments[0]["filter"] = new FilterFunctionExpression();
-            _environments[0]["load"] = new LoadFunctionExpression();
+            _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _environments[0]["head"] = new ListHeadFunctionExpression();
             _environments[0]["tail"] = new ListTailFunctionExpression();
             _environments[0]["index"] = new ListIndexFunctionExpression();
             _environments[0]["length"] = new ListLengthFunctionExpression();
+
+            _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
         }
 
         public override string VisitIdf(IdfplusParser.IdfContext context)
@@ -52,7 +54,7 @@ namespace src
 
         public override string VisitVariable_declaration(IdfplusParser.Variable_declarationContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments);
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
             Expression expression = expressionVisitor.Visit(context.expression());
 
             var members = context.member_access();
@@ -89,7 +91,7 @@ namespace src
 
         public override string VisitPrint_statment(IdfplusParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments);
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
             expressionVisitor.Visit(context.expression());
             return expressionVisitor.output.ToString();
         }
@@ -103,6 +105,7 @@ namespace src
             IdfPlusVisitor visitor;
             if (filePath.Contains("http"))
             {
+                // See: https://stackoverflow.com/a/943875/5932184
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(filePath);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 Stream resStream = response.GetResponseStream();
@@ -119,11 +122,11 @@ namespace src
                 {
                     contents = File.ReadAllText(fileInfo.FullName);
                 }
-                catch (FileNotFoundException fileNotFoundException)
+                catch (FileNotFoundException)
                 {
                     throw new Exception($"Could not find file {filePath} for import statement, line {context.Start.Line}.");
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
                 }

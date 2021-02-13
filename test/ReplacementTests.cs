@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using src;
 
 namespace test
@@ -13,7 +14,7 @@ namespace test
         {
             string objectText = "Version\n  < versionNum >;\n";
 
-            ObjectVariableReplacer replacer = new ObjectVariableReplacer();
+            ObjectVariableReplacer replacer = new ObjectVariableReplacer(TestDir.Dir);
 
             List<Dictionary<string, Expression>> variables = new List<Dictionary<string, Expression>>();
             variables.Add(new Dictionary<string, Expression>

@@ -9,22 +9,25 @@ namespace src
     public class IdfPlusExpVisitor : IdfplusBaseVisitor<Expression>
     {
         private readonly List<Dictionary<string, Expression>> _variables;
+        private readonly string _baseDirectory;
 
         public StringBuilder output = new StringBuilder();
 
-        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables)
+        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables, string baseDirectory)
         {
             _variables = variables;
+            _baseDirectory = baseDirectory;
         }
-        public IdfPlusExpVisitor()
+        public IdfPlusExpVisitor(string baseDirectory)
         {
+            _baseDirectory = baseDirectory;
             _variables = new List<Dictionary<string, Expression>>
             {
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
             };
             _variables[0]["map"] = new MapFunctionExpression();
             _variables[0]["filter"] = new FilterFunctionExpression();
-            _variables[0]["load"] = new LoadFunctionExpression();
+            _variables[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _variables[0]["head"] = new ListHeadFunctionExpression();
             _variables[0]["tail"] = new ListTailFunctionExpression();
             _variables[0]["index"] = new ListIndexFunctionExpression();
@@ -182,7 +185,7 @@ namespace src
             try
             {
                 var expressions = functionExpContext.expression().Skip(1).Select(Visit).ToList();
-                (text, expression) = functionExpression.Evaluate(expressions);
+                (text, expression) = functionExpression.Evaluate(expressions, _baseDirectory);
             }
             catch (Exception exception)
             {
@@ -196,7 +199,7 @@ namespace src
 
         public override Expression VisitLambdaExp(IdfplusParser.LambdaExpContext context)
         {
-            return new FunctionExpression(context, _variables);
+            return new FunctionExpression(context, _variables, _baseDirectory);
         }
 
         public override Expression VisitIfExp(IdfplusParser.IfExpContext context)
@@ -309,7 +312,7 @@ namespace src
             foreach (var dict in _variables) variableContext.Add(dict);
             variableContext.Insert(0, dictionary);
 
-            IdfPlusExpVisitor newVisitor = new IdfPlusExpVisitor(variableContext);
+            IdfPlusExpVisitor newVisitor = new IdfPlusExpVisitor(variableContext, _baseDirectory);
             Expression evaluatedExpression = newVisitor.Visit(context.expression().Last());
             output.Append(newVisitor.output.ToString());
             return evaluatedExpression;

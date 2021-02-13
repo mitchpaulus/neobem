@@ -6,6 +6,12 @@ namespace src
 {
     public class ObjectVariableReplacer
     {
+        private readonly string _baseDirectory;
+
+        public ObjectVariableReplacer(string baseDirectory)
+        {
+            _baseDirectory = baseDirectory;
+        }
 
         public string Replace(string objectText, List<Dictionary<string, Expression>> variables)
         {
@@ -35,7 +41,7 @@ namespace src
                         var startIndex = leftCurlyBraceIndicies.Pop();
                         var expressionText = objectText.Substring(startIndex + 1, i - startIndex - 1);
 
-                        IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables);
+                        IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables, _baseDirectory);
 
                         var parser = expressionText.ToParser();
                         var tree = parser.expression();

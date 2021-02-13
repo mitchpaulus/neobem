@@ -34,7 +34,7 @@ namespace src
         public static MathematicalFunction Tan = new MathematicalFunction("tan", inputs => Math.Tan(inputs[0]));
 
 
-        public MathematicalFunction(string name, Func<List<double>, double> function) : base(new List<Dictionary<string, Expression>>(), new List<string>())
+        public MathematicalFunction(string name, Func<List<double>, double> function) : base(new List<Dictionary<string, Expression>>(), new List<string>(), null)
         {
             Name = name;
             Function = function;
@@ -43,7 +43,7 @@ namespace src
             FunctionDict[name] = this;
         }
 
-        public override (string, Expression) Evaluate(List<Expression> inputs)
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             var value = Function(inputs.Cast<NumericExpression>().Select(expression => expression.Value).ToList());
             return ("", new NumericExpression(value));
@@ -60,20 +60,20 @@ namespace src
 
         public override string AsString() => "";
 
-        public FunctionExpression(IdfplusParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments)
+        public FunctionExpression(IdfplusParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
         {
             _context = lambdaDefContext;
             _environments = environments;
             _parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
         }
 
-        public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters)
+        public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters, string baseDirectory = null)
         {
             _environments = environments;
             _parameters = parameters;
         }
 
-        public virtual (string, Expression) Evaluate(List<Expression> inputs)
+        public virtual (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
 
@@ -84,11 +84,11 @@ namespace src
             var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
             updatedEnvironments.Insert(0, locals);
 
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments, baseDirectory);
 
             StringBuilder builder = new StringBuilder();
 
-            ObjectVariableReplacer replacer = new ObjectVariableReplacer();
+            ObjectVariableReplacer replacer = new ObjectVariableReplacer(baseDirectory);
 
             if (_context.lambda_def().expression() != null)
             {

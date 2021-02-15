@@ -6,7 +6,7 @@ using System.Text;
 
 namespace src
 {
-    public class IdfPlusExpVisitor : IdfplusBaseVisitor<Expression>
+    public class IdfPlusExpVisitor : NeobemParserBaseVisitor<Expression>
     {
         private readonly List<Dictionary<string, Expression>> _variables;
         private readonly string _baseDirectory;
@@ -44,9 +44,9 @@ namespace src
             };
 
 
-        public override Expression VisitExponientiate(IdfplusParser.ExponientiateContext context)
+        public override Expression VisitExponientiate(NeobemParser.ExponientiateContext context)
         {
-            IdfplusParser.ExpressionContext lhs = context.expression(0);
+            NeobemParser.ExpressionContext lhs = context.expression(0);
 
             NumericExpression lhsValue = (NumericExpression)Visit(lhs);
             NumericExpression rhsValue = (NumericExpression)Visit(context.expression(1));
@@ -56,7 +56,7 @@ namespace src
             return new NumericExpression(exponentValue, exponentValue.ToString());
         }
 
-        public override Expression VisitVariableExp(IdfplusParser.VariableExpContext context)
+        public override Expression VisitVariableExp(NeobemParser.VariableExpContext context)
         {
             foreach (var scope in _variables)
             {
@@ -66,7 +66,7 @@ namespace src
             throw new InvalidOperationException($"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
         }
 
-        public override Expression VisitLogicExp(IdfplusParser.LogicExpContext context)
+        public override Expression VisitLogicExp(NeobemParser.LogicExpContext context)
         {
             Dictionary<string, Func<bool, bool, bool>> conditional = new Dictionary<string, Func<bool, bool, bool>>()
             {
@@ -85,20 +85,20 @@ namespace src
             throw new NotImplementedException($"Line {context.Start.Line}: The logic expression is not defined for types {lhs.GetType()} and {rhs.GetType()}.");
         }
 
-        public override Expression VisitNumericExp(IdfplusParser.NumericExpContext context)
+        public override Expression VisitNumericExp(NeobemParser.NumericExpContext context)
         {
             string numericText = context.GetText();
             double value = double.Parse(numericText);
             return new NumericExpression(value, numericText);
         }
 
-        public override Expression VisitStringExp(IdfplusParser.StringExpContext context) =>
+        public override Expression VisitStringExp(NeobemParser.StringExpContext context) =>
             // Remove the surrounding quotes
             new StringExpression(context.GetText().Substring(1, context.GetText().Length - 2));
 
-        public override Expression VisitParensExp(IdfplusParser.ParensExpContext context) => Visit(context.expression());
+        public override Expression VisitParensExp(NeobemParser.ParensExpContext context) => Visit(context.expression());
 
-        public override Expression VisitMemberAccessExp(IdfplusParser.MemberAccessExpContext context)
+        public override Expression VisitMemberAccessExp(NeobemParser.MemberAccessExpContext context)
         {
             Expression expression = Visit(context.expression());
             if (expression is IdfPlusObjectExpression objectExpression)
@@ -120,7 +120,7 @@ namespace src
             }
         }
 
-        public override Expression VisitMultDivide(IdfplusParser.MultDivideContext context)
+        public override Expression VisitMultDivide(NeobemParser.MultDivideContext context)
         {
             var op = context.op.Text;
 
@@ -133,13 +133,13 @@ namespace src
             return new NumericExpression(newValue);
         }
 
-        public override Expression VisitListExp(IdfplusParser.ListExpContext context)
+        public override Expression VisitListExp(NeobemParser.ListExpContext context)
         {
             var expressions = context.list().expression().Select(Visit).ToList();
             return new ListExpression(expressions);
         }
 
-        public override Expression VisitAddSub(IdfplusParser.AddSubContext context)
+        public override Expression VisitAddSub(NeobemParser.AddSubContext context)
         {
             var op = context.op.Text;
 
@@ -170,7 +170,7 @@ namespace src
                 $"Line {context.Start.Line}: The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
         }
 
-        public override Expression VisitFunctionExp(IdfplusParser.FunctionExpContext functionExpContext)
+        public override Expression VisitFunctionExp(NeobemParser.FunctionExpContext functionExpContext)
         {
             Expression func = Visit(functionExpContext.funcexp);
 
@@ -197,12 +197,12 @@ namespace src
             return expression;
         }
 
-        public override Expression VisitLambdaExp(IdfplusParser.LambdaExpContext context)
+        public override Expression VisitLambdaExp(NeobemParser.LambdaExpContext context)
         {
             return new FunctionExpression(context, _variables, _baseDirectory);
         }
 
-        public override Expression VisitIfExp(IdfplusParser.IfExpContext context)
+        public override Expression VisitIfExp(NeobemParser.IfExpContext context)
         {
             var expressionOutput = Visit(context.if_exp().expression(0));
 
@@ -215,7 +215,7 @@ namespace src
             return Visit(booleanExpression.Value ? context.if_exp().expression(1) : context.if_exp().expression(2));
         }
 
-        public override Expression VisitBooleanExp(IdfplusParser.BooleanExpContext context)
+        public override Expression VisitBooleanExp(NeobemParser.BooleanExpContext context)
         {
             var lhs = Visit(context.expression(0));
             var rhs = Visit(context.expression(1));
@@ -256,12 +256,12 @@ namespace src
             throw new NotImplementedException($"Boolean expression like '{context.GetText()}' not implemented.");
         }
 
-        public override Expression VisitObjExp(IdfplusParser.ObjExpContext context)
+        public override Expression VisitObjExp(NeobemParser.ObjExpContext context)
         {
             var props = context.idfplus_object().idfplus_object_property_def();
 
             IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
-            foreach (IdfplusParser.Idfplus_object_property_defContext prop in props)
+            foreach (NeobemParser.Idfplus_object_property_defContext prop in props)
             {
                 var name = prop.IDENTIFIER().GetText();
                 Expression expression = Visit(prop.expression());
@@ -271,7 +271,7 @@ namespace src
             return objectExpression;
         }
 
-        public override Expression VisitInlineTable(IdfplusParser.InlineTableContext context)
+        public override Expression VisitInlineTable(NeobemParser.InlineTableContext context)
         {
             var names = context.inline_table().inline_table_header().IDENTIFIER().Select(node => node.GetText()).ToList();
 
@@ -301,7 +301,7 @@ namespace src
             return new ListExpression(objectExpressions);
         }
 
-        public override Expression VisitLet_binding(IdfplusParser.Let_bindingContext context)
+        public override Expression VisitLet_binding(NeobemParser.Let_bindingContext context)
         {
             var boundExpressions = context.expression().Take(context.expression().Length - 1).Select(Visit);
             var names = context.IDENTIFIER().Select(node => node.GetText());
@@ -318,7 +318,7 @@ namespace src
             return evaluatedExpression;
         }
 
-        public override Expression VisitBooleanLiteralExp(IdfplusParser.BooleanLiteralExpContext context)
+        public override Expression VisitBooleanLiteralExp(NeobemParser.BooleanLiteralExpContext context)
         {
             var text = context.BOOLEAN_LITERAL().GetText();
             if (text == "true" || text == "✓") return new BooleanExpression(true);

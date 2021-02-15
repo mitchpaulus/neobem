@@ -7,7 +7,7 @@ using Antlr4.Runtime.Tree;
 
 namespace src
 {
-    public class IdfPlusVisitor : IdfplusBaseVisitor<string>
+    public class IdfPlusVisitor : NeobemParserBaseVisitor<string>
     {
         private readonly string _baseDirectory;
         private readonly List<Dictionary<string, Expression>> _environments;
@@ -33,26 +33,26 @@ namespace src
             _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
         }
 
-        public override string VisitIdf(IdfplusParser.IdfContext context)
+        public override string VisitIdf(NeobemParser.IdfContext context)
         {
             var items = context.base_idf().Select(Visit).ToList();
 
             return string.Join("", items);
         }
 
-        public override string VisitIdfComment(IdfplusParser.IdfCommentContext context)
+        public override string VisitIdfComment(NeobemParser.IdfCommentContext context)
         {
             return _objectVariableReplacer.Replace(context.GetText(), _environments);
         }
 
-        public override string VisitObjectDeclaration(IdfplusParser.ObjectDeclarationContext context)
+        public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
         {
             var replaced = _objectVariableReplacer.Replace(context.GetText(), _environments);
-            ITerminalNode comment = context.@object().COMMENT();
+            // ITerminalNode comment = context.@object().COMMENT();
             return replaced + "\n\n";
         }
 
-        public override string VisitVariable_declaration(IdfplusParser.Variable_declarationContext context)
+        public override string VisitVariable_declaration(NeobemParser.Variable_declarationContext context)
         {
             IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
             Expression expression = expressionVisitor.Visit(context.expression());
@@ -68,7 +68,7 @@ namespace src
                 if (!_environments[0].ContainsKey(identifier))
                 {
                     IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
-                    foreach (IdfplusParser.Member_accessContext memberAccessContext in members)
+                    foreach (NeobemParser.Member_accessContext memberAccessContext in members)
                     {
                         var memberName = memberAccessContext.IDENTIFIER().GetText();
                         // objectExpression.Members.Add(memberName,     );
@@ -80,7 +80,7 @@ namespace src
         }
 
         public IdfPlusObjectExpression AddObjectMembers(IdfPlusObjectExpression objectExpression,
-            List<IdfplusParser.Member_accessContext> remainingMembers)
+            List<NeobemParser.Member_accessContext> remainingMembers)
         {
             // if (!remainingMembers.Any()) return objectExpression;
             // var memberName = remainingMembers.First().IDENTIFIER().GetText();
@@ -89,14 +89,14 @@ namespace src
         }
 
 
-        public override string VisitPrint_statment(IdfplusParser.Print_statmentContext context)
+        public override string VisitPrint_statment(NeobemParser.Print_statmentContext context)
         {
             IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
             expressionVisitor.Visit(context.expression());
             return expressionVisitor.output.ToString();
         }
 
-        public override string VisitImport_statement(IdfplusParser.Import_statementContext context)
+        public override string VisitImport_statement(NeobemParser.Import_statementContext context)
         {
             var fullStringWithQuotes = context.STRING().GetText();
             string filePath = fullStringWithQuotes.Substring(1, fullStringWithQuotes.Length - 2);
@@ -137,20 +137,20 @@ namespace src
 
             string prefix = "";
             List<string> onlyOptions = new List<string>();
-            foreach (IdfplusParser.Import_optionContext importOptionContext in options)
+            foreach (NeobemParser.Import_optionContext importOptionContext in options)
             {
-                if (importOptionContext is IdfplusParser.AsOptionContext asOption)
+                if (importOptionContext is NeobemParser.AsOptionContext asOption)
                 {
                     prefix = asOption.STRING().GetText().Substring(1, asOption.STRING().GetText().Length - 2);
                 }
 
-                if (importOptionContext is IdfplusParser.OnlyOptionContext onlyOptionContext)
+                if (importOptionContext is NeobemParser.OnlyOptionContext onlyOptionContext)
                 {
                     onlyOptions.AddRange(onlyOptionContext.IDENTIFIER().Select(node => node.GetText()).ToList());
                 }
             }
 
-            IdfplusParser parser =  contents.ToParser();
+            NeobemParser parser =  contents.ToParser();
             var tree = parser.idf();
             string  outputResult = visitor.VisitIdf(tree);
 
@@ -166,7 +166,7 @@ namespace src
             return outputResult;
         }
 
-        public override string VisitExport_statement(IdfplusParser.Export_statementContext context)
+        public override string VisitExport_statement(NeobemParser.Export_statementContext context)
         {
             foreach (var identifierNode in context.IDENTIFIER())
             {

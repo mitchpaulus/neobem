@@ -6,12 +6,12 @@ namespace src
 {
     public static class Extensions
     {
-        public static IdfplusParser ToParser(this string input)
+        public static NeobemParser ToParser(this string input)
         {
             AntlrInputStream inputStream = new AntlrInputStream(input);
-            IdfplusLexer lexer = new IdfplusLexer(inputStream);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            return new IdfplusParser(tokens);
+            return new NeobemParser(tokens);
         }
 
         public static ExcelRangeParser ToExcelRangeParser(this string input)

@@ -38,15 +38,17 @@ namespace src
                 {
                     if (objectText[i] == endingChar && objectText[i + 1] != endingChar)
                     {
-                        var startIndex = leftCurlyBraceIndicies.Pop();
-                        var expressionText = objectText.Substring(startIndex + 1, i - startIndex - 1);
+                        if (leftCurlyBraceIndicies.TryPop(out int startIndex))
+                        {
+                            var expressionText = objectText.Substring(startIndex + 1, i - startIndex - 1);
 
-                        IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables, _baseDirectory);
+                            IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables, _baseDirectory);
 
-                        var parser = expressionText.ToParser();
-                        var tree = parser.expression();
-                        var evaluatedExpression = expVisitor.Visit(tree);
-                        output.Append(evaluatedExpression.AsString());
+                            var parser = expressionText.ToParser();
+                            var tree = parser.expression();
+                            var evaluatedExpression = expVisitor.Visit(tree);
+                            output.Append(evaluatedExpression.AsString());
+                        }
                     }
                     else if (objectText[i] == endingChar && objectText[i + 1] == endingChar)
                     {

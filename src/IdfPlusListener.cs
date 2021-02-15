@@ -12,7 +12,7 @@ namespace src
         public static Regex ExpressionReplacement = new Regex(@"\{.*?\}");
     }
 
-    public class IdfPlusListener : IdfplusBaseListener
+    public class IdfPlusListener : NeobemParserBaseListener
     {
         readonly Dictionary<string, Expression> _variables = new Dictionary<string, Expression>();
 
@@ -21,7 +21,7 @@ namespace src
 
         private readonly Dictionary<string, IFunction> _functions = new Dictionary<string, IFunction>();
 
-        public override void EnterVariable_declaration(IdfplusParser.Variable_declarationContext context)
+        public override void EnterVariable_declaration(NeobemParser.Variable_declarationContext context)
         {
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>>()
             {
@@ -35,14 +35,14 @@ namespace src
             // variables[name] = value;
         }
 
-        public override void EnterPrint_statment(IdfplusParser.Print_statmentContext context)
+        public override void EnterPrint_statment(NeobemParser.Print_statmentContext context)
         {
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor( new List<Dictionary<string, Expression>>() { _variables }, null);
             var expression = visitor.Visit(context.expression());
             Output.Append(expression.AsString() + '\n');
         }
 
-        public override void EnterObject(IdfplusParser.ObjectContext context)
+        public override void EnterObject(NeobemParser.ObjectContext context)
         {
             var text = context.GetText();
 
@@ -66,7 +66,7 @@ namespace src
             Output.Append(builder.ToString() + '\n');
         }
 
-        public override void EnterLambda_def(IdfplusParser.Lambda_defContext context)
+        public override void EnterLambda_def(NeobemParser.Lambda_defContext context)
         {
             // FunctionExpression funcExpression = new FunctionExpression(context);
         }

@@ -15,11 +15,11 @@ namespace test
         public Expression Evaluate(string expression, Dictionary<string, Expression> variables)
         {
             AntlrInputStream inputStream = new AntlrInputStream(expression);
-            IdfplusLexer lexer = new IdfplusLexer(inputStream);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            IdfplusParser parser = new IdfplusParser(tokens);
+            NeobemParser parser = new NeobemParser(tokens);
 
-            IdfplusParser.ExpressionContext tree =  parser.expression();
+            NeobemParser.ExpressionContext tree =  parser.expression();
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>> {variables}, null);
             return  visitor.Visit(tree);
         }
@@ -40,11 +40,11 @@ namespace test
         {
             StringReader reader = new StringReader("5 ^ 3");
             AntlrInputStream inputStream = new AntlrInputStream("5 ^ 3");
-            IdfplusLexer lexer = new IdfplusLexer(inputStream);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            IdfplusParser parser = new IdfplusParser(tokens);
+            NeobemParser parser = new NeobemParser(tokens);
 
-            IdfplusParser.ExpressionContext tree =  parser.expression();
+            NeobemParser.ExpressionContext tree =  parser.expression();
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null);
 
             Expression expression = visitor.Visit(tree);
@@ -106,10 +106,10 @@ namespace test
             string file = "$myvariable = 12\nprint $myvariable / 6";
 
             AntlrInputStream inputStream = new AntlrInputStream(file);
-            IdfplusLexer lexer = new IdfplusLexer(inputStream);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            IdfplusParser parser = new IdfplusParser(tokens);
-            IdfplusParser.IdfContext tree = parser.idf();
+            NeobemParser parser = new NeobemParser(tokens);
+            NeobemParser.IdfContext tree = parser.idf();
             ParseTreeWalker walker = new ParseTreeWalker();
             IdfPlusListener listener = new IdfPlusListener();
             walker.Walk(listener, tree);
@@ -178,7 +178,7 @@ namespace test
         [Test]
         public void TestNestedFunctionApplication()
         {
-            string test = "myadd = \\x { \\y { x + y } }\nversionnum = myadd(2)(3)\nVersion, <versionnum>;\n";
+            string test = "myadd = \\x { \\y { x + y } }\nversionnum = myadd(2)(3)\nVersion,<versionnum>;\n";
             var parser = test.ToParser();
             var tree = parser.idf();
 

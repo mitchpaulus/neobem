@@ -52,7 +52,7 @@ namespace src
 
     public class FunctionExpression : Expression
     {
-        private readonly IdfplusParser.LambdaExpContext _context;
+        private readonly NeobemParser.LambdaExpContext _context;
         private readonly List<Dictionary<string, Expression>> _environments;
 
 
@@ -60,7 +60,7 @@ namespace src
 
         public override string AsString() => "";
 
-        public FunctionExpression(IdfplusParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
+        public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
         {
             _context = lambdaDefContext;
             _environments = environments;
@@ -97,23 +97,23 @@ namespace src
             }
             else
             {
-                foreach (IdfplusParser.Function_statementContext item in _context.lambda_def().function_statement())
+                foreach (NeobemParser.Function_statementContext item in _context.lambda_def().function_statement())
                 {
                     switch (item)
                     {
-                        case IdfplusParser.FunctionIdfCommentContext commentContext:
+                        case NeobemParser.FunctionIdfCommentContext commentContext:
                             builder.Append(commentContext.GetText());
                             break;
-                        case IdfplusParser.FunctionObjectDeclarationContext objectDeclarationContext:
+                        case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             var replacedObject = replacer.Replace(objectDeclarationContext.GetText(), updatedEnvironments);
                             builder.AppendLine(replacedObject);
                             break;
-                        case IdfplusParser.FunctionVariableDeclarationContext variableDeclarationContext:
+                        case NeobemParser.FunctionVariableDeclarationContext variableDeclarationContext:
                             var expressionResult = visitor.Visit(variableDeclarationContext.variable_declaration().expression());
                             var identifier = variableDeclarationContext.variable_declaration().IDENTIFIER().GetText();
                             locals[identifier] = expressionResult;
                             break;
-                        case IdfplusParser.ReturnStatementContext returnStatementContext:
+                        case NeobemParser.ReturnStatementContext returnStatementContext:
                             Expression returnExpression = visitor.Visit(returnStatementContext.return_statement().expression());
                             return (builder.ToString(), returnExpression);
                         default:

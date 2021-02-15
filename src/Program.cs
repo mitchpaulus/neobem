@@ -56,15 +56,15 @@ namespace src
                 throw new NotImplementedException("Input from standard input not implemented yet.");
             }
 
-            IdfplusLexer lexer = new IdfplusLexer(inputStream);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
 
-            IdfplusParser parser = new IdfplusParser(commonTokenStream);
+            NeobemParser parser = new NeobemParser(commonTokenStream);
 
             IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
 
-            IdfplusParser.IdfContext tree = parser.idf();
+            NeobemParser.IdfContext tree = parser.idf();
 
             string result;
             try

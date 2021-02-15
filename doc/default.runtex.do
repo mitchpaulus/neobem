@@ -11,6 +11,7 @@ exec >&2
 # file (which lists additional dependencies)
 #redo-ifchange "$2.tex" "$2.deps"
 redo-ifchange "$2.tex"
+redo-ifchange "../kde-syntax/bemp.xml"
 
 awk '/input{/' doc.tex | \
 awk 'BEGIN { FS="{|}" } { print $2 ".tex" }' | \

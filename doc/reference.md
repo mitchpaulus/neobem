@@ -3,7 +3,7 @@
 Whitespace is generally ignored, expect within the object definitions and
 comments.
 
-When parsing the main file, there are 5 possibilities of what is being
+When parsing the main file, there are 6 possibilities of what is being
 parsed:
 
 1. An idf comment (ex: `! comment`{.bemp})
@@ -11,6 +11,7 @@ parsed:
 3. A variable declaration (ex: `name = <expression>`)
 4. An `import` statement (ex: `import 'filename.bemp'`{.bemp})
 5. Print statement (ex: `print <expression>`{.bemp})
+6. A bemp specific comment (ex: `# bemp comment`{.bemp})
 
 idf comments and idf objects result in text being output to the final
 target.
@@ -33,6 +34,45 @@ There are 4 higher order expression types.
 2. Function expressions
 3. Structure expressions
 4. Boolean expressions
+
+### Strings
+
+Strings are entered using single quotes "`'`".
+
+### Boolean Literals
+
+You can enter in a boolean literal in two ways each for True or False.
+
+For true you can use `true`{.bemp} or `✓`{.bemp} (Unicode U+2713, Check Mark)
+
+For false you can use `false`{.bemp} or `✗`{.bemp} (Unicode U+2717, Ballot X)
+
+## Comments
+
+There are two different types of comments in bemp. One is the comment
+syntax used by the idf files, beginning with an exclamation point
+character (`!`). These comments are available to have portions replaced
+by expressions and they are always passed along on to the output.
+
+The second comment type is internal to bemp itself. These are like
+traditional comments in that they are parsed an then completely ignored.
+They are only there to aid the reader of the code.
+
+So for example, given:
+
+```bemp
+# This is an internal comment that won't appear in output. It won't
+# have this <variable> replaced.
+variable = 'Mitch'
+
+! This is an IDF comment, with my name <variable> showing up.
+```
+
+the output is
+
+```bemp
+! This is an IDF comment, with my name Mitch showing up.
+```
 
 ## Replacements
 
@@ -173,10 +213,46 @@ A number of mathematical functions are built in.
 
 ## Loading Data
 
-- `load('file.txt')`{.bemp}: Load data from a file to a list of structures.
+- `load(expression)`{.bemp}: Load data from a file to a list of structures.
 
-   The parameter can be a relative file path location - `..` represents
-   the parent folder.
+  The single input parameter can either be a string expression or
+  structure.
+
+  If the input parameter is a string, it is a relative file path
+  location. `..` represents the parent folder.
+
+  If a structure is passed as the parameter, the members are used as
+  options.
+
+
+### Loading from Excel
+
+To load data from Excel, you can use a structure with the following options.
+
+1. `type`: This must be set to `'Excel'`{.bemp}.
+2. `sheet`: Optional. A string that has the name of the sheet to pull
+   the data from. If omitted, the first worksheet is used by default.
+3. `range`: Optional. Can be specified in different forms.
+    - `'A1:B2'`{.bemp} style. This is a string that specifies the complete range
+      in normal Excel range syntax.
+    - `'A1'`{.bemp} style. A single cell reference. Neobem will use the input as
+      the upper left hand corner of the data table. It will read headers
+      to the right until it reaches a blank cell. It then read down the
+      table until it reaches a row in which every column in the table is
+      empty.
+
+An example:
+
+```bemp
+load_options = {
+    type: 'Excel',
+    sheet: 'Data',
+    range: 'C10'
+}
+
+print map(my_template, load(load_options))
+```
+
 
 ## Functional Programming Functions
 
@@ -186,3 +262,38 @@ Several functions are staples of functional programming languages.
 - `map(function, list)`{.bemp}: Returns a new list in which the `function` has
   been applied to each element.
     - EX: `map(\x { x + 2}, [1, 2, 3])`{.bemp} will equal `[3, 4, 5]`.
+
+- `filter(function, list)`{.bemp}: Returns a new list in which each
+  element is passed to the function provided, and only the ones in which
+  the function result is `true`{.bemp} are returned.
+
+    - EX: `filter(\x { x < 3 }, [1, 2, 3, 4])`{.bemp} will equal `[1, 2]`{.bemp}.
+
+## Let Expressions
+
+Oftentimes, it is useful to be able to name a sub-calculation as part of
+evaluating an expression. This is especially the case when within if
+expressions where you can't put a variable declaration.
+
+This is where 'let expressions' come into play. The syntax for a let
+expression is:
+
+```bemp
+let var1 = expression [, var2 = expression]... in <expression>
+```
+
+Here's an example of using a let expression in defining a `filter`
+function.
+
+```bemp
+filter = λ predicate list {
+    if length(list) == 0 then [] else
+    let elem = head(list),
+        remaining = filter(predicate, tail(list))
+    in
+    if predicate(elem) then [elem] + remaining else remaining
+}
+
+filtered_list = filter(λ x { x < 2 }, [1, 2, 3, 4])
+```
+

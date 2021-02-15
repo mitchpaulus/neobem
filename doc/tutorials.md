@@ -641,6 +641,8 @@ Timestep,6;
 
 ZoneAirHeatBalanceAlgorithm,EulerMethod;
 }
+
+export (simulation_params)
 ```
 
 **chillers.bemp**
@@ -729,4 +731,29 @@ your current files is by breaking them up into smaller pieces.
 To note here:
 
 - The string is a relative file path to the file to import.
-- All variables are carried along through the import.
+- Notice the last line of the file `defaults.bemp`. It is an *export*
+  statement, and it is required for other files to use the variables and
+  functions that are defined.
+
+  However, if the imported script generates any output, that is passed
+  along no matter what - no `export` is required. This is what happens
+  in the `chillers.bemp` file.
+
+- By default, exported items will overwrite existing identifiers with
+  the same name. You can get around this by *qualifying* the import
+  using the `as` option.
+
+  Using the previous example, we could have done:
+
+  **in.bemp**
+  ```bemp
+  import 'defaults.bemp' as 'def'
+
+  print def@simulation_params()
+
+  import 'chillers.bemp'
+  ```
+
+  The `as` option will put whatever string is specified as a prefix to
+  all exports from the file, with an `@` sign between.
+

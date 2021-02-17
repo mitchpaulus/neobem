@@ -22,7 +22,7 @@ namespace test
 
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,9.2;\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.2;", output));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace test
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,1,2,Hello,3,4,There;\n\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2,Hello,3,4,There;\n\n", output));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace test
              string output = visitor.Visit(tree);
 
              Console.WriteLine(output);
-             Assert.AreEqual("Version,1,2;\n\n", output);
+             Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2;\n\n", output));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace test
               string output = visitor.Visit(tree);
 
               Console.WriteLine(output);
-              Assert.AreEqual("Version,9.2;\n\nZoneAirHeatBalanceAlgorithm,EulerMethod;\n", output);
+              Assert.IsTrue( IdfObjectCompare.Equals("Version,9.2;ZoneAirHeatBalanceAlgorithm,EulerMethod;\n", output));
         }
 
         [Test]

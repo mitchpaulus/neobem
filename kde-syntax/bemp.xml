@@ -2,13 +2,16 @@
 
 <!-- See https://docs.kde.org/stable5/en/applications/katepart/highlight.html -->
 
-<language name="bemp" version="1" kateversion="2.4" section="Sources" extensions="*.bemp;*.idf" author="Mitchell T. Paulus" >
+<language name="bemp" version="1" kateversion="2.4" section="Sources" extensions="*.bemp;*.idf;*.nbem" author="Mitchell T. Paulus" >
     <highlighting>
         <list name="keywords1">
             <item>print</item>
             <item>import</item>
             <item>let</item>
             <item>in</item>
+            <item>as</item>
+            <item>only</item>
+            <item>not</item>
         </list>
         <list name="controlflow">
             <item>if</item>

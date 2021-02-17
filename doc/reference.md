@@ -297,3 +297,185 @@ filter = λ predicate list {
 filtered_list = filter(λ x { x < 2 }, [1, 2, 3, 4])
 ```
 
+## Importing and Exporting
+
+neobem has a fairly straightforward method of importing and exporting.
+The syntax for importing from another file is:
+
+```bemp
+import 'uri' [as 'prefix'] [only (identifier1, identifier2, ...)]
+```
+
+The only portion that is required is the string `'uri'`. By default, this
+string is a relative path to a file on local machine. For example,
+
+```bemp
+import 'utilities/my_utilities.bemp'
+```
+
+will import a 'my_utilities.bemp' file in the 'utilities' folder that is
+in the same directory as the executing script.
+
+Important note: Paths are *relative from the script location, not from
+the current working directory of execution*. If this weren't the case,
+running `neobem` from different locations would affect the outcome.
+
+```sh
+bemp in.bemp
+```
+
+would be different from:
+
+```sh
+bemp sub_folder/in.bemp
+```
+
+The string can also be a normal Internet URL. For example, you can test
+an example file from GitHub.
+
+```bemp
+import 'example'
+```
+
+Important: *By default, identifiers that are imported are imported
+directly into the same namespace as the calling script, with the
+imported identifier overwriting any existing identifier*.
+
+So for example:
+
+```bemp
+my_template = \ value {
+Schedule:Constant,
+  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
+  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
+  <value>;       ! Hourly Value Def: 0, #3
+}
+
+import 'importfile.bemp'
+
+print my_template(10)
+```
+
+where **importfile.bemp** has the contents
+
+```
+my_template = \ value {
+Material:AirGap,
+  <value> Air Gap, ! Name RefList: [MaterialName], REQ, #1
+  <value>;         ! Thermal Resistance {m2-K/W}, REQ, #2
+}
+```
+
+results in
+
+```bemp
+Material:AirGap,
+  10 Air Gap, ! Name
+  10;         ! Thermal Resistance {m2-K/W}
+```
+
+To avoid Conflicts, you can make use of the `as`{.bemp} and `only`{.bemp} options of
+importing.
+
+The `as`{.bemp} option uses the specified string that follows as a
+prefix, with an '`@`' character between.
+
+So if our example above instead used (note the `as 'my_import'`{.bemp}
+option):
+
+```bemp
+my_template = \ value {
+Schedule:Constant,
+  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
+  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
+  <value>;       ! Hourly Value Def: 0, #3
+}
+
+import 'importfile.bemp' as 'my_import'
+
+print my_template(10)
+```
+
+results in
+
+```bemp
+Schedule:Constant,
+  Const 10, ! Name RefList: [ScheduleNames], REQ, #1
+  ,         ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
+  10;       ! Hourly Value Def: 0, #3
+```
+
+If the imported function was desired, then it would be called like:
+
+```bemp
+my_template = \ value {
+Schedule:Constant,
+  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
+  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
+  <value>;       ! Hourly Value Def: 0, #3
+}
+
+import 'importfile.bemp' as 'my_import'
+
+print my_import@my_template(10)
+```
+
+If only certain identifiers are desired to be imported, the `only
+(identifiers, ...)`{.bemp} Syntax can be used. It can be used in
+combination with the `as`{.bemp} option as well.
+
+### Controlling What Gets Imported
+
+When an import statement is called, the compiler moves to the imported
+file and serially executes all the statements contained within.
+
+*Any object declaration in the imported file is passed on to the final
+result*. This is how you can import a normal idf file and have it pass
+along to the final output.
+
+However, variable and function definitions are not passed along to the
+calling environment *unless they are exported*.
+
+The syntax for exporting identifiers is:
+
+```bemp
+export (identifier1, identifier2, ...)
+```
+
+For example, if the following file is imported:
+
+```bemp
+my_template = \ name {
+Zone,
+  <name>,        ! Name RefList: [ZoneNames, OutFaceEnvNames, ZoneAndZoneListNames, AirflowNetworkNodeAndZoneNames], REQ, #1
+  0,             ! Direction of Relative North {deg}, Def: 0, #2
+  0,             ! X Origin {m}, Def: 0, #3
+  0,             ! Y Origin {m}, Def: 0, #4
+  0,             ! Z Origin {m}, Def: 0, #5
+  1,             ! Type Def: 1, #6
+  1,             ! Multiplier Def: 1, #7
+  autocalculate, ! Ceiling Height {m}, Def: autocalculate, AC, #8
+  autocalculate, ! Volume {m3}, Def: autocalculate, AC, #9
+  autocalculate, ! Floor Area {m2}, Def: autocalculate, AC, #10
+  ,              ! Zone Inside Convection Algorithm [Simple, TARP, CeilingDiffuser, AdaptiveConvectionAlgorithm, TrombeWall], #11
+  ,              ! Zone Outside Convection Algorithm [SimpleCombined, TARP, DOE-2, MoWiTT, AdaptiveConvectionAlgorithm], #12
+  Yes;           ! Part of Total Floor Area Def: Yes, [Yes, No], #13
+}
+
+const_schedule = \ value {
+Schedule:Constant,
+  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
+  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
+  <value>;       ! Hourly Value Def: 0, #3
+}
+
+Version,
+    9.4;
+
+export(const_schedule)
+```
+
+`Version, 9.4`{.bemp} will be printed to the output, but only
+`const_schedule` will be available for use from the script that has
+imported this file.
+

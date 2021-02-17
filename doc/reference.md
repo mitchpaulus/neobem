@@ -346,9 +346,9 @@ So for example:
 ```neobem
 my_template = \ value {
 Schedule:Constant,
-  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
-  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
-  <value>;       ! Hourly Value Def: 0, #3
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
 }
 
 import 'importfile.nbem'
@@ -358,11 +358,11 @@ print my_template(10)
 
 where **importfile.nbem** has the contents
 
-```
+```neobem
 my_template = \ value {
 Material:AirGap,
-  <value> Air Gap, ! Name RefList: [MaterialName], REQ, #1
-  <value>;         ! Thermal Resistance {m2-K/W}, REQ, #2
+  <value> Air Gap, ! Name
+  <value>;         ! Thermal Resistance {m2-K/W}
 }
 ```
 
@@ -386,9 +386,9 @@ option):
 ```neobem
 my_template = \ value {
 Schedule:Constant,
-  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
-  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
-  <value>;       ! Hourly Value Def: 0, #3
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
 }
 
 import 'importfile.nbem' as 'my_import'
@@ -400,9 +400,9 @@ results in
 
 ```neobem
 Schedule:Constant,
-  Const 10, ! Name RefList: [ScheduleNames], REQ, #1
-  ,         ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
-  10;       ! Hourly Value Def: 0, #3
+  Const 10, ! Name
+  ,         ! Schedule Type Limits Name
+  10;       ! Hourly Value
 ```
 
 If the imported function was desired, then it would be called like:
@@ -410,9 +410,9 @@ If the imported function was desired, then it would be called like:
 ```neobem
 my_template = \ value {
 Schedule:Constant,
-  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
-  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
-  <value>;       ! Hourly Value Def: 0, #3
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
 }
 
 import 'importfile.nbem' as 'my_import'
@@ -447,26 +447,26 @@ For example, if the following file is imported:
 ```neobem
 my_template = \ name {
 Zone,
-  <name>,        ! Name RefList: [ZoneNames, OutFaceEnvNames, ZoneAndZoneListNames, AirflowNetworkNodeAndZoneNames], REQ, #1
-  0,             ! Direction of Relative North {deg}, Def: 0, #2
-  0,             ! X Origin {m}, Def: 0, #3
-  0,             ! Y Origin {m}, Def: 0, #4
-  0,             ! Z Origin {m}, Def: 0, #5
-  1,             ! Type Def: 1, #6
-  1,             ! Multiplier Def: 1, #7
-  autocalculate, ! Ceiling Height {m}, Def: autocalculate, AC, #8
-  autocalculate, ! Volume {m3}, Def: autocalculate, AC, #9
-  autocalculate, ! Floor Area {m2}, Def: autocalculate, AC, #10
-  ,              ! Zone Inside Convection Algorithm [Simple, TARP, CeilingDiffuser, AdaptiveConvectionAlgorithm, TrombeWall], #11
-  ,              ! Zone Outside Convection Algorithm [SimpleCombined, TARP, DOE-2, MoWiTT, AdaptiveConvectionAlgorithm], #12
-  Yes;           ! Part of Total Floor Area Def: Yes, [Yes, No], #13
+  <name>,        ! Name
+  0,             ! Direction of Relative North {deg}
+  0,             ! X Origin {m}
+  0,             ! Y Origin {m}
+  0,             ! Z Origin {m}
+  1,             ! Type
+  1,             ! Multiplier
+  autocalculate, ! Ceiling Height {m}
+  autocalculate, ! Volume {m3}
+  autocalculate, ! Floor Area {m2}
+  ,              ! Zone Inside Convection Algorithm
+  ,              ! Zone Outside Convection Algorithm
+  Yes;           ! Part of Total Floor Area
 }
 
 const_schedule = \ value {
 Schedule:Constant,
-  Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
-  ,              ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
-  <value>;       ! Hourly Value Def: 0, #3
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
 }
 
 Version,

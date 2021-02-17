@@ -6,9 +6,9 @@ The latest release of Neobem is on GitHub, at
 [https://github.com/mitchpaulus/idfplus/releases](https://github.com/mitchpaulus/idfplus/releases).
 There you will see 3 main assets:
 
-1. `neobem-x64_x.x.x.zip`
-2. `neobem-x64_x.x.x.zip`
-3. `neobem-x64_x.x.x.zip`
+1. `neobem_win-x64_x.x.x.zip`
+2. `neobem_linux-x64_x.x.x.zip`
+3. `neobem_osx-x64_x.x.x.zip`
 
 Download the zip file that matches your operating system.^[If you are
 running the Windows Subsystem for Linux within Windows, I would
@@ -19,17 +19,14 @@ live. It doesn't really matter where you put it, but recommended places
 would be:
 
 - `C:\Program Files\neobem` on Windows
-- `/usr/local/bin` or `~/.local/bin` on Linux
+- `/usr/local/neobem` or `~/.local/neobem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
 from a shell environment, that could be anything like:
 
 - `cmd.exe` or PowerShell on Windows
 - Any terminal emulator, like Gnome Terminal, Alacritty, Konsole running
-  a shell like `bash`, `zsh`, or `fish`.^[If none of this makes sense,
-  take a look at [this
-  link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
-  or other web searches for 'terminal vs. shell']
+  a shell like `bash`, `zsh`, or `fish`.^[If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html) or other web searches for 'terminal vs. shell']
 
 
 ### Add Program Location to PATH Variable
@@ -37,6 +34,22 @@ from a shell environment, that could be anything like:
 Once the program files are installed in your preferred location, you
 will want to add the folder to the `PATH` environment variable (if the
 location you put it in isn't already there).
+
+#### Windows
+
+On Windows, you can get to the dialog box to change the `PATH` variable
+by doing a search for 'Edit System Environment Variables'.
+
+
+#### Linux/OSX
+
+Setting the `PATH` variable is most often done in the initialization of
+the particular shell that you are using. The default shell on many
+systems is `bash`. To add a location to the `PATH` every time bash is
+invoked, you follow the directions [here](<++>). You add the location to
+the existing `PATH` variable in the `.bashrc` initialization file,
+making sure it is exported.
+
 
 
 ### Execute the Program

@@ -1,0 +1,5 @@
+import 'import1.nbem'
+import 'import2.nbem' as 'euler'
+
+print euler@my_template()
+

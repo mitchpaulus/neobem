@@ -9,7 +9,7 @@ this idea straight from the TikZ-PGF manual.]
 You are building your EnergyPlus input file using conventional tools,
 and you end up with objects like so:
 
-```bemp
+```nbem
 Zone,
   Atrium,        ! Name
   0,             ! Direction of Relative North {deg}
@@ -36,7 +36,7 @@ Do you see all those `Atrium`s? If you're a programmer, you know those
 can be abstracted out to a variable. If you ever want to change the
 name, you can easily do it in one place. How do you do it? Like so:
 
-```bemp
+```nbem
 
 atrium_name = 'Atrium'
 
@@ -88,7 +88,7 @@ A few pieces of syntax to see here:
 Say you've continued to build your input file, and you end up with the
 six following objects:
 
-```bemp
+```nbem
 Schedule:Constant,
   Zone Space Temperature Setpoint Schedule, ! Name
   Zone Space Temperature Limits,            ! Schedule Type Limits Name
@@ -131,7 +131,7 @@ Can you see the repetition here? Each schedule has an associated
 schedule limits, in which the names match. We can make this situation
 better by introducing a *function*.
 
-```bemp
+```nbem
 const_temp_schedule = \ name value lower upper {
 Schedule:Constant,
   <name> Schedule, ! Name
@@ -168,13 +168,13 @@ more function statements in curly braces.
 
 So technically, in our example with the schedule, this is a *variable
 declaration* where the expression on the right hand side being assigned
-is a *function expression*.  Pretty much everything in `bemp` is an
-*expression*.  And in `bemp`, functions are first class. They can be
+is a *function expression*.  Pretty much everything in Neobem is an
+*expression*.  And in Neobem, functions are first class. They can be
 assigned to variables and be returned by other functions.
 
 This means you can build higher order functions like:
 
-```bemp
+```nbem
 my_add = \ x { \y { x + y }}
 
 add_two = my_add(2)
@@ -184,7 +184,7 @@ print add_two(5)
 
 The same thing could even be written on a single line like:
 
-```bemp
+```nbem
 print (\x { \y { x + y }})(2)(5)
 ```
 
@@ -210,9 +210,9 @@ A function statement can be:
 3. An input file comment
 4. A return statement
 
-`bemp` can be considered a mostly *functional* language. In a truly
+Neobem can be considered a mostly *functional* language. In a truly
 functional programming language, there *are no side-effects*. However,
-for practical reasons, the `bemp` language has one important built in
+for practical reasons, the Neobem language has one important built in
 side-effect. That is the object declaration.
 
 When the compiler encounters an object declaration from inside or
@@ -221,11 +221,11 @@ any required replacements (The same is true for input file comments).
 *This is the only way objects are printed out*.
 
 This is how the concept of what some might think of as a "template" and
-a mathematical function are the same thing in `bemp`. These are both
-functions to `bemp`. One has a side effect of printing to the result,
+a mathematical function are the same thing in Neobem. These are both
+functions to Neobem. One has a side effect of printing to the result,
 and the other just computes a value.
 
-```bemp
+```nbem
 version_template = \ ver {
 Version,
     <ver>;
@@ -247,7 +247,7 @@ The return statement sets the resulting expression that is returned by
 the function. An example of variable declaration and the return
 statement would be:
 
-```bemp
+```nbem
 my_hard_computation = \ input {
     numerator   = sin(input * 2) + ceiling(input)
     denominator = log(input)
@@ -260,14 +260,14 @@ my_hard_computation = \ input {
 The goal with a domain specific language like this is to reduce the
 amount of syntax required to express our intent. At the extreme, the
 minimum we must provide is the *data*. So a novel feature of the
-`bemp` language is the integration of data entry directly into the
+Neobem language is the integration of data entry directly into the
 language.
 
 Lets say I have tabular data about my zones and want to create the
 required objects for them. An example is the easiest way to show how this
-would be done in `bemp`.
+would be done in Neobem.
 
-```bemp
+```nbem
 zones =
 ________________________________________
 name          | x_origin    | y_origin
@@ -303,7 +303,7 @@ statement.
 
 The first variable declaration
 
-```bemp
+```nbem
 zones =
 ________________________________________
 name          | x_origin    | y_origin
@@ -326,7 +326,7 @@ by commas.
 
 Example:
 
-```bemp
+```nbem
 my_list = [ 1, 2, 'a string!', sin(3.1415926), \x { x + 1 } ]
 ```
 
@@ -343,7 +343,7 @@ programming languages. Unfortunately for me, I cannot name this an
 
 You define a structure like this:
 
-```bemp
+```nbem
 my_struct = {
     prop_1 : 42,
     prop_2 : 'Some text'
@@ -359,7 +359,7 @@ operator, a period `.`.
 
 So for our structure example:
 
-```bemp
+```nbem
 my_struct.prop2 == 'Some text'
 my_struct.prop_3.nested_struct_prop == 'I am nested'
 ```
@@ -369,7 +369,7 @@ that inline data table? It's a *list of structures*.
 
 That means these are exactly the same.
 
-```bemp
+```nbem
 zones =
 ________________________________________
 name          | x_origin    | y_origin
@@ -407,7 +407,7 @@ That covers the first variable declaration of our example file.
 
 The second variable declaration
 
-```bemp
+```nbem
 zone_template = λ zone {
 Zone,
   <zone.name>,     ! Name
@@ -439,7 +439,7 @@ dive into that rabbit hole.
 
 The final statement is
 
-```bemp
+```nbem
 print map(zone_template, zones)
 ```
 
@@ -451,12 +451,12 @@ programming languages. It allows you to "map" or evaluate a function
 over each element of a list. The resulting expression is a new list,
 with each list item being transformed by the function.
 
-However, in `bemp` remember, functions can have one important
+However, in Neobem remember, functions can have one important
 side-effect: printing out objects.
 
 So the output to our compiled idf file from the `map` function is:
 
-```bemp
+```nbem
 Zone,
   Bedroom,       ! Name
   0,             ! Direction of Relative North {deg}
@@ -510,7 +510,7 @@ of data, then map a template function over it to build all your objects.
 ## Tutorial 4: Introducing Logic
 
 If we want to have a Turing complete programming language, we need
-branching ability - which we accomplish in `bemp` using *if
+branching ability - which we accomplish in Neobem using *if
 expressions*.
 
 Notice how I called it an *expression*. Like everything else, our
@@ -519,16 +519,16 @@ new expression.
 
 The syntax for the if expression is
 
-```bemp
+```nbem
 if <expression> then <expression> else <expression>
 ```
 
-The `else`{.bemp} is required because there must always be a result.
+The `else`{.nbem} is required because there must always be a result.
 
 For this tutorial, let's use logic to determine which template we want to
 use for a given fan.
 
-```bemp
+```nbem
 in_h2o_2_pa = \ in_h2o { in_h2o * 249.08891 }
 cfm_2_m3s = \ cfm { cfm / 2118.88 }
 
@@ -611,29 +611,29 @@ Large software projects are not built in one monolithic file. Engineers
 break the code up into smaller pieces so that it is more manageable.
 Building simulation files can get quite large, thousands of lines of
 code, so it makes sense that we should be able to do the same thing in
-`bemp`.
+Neobem.
 
 A small, but typical example of breaking out the input file in multiple
 files could be this.
 
-**in.bemp**
-```bemp
-import 'defaults.bemp'
+**in.nbem**
+```nbem
+import 'defaults.nbem'
 
 print simulation_params()
 
-import 'chillers.bemp'
+import 'chillers.nbem'
 ```
 
-where in the same directory as the `in.bemp` file is the two files
+where in the same directory as the `in.nbem` file is the two files
 
-1. `defaults.bemp`
-2. `chillers.bemp`
+1. `defaults.nbem`
+2. `chillers.nbem`
 
 If the contents of those are
 
-**defaults.bemp**
-```bemp
+**defaults.nbem**
+```nbem
 simulation_params = λ {
 Version,9.4;
 
@@ -645,8 +645,8 @@ ZoneAirHeatBalanceAlgorithm,EulerMethod;
 export (simulation_params)
 ```
 
-**chillers.bemp**
-```bemp
+**chillers.nbem**
+```nbem
 chiller = λ unit_number {
 
 chiller_name = 'Chiller ' + unit_number
@@ -674,7 +674,7 @@ print map(chiller, [1, 2, 3])
 then the resulting output would be:
 
 
-```bemp
+```nbem
 Version,9.4;
 
 Timestep,6;
@@ -725,19 +725,19 @@ Chiller:ConstantCOP,
 
 ```
 
-Neat, right? So perhaps the simplest way that `bemp` can help you with
+Neat, right? So perhaps the simplest way that Neobem can help you with
 your current files is by breaking them up into smaller pieces.
 
 To note here:
 
 - The string is a relative file path to the file to import.
-- Notice the last line of the file `defaults.bemp`. It is an *export*
+- Notice the last line of the file `defaults.nbem`. It is an *export*
   statement, and it is required for other files to use the variables and
   functions that are defined.
 
   However, if the imported script generates any output, that is passed
   along no matter what - no `export` is required. This is what happens
-  in the `chillers.bemp` file.
+  in the `chillers.nbem` file.
 
 - By default, exported items will overwrite existing identifiers with
   the same name. You can get around this by *qualifying* the import
@@ -745,13 +745,13 @@ To note here:
 
   Using the previous example, we could have done:
 
-  **in.bemp**
-  ```bemp
-  import 'defaults.bemp' as 'def'
+  **in.nbem**
+  ```nbem
+  import 'defaults.nbem' as 'def'
 
   print def@simulation_params()
 
-  import 'chillers.bemp'
+  import 'chillers.nbem'
   ```
 
   The `as` option will put whatever string is specified as a prefix to

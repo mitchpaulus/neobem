@@ -1,6 +1,6 @@
 Here is some sample code:
 
-```bemp
+```nbem
 print if 2 == 2 then 'Hello' else nothing
 
 import 'file' as 'import' only 'template'

@@ -98,7 +98,7 @@ namespace src
         public class BempOptions
         {
             public string OutputFile = "";
-            public string InputFile = "in.bemp";
+            public string InputFile = "in.nbem";
         }
     }
 }

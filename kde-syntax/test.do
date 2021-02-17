@@ -1,1 +1,1 @@
-pandoc --syntax-definition bemp.xml -o test.pdf test.md
+pandoc --syntax-definition neobem.xml -o test.pdf test.md

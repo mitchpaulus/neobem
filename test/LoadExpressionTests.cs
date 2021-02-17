@@ -37,7 +37,7 @@ namespace test
         [Test]
         public void LoadExcelStartCellTest()
         {
-              var filepath = Path.Combine(TestDir.Dir, "Excel", "load_excel_test_1.bemp");
+              var filepath = Path.Combine(TestDir.Dir, "Excel", "load_excel_test_1.nbem");
               var file = File.ReadAllText(filepath);
               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "Excel"));
               var parser = file.ToParser();

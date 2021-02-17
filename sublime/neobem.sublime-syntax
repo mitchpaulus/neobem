@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+
+name: neobem
+file_extensions: [bemp, idf, nbem]
+scope: source.neobem
+
+contexts:
+    main:
+     - match: "^[A-Z][a-zA-Z:]*,"
+       scope: entity.name.label.neobem
+     - match: "!.*"
+       scope: comment.line.neobem
+     - match: '\b(if|then|else|and|or|return|data|print|import)\b'
+       scope: keyword.control.neobem
+
+# vim:ft=yaml

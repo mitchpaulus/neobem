@@ -10,7 +10,7 @@
   and logic.
 
   And while I love statically typed languages, it doesn't make sense for
-  this domain of problems. `bemp` is not meant to replace general
+  this domain of problems. Neobem is not meant to replace general
   purpose programming languages. It is a language designed specifically
   for generating comma separated data for input files. So there is no
   need to add verbosity to the language in the form of types.

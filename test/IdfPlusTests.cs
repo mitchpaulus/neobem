@@ -91,7 +91,7 @@ namespace test
         [Test]
         public void TestListOfListInReplacement()
         {
-            var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.bemp");
+            var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.nbem");
 
             var file = File.ReadAllText(filepath);
             var visitor = new IdfPlusVisitor(TestDir.Dir);
@@ -105,7 +105,7 @@ namespace test
         [Test]
         public void TestFilterFunction()
         {
-             var filepath = Path.Combine(TestDir.Dir, "test_filter_function.bemp");
+             var filepath = Path.Combine(TestDir.Dir, "test_filter_function.nbem");
              var file = File.ReadAllText(filepath);
              var visitor = new IdfPlusVisitor(TestDir.Dir);
              var parser = file.ToParser();
@@ -119,7 +119,7 @@ namespace test
         [Test]
         public void TestQualifiedImport()
         {
-              var filepath = Path.Combine(TestDir.Dir, "import_test/in2.bemp");
+              var filepath = Path.Combine(TestDir.Dir, "import_test/in2.nbem");
               var file = File.ReadAllText(filepath);
               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"));
               var parser = file.ToParser();
@@ -133,7 +133,7 @@ namespace test
         [Test]
         public void TestInlineDataTable()
         {
-            var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.bemp");
+            var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.nbem");
 
             var file = File.ReadAllText(filepath);
             var visitor = new IdfPlusVisitor(TestDir.Dir);
@@ -147,7 +147,7 @@ namespace test
         [Test]
         public void TestObjectFormatting()
         {
-            var filepath = Path.Combine(TestDir.Dir, "object_format_test.bemp");
+            var filepath = Path.Combine(TestDir.Dir, "object_format_test.nbem");
 
             var file = File.ReadAllText(filepath);
             var visitor = new IdfPlusVisitor(TestDir.Dir);

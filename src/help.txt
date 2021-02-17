@@ -1,10 +1,10 @@
-Usage: bemp [options..] [input file]
-Transpile bemp file to idf output
+Usage: nbem [options..] [input file]
+Compile Neobem file to idf output
 
-With no [input file], input is read from in.bemp file in current
+With no [input file], input is read from in.nbem file in current
 directory.
 
 OPTIONS:
 
--h, --help      show this help and exit
--o, --output    output file name, default is standard output
+-h, --help              show this help and exit
+-o, --output <filename> output file name, default is standard output

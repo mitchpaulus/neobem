@@ -6,12 +6,12 @@ comments.
 When parsing the main file, there are 6 possibilities of what is being
 parsed:
 
-1. An idf comment (ex: `! comment`{.bemp})
-2. An idf object (ex: `Version,9.4;`{.bemp})
+1. An idf comment (ex: `! comment`{.nbem})
+2. An idf object (ex: `Version,9.4;`{.neobem})
 3. A variable declaration (ex: `name = <expression>`)
-4. An `import` statement (ex: `import 'filename.bemp'`{.bemp})
-5. Print statement (ex: `print <expression>`{.bemp})
-6. A bemp specific comment (ex: `# bemp comment`{.bemp})
+4. An `import` statement (ex: `import 'filename.nbem'`{.nbem})
+5. Print statement (ex: `print <expression>`{.nbem})
+6. A Neobem specific comment (ex: `# Neobem comment`{.nbem})
 
 idf comments and idf objects result in text being output to the final
 target.
@@ -43,24 +43,24 @@ Strings are entered using single quotes "`'`".
 
 You can enter in a boolean literal in two ways each for True or False.
 
-For true you can use `true`{.bemp} or `✓`{.bemp} (Unicode U+2713, Check Mark)
+For true you can use `true`{.nbem} or `✓`{.nbem} (Unicode U+2713, Check Mark)
 
-For false you can use `false`{.bemp} or `✗`{.bemp} (Unicode U+2717, Ballot X)
+For false you can use `false`{.nbem} or `✗`{.nbem} (Unicode U+2717, Ballot X)
 
 ## Comments
 
-There are two different types of comments in bemp. One is the comment
+There are two different types of comments in Neobem. One is the comment
 syntax used by the idf files, beginning with an exclamation point
 character (`!`). These comments are available to have portions replaced
 by expressions and they are always passed along on to the output.
 
-The second comment type is internal to bemp itself. These are like
+The second comment type is internal to Neobem itself. These are like
 traditional comments in that they are parsed an then completely ignored.
 They are only there to aid the reader of the code.
 
 So for example, given:
 
-```bemp
+```neobem
 # This is an internal comment that won't appear in output. It won't
 # have this <variable> replaced.
 variable = 'Mitch'
@@ -70,7 +70,7 @@ variable = 'Mitch'
 
 the output is
 
-```bemp
+```neobem
 ! This is an IDF comment, with my name Mitch showing up.
 ```
 
@@ -123,7 +123,7 @@ others are there for consistency, but the usage should be rare.
 - Plus '`+`'
     - Addition for numeric types
     - String concatenation for string types
-        - `'Chiller ' + '1'`{.bemp} equals `'Chiller 1'`{.bemp}
+        - `'Chiller ' + '1'`{.nbem} equals `'Chiller 1'`{.nbem}
     - List concatenation for list types
         - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`
 - Minus '`-`'
@@ -165,7 +165,7 @@ separated by pipes, finished by 3 or more underscores.
 
 So these are technically parsed the same:
 
-```bemp
+```neobem
 
 zones =
 _____________
@@ -186,34 +186,34 @@ But I think it's obvious which one is easier for a *human* to parse.
 
 A number of mathematical functions are built in.
 
-- `abs(x)`{.bemp}: absolute value
-- `acos(x)`{.bemp}: inverse cosine - return value is in radians
-- `asin(x)`{.bemp}: inverse sine - return value is in radians
-- `atan2(x, y)`{.bemp}: inverse tangent, returns the angle whose tangent is the quotient of two specified numbers.
-- `ceiling(x)`{.bemp}: Returns the smallest integral value that is greater than or equal to the specified number.
-- `cos(x)`{.bemp}: Returns the cosine of the angle specified in radians
-- `floor(x)`{.bemp}: Returns the smallest integral value that is less than or equal to the specified number.
-- `ln(x)`{.bemp}: Natural logarithm, logarithm with base $e$
-- `log10(x)`{.bemp}: logarithm with base 10
-- `log2(x)`{.bemp}: logarithm with base 2
-- `sin(x)`{.bemp}: Returns the sine of the angle specified in radians
-- `sqrt(x)`{.bemp}: Returns the positive root of the value (always remember there are 2 roots!)
-- `tan(x)`{.bemp}: Returns the tangent of the angle specified in radians
+- `abs(x)`{.nbem}: absolute value
+- `acos(x)`{.nbem}: inverse cosine - return value is in radians
+- `asin(x)`{.nbem}: inverse sine - return value is in radians
+- `atan2(x, y)`{.nbem}: inverse tangent, returns the angle whose tangent is the quotient of two specified numbers.
+- `ceiling(x)`{.nbem}: Returns the smallest integral value that is greater than or equal to the specified number.
+- `cos(x)`{.nbem}: Returns the cosine of the angle specified in radians
+- `floor(x)`{.nbem}: Returns the smallest integral value that is less than or equal to the specified number.
+- `ln(x)`{.nbem}: Natural logarithm, logarithm with base $e$
+- `log10(x)`{.nbem}: logarithm with base 10
+- `log2(x)`{.nbem}: logarithm with base 2
+- `sin(x)`{.nbem}: Returns the sine of the angle specified in radians
+- `sqrt(x)`{.nbem}: Returns the positive root of the value (always remember there are 2 roots!)
+- `tan(x)`{.nbem}: Returns the tangent of the angle specified in radians
 
 ## Functions on Lists
 
-- `length(list)`{.bemp}: number of elements in the list
-- `head(list)`{.bemp}: Returns the first element of the list
-- `tail(list)`{.bemp}: Returns all elements *except* the first element in the list
-- `index(list, integer)`{.bemp}: Returns the element the specified index. The
+- `length(list)`{.nbem}: number of elements in the list
+- `head(list)`{.nbem}: Returns the first element of the list
+- `tail(list)`{.nbem}: Returns all elements *except* the first element in the list
+- `index(list, integer)`{.nbem}: Returns the element the specified index. The
   index is 0-based, so getting the first element of the list would be
-  `index(list, 0)`{.bemp}. The index can also be negative to index from the
-  end. `index(list, -1)`{.bemp} returns the last element of the list and
-  `index(list, -2)`{.bemp} returns the second to last element.
+  `index(list, 0)`{.nbem}. The index can also be negative to index from the
+  end. `index(list, -1)`{.nbem} returns the last element of the list and
+  `index(list, -2)`{.nbem} returns the second to last element.
 
 ## Loading Data
 
-- `load(expression)`{.bemp}: Load data from a file to a list of structures.
+- `load(expression)`{.nbem}: Load data from a file to a list of structures.
 
   The single input parameter can either be a string expression or
   structure.
@@ -229,13 +229,13 @@ A number of mathematical functions are built in.
 
 To load data from Excel, you can use a structure with the following options.
 
-1. `type`: This must be set to `'Excel'`{.bemp}.
+1. `type`: This must be set to `'Excel'`{.nbem}.
 2. `sheet`: Optional. A string that has the name of the sheet to pull
    the data from. If omitted, the first worksheet is used by default.
 3. `range`: Optional. Can be specified in different forms.
-    - `'A1:B2'`{.bemp} style. This is a string that specifies the complete range
+    - `'A1:B2'`{.nbem} style. This is a string that specifies the complete range
       in normal Excel range syntax.
-    - `'A1'`{.bemp} style. A single cell reference. Neobem will use the input as
+    - `'A1'`{.nbem} style. A single cell reference. Neobem will use the input as
       the upper left hand corner of the data table. It will read headers
       to the right until it reaches a blank cell. It then read down the
       table until it reaches a row in which every column in the table is
@@ -243,7 +243,7 @@ To load data from Excel, you can use a structure with the following options.
 
 An example:
 
-```bemp
+```neobem
 load_options = {
     type: 'Excel',
     sheet: 'Data',
@@ -257,17 +257,17 @@ print map(my_template, load(load_options))
 ## Functional Programming Functions
 
 Several functions are staples of functional programming languages.
-`bemp` has a few of the most important ones.
+Neobem has a few of the most important ones.
 
-- `map(function, list)`{.bemp}: Returns a new list in which the `function` has
+- `map(function, list)`{.nbem}: Returns a new list in which the `function` has
   been applied to each element.
-    - EX: `map(\x { x + 2}, [1, 2, 3])`{.bemp} will equal `[3, 4, 5]`.
+    - EX: `map(\x { x + 2}, [1, 2, 3])`{.nbem} will equal `[3, 4, 5]`.
 
-- `filter(function, list)`{.bemp}: Returns a new list in which each
+- `filter(function, list)`{.nbem}: Returns a new list in which each
   element is passed to the function provided, and only the ones in which
-  the function result is `true`{.bemp} are returned.
+  the function result is `true`{.nbem} are returned.
 
-    - EX: `filter(\x { x < 3 }, [1, 2, 3, 4])`{.bemp} will equal `[1, 2]`{.bemp}.
+    - EX: `filter(\x { x < 3 }, [1, 2, 3, 4])`{.nbem} will equal `[1, 2]`{.nbem}.
 
 ## Let Expressions
 
@@ -278,14 +278,14 @@ expressions where you can't put a variable declaration.
 This is where 'let expressions' come into play. The syntax for a let
 expression is:
 
-```bemp
+```neobem
 let var1 = expression [, var2 = expression]... in <expression>
 ```
 
 Here's an example of using a let expression in defining a `filter`
 function.
 
-```bemp
+```neobem
 filter = λ predicate list {
     if length(list) == 0 then [] else
     let elem = head(list),
@@ -302,18 +302,18 @@ filtered_list = filter(λ x { x < 2 }, [1, 2, 3, 4])
 neobem has a fairly straightforward method of importing and exporting.
 The syntax for importing from another file is:
 
-```bemp
+```neobem
 import 'uri' [as 'prefix'] [only (identifier1, identifier2, ...)]
 ```
 
 The only portion that is required is the string `'uri'`. By default, this
 string is a relative path to a file on local machine. For example,
 
-```bemp
-import 'utilities/my_utilities.bemp'
+```neobem
+import 'utilities/my_utilities.nbem'
 ```
 
-will import a 'my_utilities.bemp' file in the 'utilities' folder that is
+will import a 'my_utilities.nbem' file in the 'utilities' folder that is
 in the same directory as the executing script.
 
 Important note: Paths are *relative from the script location, not from
@@ -321,19 +321,19 @@ the current working directory of execution*. If this weren't the case,
 running `neobem` from different locations would affect the outcome.
 
 ```sh
-bemp in.bemp
+nbem in.nbem
 ```
 
 would be different from:
 
 ```sh
-bemp sub_folder/in.bemp
+nbem sub_folder/in.nbem
 ```
 
 The string can also be a normal Internet URL. For example, you can test
 an example file from GitHub.
 
-```bemp
+```neobem
 import 'example'
 ```
 
@@ -343,7 +343,7 @@ imported identifier overwriting any existing identifier*.
 
 So for example:
 
-```bemp
+```neobem
 my_template = \ value {
 Schedule:Constant,
   Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
@@ -351,12 +351,12 @@ Schedule:Constant,
   <value>;       ! Hourly Value Def: 0, #3
 }
 
-import 'importfile.bemp'
+import 'importfile.nbem'
 
 print my_template(10)
 ```
 
-where **importfile.bemp** has the contents
+where **importfile.nbem** has the contents
 
 ```
 my_template = \ value {
@@ -368,22 +368,22 @@ Material:AirGap,
 
 results in
 
-```bemp
+```neobem
 Material:AirGap,
   10 Air Gap, ! Name
   10;         ! Thermal Resistance {m2-K/W}
 ```
 
-To avoid Conflicts, you can make use of the `as`{.bemp} and `only`{.bemp} options of
+To avoid Conflicts, you can make use of the `as`{.nbem} and `only`{.nbem} options of
 importing.
 
-The `as`{.bemp} option uses the specified string that follows as a
+The `as`{.nbem} option uses the specified string that follows as a
 prefix, with an '`@`' character between.
 
-So if our example above instead used (note the `as 'my_import'`{.bemp}
+So if our example above instead used (note the `as 'my_import'`{.nbem}
 option):
 
-```bemp
+```neobem
 my_template = \ value {
 Schedule:Constant,
   Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
@@ -391,14 +391,14 @@ Schedule:Constant,
   <value>;       ! Hourly Value Def: 0, #3
 }
 
-import 'importfile.bemp' as 'my_import'
+import 'importfile.nbem' as 'my_import'
 
 print my_template(10)
 ```
 
 results in
 
-```bemp
+```neobem
 Schedule:Constant,
   Const 10, ! Name RefList: [ScheduleNames], REQ, #1
   ,         ! Schedule Type Limits Name [ScheduleTypeLimitsNames], #2
@@ -407,7 +407,7 @@ Schedule:Constant,
 
 If the imported function was desired, then it would be called like:
 
-```bemp
+```neobem
 my_template = \ value {
 Schedule:Constant,
   Const <value>, ! Name RefList: [ScheduleNames], REQ, #1
@@ -415,14 +415,14 @@ Schedule:Constant,
   <value>;       ! Hourly Value Def: 0, #3
 }
 
-import 'importfile.bemp' as 'my_import'
+import 'importfile.nbem' as 'my_import'
 
 print my_import@my_template(10)
 ```
 
 If only certain identifiers are desired to be imported, the `only
-(identifiers, ...)`{.bemp} Syntax can be used. It can be used in
-combination with the `as`{.bemp} option as well.
+(identifiers, ...)`{.nbem} Syntax can be used. It can be used in
+combination with the `as`{.nbem} option as well.
 
 ### Controlling What Gets Imported
 
@@ -438,13 +438,13 @@ calling environment *unless they are exported*.
 
 The syntax for exporting identifiers is:
 
-```bemp
+```neobem
 export (identifier1, identifier2, ...)
 ```
 
 For example, if the following file is imported:
 
-```bemp
+```neobem
 my_template = \ name {
 Zone,
   <name>,        ! Name RefList: [ZoneNames, OutFaceEnvNames, ZoneAndZoneListNames, AirflowNetworkNodeAndZoneNames], REQ, #1
@@ -475,7 +475,7 @@ Version,
 export(const_schedule)
 ```
 
-`Version, 9.4`{.bemp} will be printed to the output, but only
+`Version, 9.4`{.nbem} will be printed to the output, but only
 `const_schedule` will be available for use from the script that has
 imported this file.
 

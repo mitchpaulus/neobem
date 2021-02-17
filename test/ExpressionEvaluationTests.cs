@@ -237,7 +237,7 @@ namespace test
         [Test]
         public void TestBooleanLiteral()
         {
-            string test_filepath = Path.Combine(TestDir.Dir, "boolean_literal_test.bemp");
+            string test_filepath = Path.Combine(TestDir.Dir, "boolean_literal_test.nbem");
             string file = File.ReadAllText(test_filepath);
 
             var visitor = new IdfPlusVisitor(null);
@@ -254,7 +254,7 @@ namespace test
         [Test]
         public void TestLetBindings()
         {
-             string test_filepath = Path.Combine(TestDir.Dir, "test_let_bindings.bemp");
+             string test_filepath = Path.Combine(TestDir.Dir, "test_let_bindings.nbem");
              string file = File.ReadAllText(test_filepath);
 
              var visitor = new IdfPlusVisitor(TestDir.Dir);

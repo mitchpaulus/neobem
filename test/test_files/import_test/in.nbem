@@ -1,0 +1,4 @@
+import 'import1.nbem'
+import 'import2.nbem'
+
+print my_template()

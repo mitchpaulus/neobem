@@ -2,7 +2,7 @@
 
 <!-- See https://docs.kde.org/stable5/en/applications/katepart/highlight.html -->
 
-<language name="bemp" version="1" kateversion="2.4" section="Sources" extensions="*.bemp;*.idf;*.nbem" author="Mitchell T. Paulus" >
+<language name="neobem" version="1" kateversion="2.4" section="Sources" extensions="*.bemp;*.idf;*.nbem" author="Mitchell T. Paulus" >
     <highlighting>
         <list name="keywords1">
             <item>print</item>

@@ -1,4 +1,4 @@
-import 'import_only_options.bemp' only ( to_import )
+import 'import_only_options.nbem' only ( to_import )
 
 # Should work
 print to_import()

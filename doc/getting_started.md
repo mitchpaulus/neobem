@@ -2,13 +2,13 @@
 
 ### Download Program
 
-The latest release of `bemp` is on GitHub, at
+The latest release of Neobem is on GitHub, at
 [https://github.com/mitchpaulus/idfplus/releases](https://github.com/mitchpaulus/idfplus/releases).
 There you will see 3 main assets:
 
-1. `bemp_linux-x64_x.x.x.zip`
-2. `bemp_osx-x64_x.x.x.zip`
-3. `bemp_win-x64_x.x.x.zip`
+1. `neobem-x64_x.x.x.zip`
+2. `neobem-x64_x.x.x.zip`
+3. `neobem-x64_x.x.x.zip`
 
 Download the zip file that matches your operating system.^[If you are
 running the Windows Subsystem for Linux within Windows, I would
@@ -18,10 +18,10 @@ Extract that zip file to a location that you will want the program to
 live. It doesn't really matter where you put it, but recommended places
 would be:
 
-- `C:\Program Files\bemp` on Windows
+- `C:\Program Files\neobem` on Windows
 - `/usr/local/bin` or `~/.local/bin` on Linux
 
-`bemp` is a console or command line application. It is meant to be run
+Neobem is a console or command line application. It is meant to be run
 from a shell environment, that could be anything like:
 
 - `cmd.exe` or PowerShell on Windows
@@ -41,20 +41,20 @@ location you put it in isn't already there).
 
 ### Execute the Program
 
-On Windows, the program is called `bemp.exe`. On Linux and OSX, it is
-just `bemp` with no extension.
+On Windows, the program is called `nbem.exe`. On Linux and OSX, it is
+just `nbem` with no extension.
 
 From the shell, you can test that things are working by running the
 command with the help argument like:
 
 ```sh
-bemp -h
+nbem -h
 ```
 
 on Windows:
 
 ```sh
-bemp.exe -h
+nbem.exe -h
 ```
 
 ![Output from help command](img/help_output.png){ width=630 height=450 }

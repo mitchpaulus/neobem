@@ -7,6 +7,7 @@
         <list name="keywords1">
             <item>print</item>
             <item>import</item>
+            <item>export</item>
             <item>let</item>
             <item>in</item>
             <item>as</item>
@@ -26,12 +27,19 @@
             <item>autocalculate</item>
             <item>autosize</item>
         </list>
+        <list name="booleans">
+            <item>true </item>
+            <item>false</item>
+            <item>✓</item>
+            <item>✗</item>
+        </list>
         <contexts>
             <context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
                 <keyword attribute="Keyword" context="#stay" String="keywords1" />
                 <keyword attribute="ControlFlow" context="#stay" String="controlflow" />
                 <keyword attribute="Logical" context="#stay" String="logical" />
                 <keyword attribute="Constants" context="#stay" String="constants" />
+                <keyword attribute="Constants" context="#stay" String="booleans" />
 
 
                 <DetectChar attribute="String" context="String" char="&apos;" />

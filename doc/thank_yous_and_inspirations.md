@@ -16,7 +16,7 @@ many good ideas from languages before me. Some inspirations include:
   compiling to [CSS](https://www.w3.org/TR/CSS/).
 - The functional programming style comes from my experience with
   Haskell. The lambda grammar is inspired in part from [Haskell](https://www.haskell.org/).
-- The logic operators `and` and `or` come from
+- The logic operators `and`{.nbem} and `or`{.nbem} come from
   [Python](https://www.python.org/). I think that they are clearer than
   the usual `&&` and `||` and only require one extra character. I also
   prefer the snake case convention for identifiers.

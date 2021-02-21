@@ -49,7 +49,7 @@
     - Documentation on building from source
 
   It may be difficult for me to accomplish this goal by myself, may
-  reach out to others for help!
+  need much help from other contributers!
 
 - High quality documentation.
 
@@ -67,17 +67,6 @@
         text editors.
      2. Provide GUI wrappers around the program.
      3. Provide an implementation of the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/)
-
-
-- There must always be a sole commander-in-chief in charge of the
-  language (Inspired by the [KISS Linux Guidestones](https://k1ss.org/guidestones)).
-
-  This language shall not be designed by committee. This does not
-  mean feedback, feature requests, criticism are not welcome!
-  Contributions of all kinds are wanted.
-
-  This statement simply means that it is ultimately one person who
-  determines the future direction of the language.
 
 
 And to be clear, these are the goals and driving principles, it doesn't

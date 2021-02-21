@@ -1,0 +1,11 @@
+# Neobem
+
+Neobem is a preprocessor programming language primarily targeted for the idf input files for EnergyPlus.
+
+INCLUDE doc/intro.md
+
+# Getting Started
+
+INCLUDE doc/getting_started.md
+
+<!-- vim:set ft=markdown: -->

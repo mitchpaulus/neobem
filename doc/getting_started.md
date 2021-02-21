@@ -1,5 +1,13 @@
 ## Installation
 
+### Quick Instructions
+
+1. Download program files.
+2. Add folder location to `PATH`.
+3. Execute `nbem` in shell or command interpreter.
+
+See below for additional details on these steps.
+
 ### Download Program
 
 The latest release of Neobem is on GitHub, at
@@ -28,7 +36,6 @@ from a shell environment, that could be anything like:
 - Any terminal emulator, like Gnome Terminal, Alacritty, Konsole running
   a shell like `bash`, `zsh`, or `fish`.^[If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html) or other web searches for 'terminal vs. shell']
 
-
 ### Add Program Location to PATH Variable
 
 Once the program files are installed in your preferred location, you
@@ -46,13 +53,50 @@ by doing a search for 'Edit System Environment Variables'.
 Setting the `PATH` variable is most often done in the initialization of
 the particular shell that you are using. The default shell on many
 systems is `bash`. To add a location to the `PATH` every time bash is
-invoked, you follow the directions [here](<++>). You add the location to
-the existing `PATH` variable in the `.bashrc` initialization file,
+invoked, you follow the steps [here](https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path). You add the location to
+the existing `PATH` variable in the `.bash_profile` or `.bashrc`
+initialization file,
 making sure it is exported.
 
+If you are using a different shell, you already likely know how to add
+locations to the PATH, but for example the syntax for
+[fish](https://fishshell.com/) (the interactive shell I personally use),
+the syntax looks like:
+
+```fish
+set -gxp PATH "/path/to/directory"
+```
+
+## Creating Neobem Input Files
 
 
-### Execute the Program
+The input files are simple text files - you can use any editor of choice
+to create them. Here's a list of popular text editors that you might
+want to try. If you've never heard of a "text editor", I'd begin with
+Sublime Text or Atom.
+
+**Cross-Platform:**
+
+1. [Sublime Text](https://www.sublimetext.com/)
+2. [Atom](https://atom.io/)
+3. [Visual Studio Code](https://code.visualstudio.com/)
+4. [Vim](https://www.vim.org/)
+5. [Neovim](https://neovim.io/)
+6. [Kate](https://kate-editor.org/)
+6. [Emacs](https://www.gnu.org/software/emacs/)
+
+**Windows:**
+
+1. [Notepad++](https://notepad-plus-plus.org/)
+2. Notepad - yes, that Notepad built into Windows
+
+**Linux:**
+
+1. [gEdit](https://wiki.gnome.org/Apps/Gedit)
+2. [Nano](https://www.nano-editor.org/)
+
+
+## Execute the Program
 
 On Windows, the program is called `nbem.exe`. On Linux and OSX, it is
 just `nbem` with no extension.
@@ -60,14 +104,48 @@ just `nbem` with no extension.
 From the shell, you can test that things are working by running the
 command with the help argument like:
 
-```sh
-nbem -h
+```console
+mp@mp-computer:~$ nbem -h
 ```
 
 on Windows:
 
-```sh
-nbem.exe -h
+```console
+C:\Users\mpaulus> nbem.exe -h
 ```
 
-![Output from help command](img/help_output.png){ width=630 height=450 }
+If things are working correctly, you should see help text like:
+
+INCLUDE help_output.md
+
+In general, you will call the execute the program `nbem`, passing in your Neobem
+input file as an argument.
+
+To compile a Neobem file to an idf file, execute a command like
+
+```console
+mp@mp-computer:~$ nbem in.nbem
+```
+
+where `in.nbem` is the relative path to the file you want to compile. In
+the example above, this would be the `in.nbem` file in my home directory
+('`~`'). By default, the compiled output is printed to standard output,
+which you will see on the screen. To put the output into a file, either
+specify the file path as a option, or redirect the output in the shell.
+
+**Using Option:**
+
+```console
+mp@mp-computer:~$ nbem -o output.idf in.nbem
+```
+
+**Using Redirection:**
+
+```console
+mp@mp-computer:~$ nbem in.nbem > output.idf
+```
+
+Please see this [screencast link](https://asciinema.org/a/392845) that
+shows an example workflow from start to finish.
+
+![Sample screenshot from demo at: [https://asciinema.org/a/392845](https://asciinema.org/a/392845).](img/demo.png)

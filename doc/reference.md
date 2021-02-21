@@ -230,9 +230,10 @@ A number of mathematical functions are built in.
 To load data from Excel, you can use a structure with the following options.
 
 1. `type`: This must be set to `'Excel'`{.nbem}.
-2. `sheet`: Optional. A string that has the name of the sheet to pull
+2. `path`: Required. A string that is the relative path to the Excel file.
+3. `sheet`: Optional. A string that has the name of the sheet to pull
    the data from. If omitted, the first worksheet is used by default.
-3. `range`: Optional. Can be specified in different forms.
+4. `range`: Optional. Can be specified in different forms.
     - `'A1:B2'`{.nbem} style. This is a string that specifies the complete range
       in normal Excel range syntax.
     - `'A1'`{.nbem} style. A single cell reference. Neobem will use the input as
@@ -247,7 +248,8 @@ An example:
 load_options = {
     type: 'Excel',
     sheet: 'Data',
-    range: 'C10'
+    range: 'C10',
+    path: 'my_excel_data.xlsx'
 }
 
 print map(my_template, load(load_options))

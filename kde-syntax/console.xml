@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- See https://docs.kde.org/stable5/en/applications/katepart/highlight.html -->
+
+<language name="console" version="1" kateversion="2.4" section="Sources"  author="Mitchell T. Paulus" >
+    <highlighting>
+        <!--<list name="keywords1">-->
+            <!--<item>nbem</item>-->
+        <!--</list>-->
+        <contexts>
+            <context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
+                <!--<keyword attribute="Keyword" context="#stay" String="keywords1" />-->
+                <!--<keyword attribute="ControlFlow" context="#stay" String="controlflow" />-->
+                <!--<keyword attribute="Logical" context="#stay" String="logical" />-->
+                <!--<keyword attribute="Constants" context="#stay" String="constants" />-->
+                <!--<keyword attribute="Constants" context="#stay" String="booleans" />-->
+
+
+                <!--<DetectChar attribute="String" context="String" char="&apos;" />-->
+                <!--<DetectChar char="!" attribute="Comment" context="Comment"/>-->
+                <!--<DetectChar char="#" attribute="Comment" context="Comment"/>-->
+
+                <RegExpr String="^mp@mp-computer" attribute="Label" context="#stay" />
+                <RegExpr String="~" attribute="Logical" context="#stay" />
+
+                <!--<RegExpr String="^[A-Z][a-zA-Z0-9:]+," attribute="Label" context="#stay" />-->
+                <!--<RegExpr String="\b-?([1-9][0-9]*|0)(\.[0-9]+)?\b" attribute="Numeric" context="#stay" />-->
+                <!--<RegExpr String="\b[a-z][A-Za-z0-9_]*(?=\()" attribute="Function" context="#stay" />-->
+            </context>
+            <!--<context attribute="String" lineEndContext="#stay" name="string" >-->
+                <!--<DetectChar attribute="String" context="#pop" char="&quot;" />-->
+            <!--</context>-->
+            <context name="Comment" attribute="Comment" lineEndContext="#pop">
+            </context>
+            <context name="String" attribute="String" lineEndContext="#stay">
+                <DetectChar attribute="String" context="#pop" char="&apos;" />
+            </context>
+        </contexts>
+        <itemDatas>
+            <!--<itemData name="Normal Text" defStyleNum="dsNormal" />-->
+            <itemData name="Normal Text" color="#FFFFFF" selColor="#FFFFFF" />
+            <itemData name="Keyword" defStyleNum="dsKeyword" />
+            <itemData name="String" defStyleNum="dsString" />
+            <itemData name="Comment" defStyleNum="dsComment" />
+            <itemData name="ControlFlow" defStyleNum="dsControlFlow" />
+            <itemData name="Label" defStyleNum="dsFunction" />
+            <itemData name="Function" defStyleNum="dsFunction" />
+            <itemData name="Numeric" defStyleNum="dsFloat" />
+            <itemData name="Logical" defStyleNum="dsOperator" />
+            <itemData name="Constants" defStyleNum="dsConstant" />
+        </itemDatas>
+    </highlighting>
+    <general>
+        <keywords casesensitive="1" />
+    </general>
+</language>
+
+
+
+

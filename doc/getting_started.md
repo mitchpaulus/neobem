@@ -30,11 +30,18 @@ would be:
 - `/usr/local/neobem` or `~/.local/neobem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
-from a shell environment, that could be anything like:
+from a shell environment, that could be anything like^[If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html) or other web searches for 'terminal vs. shell']:
 
 - `cmd.exe` or PowerShell on Windows
-- Any terminal emulator, like Gnome Terminal, Alacritty, Konsole running
-  a shell like `bash`, `zsh`, or `fish`.^[If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html) or other web searches for 'terminal vs. shell']
+- `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
+    - Windows Terminal
+    - Terminal.app
+    - iTerm2
+    - Gnome Terminal
+    - Alacritty
+    - Konsole
+    - Terminator
+
 
 ### Add Program Location to PATH Variable
 
@@ -45,8 +52,14 @@ location you put it in isn't already there).
 #### Windows
 
 On Windows, you can get to the dialog box to change the `PATH` variable
-by doing a search for 'Edit System Environment Variables'.
+by doing a search for 'Edit System Environment Variables'. There are
+several biog posts on the Internet that can guide you through this with
+screenshots, here are a curated few:
 
+ - [https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/)
+ - [https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)
+
+Here's a post on Superuser answering the question, ["What are PATH and other environment variables, and how can I set or use them?"](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them)
 
 #### Linux/OSX
 
@@ -145,7 +158,9 @@ mp@mp-computer:~$ nbem -o output.idf in.nbem
 mp@mp-computer:~$ nbem in.nbem > output.idf
 ```
 
-Please see this [screencast link](https://asciinema.org/a/392845) that
-shows an example workflow from start to finish.
+Please see this [screencast
+link](https://asciinema.org/a/392845?size=big) that
+shows an example workflow from start to finish. This particular workflow
+example used `bash` as the shell and the files were edited with Neovim.
 
-![Sample screenshot from demo at: [https://asciinema.org/a/392845](https://asciinema.org/a/392845).](img/demo.png)
+![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](img/demo.png)

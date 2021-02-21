@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Simple Windows GUI for compiling.
+
 ## 0.2.0
 
 ### Changed
@@ -16,18 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Vast documentation additions, including 'Getting Started' section.
-- Boolean literal syntax, (i.e. `true`, `false`, `✓`, `✗`)
-- Let binding syntax
-- Replacement ability in comments
-- Loading from Excel functionality
-- Grammar and functionality for exports
-- Ability to import from web location
+- Boolean literal syntax, (i.e. `true`, `false`, `✓`, `✗`).
+- Let binding syntax.
+- Replacement ability in comments.
+- Loading from Excel functionality.
+- Grammar and functionality for exports.
+- Ability to import from web location.
+- Ability to read input from standard input.
 
 
 ### Fixed
 
 - Printing of lists of lists now flattens output as expected.
-- lambda expressions can now properly return values
+- lambda expressions can now properly return values.
 
 ### Removed
 

@@ -1,7 +1,10 @@
-clean
 design_goals.tex
 doc.runtex
 faq.tex
+getting_started.md
+getting_started.tex
+help_output.md
 intro.tex
+reference.tex
 thank_yous_and_inspirations.tex
 tutorials.tex

@@ -2,7 +2,8 @@ Usage: nbem [options..] [input file]
 Compile Neobem file to idf output
 
 With no [input file], input is read from in.nbem file in current
-directory.
+directory. If the input file is '-', input is read from standard input
+rather than from a file.
 
 OPTIONS:
 

@@ -46,14 +46,17 @@ namespace src
             AntlrInputStream inputStream;
 
             FileInfo fileInfo;
+            string baseDirectory;
             if (options.InputFile != "-")
             {
                 fileInfo = new FileInfo(options.InputFile);
                 inputStream = new AntlrFileStream(fileInfo.FullName);
+                baseDirectory = fileInfo.DirectoryName;
             }
             else
             {
-                throw new NotImplementedException("Input from standard input not implemented yet.");
+                inputStream = new AntlrInputStream(Console.In);
+                baseDirectory = Environment.CurrentDirectory;
             }
 
             NeobemLexer lexer = new NeobemLexer(inputStream);
@@ -62,7 +65,7 @@ namespace src
 
             NeobemParser parser = new NeobemParser(commonTokenStream);
 
-            IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
+            IdfPlusVisitor visitor = new IdfPlusVisitor(baseDirectory);
 
             NeobemParser.IdfContext tree = parser.idf();
 

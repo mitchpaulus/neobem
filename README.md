@@ -2,7 +2,7 @@
 
 Neobem is a preprocessor programming language primarily targeted for the idf input files for EnergyPlus.
 
-You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](http://neobem.io/neobem.pdf).
+You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](https://neobem.io/neobem.pdf).
 
 While creating you building energy simulation input files, have you ever wanted to:
 
@@ -34,7 +34,7 @@ I hope you find it as useful as I do.
 ### Quick Instructions
 
 1. Download program files.
-2. Add folder location to `PATH`.
+2. Add folder location to `PATH` or symlink executable to location in `PATH`.
 3. Execute `nbem` in shell or command interpreter.
 
 See below for additional details on these steps.
@@ -78,7 +78,13 @@ from a shell environment, that could be anything like^[If none of this makes sen
 
 Once the program files are installed in your preferred location, you
 will want to add the folder to the `PATH` environment variable (if the
-location you put it in isn't already there).
+location you put it in isn't already there). Another option is to
+symlink the executable to a location that is already in the `PATH`
+variable. Here's a
+[link](https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/)
+for creating symlinks in Windows, and another
+[link](https://www.howtogeek.com/287014/how-to-create-and-use-symbolic-links-aka-symlinks-on-linux/)
+for creating symlinks in Linux.
 
 #### Windows
 

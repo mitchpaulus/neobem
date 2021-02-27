@@ -89,6 +89,30 @@ namespace test
         }
 
         [Test]
+        public void TestNestedMemberAccess()
+        {
+            var file = File.ReadAllText(Path.Combine(TestDir.Dir, "nested_member_access.nbem"));
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.4;", output));
+        }
+
+        [Test]
+        public void TestNestedMemberAddField()
+        {
+            var file = File.ReadAllText(Path.Combine(TestDir.Dir, "nested_member_access_add_field.nbem"));
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.4,9.3,9.5;", output));
+        }
+
+        [Test]
         public void TestListOfListInReplacement()
         {
             var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.nbem");

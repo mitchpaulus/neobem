@@ -59,35 +59,47 @@ namespace src
 
             var members = context.member_access();
             var identifier = context.IDENTIFIER().GetText();
-            if (members.Length == 0)
-            {
-                _environments[0][identifier] = expression;
-            }
+
+            if (members.Length == 0) _environments[0][identifier] = expression;
             else
             {
-                if (!_environments[0].ContainsKey(identifier))
+                Expression currentExpression = _environments[0].ContainsKey(identifier) ? _environments[0][identifier] : new IdfPlusObjectExpression();
+                string currentStructureText = identifier;
+
+                for (int i = 0; i < members.Length; i++)
                 {
-                    IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
-                    foreach (NeobemParser.Member_accessContext memberAccessContext in members)
+                    string memberName = members[i].IDENTIFIER().GetText();
+
+                    if (!(currentExpression is IdfPlusObjectExpression currentStructureExpression))
                     {
-                        var memberName = memberAccessContext.IDENTIFIER().GetText();
-                        // objectExpression.Members.Add(memberName,     );
+                        throw new InvalidCastException($"'{currentStructureText}' is not a structure. Attempted to access member {memberName}.");
                     }
+
+                    // The final member access actually gets the value of the arbitrary expression.
+                    if (i == members.Length - 1)
+                    {
+                        currentStructureExpression.Members[memberName] = expression;
+                    }
+                    else
+                    {
+                        // If identifier points to an existing member, use that.
+                        if (currentStructureExpression.Members.ContainsKey(memberName))
+                        {
+                            currentExpression = currentStructureExpression.Members[memberName];
+                        }
+                        else
+                        {
+                            // Recursively create nested structures as required.
+                            currentStructureExpression.Members[memberName] = new IdfPlusObjectExpression();
+                            currentExpression = currentStructureExpression.Members[memberName];
+                        }
+                    }
+                    currentStructureText = $"{currentStructureText}.{memberName}";
                 }
             }
 
             return expressionVisitor.output.ToString();
         }
-
-        public IdfPlusObjectExpression AddObjectMembers(IdfPlusObjectExpression objectExpression,
-            List<NeobemParser.Member_accessContext> remainingMembers)
-        {
-            // if (!remainingMembers.Any()) return objectExpression;
-            // var memberName = remainingMembers.First().IDENTIFIER().GetText();
-            // objectExpression.Members.Add(memberName,  AddObjectMembers() );
-            return objectExpression;
-        }
-
 
         public override string VisitPrint_statment(NeobemParser.Print_statmentContext context)
         {

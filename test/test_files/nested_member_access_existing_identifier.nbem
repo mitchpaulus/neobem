@@ -1,0 +1,12 @@
+mystruct = {
+    substruct1: {
+        substruct2: {
+            value: 9.3
+        }
+    }
+}
+
+mystruct.substruct1.substruct2.value = 9.4
+
+Version,
+< mystruct.substruct1.substruct2.value >;

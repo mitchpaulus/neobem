@@ -2,6 +2,8 @@
 
 Neobem is a preprocessor programming language primarily targeted for the idf input files for EnergyPlus.
 
+You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](http://neobem.io/neobem.pdf).
+
 While creating you building energy simulation input files, have you ever wanted to:
 
 - Use variables?
@@ -164,7 +166,8 @@ Usage: nbem [options..] [input file]
 Compile Neobem file to idf output
 
 With no [input file], input is read from in.nbem file in current
-directory.
+directory. If the input file is '-', input is read from standard input
+rather than from a file.
 
 OPTIONS:
 
@@ -205,6 +208,6 @@ link](https://asciinema.org/a/392845?size=big) that
 shows an example workflow from start to finish. This particular workflow
 example used `bash` as the shell and the files were edited with Neovim.
 
-![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](img/demo.png)
+![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](doc/img/demo.png)
 
 <!-- vim:set ft=markdown: -->

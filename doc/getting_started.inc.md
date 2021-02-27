@@ -47,7 +47,13 @@ from a shell environment, that could be anything like^[If none of this makes sen
 
 Once the program files are installed in your preferred location, you
 will want to add the folder to the `PATH` environment variable (if the
-location you put it in isn't already there).
+location you put it in isn't already there). Another option is to
+symlink the executable to a location that is already in the `PATH`
+variable. Here's a
+[link](https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/)
+for creating symlinks in Windows, and another
+[link](https://www.howtogeek.com/287014/how-to-create-and-use-symbolic-links-aka-symlinks-on-linux/)
+for creating symlinks in Linux.
 
 #### Windows
 

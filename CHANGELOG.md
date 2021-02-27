@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Printing of lists of lists now flattens output as expected.
 - lambda expressions can now properly return values.
+- Variable assignment with nested structures now works as expected.
 
 ### Removed
 

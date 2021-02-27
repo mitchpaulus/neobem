@@ -50,6 +50,12 @@ namespace src
             if (options.InputFile != "-")
             {
                 fileInfo = new FileInfo(options.InputFile);
+                if (!fileInfo.Exists)
+                {
+                    string errorMessage = $"The input file '{fileInfo.FullName}' does not exist.";
+                    Console.WriteLine(errorMessage);
+                    return 1;
+                }
                 inputStream = new AntlrFileStream(fileInfo.FullName);
                 baseDirectory = fileInfo.DirectoryName;
             }
@@ -92,6 +98,7 @@ namespace src
                 catch (Exception exception)
                 {
                     Console.WriteLine($"Could not write output to {options.OutputFile}.");
+                    return 1;
                 }
             }
 

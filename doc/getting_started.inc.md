@@ -3,7 +3,7 @@
 ### Quick Instructions
 
 1. Download program files.
-2. Add folder location to `PATH`.
+2. Add folder location to `PATH` or symlink executable to location in `PATH`.
 3. Execute `nbem` in shell or command interpreter.
 
 See below for additional details on these steps.

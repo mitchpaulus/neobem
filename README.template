@@ -2,7 +2,7 @@
 
 Neobem is a preprocessor programming language primarily targeted for the idf input files for EnergyPlus.
 
-You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](http://neobem.io/neobem.pdf).
+You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](https://neobem.io/neobem.pdf).
 
 INCLUDE doc/intro.md
 

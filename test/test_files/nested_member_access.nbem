@@ -1,4 +1,13 @@
-identifier.member1.member2.member3 = 9.4
+identifier = {
+    'member1': {
+        'member2': {
+            'member3': 9.2,
+            'member4': 9.3
+        }
+    }
+}
+identifier = identifier + { 'member1': { 'member2': { 'member3': 9.4 } } }
 
 Version,
-    < identifier.member1.member2.member3 >;
+    < identifier.'member1'.'member2'.'member3' >,
+    < identifier.'member1'.'member2'.'member4' >;

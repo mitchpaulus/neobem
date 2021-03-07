@@ -1,16 +1,15 @@
 mystruct = {
-    substruct1: {
-        substruct2: {
-            value: 9.3
+    'substruct1': {
+        'substruct2': {
+            'value': 9.3
         }
     }
 }
 
-mystruct.substruct1.new_id = 9.4
-
-mystruct.substruct1.this_should_be_made.new_id2 = 9.5
+mystruct = mystruct + { 'substruct1': { 'new_id':  9.4 } }
+mystruct = mystruct + { 'substruct1': { 'this_should_be_made': {'new_id2': 9.5 }}}
 
 Version,
-< mystruct.substruct1.new_id >,
-< mystruct.substruct1.substruct2.value >,
-< mystruct.substruct1.this_should_be_made.new_id2 >;
+< mystruct.'substruct1'.'new_id' >,
+< mystruct.'substruct1'.'substruct2'.'value' >,
+< mystruct.'substruct1'.'this_should_be_made'.'new_id2' >;

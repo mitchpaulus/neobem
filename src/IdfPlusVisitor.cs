@@ -57,46 +57,8 @@ namespace src
             IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
             Expression expression = expressionVisitor.Visit(context.expression());
 
-            var members = context.member_access();
             var identifier = context.IDENTIFIER().GetText();
-
-            if (members.Length == 0) _environments[0][identifier] = expression;
-            else
-            {
-                Expression currentExpression = _environments[0].ContainsKey(identifier) ? _environments[0][identifier] : new IdfPlusObjectExpression();
-                string currentStructureText = identifier;
-
-                for (int i = 0; i < members.Length; i++)
-                {
-                    string memberName = members[i].IDENTIFIER().GetText();
-
-                    if (!(currentExpression is IdfPlusObjectExpression currentStructureExpression))
-                    {
-                        throw new InvalidCastException($"'{currentStructureText}' is not a structure. Attempted to access member {memberName}.");
-                    }
-
-                    // The final member access actually gets the value of the arbitrary expression.
-                    if (i == members.Length - 1)
-                    {
-                        currentStructureExpression.Members[memberName] = expression;
-                    }
-                    else
-                    {
-                        // If identifier points to an existing member, use that.
-                        if (currentStructureExpression.Members.ContainsKey(memberName))
-                        {
-                            currentExpression = currentStructureExpression.Members[memberName];
-                        }
-                        else
-                        {
-                            // Recursively create nested structures as required.
-                            currentStructureExpression.Members[memberName] = new IdfPlusObjectExpression();
-                            currentExpression = currentStructureExpression.Members[memberName];
-                        }
-                    }
-                    currentStructureText = $"{currentStructureText}.{memberName}";
-                }
-            }
+            _environments[0][identifier] = expression;
 
             return expressionVisitor.output.ToString();
         }

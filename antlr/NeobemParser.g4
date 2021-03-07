@@ -6,11 +6,10 @@ options {
 }
 
 
-/*variable_declaration : VARIABLE member_access* '=' expression;*/
-variable_declaration : IDENTIFIER member_access* EQUALS expression;
+variable_declaration : IDENTIFIER EQUALS expression;
 
 // See pg. 41 of Antlr reference
-expression :   expression member_access                                               # MemberAccessExp
+expression :   expression MEMBER_ACCESS expression                                               # MemberAccessExp
              | funcexp=expression ( LPAREN RPAREN |  LPAREN expression (COMMA expression)* RPAREN ) # FunctionExp
              | <assoc=right> expression CARET expression                                # Exponientiate
              | expression op=(MULTOP|DIVIDEOP) expression                                     # MultDivide
@@ -38,7 +37,7 @@ return_statement : RETURN expression ;
 
 idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* RCURLY ;
 
-idfplus_object_property_def : IDENTIFIER STRUCT_SEP expression ;
+idfplus_object_property_def : expression STRUCT_SEP expression ;
 
 list :  LSQUARE RSQUARE |
         LSQUARE expression (COMMA expression)* RSQUARE ;
@@ -76,21 +75,9 @@ base_idf : COMMENT                # IdfComment
            | print_statment       # PrintStatment
            ;
 
-idf : (base_idf)* EOF;
-
-member_access : MEMBER_ACCESS IDENTIFIER ;
-
-
 let_binding : LET IDENTIFIER EQUALS expression (COMMA IDENTIFIER EQUALS expression)* IN expression ;
-
-/*object : OBJECT ;*/
-
-/*object : OBJECT_TYPE COMMA .*? OBJECT_TERMINATOR .*? '\r'?'\n';*/
 
 object : OBJECT_TYPE OBJECT_COMMENT? (FIELD_SEP OBJECT_COMMENT? (FIELD OBJECT_COMMENT?)?)+  OBJECT_TERMINATOR ;
 
-
-/*fragment OBJECT_TERMINATOR : ';' ;*/
-
-
+idf : (base_idf)* EOF;
 

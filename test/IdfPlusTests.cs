@@ -97,7 +97,7 @@ namespace test
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
-            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.4;", output));
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.4,9.3;", output));
         }
 
         [Test]
@@ -181,5 +181,20 @@ namespace test
 
             Console.WriteLine(output);
         }
+
+        [Test]
+        public void TestEmojiSupport()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "emoji_key_support_test.nbem");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,Neutral Face;", output));
+        }
+
     }
 }

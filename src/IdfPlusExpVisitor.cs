@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime.Atn;
 
 namespace src
 {
@@ -100,10 +101,17 @@ namespace src
 
         public override Expression VisitMemberAccessExp(NeobemParser.MemberAccessExpContext context)
         {
-            Expression expression = Visit(context.expression());
+            Expression expression = Visit(context.expression(0));
             if (expression is IdfPlusObjectExpression objectExpression)
             {
-                var memberName = context.member_access().IDENTIFIER().GetText();
+                Expression memberAccessExpression = Visit(context.expression(1));
+
+                if (!(memberAccessExpression is StringExpression stringMemberExpression))
+                {
+                    throw new InvalidOperationException($"Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
+                }
+
+                var memberName = stringMemberExpression.Text;
                 if (objectExpression.Members.TryGetValue(memberName, out Expression memberExpression))
                 {
                     return memberExpression;
@@ -111,12 +119,12 @@ namespace src
                 else
                 {
                     throw new InvalidOperationException(
-                        $"{memberName} is not a member of the object {context.expression().GetText()}");
+                        $"{memberName} is not a member of the object {context.expression(0).GetText()}");
                 }
             }
             else
             {
-                throw new InvalidOperationException($"{context.expression().GetText()} is not an object.");
+                throw new InvalidOperationException($"{context.expression(0).GetText()} is not an object.");
             }
         }
 
@@ -165,6 +173,10 @@ namespace src
             // Concatenate Strings on '+' operation
             if (lhs is StringExpression lhsString && rhs is StringExpression rhsString && op == "+")
                 return new StringExpression(lhsString.Text + rhsString.Text);
+
+            // Merge/Update structures on '+' operation
+            if (lhs is IdfPlusObjectExpression lhsStructure && rhs is IdfPlusObjectExpression rhsStructure)
+                return lhsStructure.Add(rhsStructure);
 
             throw new NotImplementedException(
                 $"Line {context.Start.Line}: The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
@@ -263,9 +275,16 @@ namespace src
             IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
             foreach (NeobemParser.Idfplus_object_property_defContext prop in props)
             {
-                var name = prop.IDENTIFIER().GetText();
-                Expression expression = Visit(prop.expression());
-                objectExpression.Members[name] = expression;
+                var stringExpression = Visit(prop.expression(0));
+
+                if (!(stringExpression is StringExpression nameExpression))
+                {
+                    throw new InvalidOperationException(
+                        $"Tried to set member '{prop.expression(0).GetText()}', which is not a string expression.");
+                }
+
+                Expression expression = Visit(prop.expression(1));
+                objectExpression.Members[nameExpression.Text] = expression;
             }
 
             return objectExpression;

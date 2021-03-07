@@ -177,6 +177,47 @@ namespace src
     {
         public Dictionary<string, Expression> Members = new Dictionary<string, Expression>();
         public override string AsString() => string.Join(",", Members.Keys.Select(s => Members[s].AsString()));
+
+        public IdfPlusObjectExpression Add(IdfPlusObjectExpression right) => StructureAdd.Add(this, right);
+    }
+
+    public static class StructureAdd
+    {
+        public static IdfPlusObjectExpression Add(IdfPlusObjectExpression left, IdfPlusObjectExpression right)
+        {
+            IdfPlusObjectExpression newStructure = new IdfPlusObjectExpression();
+
+            foreach (var member in left.Members.Keys)
+            {
+                if (!right.Members.ContainsKey(member))
+                {
+                    newStructure.Members[member] = left.Members[member];
+                }
+                else
+                {
+                    if (left.Members[member] is IdfPlusObjectExpression subLeftExpression &&
+                        right.Members[member] is IdfPlusObjectExpression subRightExpression)
+                    {
+                        newStructure.Members[member] = Add(subLeftExpression, subRightExpression);
+                    }
+                    else
+                    {
+                        // If both items have the same key, the right side overrides.
+                        newStructure.Members[member] = right.Members[member];
+                    }
+                }
+            }
+
+            foreach (var member in right.Members.Keys)
+            {
+                if (!left.Members.ContainsKey(member))
+                {
+                    newStructure.Members[member] = right.Members[member];
+                }
+            }
+
+            return newStructure;
+        }
     }
 
     public class BooleanExpression : Expression

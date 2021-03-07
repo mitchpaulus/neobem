@@ -1,10 +1,10 @@
 template = λ zone {
-    if zone.is_true
+    if zone.'is true'
     then (λ { Version,9.1; })()
     else (λ { Version,9.2; })()
 }
 
-zone = { is_true: ✓ }
+zone = { 'is true': ✓ }
 
 print template(zone)
 

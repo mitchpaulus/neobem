@@ -9,10 +9,10 @@ ________________________________________
 
 zone_template = λ zone {
 Zone,
-  < zone.name >,     ! Name
+  < zone.'name' >,     ! Name
   0,                 ! Direction of Relative North {deg}
-  < zone.x_origin >, ! X Origin {m}
-  < zone.y_origin >, ! Y Origin {m}
+  < zone.'x_origin' >, ! X Origin {m}
+  < zone.'y_origin' >, ! Y Origin {m}
   0,                 ! Z Origin {m}
   1,                 ! Type
   1,                 ! Multiplier

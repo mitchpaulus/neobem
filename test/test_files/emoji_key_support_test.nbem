@@ -1,0 +1,8 @@
+struct = {
+    '😐': 'Neutral Face'
+}
+
+
+Version,
+    < struct.'😐' >;
+

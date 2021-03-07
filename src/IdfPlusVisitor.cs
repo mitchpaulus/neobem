@@ -27,8 +27,11 @@ namespace src
             _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _environments[0]["head"] = new ListHeadFunctionExpression();
             _environments[0]["tail"] = new ListTailFunctionExpression();
+            _environments[0]["init"] = new ListInitFunctionExpression();
+            _environments[0]["last"] = new ListLastFunctionExpression();
             _environments[0]["index"] = new ListIndexFunctionExpression();
             _environments[0]["length"] = new ListLengthFunctionExpression();
+            _environments[0]["join"] = new StringJoinFunctionExpression();
 
             _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
         }

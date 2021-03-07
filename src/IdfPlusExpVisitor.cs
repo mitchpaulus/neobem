@@ -31,8 +31,12 @@ namespace src
             _variables[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _variables[0]["head"] = new ListHeadFunctionExpression();
             _variables[0]["tail"] = new ListTailFunctionExpression();
+            _variables[0]["init"] = new ListInitFunctionExpression();
+            _variables[0]["last"] = new ListLastFunctionExpression();
+
             _variables[0]["index"] = new ListIndexFunctionExpression();
             _variables[0]["length"] = new ListLengthFunctionExpression();
+            _variables[0]["join"] = new StringJoinFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

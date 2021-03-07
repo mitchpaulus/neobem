@@ -132,11 +132,62 @@ namespace src
 
         public StringExpression(string text)
         {
-            Text = text;
+            Text = StringEscape.Escape(text);
         }
 
         public override string ToString() => Text;
         public override string AsString() => Text;
+    }
+
+    public static class StringEscape
+    {
+        private static Dictionary<char, char> escapes = new Dictionary<char, char>()
+        {
+            {'n', '\n'},
+            {'t', '\t'},
+            {'\\', '\\'},
+            {'\'', '\''},
+            {'r', '\r'},
+        };
+
+        public static string Escape(string input)
+        {
+            StringBuilder builder = new StringBuilder(input);
+
+            bool inEscape = false;
+
+            List<int> indiciesToRemove = new List<int>();
+
+            for (int i = 0; i < builder.Length; i++)
+            {
+                if (!inEscape)
+                {
+                    if (builder[i] == '\\')
+                    {
+                        inEscape = true;
+                        indiciesToRemove.Add(i);
+                    }
+                }
+                else
+                {
+                    if (escapes.ContainsKey(builder[i]))
+                    {
+                        builder[i] = escapes[builder[i]];
+                        inEscape = false;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"The escape sequence \\{builder[i]} is not valid.");
+                    }
+                }
+            }
+
+            foreach (var i in indiciesToRemove)
+            {
+                builder.Remove(i, 1);
+            }
+            return builder.ToString();
+        }
     }
 
     public class ListExpression : Expression

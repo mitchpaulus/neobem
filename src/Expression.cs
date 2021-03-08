@@ -90,6 +90,7 @@ namespace src
             StringBuilder builder = new StringBuilder();
 
             ObjectVariableReplacer replacer = new ObjectVariableReplacer(baseDirectory);
+            var prettyPrinter = new IdfObjectPrettyPrinter();
 
             if (_context.lambda_def().expression() != null)
             {
@@ -103,11 +104,13 @@ namespace src
                     switch (item)
                     {
                         case NeobemParser.FunctionIdfCommentContext commentContext:
-                            builder.Append(commentContext.GetText());
+                            var replacedComment = replacer.Replace(commentContext.GetText(), updatedEnvironments);
+                            builder.Append(replacedComment);
                             break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             var replacedObject = replacer.Replace(objectDeclarationContext.GetText(), updatedEnvironments);
-                            builder.AppendLine(replacedObject);
+                            var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject);
+                            builder.AppendLine(prettyPrinted);
                             break;
                         case NeobemParser.FunctionVariableDeclarationContext variableDeclarationContext:
                             var expressionResult = visitor.Visit(variableDeclarationContext.variable_declaration().expression());

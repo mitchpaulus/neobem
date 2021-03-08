@@ -14,6 +14,7 @@ namespace src
         private readonly ObjectVariableReplacer _objectVariableReplacer;
 
         public HashSet<string> exports = new HashSet<string>();
+        private readonly IdfObjectPrettyPrinter _idfObjectPrettyPrinter = new IdfObjectPrettyPrinter();
 
         public IdfPlusVisitor(string baseDirectory)
         {
@@ -51,38 +52,8 @@ namespace src
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
         {
             var replaced = _objectVariableReplacer.Replace(context.GetText(), _environments);
-            var prettyPrinted = ObjectPrettyPrinter(replaced);
+            var prettyPrinted = _idfObjectPrettyPrinter.ObjectPrettyPrinter(replaced);
             return prettyPrinted + "\n\n";
-        }
-
-        public string ObjectPrettyPrinter(string input)
-        {
-            StringBuilder builder = new StringBuilder();
-
-            var lines = input.SplitLines();
-
-            bool firstLine = true;
-            foreach (var line in lines)
-            {
-                SplitIdfLine splitComment = line.SplitComment();
-
-                var trimmedFields = splitComment.IdfText.Split(',').Select(s => s.Trim());
-                // Trim end so last comma doesn't have extraneous space.
-                var cleanText = string.Join(", ", trimmedFields).TrimEnd();
-
-                var startSpaces = firstLine ? "" : "  ";
-
-                // Simplest method is same as the default out of the IdfEditor, put all comments in the same position for the entire file.
-                var formatSpaces = new string(' ', Math.Max(2, 20 - cleanText.Length - startSpaces.Length));
-
-                builder.Append(!string.IsNullOrWhiteSpace(splitComment.Comment)
-                    ? $"{startSpaces}{cleanText}{formatSpaces}{splitComment.Comment}\n"
-                    : $"{startSpaces}{cleanText}\n");
-
-                firstLine = false;
-            }
-
-            return builder.ToString();
         }
 
         public override string VisitVariable_declaration(NeobemParser.Variable_declarationContext context)

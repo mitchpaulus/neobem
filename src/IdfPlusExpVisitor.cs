@@ -272,7 +272,27 @@ namespace src
                     rhsStringExpression.Text));
             }
 
-            throw new NotImplementedException($"Boolean expression like '{context.GetText()}' not implemented.");
+            if (lhs is BooleanExpression lhsBooleanExpression && rhs is BooleanExpression rhsBooleanExpression)
+            {
+                return oper switch
+                {
+                    "==" => new BooleanExpression(lhsBooleanExpression.Value == rhsBooleanExpression.Value),
+                    "!=" => new BooleanExpression(lhsBooleanExpression.Value != rhsBooleanExpression.Value),
+                    _ => throw new NotImplementedException(
+                        $"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.")
+                };
+            }
+
+            if (lhs is ListExpression lhsListExpression && rhs is ListExpression rhsListExpression)
+            {
+                if (lhsListExpression.Expressions.Count == 0 && rhsListExpression.Expressions.Count == 0)
+                    return new BooleanExpression(true);
+                if (lhsListExpression.Expressions.Count != rhsListExpression.Expressions.Count)
+                    return new BooleanExpression(false);
+                throw new NotImplementedException($"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented for non empty lists.");
+            }
+
+            throw new NotImplementedException($"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.");
         }
 
         public override Expression VisitObjExp(NeobemParser.ObjExpContext context)

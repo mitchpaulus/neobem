@@ -44,7 +44,7 @@ namespace src
                     else
                     {
                         throw new ArgumentException(
-                            $"'sheet' property is expected to be a String expression. Received a {expression.GetType()}");
+                            $"'sheet' property is expected to be a String expression. Received a {expression.TypeName()}");
                     }
 
                     var tryGetRange = objectExpression.Members.TryGetValue("range", out expression);
@@ -65,7 +65,7 @@ namespace src
                         else
                         {
                             throw new ArgumentException(
-                                $"'range' property is expected to be a String expression. Received a {expression.GetType()}");
+                                $"'range' property is expected to be a string. Received a {expression.TypeName()}");
                         }
                     }
 
@@ -79,7 +79,7 @@ namespace src
                 }
             }
 
-            throw new ArgumentException($"load function expects String or Object - found {inputs[0].GetType()}");
+            throw new ArgumentException($"load function expects string or structure - found {inputs[0].TypeName()}");
         }
 
         public override string AsString() => "Load";

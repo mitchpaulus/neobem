@@ -25,7 +25,7 @@ namespace src
 
                 if (mappedList.Select((tuple, i) => !(tuple.Item2 is BooleanExpression)).Any(b => b))
                 {
-                    var distinctTypes = mappedList.Select(tuple => tuple.Item2.GetType()).Distinct();
+                    var distinctTypes = mappedList.Select(tuple => tuple.Item2.TypeName()).Distinct();
                     throw new ArgumentException(
                         $"filter function expects function to return a boolean expression. Received back {string.Join(", ", distinctTypes)}.");
                 }
@@ -41,7 +41,7 @@ namespace src
                 return (returnString, newListExpression);
             }
             throw new ArgumentException(
-                    $"filter expects a function and list, received a {inputs[0].GetType()} and {inputs[1].GetType()}");
+                    $"filter expects a function and list, received a {inputs[0].TypeName()} and {inputs[1].TypeName()}");
         }
     }
 }

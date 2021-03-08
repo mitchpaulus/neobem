@@ -59,6 +59,7 @@ namespace src
         private readonly List<string> _parameters;
 
         public override string AsString() => "";
+        public override string TypeName() => "function";
 
         public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
         {
@@ -137,6 +138,7 @@ namespace src
 
         public override string ToString() => Text;
         public override string AsString() => Text;
+        public override string TypeName() => "string";
     }
 
     public static class StringEscape
@@ -200,7 +202,7 @@ namespace src
         }
 
         public override string AsString() => string.Join(",", Expressions.Select(expression => expression.AsString()));
-
+        public override string TypeName() => "list";
     }
 
     public class NumericExpression : Expression
@@ -222,6 +224,8 @@ namespace src
 
         public override string ToString() => Text;
         public override string AsString() => Value.ToString();
+
+        public override string TypeName() => "numeric";
     }
 
     public class IdfPlusObjectExpression : Expression
@@ -230,6 +234,8 @@ namespace src
         public override string AsString() => string.Join(",", Members.Keys.Select(s => Members[s].AsString()));
 
         public IdfPlusObjectExpression Add(IdfPlusObjectExpression right) => StructureAdd.Add(this, right);
+
+        public override string TypeName() => "structure";
     }
 
     public static class StructureAdd
@@ -277,12 +283,15 @@ namespace src
 
         public BooleanExpression(bool value) => Value = value;
         public override string AsString() => Value.ToString();
+
+        public override string TypeName() => "boolean";
     }
 
 
     public abstract class Expression
     {
         public abstract string AsString();
+        public abstract string TypeName();
     }
 
     public class IdfType

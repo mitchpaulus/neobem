@@ -87,7 +87,8 @@ namespace src
                 return new BooleanExpression(conditional[context.op.Text](lhsBooleanExp.Value, rhsBooleanExp.Value));
             }
 
-            throw new NotImplementedException($"Line {context.Start.Line}: The logic expression is not defined for types {lhs.GetType()} and {rhs.GetType()}.");
+            throw new NotImplementedException(
+                $"Line {context.Start.Line}: The logic expression is not defined for types {lhs.TypeName()} and {rhs.TypeName()}");
         }
 
         public override Expression VisitNumericExp(NeobemParser.NumericExpContext context)
@@ -183,7 +184,7 @@ namespace src
                 return lhsStructure.Add(rhsStructure);
 
             throw new NotImplementedException(
-                $"Line {context.Start.Line}: The operation of {op} with types {lhs.GetType()} and {rhs.GetType()} is not defined.");
+                $"Line {context.Start.Line}: The operation of {op} with types {lhs.TypeName()} and {rhs.TypeName()} is not defined.");
         }
 
         public override Expression VisitFunctionExp(NeobemParser.FunctionExpContext functionExpContext)

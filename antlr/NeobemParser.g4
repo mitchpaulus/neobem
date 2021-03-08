@@ -35,7 +35,8 @@ lambda_def : FUNCTION_BEGIN IDENTIFIER* LCURLY (expression | function_statement*
 
 return_statement : RETURN expression ;
 
-idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* RCURLY ;
+idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* RCURLY |
+                 LCURLY RCURLY;
 
 idfplus_object_property_def : expression STRUCT_SEP expression ;
 

@@ -149,7 +149,7 @@ namespace src
                     for (var column = _startCol; column <= _endCol; column++)
                     {
                         var cellValue = sheet.Cells[row, column].Text;
-                        headers.Add(cellValue.SanitizeIdentifier());
+                        headers.Add(cellValue);
                     }
                 }
                 else
@@ -193,7 +193,7 @@ namespace src
             var col = _startCol;
             while (!string.IsNullOrWhiteSpace(sheet.Cells[row, col].Text))
             {
-                headers.Add(sheet.Cells[row, col].Text.SanitizeIdentifier());
+                headers.Add(sheet.Cells[row, col].Text);
                 col++;
             }
 

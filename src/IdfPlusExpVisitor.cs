@@ -28,6 +28,8 @@ namespace src
             };
             _variables[0]["map"] = new MapFunctionExpression();
             _variables[0]["filter"] = new FilterFunctionExpression();
+            _variables[0]["keys"] = new KeysFunctionExpression();
+            _variables[0]["has"] = new HasFunctionExpression();
             _variables[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _variables[0]["head"] = new ListHeadFunctionExpression();
             _variables[0]["tail"] = new ListTailFunctionExpression();

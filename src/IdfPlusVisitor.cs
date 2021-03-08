@@ -25,6 +25,8 @@ namespace src
             };
             _environments[0]["map"] = new MapFunctionExpression();
             _environments[0]["filter"] = new FilterFunctionExpression();
+            _environments[0]["keys"] = new KeysFunctionExpression();
+            _environments[0]["has"] = new HasFunctionExpression();
             _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
             _environments[0]["head"] = new ListHeadFunctionExpression();
             _environments[0]["tail"] = new ListTailFunctionExpression();

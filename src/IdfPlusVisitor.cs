@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Antlr4.Runtime.Tree;
+using System.Text;
 
 namespace src
 {
@@ -38,7 +38,7 @@ namespace src
 
         public override string VisitIdf(NeobemParser.IdfContext context)
         {
-            var items = context.base_idf().Select(Visit).ToList();
+            var items = context.base_idf().Select(Visit).Select(s => s.Replace("\r\n", "\n")).ToList();
 
             return string.Join("", items);
         }
@@ -51,8 +51,38 @@ namespace src
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
         {
             var replaced = _objectVariableReplacer.Replace(context.GetText(), _environments);
-            // ITerminalNode comment = context.@object().COMMENT();
-            return replaced + "\n\n";
+            var prettyPrinted = ObjectPrettyPrinter(replaced);
+            return prettyPrinted + "\n\n";
+        }
+
+        public string ObjectPrettyPrinter(string input)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            var lines = input.SplitLines();
+
+            bool firstLine = true;
+            foreach (var line in lines)
+            {
+                SplitIdfLine splitComment = line.SplitComment();
+
+                var trimmedFields = splitComment.IdfText.Split(',').Select(s => s.Trim());
+                // Trim end so last comma doesn't have extraneous space.
+                var cleanText = string.Join(", ", trimmedFields).TrimEnd();
+
+                var startSpaces = firstLine ? "" : "  ";
+
+                // Simplest method is same as the default out of the IdfEditor, put all comments in the same position for the entire file.
+                var formatSpaces = new string(' ', Math.Max(2, 20 - cleanText.Length - startSpaces.Length));
+
+                builder.Append(!string.IsNullOrWhiteSpace(splitComment.Comment)
+                    ? $"{startSpaces}{cleanText}{formatSpaces}{splitComment.Comment}\n"
+                    : $"{startSpaces}{cleanText}\n");
+
+                firstLine = false;
+            }
+
+            return builder.ToString();
         }
 
         public override string VisitVariable_declaration(NeobemParser.Variable_declarationContext context)

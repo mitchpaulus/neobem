@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 
@@ -64,5 +67,56 @@ namespace src
 
             return lowerCaseFirstChar + fixRemainingChars;
         }
+
+        public static List<string> SplitLines(this string input)
+        {
+            List<string> output = new List<string>();
+            using (StringReader sr = new StringReader(input)) {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    output.Add(line);
+                }
+            }
+
+            return output;
+        }
+
+        public static SplitIdfLine SplitComment(this string input)
+        {
+            var indexOfExclamation = input.IndexOf('!');
+
+            if (indexOfExclamation < 0)
+            {
+                return new SplitIdfLine()
+                {
+                    IdfText = input, Comment = ""
+                };
+            }
+            else
+            {
+                return new SplitIdfLine()
+                {
+                    IdfText = input.Substring(0, indexOfExclamation),
+                    Comment = input.Substring(indexOfExclamation)
+                };
+            }
+        }
+
+        public static string LineEnding(this string input)
+        {
+            foreach (var character in input)
+            {
+                if (character == '\r') return "\r\n";
+                if (character == '\n') return "\n";
+            }
+            return "\n";
+        }
+    }
+
+    public class SplitIdfLine
+    {
+        public string Comment;
+        public string IdfText;
     }
 }

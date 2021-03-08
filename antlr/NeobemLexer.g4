@@ -79,7 +79,7 @@ WS : [ \t\r\n]+ -> skip ;
 
 mode IDFOBJECT;
 
-FIELD : ~[,!;]+ ;
+FIELD : ~[,!;\r\n]+ ;
 FIELD_SEP : ',' [ \t\r\n]* ;
 OBJECT_COMMENT : '!' .*? '\r'?'\n' ;
 OBJECT_TERMINATOR : ';' [ \t]* ('!' .*? '\r'?'\n')? -> popMode ;

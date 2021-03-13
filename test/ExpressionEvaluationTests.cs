@@ -267,5 +267,18 @@ namespace test
 
              Assert.IsTrue(IdfObjectCompare.Equals("Version,1;", output));
         }
+
+        [Test]
+        public void TestNumberStringAddition()
+        {
+            string file = "var1 = 'Chiller ' + 1\nvar2 = 2 + ' Chiller'\nVersion,<var1>,<var2>;";
+            var visitor = new IdfPlusVisitor(null);
+
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,Chiller 1,2 Chiller;", output));
+        }
     }
 }

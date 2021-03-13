@@ -185,6 +185,13 @@ namespace src
             if (lhs is IdfPlusObjectExpression lhsStructure && rhs is IdfPlusObjectExpression rhsStructure)
                 return lhsStructure.Add(rhsStructure);
 
+            // If you have one string, one numeric, cast numeric to string and concatenate.
+            if (lhs is StringExpression lhsString1 && rhs is NumericExpression rhsNumeric1 && op == "+")
+                return new StringExpression(lhsString1.Text + rhsNumeric1.Text);
+
+            if (lhs is NumericExpression lhsNumeric1 && rhs is StringExpression rhsString1 && op == "+")
+                return new StringExpression(lhsNumeric1.Text + rhsString1.Text);
+
             throw new NotImplementedException(
                 $"Line {context.Start.Line}: The operation of {op} with types {lhs.TypeName()} and {rhs.TypeName()} is not defined.");
         }

@@ -37,7 +37,7 @@ namespace test
 
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,24;\n\n", output);
+            Assert.IsTrue( IdfObjectCompare.Equals("Version,24;\n\n", output));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace test
             string output = visitor.Visit(tree);
 
             Console.WriteLine(output);
-            Assert.AreEqual("Version,3;\n\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,3;\n\n", output));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace test
             string output = visitor.Visit(tree);
 
             Console.WriteLine(output);
-            Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.1;\nVersion,9.2;\n", output));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace test
 
             string output = visitor.Visit(tree);
 
-            Assert.AreEqual("Version,9.1;\nVersion,9.2;\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,9.1;\nVersion,9.2;\n", output));
         }
 
         [Test]

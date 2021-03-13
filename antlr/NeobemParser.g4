@@ -55,7 +55,7 @@ print_statment : PRINT expression ;
 
 inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
 
-inline_table_header : IDENTIFIER (INLINE_TABLE_COL_SEP IDENTIFIER)* ;
+inline_table_header : STRING (INLINE_TABLE_COL_SEP STRING)* ;
 
 inline_table_header_separator : INLINE_TABLE_HEADER_SEP (INLINE_TABLE_COL_SEP INLINE_TABLE_HEADER_SEP)* ;
 

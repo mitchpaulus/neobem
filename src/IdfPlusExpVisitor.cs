@@ -319,7 +319,7 @@ namespace src
 
         public override Expression VisitInlineTable(NeobemParser.InlineTableContext context)
         {
-            var names = context.inline_table().inline_table_header().IDENTIFIER().Select(node => node.GetText()).ToList();
+            var names = context.inline_table().inline_table_header().STRING().Select(node => node.GetText().Substring(1,node.GetText().Length - 2)).ToList();
 
             var expressions = context.inline_table()
                 .inline_table_data_row()

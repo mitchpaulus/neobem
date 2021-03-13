@@ -187,7 +187,7 @@ namespace test
             string output = visitor.Visit(tree);
 
             Console.WriteLine(output);
-            Assert.AreEqual("Version,5;\n\n", output);
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,5;\n\n", output));
         }
 
         [Test]

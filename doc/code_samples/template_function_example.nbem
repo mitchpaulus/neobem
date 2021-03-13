@@ -1,0 +1,6 @@
+version_template = \ ver {
+Version,
+    <ver>;
+}
+
+math_function = \ x { (x + 2)^3 }

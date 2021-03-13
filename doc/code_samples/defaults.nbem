@@ -1,0 +1,9 @@
+simulation_params = λ {
+Version,9.4;
+
+Timestep,6;
+
+ZoneAirHeatBalanceAlgorithm,EulerMethod;
+}
+
+export (simulation_params)

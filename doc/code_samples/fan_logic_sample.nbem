@@ -1,0 +1,63 @@
+in_h2o_2_pa = \ in_h2o { in_h2o * 249.08891 }
+cfm_2_m3s = \ cfm { cfm / 2118.88 }
+
+variable_fan = \name cfm press {
+Fan:VariableVolume,
+  <name>,               ! Name
+  ,                     ! Availability Schedule Name
+  0.7,                  ! Fan Total Efficiency
+  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa} (<press> inH2O)
+  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s} (<cfm> CFM)
+  Fraction,             ! Fan Power Minimum Flow Rate Input Method
+  0.25,                 ! Fan Power Minimum Flow Fraction
+  ,                     ! Fan Power Minimum Air Flow Rate {m3/s}
+  0.9,                  ! Motor Efficiency
+  1.0,                  ! Motor In Airstream Fraction
+  0,                    ! Fan Power Coefficient 1
+  0,                    ! Fan Power Coefficient 2
+  1,                    ! Fan Power Coefficient 3
+  0,                    ! Fan Power Coefficient 4
+  0,                    ! Fan Power Coefficient 5
+  <name> Inlet,         ! Air Inlet Node Name
+  <name> Outlet,        ! Air Outlet Node Name
+  General;              ! End-Use Subcategory
+}
+
+constant_fan = \name cfm press {
+Fan:ConstantVolume,
+  <name>,               ! Name
+  ,                     ! Availability Schedule Name
+  0.7,                  ! Fan Total Efficiency
+  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa} (<press> inH2O)
+  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s} (<cfm> CFM)
+  0.9,                  ! Motor Efficiency
+  1.0,                  ! Motor In Airstream Fraction
+  <name> Inlet,         ! Air Inlet Node Name
+  <name> Outlet,        ! Air Outlet Node Name
+  General;              ! End-Use Subcategory
+}
+
+
+fans = [
+    {
+        'name': 'Fan 1',
+        'type': 0,
+        'press': 5,
+        'cfm': 10000
+    },
+    {
+        'name': 'Fan 2',
+        'type': 1,
+        'press': 6,
+        'cfm': 20000
+    }
+]
+
+which_fan = \fan {
+if fan.'type' == 0 then
+    constant_fan(fan.'name', fan.'cfm', fan.'press')
+else
+    variable_fan(fan.'name', fan.'cfm', fan.'press')
+}
+
+print map(which_fan, fans)

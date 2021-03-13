@@ -1,0 +1,4 @@
+struct = {
+    if 'this is' == 'totally wild' then 'wild' else 'totally cool': 9.4
+}
+Version,<struct . ( 'totally ' + 'cool' )>;

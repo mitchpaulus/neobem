@@ -1,0 +1,5 @@
+my_add = \ x { \y { x + y }}
+
+add_two = my_add(2)
+
+print add_two(5)

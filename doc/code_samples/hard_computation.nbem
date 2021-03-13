@@ -1,0 +1,5 @@
+my_hard_computation = \ input {
+    numerator   = sin(input * 2) + ceiling(input)
+    denominator = log(input)
+    return numerator / denominator
+}

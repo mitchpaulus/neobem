@@ -37,30 +37,7 @@ can be abstracted out to a variable. If you ever want to change the
 name, you can easily do it in one place. How do you do it? Like so:
 
 ```nbem
-
-atrium_name = 'Atrium'
-
-Zone,
-  <atrium_name>, ! Name
-  0,             ! Direction of Relative North {deg}
-  0,             ! X Origin {m}
-  0,             ! Y Origin {m}
-  0,             ! Z Origin {m}
-  1,             ! Type
-  1,             ! Multiplier
-  autocalculate, ! Ceiling Height {m}
-  autocalculate, ! Volume {m3}
-  autocalculate, ! Floor Area {m2}
-  ,              ! Zone Inside Convection Algorithm
-  ,              ! Zone Outside Convection Algorithm
-  Yes;           ! Part of Total Floor Area
-
-
-Schedule:Constant,
-  <atrium_name> Schedule, ! Name
-  <atrium_name> Limits,   ! Schedule Type Limits Name
-  1;                      ! Hourly Value
-
+INCLUDE code_samples/variable_sample.nbem
 ```
 
 A few pieces of syntax to see here:
@@ -132,23 +109,7 @@ schedule limits, in which the names match. We can make this situation
 better by introducing a *function*.
 
 ```nbem
-const_temp_schedule = \ name value lower upper {
-Schedule:Constant,
-  <name> Schedule, ! Name
-  <name> Limits,   ! Schedule Type Limits Name
-  <value>;         ! Hourly Value
-
-ScheduleTypeLimits,
-  <name> Limits, ! Name
-  <lower>,       ! Lower Limit Value
-  <upper>,       ! Upper Limit Value
-  Continuous,    ! Numeric Type [Continuous, Discrete]
-  Temperature;   ! Unit Type
-}
-
-print const_temp_schedule('Zone Space Temperature', 22, 20, 24)
-print const_temp_schedule('Supply Air Temp'       , 13, 10, 16)
-print const_temp_schedule('CHW Supply Temp'       , 7 , 5 , 10)
+INCLUDE code_samples/const_schedule_example.nbem
 ```
 
 This will produce the exact same objects as before. But we now can trust
@@ -175,17 +136,13 @@ assigned to variables and be returned by other functions.
 This means you can build higher order functions like:
 
 ```nbem
-my_add = \ x { \y { x + y }}
-
-add_two = my_add(2)
-
-print add_two(5)
+INCLUDE code_samples/higher_order_function.nbem
 ```
 
 The same thing could even be written on a single line like:
 
 ```nbem
-print (\x { \y { x + y }})(2)(5)
+INCLUDE code_samples/single_line_higher_order_function.nbem
 ```
 
 The result of this is `7`. See, functions can return other functions, and
@@ -226,12 +183,7 @@ functions to Neobem. One has a side effect of printing to the result,
 and the other just computes a value.
 
 ```nbem
-version_template = \ ver {
-Version,
-    <ver>;
-}
-
-math_function = \ x { (x + 2)^3 }
+INCLUDE code_samples/template_function_example.nbem
 ```
 
 Beside object declarations and input file comments, the other two
@@ -248,11 +200,7 @@ the function. An example of variable declaration and the return
 statement would be:
 
 ```nbem
-my_hard_computation = \ input {
-    numerator   = sin(input * 2) + ceiling(input)
-    denominator = log(input)
-    return numerator / denominator
-}
+INCLUDE code_samples/hard_computation.nbem
 ```
 
 ## Tutorial 3: Utilizing Tabular Data, Structures, and Lists
@@ -268,33 +216,7 @@ required objects for them. An example is the easiest way to show how this
 would be done in Neobem.
 
 ```nbem
-zones =
-________________________________________
-name          | x_origin    | y_origin
---------------|------------ |-----------
-'Bedroom'     | 0           | 0
-'Living Room' | 10          | 20
-'Kitchen'     | 5           | 12
-________________________________________
-
-zone_template = λ zone {
-Zone,
-  <zone.name>,     ! Name
-  0,               ! Direction of Relative North {deg}
-  <zone.x_origin>, ! X Origin {m}
-  <zone.y_origin>, ! Y Origin {m}
-  0,               ! Z Origin {m}
-  1,               ! Type
-  1,               ! Multiplier
-  autocalculate,   ! Ceiling Height {m}
-  autocalculate,   ! Volume {m3}
-  autocalculate,   ! Floor Area {m2}
-  ,                ! Zone Inside Convection Algorithm
-  ,                ! Zone Outside Convection Algorithm
-  Yes;             ! Part of Total Floor Area
-}
-
-print map(zone_template, zones)
+INCLUDE code_samples/inline_data_table_example.nbem
 ```
 
 Woah - there's a lot going on here. Let's unpack this. There are 3
@@ -306,7 +228,7 @@ The first variable declaration
 ```nbem
 zones =
 ________________________________________
-name          | x_origin    | y_origin
+'name'        | 'x_origin'  | 'y_origin'
 --------------|------------ |-----------
 'Bedroom'     | 0           | 0
 'Living Room' | 10          | 20
@@ -336,33 +258,57 @@ numeric expression that is the result of function application, and a
 function expression.
 
 A *structure* is a way to group expressions into a single identifier.
-This is the same concept as an "object" or "class" in many other
-programming languages. Unfortunately for me, I cannot name this an
-"object" since the concept of an object is already taken by the
-"objects" in the resulting file.
+This is the concept of an ["associative
+array"](https://en.wikipedia.org/wiki/Associative_array) implemented as
+a ["hash table"](https://en.wikipedia.org/wiki/Hash_table) with a string
+key, the same concept as in many other programming languages.
+Unfortunately for me, I cannot name this an "object" since the concept
+of an object is already taken by the "objects" in the resulting file.
 
 You define a structure like this:
 
 ```nbem
-my_struct = {
-    prop_1 : 42,
-    prop_2 : 'Some text'
-    prop_3 : {
-        nested_struct_prop : 'I am nested'
-    }
-    prop_4 : [ 1, 2, 3]
-}
+INCLUDE code_samples/structure_example.nbem
 ```
 
 You can access the contents of the structure using the member access
-operator, a period `.`.
+operator, a period `.`, followed by the string key.
 
 So for our structure example:
 
 ```nbem
-my_struct.prop2 == 'Some text'
-my_struct.prop_3.nested_struct_prop == 'I am nested'
+my_struct.'prop2' == 'Some text'
+my_struct.'prop_3'.'nested_struct_prop' == 'I am nested'
 ```
+
+Note the key used in the member access can be *any* string. For example,
+you can use emoji if you'd like. This is totally valid:
+
+```neobem
+struct = {
+    '😐': 9.4
+}
+
+Version,
+    < struct.'😐' >;
+```
+
+And the key doesn't have to be a *string literal*, it just has to
+*evaluate* to a string. So this is no problem either:
+
+```neobem
+INCLUDE code_samples/variable_key.nbem
+```
+
+In fact, in the original definition, they key doesn't even have to be a
+string literal, it can be any arbitrary expression that evaluates to a
+string. If you were feeling wild, you could do something like:
+
+```neobem
+INCLUDE code_samples/wild_example.nbem
+```
+
+That does evaluate to `Version,9.4;`{.nbem}, give it a try!
 
 Now that we know what a list and structure are, what is the result of
 that inline data table? It's a *list of structures*.
@@ -372,28 +318,28 @@ That means these are exactly the same.
 ```nbem
 zones =
 ________________________________________
-name          | x_origin    | y_origin
---------------|------------ |-----------
-'Bedroom'     | 0           | 0
-'Living Room' | 10          | 20
-'Kitchen'     | 5           | 12
+'name'        | 'x_origin' | 'y_origin'
+--------------|------------|------------
+'Bedroom'     | 0          | 0
+'Living Room' | 10         | 20
+'Kitchen'     | 5          | 12
 ________________________________________
 
 zones = [
     {
-        name: 'Bedroom',
-        x_origin: 0,
-        y_origin: 0
+        'name': 'Bedroom',
+        'x_origin': 0,
+        'y_origin': 0
     },
     {
-        name: 'Living Room',
-        x_origin: 10,
-        y_origin: 20
+        'name': 'Living Room',
+        'x_origin': 10,
+        'y_origin': 20
     },
     {
-        name: 'Kitchen',
-        x_origin: 5,
-        y_origin: 12
+        'name': 'Kitchen',
+        'x_origin': 5,
+        'y_origin': 12
     }
 ]
 ```
@@ -410,19 +356,19 @@ The second variable declaration
 ```nbem
 zone_template = λ zone {
 Zone,
-  <zone.name>,     ! Name
-  0,               ! Direction of Relative North {deg}
-  <zone.x_origin>, ! X Origin {m}
-  <zone.y_origin>, ! Y Origin {m}
-  0,               ! Z Origin {m}
-  1,               ! Type
-  1,               ! Multiplier
-  autocalculate,   ! Ceiling Height {m}
-  autocalculate,   ! Volume {m3}
-  autocalculate,   ! Floor Area {m2}
-  ,                ! Zone Inside Convection Algorithm
-  ,                ! Zone Outside Convection Algorithm
-  Yes;             ! Part of Total Floor Area
+  <zone.'name'>,     ! Name
+  0,                 ! Direction of Relative North {deg}
+  <zone.'x_origin'>, ! X Origin {m}
+  <zone.'y_origin'>, ! Y Origin {m}
+  0,                 ! Z Origin {m}
+  1,                 ! Type
+  1,                 ! Multiplier
+  autocalculate,     ! Ceiling Height {m}
+  autocalculate,     ! Volume {m3}
+  autocalculate,     ! Floor Area {m2}
+  ,                  ! Zone Inside Convection Algorithm
+  ,                  ! Zone Outside Convection Algorithm
+  Yes;               ! Part of Total Floor Area
 }
 
 ```
@@ -457,51 +403,7 @@ side-effect: printing out objects.
 So the output to our compiled idf file from the `map` function is:
 
 ```nbem
-Zone,
-  Bedroom,       ! Name
-  0,             ! Direction of Relative North {deg}
-  0,             ! X Origin {m}
-  0,             ! Y Origin {m}
-  0,             ! Z Origin {m}
-  1,             ! Type
-  1,             ! Multiplier
-  autocalculate, ! Ceiling Height {m}
-  autocalculate, ! Volume {m3}
-  autocalculate, ! Floor Area {m2}
-  ,              ! Zone Inside Convection Algorithm
-  ,              ! Zone Outside Convection Algorithm
-  Yes;           ! Part of Total Floor Area
-
-
-Zone,
-  Living Room,   ! Name
-  0,             ! Direction of Relative North {deg}
-  10,            ! X Origin {m}
-  20,            ! Y Origin {m}
-  0,             ! Z Origin {m}
-  1,             ! Type
-  1,             ! Multiplier
-  autocalculate, ! Ceiling Height {m}
-  autocalculate, ! Volume {m3}
-  autocalculate, ! Floor Area {m2}
-  ,              ! Zone Inside Convection Algorithm
-  ,              ! Zone Outside Convection Algorithm
-  Yes;           ! Part of Total Floor Area
-
-Zone,
-  Kitchen,       ! Name
-  0,             ! Direction of Relative North {deg}
-  5,             ! X Origin {m}
-  12,            ! Y Origin {m}
-  0,             ! Z Origin {m}
-  1,             ! Type
-  1,             ! Multiplier
-  autocalculate, ! Ceiling Height {m}
-  autocalculate, ! Volume {m3}
-  autocalculate, ! Floor Area {m2}
-  ,              ! Zone Inside Convection Algorithm
-  ,              ! Zone Outside Convection Algorithm
-  Yes;           ! Part of Total Floor Area
+INCLUDE code_samples/inline_data_table_example.output.idf
 ```
 
 I hope you can take in how expressive that is. Write the minimal amount
@@ -529,70 +431,7 @@ For this tutorial, let's use logic to determine which template we want to
 use for a given fan.
 
 ```nbem
-in_h2o_2_pa = \ in_h2o { in_h2o * 249.08891 }
-cfm_2_m3s = \ cfm { cfm / 2118.88 }
-
-variable_fan = \name cfm press {
-Fan:VariableVolume,
-  <name>,               ! Name
-  ,                     ! Availability Schedule Name
-  0.7,                  ! Fan Total Efficiency
-  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa}
-  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s}
-  Fraction,             ! Fan Power Minimum Flow Rate Input Method
-  0.25,                 ! Fan Power Minimum Flow Fraction
-  ,                     ! Fan Power Minimum Air Flow Rate {m3/s}
-  0.9,                  ! Motor Efficiency
-  1.0,                  ! Motor In Airstream Fraction
-  0,                    ! Fan Power Coefficient 1
-  0,                    ! Fan Power Coefficient 2
-  1,                    ! Fan Power Coefficient 3
-  0,                    ! Fan Power Coefficient 4
-  0,                    ! Fan Power Coefficient 5
-  <name> Inlet,         ! Air Inlet Node Name
-  <name> Outlet,        ! Air Outlet Node Name
-  General;              ! End-Use Subcategory
-}
-
-constant_fan = \name cfm press {
-Fan:ConstantVolume,
-  <name>,               ! Name
-  ,                     ! Availability Schedule Name
-  0.7,                  ! Fan Total Efficiency
-  <in_h2o_2_pa(press)>, ! Pressure Rise {Pa}
-  <cfm_2_m3s(cfm)>,     ! Maximum Flow Rate {m3/s}
-  0.9,                  ! Motor Efficiency
-  1.0,                  ! Motor In Airstream Fraction
-  <name> Inlet,         ! Air Inlet Node Name
-  <name> Outlet,        ! Air Outlet Node Name
-  General;              ! End-Use Subcategory
-}
-
-
-fans = [
-    {
-        name: 'Fan 1',
-        type: 0,
-        press: 5,
-        cfm: 10000
-    },
-    {
-        name: 'Fan 2',
-        type: 1,
-        press: 6,
-        cfm: 20000
-    },
-]
-
-which_fan = \fan {
-if fan.type == 0 then
-    constant_fan(fan.name, fan.press, fan.cfm)
-else
-    variable_fan(fan.name, fan.press, fan.cfm)
-}
-
-print map(which_fan, fans)
-
+INCLUDE code_samples/fan_logic_sample.nbem
 ```
 
 Notice here how we used an equality operator (`==`) to determine what function
@@ -618,11 +457,7 @@ files could be this.
 
 **in.nbem**
 ```nbem
-import 'defaults.nbem'
-
-print simulation_params()
-
-import 'chillers.nbem'
+INCLUDE code_samples/in_ver_1.nbem
 ```
 
 where in the same directory as the `in.nbem` file is the two files
@@ -634,95 +469,18 @@ If the contents of those are
 
 **defaults.nbem**
 ```nbem
-simulation_params = λ {
-Version,9.4;
-
-Timestep,6;
-
-ZoneAirHeatBalanceAlgorithm,EulerMethod;
-}
-
-export (simulation_params)
+INCLUDE code_samples/defaults.nbem
 ```
 
 **chillers.nbem**
 ```nbem
-chiller = λ unit_number {
-
-chiller_name = 'Chiller ' + unit_number
-
-tons_to_watts = λ tons { tons * 3516.8528 }
-
-Chiller:ConstantCOP,
-  <chiller_name>,            ! Name
-  <tons_to_watts(1000)>,     ! Nominal Capacity {W}
-  6,                         ! Nominal COP {W/W}
-  autosize,                  ! Design Chilled Water Flow Rate {m3/s}
-  autosize,                  ! Design Condenser Water Flow Rate {m3/s}
-  <chiller_name> CHW Inlet,  ! Chilled Water Inlet Node Name
-  <chiller_name> CHW Outlet, ! Chilled Water Outlet Node Name
-  <chiller_name> CW Inlet,   ! Condenser Inlet Node Name
-  <chiller_name> CW Outlet,  ! Condenser Outlet Node Name
-  AirCooled,                 ! Condenser Type
-  NotModulated,              ! Chiller Flow Mode
-  1.0;                       ! Sizing Factor
-}
-
-print map(chiller, [1, 2, 3])
+INCLUDE code_samples/chillers.nbem
 ```
 
 then the resulting output would be:
 
-
 ```nbem
-Version,9.4;
-
-Timestep,6;
-
-ZoneAirHeatBalanceAlgorithm,EulerMethod;
-
-Chiller:ConstantCOP,
-  Chiller 1,            ! Name
-  3516852.8,            ! Nominal Capacity {W}
-  6,                    ! Nominal COP {W/W}
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}
-  Chiller 1 CHW Inlet,  ! Chilled Water Inlet Node Name
-  Chiller 1 CHW Outlet, ! Chilled Water Outlet Node Name
-  Chiller 1 CW Inlet,   ! Condenser Inlet Node Name
-  Chiller 1 CW Outlet,  ! Condenser Outlet Node Name
-  AirCooled,            ! Condenser Type
-  NotModulated,         ! Chiller Flow Mode
-  1.0;                  ! Sizing Factor
-
-Chiller:ConstantCOP,
-  Chiller 2,            ! Name
-  3516852.8,            ! Nominal Capacity {W}
-  6,                    ! Nominal COP {W/W}
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}
-  Chiller 2 CHW Inlet,  ! Chilled Water Inlet Node Name
-  Chiller 2 CHW Outlet, ! Chilled Water Outlet Node Name
-  Chiller 2 CW Inlet,   ! Condenser Inlet Node Name
-  Chiller 2 CW Outlet,  ! Condenser Outlet Node Name
-  AirCooled,            ! Condenser Type
-  NotModulated,         ! Chiller Flow Mode
-  1.0;                  ! Sizing Factor
-
-Chiller:ConstantCOP,
-  Chiller 3,            ! Name
-  3516852.8,            ! Nominal Capacity {W}
-  6,                    ! Nominal COP {W/W}
-  autosize,             ! Design Chilled Water Flow Rate {m3/s}
-  autosize,             ! Design Condenser Water Flow Rate {m3/s}
-  Chiller 3 CHW Inlet,  ! Chilled Water Inlet Node Name
-  Chiller 3 CHW Outlet, ! Chilled Water Outlet Node Name
-  Chiller 3 CW Inlet,   ! Condenser Inlet Node Name
-  Chiller 3 CW Outlet,  ! Condenser Outlet Node Name
-  AirCooled,            ! Condenser Type
-  NotModulated,         ! Chiller Flow Mode
-  1.0;                  ! Sizing Factor
-
+INCLUDE code_samples/output_include_example.idf
 ```
 
 Neat, right? So perhaps the simplest way that Neobem can help you with
@@ -747,11 +505,7 @@ To note here:
 
   **in.nbem**
   ```nbem
-  import 'defaults.nbem' as 'def'
-
-  print def@simulation_params()
-
-  import 'chillers.nbem'
+  INCLUDE code_samples/in_qualified.nbem
   ```
 
   The `as` option will put whatever string is specified as a prefix to

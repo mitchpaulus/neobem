@@ -1,0 +1,17 @@
+const_temp_schedule = \ name value lower upper {
+Schedule:Constant,
+  <name> Schedule, ! Name
+  <name> Limits,   ! Schedule Type Limits Name
+  <value>;         ! Hourly Value
+
+ScheduleTypeLimits,
+  <name> Limits, ! Name
+  <lower>,       ! Lower Limit Value
+  <upper>,       ! Upper Limit Value
+  Continuous,    ! Numeric Type [Continuous, Discrete]
+  Temperature;   ! Unit Type
+}
+
+print const_temp_schedule('Zone Space Temperature', 22, 20, 24)
+print const_temp_schedule('Supply Air Temp'       , 13, 10, 16)
+print const_temp_schedule('CHW Supply Temp'       , 7 , 5 , 10)

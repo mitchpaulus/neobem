@@ -1,0 +1,22 @@
+chiller = λ unit_number {
+
+chiller_name = 'Chiller ' + unit_number
+
+tons_to_watts = λ tons { tons * 3516.8528 }
+
+Chiller:ConstantCOP,
+  <chiller_name>,            ! Name
+  <tons_to_watts(1000)>,     ! Nominal Capacity {W} (1,000 tons)
+  6,                         ! Nominal COP {W/W}
+  autosize,                  ! Design Chilled Water Flow Rate {m3/s}
+  autosize,                  ! Design Condenser Water Flow Rate {m3/s}
+  <chiller_name> CHW Inlet,  ! Chilled Water Inlet Node Name
+  <chiller_name> CHW Outlet, ! Chilled Water Outlet Node Name
+  <chiller_name> CW Inlet,   ! Condenser Inlet Node Name
+  <chiller_name> CW Outlet,  ! Condenser Outlet Node Name
+  AirCooled,                 ! Condenser Type
+  NotModulated,              ! Chiller Flow Mode
+  1.0;                       ! Sizing Factor
+}
+
+print map(chiller, [1, 2, 3])

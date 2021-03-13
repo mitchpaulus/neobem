@@ -37,7 +37,14 @@ There are 4 higher order expression types.
 
 ### Strings
 
-Strings are entered using single quotes "`'`".
+Strings are entered using single quotes "`'`". You can escape the
+following characters with a backslash:
+
+- `'\n'` for newline
+- `'\r'` for carriage return
+- `'\t'` for tab
+- `'\''` for single quote
+- `'\\'` for the backslash character itself
 
 ### Boolean Literals
 
@@ -124,6 +131,11 @@ others are there for consistency, but the usage should be rare.
     - Addition for numeric types
     - String concatenation for string types
         - `'Chiller ' + '1'`{.nbem} equals `'Chiller 1'`{.nbem}
+        - If using `'+'` operator with a string and a numeric, the
+          numeric is coerced to a string, and then the two strings are
+          concatenated. So `'Chiller ' + 1`{.nbem} (notice no quotes
+          around the number 1) becomes the string `'Chiller 1'` as you
+          would expect.
     - List concatenation for list types
         - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`
 - Minus '`-`'
@@ -166,16 +178,15 @@ separated by pipes, finished by 3 or more underscores.
 So these are technically parsed the same:
 
 ```neobem
-
 zones =
-_____________
-name | origin
------|-------
-'Z1' | 0
-'Z2' | 1
-_____________
+_________________
+'name' | 'origin'
+-------|---------
+'Z1'   | 0
+'Z2'   | 1
+_________________
 
-zones = ___ name|origin---'Z1'|0|'Z2'|1___
+zones = ___ 'name'|'origin'---'Z1'|0|'Z2'|1___
 
 ```
 
@@ -205,11 +216,27 @@ A number of mathematical functions are built in.
 - `length(list)`{.nbem}: number of elements in the list
 - `head(list)`{.nbem}: Returns the first element of the list
 - `tail(list)`{.nbem}: Returns all elements *except* the first element in the list
+- `init(list)`{.nbem}: Returns all elements *except* the last element in
+  the list
+- `last(list)`{.nbem}: Returns the last element in the list
 - `index(list, integer)`{.nbem}: Returns the element the specified index. The
   index is 0-based, so getting the first element of the list would be
   `index(list, 0)`{.nbem}. The index can also be negative to index from the
   end. `index(list, -1)`{.nbem} returns the last element of the list and
   `index(list, -2)`{.nbem} returns the second to last element.
+
+## String Functions
+
+- `join(separator, list)`{.nbem}: Joins a list of strings together with a
+  separator string.
+    - Ex: `join(', ', ['a', 'b', 'c'])`{.nbem} results in `'a, b, c'`{.nbem}
+
+## Functions for Structures
+
+- `keys(structure)`{.nbem}: Returns a list of strings that are the keys
+  to the structure.
+- `has(key, structure)`{.nbem}: Returns a boolean representing whether
+  the given structure has the string key as a member.
 
 ## Loading Data
 
@@ -246,10 +273,10 @@ An example:
 
 ```neobem
 load_options = {
-    type: 'Excel',
-    sheet: 'Data',
-    range: 'C10',
-    path: 'my_excel_data.xlsx'
+    'type': 'Excel',
+    'sheet': 'Data',
+    'range': 'C10',
+    'path': 'my_excel_data.xlsx'
 }
 
 print map(my_template, load(load_options))
@@ -288,15 +315,7 @@ Here's an example of using a let expression in defining a `filter`
 function.
 
 ```neobem
-filter = λ predicate list {
-    if length(list) == 0 then [] else
-    let elem = head(list),
-        remaining = filter(predicate, tail(list))
-    in
-    if predicate(elem) then [elem] + remaining else remaining
-}
-
-filtered_list = filter(λ x { x < 2 }, [1, 2, 3, 4])
+INCLUDE code_samples/filter_let_expression.nbem
 ```
 
 ## Importing and Exporting

@@ -1,0 +1,8 @@
+my_struct = {
+    'prop 1' : 42,
+    'prop 2' : 'Some text',
+    'prop 3' : {
+        'nested_struct_prop' : 'I am nested'
+    },
+    'prop 4' : [ 1, 2, 3]
+}

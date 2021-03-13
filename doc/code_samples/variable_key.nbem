@@ -1,0 +1,7 @@
+assigned = 'my key'
+struct = {
+    'my key': 10
+}
+
+Version,
+  < struct.assigned >;

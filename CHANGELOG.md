@@ -11,11 +11,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.3.0
+
+### Changed
+
+- **BREAKING**: Structures now act as true associative arrays. You can
+  use any string expression as the key.
+
+- **BREAKING**: Because the structures can now use any string as the
+  key, the sanitation of column headers when loading from Excel has been
+  removed.
+
+- **BREAKING**: Inline data table headers are now strings, not
+  identifiers.
+
+### Added
+
+- String escaping is now supported for the following characters:
+    - `'\n'` for newline
+    - `'\r'` for carriage return
+    - `'\t'` for tab
+    - `'\''` for single quote
+    - `'\\'` for the backslash character itself
+
+- New built in functions:
+    - `keys`: returns all the current keys in a structure
+    - `has`: check whether a structure has a given key initialized
+    - `init`: return all but the last element in a list
+    - `last`: return the last element in a list
+    - `join`: join a list of strings together with a separator string
+
+- Pretty print the IDF objects by default.
+- Added ability to create empty structure.
+- Added equality comparisons between booleans, empty lists (like `list
+  == []`), and comparison of lists with different lengths.
+- Trailing commas are now allowed in both lists and structures ([1, 2,
+  3,] is valid).
+
+- '+' operator is now defined for 'string + number'
+- '+' operator is now defined for two structures.
+
+### Fixed
+
+- Comments called from within functions now have replacements made.
+
 ## 0.2.0
 
 ### Changed
 
-- Executable is now called `nbem` instead of `bemp`.
+- **BREAKING**: Executable is now called `nbem` instead of `bemp`.
 
 ### Added
 

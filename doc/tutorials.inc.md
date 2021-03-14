@@ -282,15 +282,16 @@ my_struct.'prop_3'.'nested_struct_prop' == 'I am nested'
 ```
 
 Note the key used in the member access can be *any* string. For example,
-you can use emoji if you'd like. This is totally valid:
+you can use pretty much any Unicode character you'd like. Using music
+notes is totally valid:
 
 ```neobem
 struct = {
-    '😐': 9.4
+    '♬': 9.4
 }
 
 Version,
-    < struct.'😐' >;
+    < struct.'♬' >;
 ```
 
 And the key doesn't have to be a *string literal*, it just has to

@@ -6,6 +6,8 @@ README.pdf
 *.old
 *.out
 
+*.output.idf
+
 doc/doc.md
 doc/doc.pdf
 

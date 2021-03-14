@@ -125,25 +125,43 @@ others are there for consistency, but the usage should be rare.
 
 ## Operators
 
+### Plus '`+`'
+- Addition for numeric types
+- String concatenation for string types
+    - `'Chiller ' + '1'`{.nbem} equals `'Chiller 1'`{.nbem}
+    - If using `'+'` operator with a string and a numeric, the
+      numeric is coerced to a string, and then the two strings are
+      concatenated. So `'Chiller ' + 1`{.nbem} (notice no quotes
+      around the number 1) becomes the string `'Chiller 1'` as you
+      would expect.
+- List concatenation for list types
+    - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`
+- Structures - concatenate/update
+    - When two structures are used with the `+` operator, the keys from
+      both structures are combined into a new structure. If both
+      structures have the same key, then the value from the *second*
+      structure is used. This is how structures can be "updated" or
+      modified. An example is shown below.
+
+```neobem
+INCLUDE code_samples/structure_addition_reference.nbem
+```
+
+Compiling the above code results in:
+
+```neobem
+INCLUDE code_samples/structure_addition_reference.output.idf
+```
+
+
+### Other Algebraic Operators
+
+The following operators are only valid for numeric types.
+
 - Exponentiation: '`^`'
-    - Valid for numeric expressions only
-- Plus '`+`'
-    - Addition for numeric types
-    - String concatenation for string types
-        - `'Chiller ' + '1'`{.nbem} equals `'Chiller 1'`{.nbem}
-        - If using `'+'` operator with a string and a numeric, the
-          numeric is coerced to a string, and then the two strings are
-          concatenated. So `'Chiller ' + 1`{.nbem} (notice no quotes
-          around the number 1) becomes the string `'Chiller 1'` as you
-          would expect.
-    - List concatenation for list types
-        - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`
 - Minus '`-`'
-    - Subtraction for numeric types
 - Multiplication '`*`'
-    - Multiplication for numeric types
 - Division '`/`'
-    - Division for numeric types
 
 
 ## Inline Data

@@ -5,13 +5,28 @@ README.pdf
 *.fls
 *.old
 *.out
-src/Help.cs
-doc/getting_started.tex
-doc/pandoc_latex.tex
-doc/reference.tex
 
 doc/doc.md
 doc/doc.pdf
+
+antlr/clean
+doc/code_samples/inline_data_table_example.output.idf
+doc/code_samples/output_include_example.idf
+doc/design_goals.tex
+doc/doc.runtex
+doc/faq.tex
+doc/getting_started.md
+doc/getting_started.tex
+doc/help_output.md
+doc/intro.tex
+doc/reference.md
+doc/reference.tex
+doc/thank_yous_and_inspirations.tex
+doc/tutorials.md
+doc/tutorials.tex
+kde-syntax/test
+src/Help.cs
+test/TestFileDirectory.cs
 
 # Deafult compiled file
 out.idf

@@ -196,5 +196,18 @@ namespace test
             Assert.IsTrue(IdfObjectCompare.Equals("Version,Neutral Face;", output));
         }
 
+        [Test]
+        public void TestTrailingComma()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "test_trailing_comma.nbem");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2,3;", output));
+        }
     }
 }

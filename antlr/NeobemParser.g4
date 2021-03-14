@@ -35,13 +35,13 @@ lambda_def : FUNCTION_BEGIN IDENTIFIER* LCURLY (expression | function_statement*
 
 return_statement : RETURN expression ;
 
-idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* RCURLY |
+idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* COMMA? RCURLY |
                  LCURLY RCURLY;
 
 idfplus_object_property_def : expression STRUCT_SEP expression ;
 
 list :  LSQUARE RSQUARE |
-        LSQUARE expression (COMMA expression)* RSQUARE ;
+        LSQUARE expression (COMMA expression)* COMMA? RSQUARE ;
 
 import_statement : IMPORT STRING import_option* ;
 

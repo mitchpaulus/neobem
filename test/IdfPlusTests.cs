@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Antlr4.Runtime;
 using NUnit.Framework;
 using src;
 
@@ -166,6 +167,30 @@ namespace test
             string output = visitor.Visit(tree);
 
             Console.WriteLine(output);
+        }
+
+        [Test]
+        public void TestInlineDataTableOverline()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.nbem");
+
+            var file = File.ReadAllText(filepath);
+            AntlrInputStream inputStream = new AntlrInputStream(file);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
+            var errorListener = new SimpleAntlrErrorListener();
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(errorListener);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            var parser = new NeobemParser(tokens);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(errorListener);
+
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var tree = parser.idf();
+
+            Assert.AreEqual(0, errorListener.Errors.Count, "There should be no errors in lexing or parsing.");
+
+            string output = visitor.Visit(tree);
         }
 
         [Test]

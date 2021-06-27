@@ -62,5 +62,7 @@ namespace src
             E = e;
         }
 
+        public string WriteError() => $"Line {Line}:{CharPositionInLine} {Msg}";
+
     }
 }

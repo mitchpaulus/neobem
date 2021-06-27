@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -13,33 +14,34 @@ namespace src
             BempOptions options = new BempOptions();
             for (var i = 0; i < args.Length; i++)
             {
-                if (args[i] == "-h" || args[i] == "--help")
+                switch (args[i])
                 {
-                    Console.WriteLine(Help.Text());
-                    return 0;
-                }
-                if (args[i] == "-v" || args[i] == "--version")
-                {
-                    Console.WriteLine("0.1");
-                    return 0;
-                }
-
-                if (args[i] == "-o" || args[i] == "--output")
-                {
-                    if (i + 1 < args.Length)
+                    case "-h":
+                    case "--help":
+                        Console.WriteLine(Help.Text());
+                        return 0;
+                    case "-v":
+                    case "--version":
+                        Console.WriteLine("0.1");
+                        return 0;
+                    case "-o":
+                    case "--output":
                     {
-                        options.OutputFile = args[i + 1];
+                        if (i + 1 < args.Length)
+                        {
+                            options.OutputFile = args[i + 1];
+                        }
+                        else
+                        {
+                            Console.WriteLine("No file path given for output option.");
+                            return 1;
+                        }
+                        i++;
+                        break;
                     }
-                    else
-                    {
-                        Console.WriteLine("No file path given for output option.");
-                        return 1;
-                    }
-                    i++;
-                }
-                else
-                {
-                    options.InputFile = args[i];
+                    default:
+                        options.InputFile = args[i];
+                        break;
                 }
             }
 
@@ -65,15 +67,34 @@ namespace src
                 baseDirectory = Environment.CurrentDirectory;
             }
 
-            NeobemLexer lexer = new NeobemLexer(inputStream);
+            NeobemLexer lexer = new(inputStream);
+            lexer.RemoveErrorListeners();
+            SimpleAntlrErrorListener lexerErrorListener = new();
+            lexer.AddErrorListener(lexerErrorListener);
 
-            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            CommonTokenStream commonTokenStream = new(lexer);
 
-            NeobemParser parser = new NeobemParser(commonTokenStream);
+            if (lexerErrorListener.Errors.Any())
+            {
+                foreach (AntlrError error in lexerErrorListener.Errors) Console.Error.WriteLine(error.WriteError());
+                return 1;
+            }
 
-            IdfPlusVisitor visitor = new IdfPlusVisitor(baseDirectory);
+            NeobemParser parser = new(commonTokenStream);
+            parser.RemoveErrorListeners();
+            SimpleAntlrErrorListener parserErrorListener = new();
+            parser.AddErrorListener(parserErrorListener);
 
             NeobemParser.IdfContext tree = parser.idf();
+
+            if (parserErrorListener.Errors.Any())
+            {
+                foreach (AntlrError error in parserErrorListener.Errors) Console.Error.WriteLine(error.WriteError());
+                return 1;
+            }
+
+            // Construct the main visitor for the initial file.
+            IdfPlusVisitor visitor = new(baseDirectory);
 
             string result;
             try
@@ -82,9 +103,10 @@ namespace src
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                Console.Error.WriteLine(exception.Message);
                 return 1;
             }
+            // If no output file was specified in the command line options, then dump results to standard output.
             if (string.IsNullOrWhiteSpace(options.OutputFile))
             {
                 Console.WriteLine(result);
@@ -97,7 +119,7 @@ namespace src
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"Could not write output to {options.OutputFile}.");
+                    Console.Error.WriteLine($"Could not write output to {options.OutputFile}.");
                     return 1;
                 }
             }

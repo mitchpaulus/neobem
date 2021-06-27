@@ -3,10 +3,10 @@ While creating you building energy simulation input files, have you ever wanted 
 - Use variables?
 - Break out sections into custom templates?
 - Use arithmetic?
-- Build objects directly from Excel data?
+- Build objects directly from Excel or JSON data?
 - Loop over lists?
 - Easily incorporate work from others?
-- Do all this without setting up a full Python or R working environment?
+- Do all this without setting up a full Python, R, or Ruby working environment?
 
 If so, Neobem is what you have always wanted.
 

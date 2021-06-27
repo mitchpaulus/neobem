@@ -9,10 +9,10 @@ While creating you building energy simulation input files, have you ever wanted 
 - Use variables?
 - Break out sections into custom templates?
 - Use arithmetic?
-- Build objects directly from Excel data?
+- Build objects directly from Excel or JSON data?
 - Loop over lists?
 - Easily incorporate work from others?
-- Do all this without setting up a full Python or R working environment?
+- Do all this without setting up a full Python, R, or Ruby working environment?
 
 If so, Neobem is what you have always wanted.
 
@@ -34,7 +34,8 @@ I hope you find it as useful as I do.
 ### Quick Instructions
 
 1. Download program files.
-2. Add folder location to `PATH` or symlink executable to location in `PATH`.
+2. Add folder location containing program files to `PATH` environment
+   variable or symlink the executable `nbem` to a location in `PATH`.
 3. Execute `nbem` in shell or command interpreter.
 
 See below for additional details on these steps.
@@ -123,13 +124,13 @@ set -gxp PATH "/path/to/directory"
 The input files are simple text files - you can use any editor of choice
 to create them. Here's a list of popular text editors that you might
 want to try. If you've never heard of a "text editor", I'd begin with
-Sublime Text or Atom.
+Visual Studio Code, Sublime Text, or Atom.
 
 **Cross-Platform:**
 
-1. [Sublime Text](https://www.sublimetext.com/)
-2. [Atom](https://atom.io/)
-3. [Visual Studio Code](https://code.visualstudio.com/)
+1. [Visual Studio Code](https://code.visualstudio.com/)
+2. [Sublime Text](https://www.sublimetext.com/)
+3. [Atom](https://atom.io/)
 4. [Vim](https://www.vim.org/)
 5. [Neovim](https://neovim.io/)
 6. [Kate](https://kate-editor.org/)

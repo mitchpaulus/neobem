@@ -300,6 +300,39 @@ load_options = {
 print map(my_template, load(load_options))
 ```
 
+### Loading JSON
+
+To load JSON formatted data, you can use a structure with the following
+options.
+
+1. `type`: Required. This must be set to `'JSON'`{.nbem}.
+2. `path`: Required. A string that is the relative path to the JSON file.
+
+The mapping between the different value types in JSON to the built in
+types for Neobem is straightforward, except for JSON's `null`. `null`
+values in JSON are currently converted to a string expression with the
+contents `'null'`{.nbem}.
+
+JSON values | Neobem types
+------------|-------------
+object      | Structure
+array       | List
+string      | String
+number      | Number
+"true"      | Boolean True
+"false"     | Boolean False
+"null"      | String `'null'`{.nbem}
+
+An example:
+
+```neobem
+load_options = {
+    'type': 'JSON',
+    'path': '../some folder/data.json'
+}
+
+print map(my_template, load(load_options))
+```
 
 ## Functional Programming Functions
 

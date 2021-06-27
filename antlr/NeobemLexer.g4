@@ -5,6 +5,8 @@ options {
 }
 
 EQUALS : '=' ;
+
+// Arithmetic Operators
 LPAREN : '(' ;
 RPAREN : ')' ;
 CARET : '^' ;
@@ -13,14 +15,16 @@ DIVIDEOP : '/' ;
 PLUSOP : '+' ;
 MINUSOP : '-' ;
 
+// Comparison Operators
 LESSTHAN : '<' ;
 GREATERTHAN : '>' ;
+LESS_THAN_OR_EQUAL_TO : '<=' ;
+GREATER_THAN_OR_EQUAL_TO : '>=' ;
 
+// Equality Operators
 EQUAL_TO : '==' ;
 NOT_EQUAL_TO : '!=' ;
 
-LESS_THAN_OR_EQUAL_TO : '<=' ;
-GREATER_THAN_OR_EQUAL_TO : '>=' ;
 
 AND_OP : 'and' ;
 OR_OP : 'or' ;
@@ -45,6 +49,8 @@ ONLY : 'only' ;
 NOT : 'not' ;
 EXPORT : 'export' ;
 PRINT : 'print' ;
+
+// Let expressions
 LET : 'let' ;
 IN : 'in' ;
 
@@ -55,8 +61,12 @@ STRUCT_SEP : ':' ;
 COMMA : ',' ;
 
 // 3 or more underscores to begin inline data table
-INLINE_TABLE_BEGIN_END : '___' '_'* ;
+INLINE_TABLE_BEGIN_END : '___' '_'*  ;
 
+// Can optionally end inline table with overline character U+203E
+INLINE_TABLE_END : '‾‾‾' '‾'* ;
+
+// 3 or more hyphens separate table header entries
 INLINE_TABLE_HEADER_SEP : '---' '-'* ;
 
 INLINE_TABLE_COL_SEP : '|' ;
@@ -69,11 +79,12 @@ COMMENT :  '!' .*? '\r'?'\n' ;
 
 NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> skip ;
 
-NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? | ('.'[0-9]+))([eE]'-'?[0-9]+)? ;
+NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? |
+          ('.'[0-9]+))([eE]'-'?[0-9]+)? ;
 
 STRING : '\'' .*? '\'' ;
 
-OBJECT_TYPE : [A-Z][a-zA-Z0-9:]*  -> pushMode(IDFOBJECT) ;
+OBJECT_TYPE : [A-Z][a-zA-Z0-9:]* -> pushMode(IDFOBJECT) ;
 
 WS : [ \t\r\n]+ -> skip ;
 

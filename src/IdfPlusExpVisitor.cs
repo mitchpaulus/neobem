@@ -246,7 +246,7 @@ namespace src
             var lhs = Visit(context.expression(0));
             var rhs = Visit(context.expression(1));
 
-            string oper = context.op.Text;
+            string oper = context.boolean_exp_operator().GetText();
 
             Dictionary<string, Func<double, double, bool>> numericOperations =
                 new Dictionary<string, Func<double, double, bool>>()

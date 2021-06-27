@@ -9,33 +9,45 @@ options {
 variable_declaration : IDENTIFIER EQUALS expression;
 
 // See pg. 41 of Antlr reference
-expression :   expression MEMBER_ACCESS expression                                               # MemberAccessExp
-             | funcexp=expression ( LPAREN RPAREN |  LPAREN expression (COMMA expression)* RPAREN ) # FunctionExp
-             | <assoc=right> expression CARET expression                                # Exponientiate
-             | expression op=(MULTOP|DIVIDEOP) expression                                     # MultDivide
-             | expression op=(PLUSOP|MINUSOP) expression                                     # AddSub
-             | expression op=(LESSTHAN|GREATERTHAN|EQUAL_TO|NOT_EQUAL_TO|LESS_THAN_OR_EQUAL_TO|GREATER_THAN_OR_EQUAL_TO) expression                 # BooleanExp
-             | expression op=(AND_OP|OR_OP) expression                                  # LogicExp
-             | STRING                                                                 # StringExp
-             | NUMERIC                                                                # NumericExp
-             | BOOLEAN_LITERAL                                                        # BooleanLiteralExp
-             | IDENTIFIER                                                             # VariableExp
-             | list                                                                   # ListExp
-             | if_exp                                                                 # IfExp
-             | idfplus_object                                                         # ObjExp
-             | lambda_def                                                             # LambdaExp
-             | let_binding                                                            # LetBindingExp
-             | inline_table                                                           # InlineTable
-             | LPAREN expression RPAREN # ParensExp
+expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
+             | funcexp=expression
+                 ( LPAREN RPAREN |
+                   LPAREN expression (COMMA expression)* RPAREN
+                 )                                        # FunctionExp
+             | <assoc=right> expression CARET expression  # Exponientiate
+             | expression op=(MULTOP|DIVIDEOP) expression # MultDivide
+             | expression op=(PLUSOP|MINUSOP) expression  # AddSub
+             | expression boolean_exp_operator expression # BooleanExp
+             | expression op=(AND_OP|OR_OP) expression    # LogicExp
+             | STRING                                     # StringExp
+             | NUMERIC                                    # NumericExp
+             | BOOLEAN_LITERAL                            # BooleanLiteralExp
+             | IDENTIFIER                                 # VariableExp
+             | list                                       # ListExp
+             | if_exp                                     # IfExp
+             | idfplus_object                             # ObjExp
+             | lambda_def                                 # LambdaExp
+             | let_binding                                # LetBindingExp
+             | inline_table                               # InlineTable
+             | LPAREN expression RPAREN                   # ParensExp
              ;
+
+boolean_exp_operator : LESSTHAN |
+                       GREATERTHAN |
+                       EQUAL_TO|NOT_EQUAL_TO |
+                       LESS_THAN_OR_EQUAL_TO |
+                       GREATER_THAN_OR_EQUAL_TO ;
 
 if_exp : IF expression THEN expression ELSE expression ;
 
-lambda_def : FUNCTION_BEGIN IDENTIFIER* LCURLY (expression | function_statement*) RCURLY ;
+lambda_def : FUNCTION_BEGIN IDENTIFIER* LCURLY
+               (expression | function_statement*) RCURLY ;
 
 return_statement : RETURN expression ;
 
-idfplus_object : LCURLY (idfplus_object_property_def) (COMMA idfplus_object_property_def)* COMMA? RCURLY |
+idfplus_object : LCURLY (idfplus_object_property_def)
+                   (COMMA idfplus_object_property_def)* COMMA?
+                   RCURLY |
                  LCURLY RCURLY;
 
 idfplus_object_property_def : expression STRUCT_SEP expression ;
@@ -53,11 +65,17 @@ export_statement : EXPORT LPAREN IDENTIFIER+ RPAREN ;
 
 print_statment : PRINT expression ;
 
-inline_table : INLINE_TABLE_BEGIN_END inline_table_header inline_table_header_separator inline_table_data_row+ INLINE_TABLE_BEGIN_END ;
+inline_table : INLINE_TABLE_BEGIN_END
+                 inline_table_header
+                 inline_table_header_separator
+                 inline_table_data_row+
+                 (INLINE_TABLE_BEGIN_END | INLINE_TABLE_END) ;
 
 inline_table_header : STRING (INLINE_TABLE_COL_SEP STRING)* ;
 
-inline_table_header_separator : INLINE_TABLE_HEADER_SEP (INLINE_TABLE_COL_SEP INLINE_TABLE_HEADER_SEP)* ;
+inline_table_header_separator :
+  INLINE_TABLE_HEADER_SEP
+  (INLINE_TABLE_COL_SEP INLINE_TABLE_HEADER_SEP)* ;
 
 inline_table_data_row : expression (INLINE_TABLE_COL_SEP expression)* ;
 
@@ -76,9 +94,13 @@ base_idf : COMMENT                # IdfComment
            | print_statment       # PrintStatment
            ;
 
-let_binding : LET IDENTIFIER EQUALS expression (COMMA IDENTIFIER EQUALS expression)* IN expression ;
+let_binding : LET IDENTIFIER EQUALS expression
+                (COMMA IDENTIFIER EQUALS expression)*
+                IN expression ;
 
-object : OBJECT_TYPE OBJECT_COMMENT? (FIELD_SEP OBJECT_COMMENT? (FIELD OBJECT_COMMENT?)?)+  OBJECT_TERMINATOR ;
+object : OBJECT_TYPE OBJECT_COMMENT?
+           (FIELD_SEP OBJECT_COMMENT? (FIELD OBJECT_COMMENT?)?)+
+           OBJECT_TERMINATOR ;
 
 idf : (base_idf)* EOF;
 

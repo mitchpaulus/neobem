@@ -55,9 +55,9 @@ idfplus_object_property_def : expression STRUCT_SEP expression ;
 list :  LSQUARE RSQUARE |
         LSQUARE expression (COMMA expression)* COMMA? RSQUARE ;
 
-import_statement : IMPORT STRING import_option* ;
+import_statement : IMPORT expression import_option* ;
 
-import_option : AS STRING                #AsOption   |
+import_option : AS IDENTIFIER                #AsOption   |
                 ONLY LPAREN IDENTIFIER+ RPAREN #OnlyOption |
                 NOT LPAREN IDENTIFIER+ RPAREN  #NotOption  ;
 

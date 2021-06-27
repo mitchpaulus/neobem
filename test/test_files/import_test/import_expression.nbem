@@ -1,0 +1,2 @@
+a_structure = { 'a file reference': 'import1.nbem' }
+import a_structure.'a file reference'

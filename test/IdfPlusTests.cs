@@ -156,6 +156,19 @@ namespace test
         }
 
         [Test]
+        public void TestImportFromExpression()
+        {
+              var filepath = Path.Combine(TestDir.Dir, "import_test/import_expression.nbem");
+              var file = File.ReadAllText(filepath);
+              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"));
+              var parser = file.ToParser();
+              var tree = parser.idf();
+              string output = visitor.Visit(tree);
+
+              Assert.IsTrue(IdfObjectCompare.Equals("Version,9.2;", output));
+        }
+
+        [Test]
         public void TestInlineDataTable()
         {
             var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.nbem");

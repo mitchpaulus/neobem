@@ -78,10 +78,21 @@ namespace src
 
         public override string VisitImport_statement(NeobemParser.Import_statementContext context)
         {
-            var fullStringWithQuotes = context.STRING().GetText();
-            string filePath = fullStringWithQuotes.Substring(1, fullStringWithQuotes.Length - 2);
-            string contents;
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
+            Expression uriExpression =  expressionVisitor.Visit(context.expression());
 
+            string filePath;
+            if (uriExpression is StringExpression uriStringExpression)
+            {
+                filePath = uriStringExpression.Text;
+            }
+            else
+            {
+                throw new Exception(
+                    $"The import statement expects a string expression, received a {uriExpression.TypeName()}");
+            }
+
+            string contents;
             IdfPlusVisitor visitor;
             if (filePath.Contains("http"))
             {
@@ -91,13 +102,13 @@ namespace src
                 Stream resStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(resStream);
                 contents = reader.ReadToEnd();
+                // When reading from a web URI, the concept of a base directory doesn't apply.
                 visitor = new IdfPlusVisitor(null);
             }
             else
             {
                 string fullFilePath = Path.GetFullPath(filePath, _baseDirectory);
                 FileInfo fileInfo = new FileInfo(fullFilePath);
-
                 try
                 {
                     contents = File.ReadAllText(fileInfo.FullName);
@@ -110,6 +121,8 @@ namespace src
                 {
                     throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
                 }
+
+                // Read the imported file, with the current directory set to directory of the input file.
                 visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
             }
 
@@ -117,21 +130,25 @@ namespace src
 
             string prefix = "";
             List<string> onlyOptions = new List<string>();
+
+            // An import statement can have n number of options appended after it. This loop is
+            // parsing those options in order. Can be an "as" option, "only" option, or "not" option.
             foreach (NeobemParser.Import_optionContext importOptionContext in options)
             {
                 if (importOptionContext is NeobemParser.AsOptionContext asOption)
                 {
-                    prefix = asOption.STRING().GetText().Substring(1, asOption.STRING().GetText().Length - 2);
+                    prefix = asOption.IDENTIFIER().GetText();
                 }
-
-                if (importOptionContext is NeobemParser.OnlyOptionContext onlyOptionContext)
+                else if (importOptionContext is NeobemParser.OnlyOptionContext onlyOptionContext)
                 {
                     onlyOptions.AddRange(onlyOptionContext.IDENTIFIER().Select(node => node.GetText()).ToList());
                 }
             }
 
-            NeobemParser parser =  contents.ToParser();
-            var tree = parser.idf();
+            NeobemParser parser = contents.ToParser();
+            NeobemParser.IdfContext tree = parser.idf();
+
+
             string  outputResult = visitor.VisitIdf(tree);
 
             foreach (var item in visitor.exports)

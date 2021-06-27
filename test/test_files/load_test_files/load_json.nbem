@@ -1,0 +1,20 @@
+zone_data = load({ 'path': 'data.json', 'type': 'JSON' })
+
+zone_template = λ zone {
+Zone,
+  < zone.'name' >,
+  0,
+  < zone.'x origin' >,
+  0,
+  0,
+  1,
+  1,
+  autocalculate,
+  autocalculate,
+  autocalculate,
+  ,
+  ,
+  Yes;
+}
+
+print map(zone_template, zone_data.'zones')

@@ -1,0 +1,31 @@
+Zone,
+  Zone 1,
+  0,
+  10,
+  0,
+  0,
+  1,
+  1,
+  autocalculate,
+  autocalculate,
+  autocalculate,
+  ,
+  ,
+  Yes;
+
+Zone,
+  Zone 2,
+  0,
+  5,
+  0,
+  0,
+  1,
+  1,
+  autocalculate,
+  autocalculate,
+  autocalculate,
+  ,
+  ,
+  Yes;
+
+

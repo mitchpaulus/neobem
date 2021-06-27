@@ -1,0 +1,12 @@
+{
+    "zones": [
+        {
+            "name": "Zone 1",
+            "x origin": 10
+        },
+        {
+            "name": "Zone 2",
+            "x origin": 5
+        }
+    ]
+}

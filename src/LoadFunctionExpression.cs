@@ -15,6 +15,8 @@ namespace src
 
         public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
+            // If a string is passed as first argument, read the file as a delimited text file.
+            // Default is tab delimited.
             if (inputs[0] is StringExpression stringExpression)
             {
                 var fullPath = Path.GetFullPath(stringExpression.Text, baseDirectory);
@@ -72,6 +74,15 @@ namespace src
                     string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
                     var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
                     return ("", ExcelDataLoader.Load( fullFilePath, worksheetName, range));
+                }
+                else if (objectExpression.Members["type"] is StringExpression {Text: "JSON"})
+                {
+                    string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
+                    var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
+                    string jsonData = File.ReadAllText(fullFilePath);
+                    JsonDataLoader jsonLoader = new();
+
+                    return ("", jsonLoader.Load(jsonData));
                 }
                 else
                 {

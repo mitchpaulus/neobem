@@ -1,0 +1,2 @@
+file_based_on_if_statement = if true then 'file1.nbem' else 'file2.nbem'
+import file_based_on_if_statement

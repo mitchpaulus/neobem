@@ -166,9 +166,9 @@ The following operators are only valid for numeric types.
 
 ## Inline Data
 
-Grammar for inline data tables in Antlr form:
+Grammar for inline data tables in ANTLR form:
 
-```
+```antlr
 inline_table :
     INLINE_TABLE_BEGIN_END
     inline_table_header
@@ -375,10 +375,10 @@ neobem has a fairly straightforward method of importing and exporting.
 The syntax for importing from another file is:
 
 ```neobem
-import 'uri' [as 'prefix'] [only (identifier1, identifier2, ...)]
+import <URI> [as prefix_identifier] [only (identifier1, identifier2, ...)]
 ```
 
-The only portion that is required is the string `'uri'`. By default, this
+The only portion that is required is the *expression* `URI`. Generally, this
 string is a relative path to a file on local machine. For example,
 
 ```neobem
@@ -388,7 +388,14 @@ import 'utilities/my_utilities.nbem'
 will import a 'my_utilities.nbem' file in the 'utilities' folder that is
 in the same directory as the executing script.
 
-Important note: Paths are *relative from the script location, not from
+Notice that this is not necessarily a string, but any arbitrary
+*expression* that evaluates to a string. For example:
+
+```neobem
+INCLUDE code_samples/reference_import_expression.nbem
+```
+
+**Important note**: Paths are *relative from the script location, not from
 the current working directory of execution*. If this weren't the case,
 running `neobem` from different locations would affect the outcome.
 
@@ -402,7 +409,7 @@ would be different from:
 nbem sub_folder/in.nbem
 ```
 
-The string can also be a normal Internet URL. For example, you can test
+The URI can also be a normal Internet URL. For example, you can test
 an example file from GitHub.
 
 ```neobem
@@ -446,26 +453,17 @@ Material:AirGap,
   10;         ! Thermal Resistance {m2-K/W}
 ```
 
-To avoid Conflicts, you can make use of the `as`{.nbem} and `only`{.nbem} options of
+To avoid conflicts, you can make use of the `as`{.nbem} and `only`{.nbem} options of
 importing.
 
-The `as`{.nbem} option uses the specified string that follows as a
+The `as`{.nbem} option uses the specified identifier that follows as a
 prefix, with an '`@`' character between.
 
-So if our example above instead used (note the `as 'my_import'`{.nbem}
+So if our example above instead used (note the `as my_import`{.nbem}
 option):
 
 ```neobem
-my_template = \ value {
-Schedule:Constant,
-  Const <value>, ! Name
-  ,              ! Schedule Type Limits Name
-  <value>;       ! Hourly Value
-}
-
-import 'importfile.nbem' as 'my_import'
-
-print my_template(10)
+INCLUDE code_samples/reference_as_import_1.nbem
 ```
 
 results in
@@ -480,16 +478,7 @@ Schedule:Constant,
 If the imported function was desired, then it would be called like:
 
 ```neobem
-my_template = \ value {
-Schedule:Constant,
-  Const <value>, ! Name
-  ,              ! Schedule Type Limits Name
-  <value>;       ! Hourly Value
-}
-
-import 'importfile.nbem' as 'my_import'
-
-print my_import@my_template(10)
+INCLUDE code_samples/reference_as_import_2.nbem
 ```
 
 If only certain identifiers are desired to be imported, the `only
@@ -517,34 +506,7 @@ export (identifier1, identifier2, ...)
 For example, if the following file is imported:
 
 ```neobem
-my_template = \ name {
-Zone,
-  <name>,        ! Name
-  0,             ! Direction of Relative North {deg}
-  0,             ! X Origin {m}
-  0,             ! Y Origin {m}
-  0,             ! Z Origin {m}
-  1,             ! Type
-  1,             ! Multiplier
-  autocalculate, ! Ceiling Height {m}
-  autocalculate, ! Volume {m3}
-  autocalculate, ! Floor Area {m2}
-  ,              ! Zone Inside Convection Algorithm
-  ,              ! Zone Outside Convection Algorithm
-  Yes;           ! Part of Total Floor Area
-}
-
-const_schedule = \ value {
-Schedule:Constant,
-  Const <value>, ! Name
-  ,              ! Schedule Type Limits Name
-  <value>;       ! Hourly Value
-}
-
-Version,
-    9.4;
-
-export(const_schedule)
+INCLUDE code_samples/reference_controlling_what_gets_imported.nbem
 ```
 
 `Version, 9.4`{.nbem} will be printed to the output, but only

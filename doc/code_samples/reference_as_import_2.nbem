@@ -1,0 +1,10 @@
+my_template = \ value {
+Schedule:Constant,
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
+}
+
+import 'importfile.nbem' as my_import
+
+print my_import@my_template(10)

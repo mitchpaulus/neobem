@@ -1,0 +1,29 @@
+my_template = \ name {
+Zone,
+  <name>,        ! Name
+  0,             ! Direction of Relative North {deg}
+  0,             ! X Origin {m}
+  0,             ! Y Origin {m}
+  0,             ! Z Origin {m}
+  1,             ! Type
+  1,             ! Multiplier
+  autocalculate, ! Ceiling Height {m}
+  autocalculate, ! Volume {m3}
+  autocalculate, ! Floor Area {m2}
+  ,              ! Zone Inside Convection Algorithm
+  ,              ! Zone Outside Convection Algorithm
+  Yes;           ! Part of Total Floor Area
+}
+
+const_schedule = \ value {
+Schedule:Constant,
+  Const <value>, ! Name
+  ,              ! Schedule Type Limits Name
+  <value>;       ! Hourly Value
+}
+
+Version,
+    9.4;
+
+export(const_schedule)
+

@@ -1,4 +1,4 @@
-  import 'defaults.nbem' as 'def'
+  import 'defaults.nbem' as def
 
   print def@simulation_params()
 

@@ -14,8 +14,17 @@ namespace src
 
         public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
-            FunctionExpression function = inputs[0] as FunctionExpression;
-            ListExpression list = inputs[1] as ListExpression;
+            if (inputs[0] is not FunctionExpression function)
+            {
+                throw new ArgumentException(
+                    $"Expected a function as the first parameter to map, received a {inputs[0].TypeName()} of value '{inputs[0].AsErrorString()}'");
+            }
+
+            if (inputs[1] is not ListExpression list)
+            {
+                throw new ArgumentException(
+                    $"Expected a list as the second parameter to map, received a {inputs[1].TypeName()} of value '{inputs[1].AsErrorString()}'");
+            }
 
             List<(string, Expression)> mappedList = list.Expressions
                 .Select(expression => function.Evaluate(new List<Expression>() {expression}, baseDirectory)).ToList();

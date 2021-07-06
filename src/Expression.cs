@@ -59,6 +59,8 @@ namespace src
         private readonly List<string> _parameters;
 
         public override string AsString() => "";
+        public override string AsErrorString() => _context.GetText();
+
         public override string TypeName() => "function";
 
         public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
@@ -152,6 +154,8 @@ namespace src
 
         public override string ToString() => Text;
         public override string AsString() => Text;
+        public override string AsErrorString() => $"'{Text}'";
+
         public override string TypeName() => "string";
     }
 
@@ -216,6 +220,8 @@ namespace src
         }
 
         public override string AsString() => string.Join(",", Expressions.Select(expression => expression.AsString()));
+        public override string AsErrorString() => "[" + AsString() + ']';
+
         public override string TypeName() => "list";
     }
 
@@ -238,6 +244,7 @@ namespace src
 
         public override string ToString() => Text;
         public override string AsString() => Value.ToString();
+        public override string AsErrorString() => AsString();
 
         public override string TypeName() => "numeric";
     }
@@ -247,9 +254,19 @@ namespace src
         public Dictionary<string, Expression> Members = new Dictionary<string, Expression>();
         public override string AsString() => string.Join(",", Members.Keys.Select(s => Members[s].AsString()));
 
+        public override string AsErrorString()
+        {
+            return '{' + string.Join(", ", Members.Select(ErrorMemberString)) + '}';
+        }
+
         public IdfPlusObjectExpression Add(IdfPlusObjectExpression right) => StructureAdd.Add(this, right);
 
         public override string TypeName() => "structure";
+
+        private string ErrorMemberString(KeyValuePair<string, Expression> keyValuePair)
+        {
+            return $"'{keyValuePair.Key}': {keyValuePair.Value.AsErrorString()}";
+        }
     }
 
     public static class StructureAdd
@@ -297,7 +314,7 @@ namespace src
 
         public BooleanExpression(bool value) => Value = value;
         public override string AsString() => Value.ToString();
-
+        public override string AsErrorString() => AsString();
         public override string TypeName() => "boolean";
     }
 
@@ -306,6 +323,18 @@ namespace src
     {
         public abstract string AsString();
         public abstract string TypeName();
+
+        // For error messages, we may want to present the current value
+        // differently than what would show up in a replacement.
+        public abstract string AsErrorString();
+
+        public static Expression Parse(string input)
+        {
+            if (input == null) return new StringExpression("null");
+            if (bool.TryParse(input, out bool parsedBoolean)) return new BooleanExpression(parsedBoolean);
+            if (double.TryParse(input, out double parsedDouble)) return new NumericExpression(parsedDouble);
+            return new StringExpression(input);
+        }
     }
 
     public class IdfType

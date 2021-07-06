@@ -92,6 +92,8 @@ namespace src
             ObjectVariableReplacer replacer = new ObjectVariableReplacer(baseDirectory);
             var prettyPrinter = new IdfObjectPrettyPrinter();
 
+            // In a function declaration, you can have either a lone single expression,
+            // or a set of valid function statements.
             if (_context.lambda_def().expression() != null)
             {
                 Expression expression = visitor.Visit(_context.lambda_def().expression());
@@ -120,8 +122,17 @@ namespace src
                         case NeobemParser.ReturnStatementContext returnStatementContext:
                             Expression returnExpression = visitor.Visit(returnStatementContext.return_statement().expression());
                             return (builder.ToString(), returnExpression);
+                        case NeobemParser.FunctionPrintStatementContext printStatmentContext:
+                            // Need a clean visitor, so that only the output from evaluating the single expression
+                            // is appended.
+                            IdfPlusExpVisitor printStatementExpressionVisitor = new(updatedEnvironments, baseDirectory);
+                            printStatementExpressionVisitor.Visit(printStatmentContext.print_statment().expression());
+                            builder.Append(printStatementExpressionVisitor.output.ToString());
+                            break;
                         default:
-                            throw new NotImplementedException();
+                            // A user should never reach this, as all syntactically valid programs should be handled here.
+                            throw new NotImplementedException(
+                                $"The statement of type {item.GetType()} has not been implemented in function evaluation.");
                     }
                 }
 

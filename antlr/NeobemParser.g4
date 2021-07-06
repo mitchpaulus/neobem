@@ -83,6 +83,7 @@ inline_table_data_row : expression (INLINE_TABLE_COL_SEP expression)* ;
 function_statement :  COMMENT   # FunctionIdfComment
                     | object    # FunctionObjectDeclaration
                     | variable_declaration # FunctionVariableDeclaration
+                    | print_statment # FunctionPrintStatement
                     | return_statement # ReturnStatement
                     ;
 

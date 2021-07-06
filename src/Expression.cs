@@ -143,9 +143,9 @@ namespace src
         }
     }
 
-    public class StringExpression : Expression
+    public class StringExpression : Expression, IEquatable<StringExpression>
     {
-        public string Text;
+        public readonly string Text;
 
         public StringExpression(string text)
         {
@@ -157,6 +157,25 @@ namespace src
         public override string AsErrorString() => $"'{Text}'";
 
         public override string TypeName() => "string";
+
+        public bool Equals(StringExpression other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Text == other.Text;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((StringExpression) obj);
+        }
+
+        public override int GetHashCode() => Text.GetHashCode();
+        public static bool operator ==(StringExpression left, StringExpression right) => Equals(left, right);
+        public static bool operator !=(StringExpression left, StringExpression right) => !Equals(left, right);
     }
 
     public static class StringEscape

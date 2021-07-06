@@ -80,14 +80,14 @@ namespace src
         {
             Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
 
-            if (inputs.Count != _parameters.Count) throw new InvalidOperationException( $"Expected {_parameters.Count} parameters, received {inputs.Count}");
+            if (inputs.Count != _parameters.Count) throw new InvalidOperationException($"Expected {_parameters.Count} parameters ({string.Join(", ", _parameters)}), received {inputs.Count}");
 
             for (int i = 0; i < inputs.Count; i++) locals[_parameters[i]] = inputs[i];
 
             var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
             updatedEnvironments.Insert(0, locals);
 
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(updatedEnvironments, baseDirectory);
+            IdfPlusExpVisitor visitor = new(updatedEnvironments, baseDirectory);
 
             StringBuilder builder = new StringBuilder();
 

@@ -38,7 +38,13 @@ namespace src
 
             _variables[0]["index"] = new ListIndexFunctionExpression();
             _variables[0]["length"] = new ListLengthFunctionExpression();
+
             _variables[0]["join"] = new StringJoinFunctionExpression();
+            _variables[0]["replace"] = new StringReplaceFunctionExpression();
+
+            _variables[0]["type"] = new TypeFunctionExpression();
+
+            _variables[0]["guid"] = new GuidFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

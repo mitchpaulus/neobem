@@ -35,6 +35,11 @@ namespace src
             _environments[0]["index"] = new ListIndexFunctionExpression();
             _environments[0]["length"] = new ListLengthFunctionExpression();
             _environments[0]["join"] = new StringJoinFunctionExpression();
+            _environments[0]["replace"] = new StringReplaceFunctionExpression();
+
+            _environments[0]["type"] = new TypeFunctionExpression();
+
+            _environments[0]["guid"] = new GuidFunctionExpression();
 
             _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
         }

@@ -1,0 +1,93 @@
+coordinate_template = λ cartesian_point { join(',', cartesian_point.'Coordinate') }
+
+with_index = λ list start_index { if length(list) == 0 then [] else [ { 'value': head(list), 'index': start_index } ] + with_index(tail(list), start_index + 1) }
+
+polyloop_template = λ polyloop {
+    join(',\n', map(coordinate_template, polyloop.'CartesianPoint'))
+}
+
+space_template = λ space {
+  Zone,
+    < space.'Name'.'value' >,   ! Name RefList: [ZoneNames, OutFaceEnvNames, ZoneAndZoneListNames, AirflowNetworkNodeAndZoneNames], REQ, #1
+    0,                          ! Direction of Relative North {deg}, Def: 0, #2
+    0,                          ! X Origin {m}, Def: 0, #3
+    0,                          ! Y Origin {m}, Def: 0, #4
+    0,                          ! Z Origin {m}, Def: 0, #5
+    1,                          ! Type Def: 1, #6
+    1,                          ! Multiplier Def: 1, #7
+    autocalculate,              ! Ceiling Height {m}, Def: autocalculate, AC, #8
+    < space.'Volume'.'value' >, ! Volume {m3}, Def: autocalculate, AC, #9
+    autocalculate,              ! Floor Area {m2}, Def: autocalculate, AC, #10
+    ,                           ! Zone Inside Convection Algorithm [Simple, TARP, CeilingDiffuser, AdaptiveConvectionAlgorithm, TrombeWall], #11
+    ,                           ! Zone Outside Convection Algorithm [SimpleCombined, TARP, DOE-2, MoWiTT, AdaptiveConvectionAlgorithm], #12
+    Yes;                        ! Part of Total Floor Area Def: Yes, [Yes, No], #13
+
+    surfaces = space.'ShellGeometry'.'AnalyticalShell'.'ShellSurface'
+
+    ! Total number of surfaces: <length(surfaces)>
+    print map(λ surface { surface_switch(surface, space.'Name'.'value') }, surfaces)
+}
+
+wall_template = λ shell_surface zone_name {
+
+! Min Fields: 18
+Wall:Detailed,
+    < shell_surface.'surfaceType' >, ! Name RefList: [SurfaceNames, SurfAndSubSurfNames, AllHeatTranSurfNames, OutFaceEnvNames, AllHeatTranAngFacNames, RadiantSurfaceNames, AllShadingAndHTSurfNames], REQ, #1
+    ,                                ! Construction Name [ConstructionNames], REQ, #2
+    < zone_name >,                   ! Zone Name [ZoneNames], REQ, #3
+    ,                                ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Foundation, Ground, GroundFCfactorMethod, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
+    ,                                ! Outside Boundary Condition Object [OutFaceEnvNames], #5
+    SunExposed,                      ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+    WindExposed,                     ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+    autocalculate,                   ! View Factor to Ground Def: autocalculate, AC, #8
+    autocalculate,                   ! Number of Vertices Def: autocalculate, AC, #9
+    < polyloop_template(shell_surface.'PolyLoop') >;
+}
+
+floor_template = λ shell_surface zone_name {
+! Min Fields: 18
+  Floor:Detailed,
+    Floor,                                           ! Name RefList: [SurfaceNames, SurfAndSubSurfNames, AllHeatTranSurfNames, OutFaceEnvNames, AllHeatTranAngFacNames, RadiantSurfaceNames, AllShadingAndHTSurfNames, FloorSurfaceNames], REQ, #1
+    ,                                                ! Construction Name [ConstructionNames], REQ, #2
+    < zone_name >,                                   ! Zone Name [ZoneNames], REQ, #3
+    ,                                                ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Foundation, Ground, GroundFCfactorMethod, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
+    ,                                                ! Outside Boundary Condition Object [OutFaceEnvNames], #5
+    SunExposed,                                      ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+    WindExposed,                                     ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+    autocalculate,                                   ! View Factor to Ground Def: autocalculate, AC, #8
+    autocalculate,                                   ! Number of Vertices Def: autocalculate, AC, #9
+    < polyloop_template(shell_surface.'PolyLoop') >; ! Vertex 1 Z-coordinate {m}, REQ, #12
+}
+
+roof_ceiling_template = λ shell_surface zone_name {
+
+! Min Fields: 18
+  RoofCeiling:Detailed,
+    Roof,                                            ! Name RefList: [SurfaceNames, SurfAndSubSurfNames, AllHeatTranSurfNames, OutFaceEnvNames, AllHeatTranAngFacNames, RadiantSurfaceNames, AllShadingAndHTSurfNames], REQ, #1
+    ,                                                ! Construction Name [ConstructionNames], REQ, #2
+    < zone_name >,                                   ! Zone Name [ZoneNames], REQ, #3
+    ,                                                ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Ground, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
+    ,                                                ! Outside Boundary Condition Object [OutFaceEnvNames], #5
+    SunExposed,                                      ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+    WindExposed,                                     ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+    autocalculate,                                   ! View Factor to Ground Def: autocalculate, AC, #8
+    autocalculate,                                   ! Number of Vertices Def: autocalculate, AC, #9
+    < polyloop_template(shell_surface.'PolyLoop') >; ! Vertex 1 Z-coordinate {m}, REQ, #12
+}
+
+
+surface_switch = λ shell_surface zone_name {
+    idf = if shell_surface.'surfaceType' == 'Wall'    then wall_template
+    else  if shell_surface.'surfaceType' == 'Ceiling' then roof_ceiling_template
+    else  if shell_surface.'surfaceType' == 'Floor'   then floor_template
+    else \ shell_surface zone_name { '' }
+
+    print idf(shell_surface, zone_name)
+}
+
+gbxml = load({ 'type': 'XML', 'path': 'gbxml.xml' })
+
+spaces = gbxml.'Campus'.'Building'.'Space'
+
+print map(space_template, spaces)
+

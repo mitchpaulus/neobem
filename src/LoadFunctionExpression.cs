@@ -84,6 +84,15 @@ namespace src
 
                     return ("", jsonLoader.Load(jsonData));
                 }
+                else if (objectExpression.Members["type"] is StringExpression {Text: "XML"})
+                {
+                    string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
+                    var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
+                    string jsonData = File.ReadAllText(fullFilePath);
+                    XmlDataLoader xmlDataLoader = new();
+
+                    return ("", xmlDataLoader.Load(jsonData));
+                }
                 else
                 {
                     throw new NotImplementedException($"Non string input for load function not implemented yet.");

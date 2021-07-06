@@ -1,0 +1,8 @@
+gbxml = load({ 'type': 'XML', 'path': 'gbxml.xml' })
+
+Site:Location,
+  <replace(gbxml.'Campus'.'Location'.'Name'.'value', ',', '') >,
+  <gbxml.'Campus'.'Location'.'Latitude'.'value' >,
+  <gbxml.'Campus'.'Location'.'Longitude'.'value' >,
+  0.0,
+  0.0;

@@ -252,7 +252,7 @@ Example:
 my_list = [ 1, 2, 'a string!', sin(3.1415926), \x { x + 1 } ]
 ```
 
-Notice that you can put whatever expression types you want into a single
+Notice that you can put whatever expression *types* you want into a single
 list. The example has 2 numeric expressions, a string expression, a
 numeric expression that is the result of function application, and a
 function expression.
@@ -263,7 +263,8 @@ array"](https://en.wikipedia.org/wiki/Associative_array) implemented as
 a ["hash table"](https://en.wikipedia.org/wiki/Hash_table) with a string
 key, the same concept as in many other programming languages.
 Unfortunately for me, I cannot name this an "object" since the concept
-of an object is already taken by the "objects" in the resulting file.
+of an object is already taken by the "objects" in the resulting building
+energy simulation files we are trying to create.
 
 You define a structure like this:
 
@@ -282,7 +283,7 @@ my_struct.'prop_3'.'nested_struct_prop' == 'I am nested'
 ```
 
 Note the key used in the member access can be *any* string. For example,
-you can use pretty much any Unicode character you'd like. Using music
+you can use pretty much any Unicode characters you'd like. Using music
 notes is totally valid:
 
 ```neobem
@@ -316,7 +317,7 @@ that inline data table? It's a *list of structures*.
 
 That means these are exactly the same.
 
-```nbem
+```neobem
 zones =
 ________________________________________
 'name'        | 'x_origin' | 'y_origin'
@@ -354,7 +355,7 @@ That covers the first variable declaration of our example file.
 
 The second variable declaration
 
-```nbem
+```neobem
 zone_template = λ zone {
 Zone,
   <zone.'name'>,     ! Name

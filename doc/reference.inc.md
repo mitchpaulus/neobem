@@ -40,11 +40,11 @@ There are 4 higher order expression types.
 Strings are entered using single quotes "`'`". You can escape the
 following characters with a backslash:
 
-- `'\n'` for newline
-- `'\r'` for carriage return
-- `'\t'` for tab
-- `'\''` for single quote
-- `'\\'` for the backslash character itself
+- `'\n'`{.nbem} for newline
+- `'\r'`{.nbem} for carriage return
+- `'\t'`{.nbem} for tab
+- `'\''`{.nbem} for single quote
+- `'\\'`{.nbem} for the backslash character itself
 
 ### Boolean Literals
 
@@ -333,6 +333,77 @@ load_options = {
 
 print map(my_template, load(load_options))
 ```
+
+### Loading XML
+
+In a similar manner to JSON, you can load XML passing in a structure
+with the following properties.
+
+1. `type`: Required. This must be set to `'XML'`{.nbem}.
+2. `path`: Required. A string that is the relative path to the XML file.
+
+The mapping between XML and Neobem is only slightly lossy. An example
+will show the mapping best.
+
+```xml
+<root>
+  <element attribute1="attribute value" iselement="true">Some text</element>
+  <numbers>
+    <list>1.5</list>
+    <list>2.5</list>
+    <list>3.5</list>
+  </numbers>
+</root>
+```
+
+These statements are the same:
+
+```neobem
+root = load({ 'type': 'XML', 'path': 'path/to/example above.xml' })
+
+root = {
+  'element': {
+    'attribute1': 'attribute value'
+    'iselement': true
+    'value': 'Some text'
+  }
+
+  'numbers': {
+    'list': [
+      { 'value': 1.5 },
+      { 'value': 2.5 },
+      { 'value': 3.5 },
+    ]
+  }
+
+  'value': ''
+}
+```
+
+The basics are that
+
+1. A structure is returned.
+2. Each child element is made as a property
+3. If there are more than one of the same child element, the value for
+   that property is a list of structures.
+4. Each element has a `'value'`{.nbem} property, which holds the text inside of
+   a given element.
+5. Booleans and numeric values are attempted to be parsed for all
+   structure values, with a string type as the fall back.
+
+Some tricky edge cases:
+
+1. It's expected that there is a single root element, Neobem currently
+   only loads the first element.
+2. If you have an element such as
+
+   ```xml
+   <element>   some    <br></br>     text    </element>
+   ```
+
+   the `'value'`{.nbem} that you get out will be `'some text'`{.nbem}. Each run
+   of text is trimmed of white space on both the start and end, then
+   concatenated with a space.
 
 ## Functional Programming Functions
 

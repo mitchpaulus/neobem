@@ -11,6 +11,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.4.0
+
+### Added
+
+- Ability to load in JSON data
+- Ability to load in XML data
+- A `print` statement is now allowed within a function. Previously it
+  was only allowed at the root scope of a file.
+- Added three new built in functions: `type`, `guid`, and `replace`.
+
+### Changed
+
+- **BREAKING**: The grammar for imports was updated. The `as 'name'`
+  token has been now forced to be an identifier, not a string. All
+  strings will need to have the quotations removed, and the `name` made
+  into a valid identifier.
+
+- The URI portion of the `import` statement now is generalized to be an
+  expression, instead of a string. This means that the URI for an import
+  can now be dynamic. This is not a breaking change.
+
+### Fixed
+
+- The program now exits immediately on any errors in lexing or parsing.
+  Previously would still try to walk the broken syntax tree.
+
+### Changed
+
 ## 0.3.0
 
 ### Changed

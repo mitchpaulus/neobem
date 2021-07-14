@@ -9,10 +9,17 @@ namespace src
 {
     public class DelimitedFileReader
     {
+        private readonly string _delimiter;
+
+        public DelimitedFileReader(string delimiter = "\t")
+        {
+            _delimiter = delimiter;
+        }
+
         public ListExpression ReadFile(string contents, bool hasHeaderLine = true)
         {
-            List<string> lines = new List<string>();
-            using (StringReader reader = new StringReader(contents))
+            List<string> lines = new();
+            using (StringReader reader = new(contents))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -21,19 +28,36 @@ namespace src
                 }
             }
 
-            var headerLine = lines[0];
+            // Generally use header line verbatim. Otherwise use 0-based index as structure members.
+            List<string> headers;
+            if (hasHeaderLine)
+            {
+                string headerLine = lines[0];
+                headers = headerLine.Split(_delimiter).ToList();
+            }
+            else
+            {
+                // Decided to use 1-based index here (the i + 1) for columns. I know that other parts of the code
+                // have used 0-based, but for column identifiers like this, I feel like this is a more
+                // pragmatic decision.
+                headers = lines[0].Split(_delimiter).Select((s, i) => (i + 1).ToString()).ToList();
+            }
 
-            IdentifierTransformer transformer = new IdentifierTransformer();
-            var headers = headerLine.Split('\t').Select(s => transformer.ToIdentifier(s)).ToList();
+            // We need to skip the header line if used
+            int linesToSkip = hasHeaderLine ? 1 : 0;
+            // Passing along the line numbers so if there is an issue in parsing we can present the line number in an error message.
+            int lineNumberOffset = linesToSkip + 1;
 
-            var objects = lines.Skip(1).Select((line, index) => RecordToObject(line, headers, index + 2)).Cast<Expression>().ToList();
+            List<Expression> objects = lines.Skip(linesToSkip)
+                                            .Select((line, index) => RecordToObject(line, headers, index + lineNumberOffset))
+                                            .Cast<Expression>().ToList();
 
             return new ListExpression(objects);
         }
 
-        private static IdfPlusObjectExpression RecordToObject(string record, List<string> headers, int lineNum)
+        private IdfPlusObjectExpression RecordToObject(string record, List<string> headers, int lineNum)
         {
-            var fields = record.Split('\t');
+            string[] fields = record.Split(_delimiter);
 
             if (fields.Length != headers.Count)
                 throw new FileLoadException(
@@ -41,20 +65,9 @@ namespace src
 
             var zipped = headers.Zip(fields, (s, s1) => (Header: s, Field: s1)).ToList();
 
-            IdfPlusObjectExpression objectExpression = new IdfPlusObjectExpression();
+            IdfPlusObjectExpression objectExpression = new();
 
-            foreach (var (header, field) in zipped)
-            {
-                string trimmedField = field.Trim();
-                if (double.TryParse(trimmedField, out double numericValue))
-                {
-                    objectExpression.Members[header] = new NumericExpression(numericValue);
-                }
-                else
-                {
-                    objectExpression.Members[header] = new StringExpression(trimmedField);
-                }
-            }
+            foreach ((string header, string field) in zipped) objectExpression.Members[header] = Expression.Parse(field.Trim());
 
             return objectExpression;
         }
@@ -64,9 +77,9 @@ namespace src
     {
         public string ToIdentifier(string input)
         {
-            Regex regex = new Regex("[^a-zA-Z0-9_]+");
+            Regex regex = new("[^a-zA-Z0-9_]+");
             var inputWithValidChars = regex.Replace(input, "_").ToLower();
-            Regex multipleUnderscores = new Regex("_+");
+            Regex multipleUnderscores = new("_+");
             inputWithValidChars =  multipleUnderscores.Replace(input, "_");
             return inputWithValidChars.TrimStart('_').TrimEnd('_');
         }

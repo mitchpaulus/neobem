@@ -19,25 +19,55 @@ namespace src
             // Default is tab delimited.
             if (inputs[0] is StringExpression stringExpression)
             {
+                DelimitedFileReader reader = new();
                 var fullPath = Path.GetFullPath(stringExpression.Text, baseDirectory);
-
-                if (File.Exists(fullPath))
-                {
-                    DelimitedFileReader reader = new DelimitedFileReader();
-                    string contents = File.ReadAllText(fullPath);
-
-                    var listExpression = reader.ReadFile(contents);
-
-                    return ("", listExpression);
-                }
-                else
-                {
-                    throw new FileNotFoundException($"The file {stringExpression.Text} could not be found.");
-                }
+                return EvaluateDelimitedFile(fullPath, reader, true);
             }
             else if (inputs[0] is IdfPlusObjectExpression objectExpression)
             {
-                if (objectExpression.Members["type"] is StringExpression {Text: "Excel"})
+                if (!objectExpression.Members.TryGetValue("type", out Expression typeExpression))
+                {
+                    throw new ArgumentException("'type' is a mandatory member of the structure for the load function.");
+                }
+
+                if (!objectExpression.Members.TryGetValue("path", out Expression pathExpression))
+                {
+                    throw new ArgumentException("'path' is a mandatory member of the structure for the load function.");
+                }
+
+                if (typeExpression is not StringExpression typeStringExpression)
+                {
+                    throw new ArgumentException(
+                        $"The 'type' member of the structure passed to load is expected to evaluate to a string, found a {typeExpression.TypeName()} with value {typeExpression.AsErrorString()}");
+                }
+
+                if (pathExpression is not StringExpression pathStringExpression)
+                {
+                    throw new ArgumentException(
+                        $"The 'path' member of the structure passed to load is expected to evaluate to a string, found a {pathExpression.TypeName()} with value {pathExpression.AsErrorString()}");
+                }
+
+                if (typeStringExpression.TextEqualsCaseIns("text"))
+                {
+                    string delimiter;
+                    if (objectExpression.Members.TryGetValue("delimiter", out Expression delimiterExp) && delimiterExp is StringExpression delimiterStringExpression)
+                    {
+                        delimiter = delimiterStringExpression.Text;
+                    }
+                    else delimiter = "\t";
+
+                    bool hasHeaderLine;
+                    if (objectExpression.Members.TryGetValue("has header", out Expression headerExp) && headerExp is BooleanExpression headerBooleanExpression)
+                    {
+                        hasHeaderLine = headerBooleanExpression.Value;
+                    }
+                    else hasHeaderLine = true;
+
+                    DelimitedFileReader reader = new(delimiter);
+                    var fullPath = Path.GetFullPath(pathStringExpression.Text, baseDirectory);
+                    return EvaluateDelimitedFile(fullPath, reader, hasHeaderLine);
+                }
+                else if (typeStringExpression.Text == "Excel")
                 {
                     string worksheetName;
                     var tryGetSheet = objectExpression.Members.TryGetValue("sheet", out Expression expression);
@@ -100,6 +130,20 @@ namespace src
             }
 
             throw new ArgumentException($"load function expects string or structure - found {inputs[0].TypeName()}");
+        }
+
+        private static (string, Expression) EvaluateDelimitedFile(string fullPath, DelimitedFileReader reader, bool hasHeaderLine)
+        {
+            if (File.Exists(fullPath))
+            {
+                string contents = File.ReadAllText(fullPath);
+                ListExpression listExpression = reader.ReadFile(contents, hasHeaderLine);
+                return ("", listExpression);
+            }
+            else
+            {
+                throw new FileNotFoundException($"The file {fullPath} could not be found.");
+            }
         }
 
         public override string AsString() => "Load";

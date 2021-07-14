@@ -1,0 +1,16 @@
+load_options =
+   {
+     'path': 'no_header_data.txt',
+     'type': 'text',
+     'has header': false
+   }
+
+no_header_data = load(load_options)
+
+version_map = λ line {
+Version,
+  < line.'2' >;
+}
+
+print map(version_map, no_header_data)
+

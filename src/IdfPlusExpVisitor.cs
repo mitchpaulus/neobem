@@ -119,7 +119,7 @@ namespace src
             {
                 Expression memberAccessExpression = Visit(context.expression(1));
 
-                if (!(memberAccessExpression is StringExpression stringMemberExpression))
+                if (memberAccessExpression is not StringExpression stringMemberExpression)
                 {
                     throw new InvalidOperationException($"Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
                 }
@@ -132,7 +132,7 @@ namespace src
                 else
                 {
                     throw new InvalidOperationException(
-                        $"{memberName} is not a member of the object {context.expression(0).GetText()}");
+                        $"'{memberName}' is not a member of the structure {context.expression(0).GetText()}. Possible members include:\n\n{string.Join("", objectExpression.Members.Keys.Select(s => $"'{s}'\n"))}");
                 }
             }
             else

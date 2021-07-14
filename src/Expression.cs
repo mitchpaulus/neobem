@@ -176,6 +176,13 @@ namespace src
         public override int GetHashCode() => Text.GetHashCode();
         public static bool operator ==(StringExpression left, StringExpression right) => Equals(left, right);
         public static bool operator !=(StringExpression left, StringExpression right) => !Equals(left, right);
+
+        /// <summary>
+        /// Case insensitive equality to the value of the text string
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool TextEqualsCaseIns(string other) => string.Equals(Text, other, StringComparison.OrdinalIgnoreCase);
     }
 
     public static class StringEscape
@@ -270,7 +277,7 @@ namespace src
 
     public class IdfPlusObjectExpression : Expression
     {
-        public Dictionary<string, Expression> Members = new Dictionary<string, Expression>();
+        public Dictionary<string, Expression> Members = new();
         public override string AsString() => string.Join(",", Members.Keys.Select(s => Members[s].AsString()));
 
         public override string AsErrorString()

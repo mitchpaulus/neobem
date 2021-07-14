@@ -27,11 +27,11 @@ namespace test
             Assert.IsTrue(output.Expressions[1] is IdfPlusObjectExpression);
 
             Assert.IsTrue(((IdfPlusObjectExpression)output.Expressions[0]).Members["name"] is StringExpression);
-            Assert.IsTrue(((IdfPlusObjectExpression)output.Expressions[0]).Members["x_origin"] is NumericExpression);
+            Assert.IsTrue(((IdfPlusObjectExpression)output.Expressions[0]).Members["x origin"] is NumericExpression);
 
             Assert.AreEqual(((StringExpression)((IdfPlusObjectExpression) output.Expressions[0]).Members["name"]).Text, "Zone 1");
             IdfPlusObjectExpression secondExpression = (IdfPlusObjectExpression) output.Expressions[1];
-            Assert.AreEqual(((NumericExpression) secondExpression.Members["x_origin"]).Value,  56);
+            Assert.AreEqual(((NumericExpression) secondExpression.Members["x origin"]).Value,  56);
         }
 
         [Test]
@@ -109,6 +109,38 @@ namespace test
               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
 
               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+        }
+
+        [Test]
+        public void TestNoHeaderOption()
+        {
+               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "no_header_data.nbem");
+               var file = File.ReadAllText(filepath);
+               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
+               var parser = file.ToParser();
+               var tree = parser.idf();
+               string output = visitor.Visit(tree);
+
+               string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "no_header_data_expected.idf");
+               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+
+               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+        }
+
+        [Test]
+        public void TestLoadingCSV()
+        {
+               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "csv.nbem");
+               var file = File.ReadAllText(filepath);
+               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
+               var parser = file.ToParser();
+               var tree = parser.idf();
+               string output = visitor.Visit(tree);
+
+               string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "csv_expected.idf");
+               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+
+               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
         }
     }
 }

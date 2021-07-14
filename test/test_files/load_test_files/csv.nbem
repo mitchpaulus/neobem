@@ -1,0 +1,4 @@
+csv_data = load({ 'delimiter': ',', 'type': 'text', 'path': 'csv.csv' })
+
+Version,
+    < let data_row = head(csv_data) in if data_row.'header 2' then data_row.'header 1' else 2 >;

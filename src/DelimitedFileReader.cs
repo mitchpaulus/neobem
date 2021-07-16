@@ -16,17 +16,23 @@ namespace src
             _delimiter = delimiter;
         }
 
-        public ListExpression ReadFile(string contents, bool hasHeaderLine = true)
+        public ListExpression ReadFile(string contents, bool hasHeaderLine = true, int skipLines = 0)
         {
             List<string> lines = new();
+            int lineNum = 1;
             using (StringReader reader = new(contents))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(line)) lines.Add(line);
+                    if (!string.IsNullOrWhiteSpace(line) && lineNum > skipLines) lines.Add(line);
+                    lineNum++;
                 }
             }
+
+            // If there is no data, return empty list.
+            // TODO: Potentially add warning capability?
+            if (lines.Count == 0) return new ListExpression(new List<Expression>());
 
             // Generally use header line verbatim. Otherwise use 0-based index as structure members.
             List<string> headers;

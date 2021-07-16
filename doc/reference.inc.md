@@ -270,6 +270,49 @@ A number of mathematical functions are built in.
   options.
 
 
+### Loading Delimited Text Data
+
+The most straightforward file type to load is the delimited text file.
+To load, pass a structure with the following options:
+
+1. `type`: This must be set to `'text'`{.nbem}.
+2. `path`: Required. A string that is the relative path to the text file.
+3. `has header`: Optional. A boolean that specifies whether the file has
+   a header record or not. By default, this is `true`{.nbem}.
+4. `delimiter`: Optional. A string that specifies the delimiter between
+   fields. By default, this is a tab (`'\t'`) character.
+5. `skip`. Optional. An integer number of lines to skip.
+
+For example, with a text file like:
+
+```
+Non useful info to start:
+
+Header 1|Header 2
+Value1|Value2
+Value3|Value4
+```
+
+It can be loaded like:
+
+```nbem
+load_options = {
+  'type': 'text',
+  'path': 'path/to/file.txt',
+  'skip': 2,
+  'delimiter': '|'
+}
+
+data = load(load_options)
+# data is same as:
+data = [
+  { 'Header 1': 'Value1', 'Header  2': 'Value2' },
+  { 'Header 1': 'Value3', 'Header  2': 'Value4' },
+]
+
+```
+
+
 ### Loading from Excel
 
 To load data from Excel, you can use a structure with the following options.

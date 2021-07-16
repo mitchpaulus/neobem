@@ -21,7 +21,7 @@ namespace src
             {
                 DelimitedFileReader reader = new();
                 var fullPath = Path.GetFullPath(stringExpression.Text, baseDirectory);
-                return EvaluateDelimitedFile(fullPath, reader, true);
+                return EvaluateDelimitedFile(fullPath, reader, true, 0);
             }
             else if (inputs[0] is IdfPlusObjectExpression objectExpression)
             {
@@ -63,9 +63,13 @@ namespace src
                     }
                     else hasHeaderLine = true;
 
+                    int skipLines = 0;
+                    if (objectExpression.Members.TryGetValue("skip", out Expression skipExp) && skipExp is NumericExpression skipIntExp)
+                        skipLines = Convert.ToInt32(Math.Round(skipIntExp.Value));
+
                     DelimitedFileReader reader = new(delimiter);
                     var fullPath = Path.GetFullPath(pathStringExpression.Text, baseDirectory);
-                    return EvaluateDelimitedFile(fullPath, reader, hasHeaderLine);
+                    return EvaluateDelimitedFile(fullPath, reader, hasHeaderLine, skipLines);
                 }
                 else if (typeStringExpression.Text == "Excel")
                 {
@@ -132,12 +136,12 @@ namespace src
             throw new ArgumentException($"load function expects string or structure - found {inputs[0].TypeName()}");
         }
 
-        private static (string, Expression) EvaluateDelimitedFile(string fullPath, DelimitedFileReader reader, bool hasHeaderLine)
+        private static (string, Expression) EvaluateDelimitedFile(string fullPath, DelimitedFileReader reader, bool hasHeaderLine, int skipLines)
         {
             if (File.Exists(fullPath))
             {
                 string contents = File.ReadAllText(fullPath);
-                ListExpression listExpression = reader.ReadFile(contents, hasHeaderLine);
+                ListExpression listExpression = reader.ReadFile(contents, hasHeaderLine, skipLines);
                 return ("", listExpression);
             }
             else

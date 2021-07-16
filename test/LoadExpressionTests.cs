@@ -142,5 +142,21 @@ namespace test
 
                Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
         }
+
+        [Test]
+        public void TestSkippingHeaderLines()
+        {
+               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data.nbem");
+               var file = File.ReadAllText(filepath);
+               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
+               var parser = file.ToParser();
+               var tree = parser.idf();
+               string output = visitor.Visit(tree);
+
+               string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data_expected.idf");
+               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+
+               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+        }
     }
 }

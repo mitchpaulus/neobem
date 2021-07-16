@@ -1,0 +1,16 @@
+load_options = {
+    'path': 'skip_test_data.txt',
+    'type': 'text',
+    'skip': 3,
+    'delimiter': '|',
+}
+
+data = load(load_options)
+
+template = λ record {
+    Version,
+      < record.'Header 1' >,
+      < record.'Header 2' >;
+}
+
+print map(template, data)

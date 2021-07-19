@@ -71,7 +71,8 @@ INLINE_TABLE_HEADER_SEP : '---' '-'* ;
 
 INLINE_TABLE_COL_SEP : '|' ;
 
-BOOLEAN_LITERAL : 'true' | 'false' | '✓' | '✗' ;
+BOOLEAN_LITERAL_TRUE : 'true' | '✓' ;
+BOOLEAN_LITERAL_FALSE : 'false' | '✗' ;
 
 IDENTIFIER : [a-z][a-zA-Z0-9@_]* ;
 

@@ -21,7 +21,8 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | expression op=(AND_OP|OR_OP) expression    # LogicExp
              | STRING                                     # StringExp
              | NUMERIC                                    # NumericExp
-             | BOOLEAN_LITERAL                            # BooleanLiteralExp
+             | BOOLEAN_LITERAL_TRUE                       # BooleanLiteralTrueExp
+             | BOOLEAN_LITERAL_FALSE                      # BooleanLiteralFalseExp
              | IDENTIFIER                                 # VariableExp
              | list                                       # ListExp
              | if_exp                                     # IfExp

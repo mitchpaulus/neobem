@@ -377,11 +377,10 @@ namespace src
             return evaluatedExpression;
         }
 
-        public override Expression VisitBooleanLiteralExp(NeobemParser.BooleanLiteralExpContext context)
-        {
-            var text = context.BOOLEAN_LITERAL().GetText();
-            if (text == "true" || text == "✓") return new BooleanExpression(true);
-            return new BooleanExpression(false);
-        }
+        public override Expression VisitBooleanLiteralTrueExp(NeobemParser.BooleanLiteralTrueExpContext context) =>
+            new BooleanExpression(true);
+
+        public override Expression VisitBooleanLiteralFalseExp(NeobemParser.BooleanLiteralFalseExpContext context) =>
+            new BooleanExpression(false);
     }
 }

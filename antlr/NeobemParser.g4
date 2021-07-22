@@ -99,8 +99,10 @@ base_idf : COMMENT                # IdfComment
            ;
 
 let_binding : LET IDENTIFIER EQUALS expression
-                (COMMA IDENTIFIER EQUALS expression)*
-                IN expression ;
+              (COMMA IDENTIFIER EQUALS expression)* COMMA?
+              IN let_expression ;
+
+let_expression : expression ;
 
 object : OBJECT_TYPE OBJECT_COMMENT?
            (FIELD_SEP OBJECT_COMMENT? (FIELD OBJECT_COMMENT?)?)+

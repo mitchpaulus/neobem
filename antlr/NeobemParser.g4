@@ -12,7 +12,7 @@ variable_declaration : IDENTIFIER EQUALS expression;
 expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | funcexp=expression
                  ( LPAREN RPAREN |
-                   LPAREN expression (COMMA expression)* RPAREN
+                   LPAREN function_parameter (COMMA function_parameter)* RPAREN
                  )                                        # FunctionExp
              | <assoc=right> expression CARET expression  # Exponientiate
              | expression op=(MULTOP|DIVIDEOP) expression # MultDivide
@@ -32,6 +32,8 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | inline_table                               # InlineTable
              | LPAREN expression RPAREN                   # ParensExp
              ;
+
+function_parameter : expression ;
 
 boolean_exp_operator : LESSTHAN |
                        GREATERTHAN |

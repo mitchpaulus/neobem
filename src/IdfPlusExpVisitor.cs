@@ -216,7 +216,7 @@ namespace src
             Expression expression;
             try
             {
-                var expressions = functionExpContext.expression().Skip(1).Select(Visit).ToList();
+                var expressions = functionExpContext.function_parameter().Select(Visit).ToList();
                 (text, expression) = functionExpression.Evaluate(expressions, _baseDirectory);
             }
             catch (Exception exception)

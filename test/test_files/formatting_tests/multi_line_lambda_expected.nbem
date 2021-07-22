@@ -1,0 +1,4 @@
+func = λ name {
+  var1 = 2
+  var2 = 3
+}

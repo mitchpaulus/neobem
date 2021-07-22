@@ -1,0 +1,10 @@
+versions = [
+  { 'ver': '9.1' },
+  { 'ver': '9.2' },
+]
+
+version_temp = λ obj {
+  Version, < obj.'ver' >;
+}
+
+print map(version_temp, versions)

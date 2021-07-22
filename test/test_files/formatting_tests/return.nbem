@@ -1,0 +1,6 @@
+a_function = λ name {
+
+    var = 2
+
+    return var + 2
+}

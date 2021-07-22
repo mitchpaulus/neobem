@@ -39,6 +39,10 @@ namespace src
                         i++;
                         break;
                     }
+                    case "-f":
+                    case "--fmt":
+                        options.FormatFile = true;
+                        break;
                     default:
                         options.InputFile = args[i];
                         break;
@@ -93,6 +97,22 @@ namespace src
                 return 1;
             }
 
+            if (options.FormatFile)
+            {
+                FormatVisitor formatVisitor = new(0, 0);
+                try
+                {
+                    string output = formatVisitor.Visit(tree);
+                    Console.Write(output);
+                    return 0;
+                }
+                catch (Exception exception)
+                {
+                    Console.Error.WriteLine(exception.Message);
+                    return 1;
+                }
+            }
+
             // Construct the main visitor for the initial file.
             IdfPlusVisitor visitor = new(baseDirectory);
 
@@ -131,6 +151,7 @@ namespace src
         {
             public string OutputFile = "";
             public string InputFile = "in.nbem";
+            public bool FormatFile = false;
         }
     }
 }

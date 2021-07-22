@@ -1,0 +1,7 @@
+lambda_1 = \ var {
+    var2 = 1
+
+    lambda_2 = \ {
+        var3 = 2
+    }
+}

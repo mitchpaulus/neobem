@@ -59,7 +59,7 @@ namespace src
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
         {
             var replaced = _objectVariableReplacer.Replace(context.GetText(), _environments);
-            var prettyPrinted = _idfObjectPrettyPrinter.ObjectPrettyPrinter(replaced);
+            var prettyPrinted = _idfObjectPrettyPrinter.ObjectPrettyPrinter(replaced, 0, Consts.IndentSpaces);
             return prettyPrinted + "\n\n";
         }
 

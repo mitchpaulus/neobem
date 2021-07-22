@@ -1,0 +1,12 @@
+filter = λ predicate list {
+  if length(list) == 0
+  then []
+  else let elem = head(list)
+           remaining = filter(predicate, tail(list))
+       in if predicate(elem) then [elem] + remaining else remaining
+}
+
+filtered_list = filter(λ x { x < 2 }, [1, 2, 3, 4])
+
+Version,
+  <filtered_list>;

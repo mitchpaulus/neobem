@@ -1,0 +1,1 @@
+var = if value >= something then other else other

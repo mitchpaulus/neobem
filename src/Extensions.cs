@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 
 namespace src
 {
@@ -16,6 +18,8 @@ namespace src
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             return new NeobemParser(tokens);
         }
+
+        public static IParseTree ToIdfTree(this string input) => ToParser(input).idf();
 
         public static ExcelRangeParser ToExcelRangeParser(this string input)
         {
@@ -82,6 +86,16 @@ namespace src
             return output;
         }
 
+        public static int NumLines(this StringBuilder builder) => builder.ToString().SplitLines().Count;
+        public static int NumLines(this string input) => input.SplitLines().Count;
+
+        /// <summary>
+        /// Split an idf object by comment.  Ex:
+        /// my field, ! Comment
+        /// returns SplitIdfLine('my field, ', '! Comment')
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static SplitIdfLine SplitComment(this string input)
         {
             var indexOfExclamation = input.IndexOf('!');
@@ -112,6 +126,9 @@ namespace src
             }
             return "\n";
         }
+
+        public static string IndentSpaces(this int indentLevel, int indentSpaces) =>
+            new string(' ', indentLevel * indentSpaces);
     }
 
     public class SplitIdfLine

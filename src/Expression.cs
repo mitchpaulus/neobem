@@ -113,7 +113,7 @@ namespace src
                             break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             var replacedObject = replacer.Replace(objectDeclarationContext.GetText(), updatedEnvironments);
-                            var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject);
+                            var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
                             builder.AppendLine(prettyPrinted);
                             break;
                         case NeobemParser.FunctionVariableDeclarationContext variableDeclarationContext:

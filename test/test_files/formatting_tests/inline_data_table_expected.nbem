@@ -1,0 +1,27 @@
+zones = 
+──────────────┬────────────┬───────────
+'name'        │ 'x_origin' │ 'y_origin'
+──────────────┼────────────┼───────────
+'Bedroom'     │ 0          │ 0         
+'Living Room' │ 10         │ 20        
+'Kitchen'     │ 5          │ 12        
+──────────────┴────────────┴───────────
+
+zone_template = λ zone {
+  Zone,
+    < zone.'name' >,          ! Name
+    0,                        ! Direction of Relative North {deg}
+    < zone.'x_origin' >,      ! X Origin {m}
+    < zone.'y_origin' >,      ! Y Origin {m}
+    0,                        ! Z Origin {m}
+    1,                        ! Type
+    1,                        ! Multiplier
+    autocalculate,            ! Ceiling Height {m}
+    autocalculate,            ! Volume {m3}
+    autocalculate,            ! Floor Area {m2}
+    ,                         ! Zone Inside Convection Algorithm
+    ,                         ! Zone Outside Convection Algorithm
+    Yes;                      ! Part of Total Floor Area
+}
+
+print map(zone_template, zones)

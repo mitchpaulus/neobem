@@ -60,16 +60,22 @@ STRUCT_SEP : ':' ;
 
 COMMA : ',' ;
 
-// 3 or more underscores to begin inline data table
-INLINE_TABLE_BEGIN_END : '___' '_'*  ;
+// 3 or more
+//  - underscores,
+//  - 'Box Drawings Light Horizontal' (U+2500),
+//  - 'Box Drawings Light Down and Horizontal' (U+252C)
+//  - 'Box Drawings Light Up and Horizontal' (U+2534)
+//  - or hyphens
+//  to begin/end inline data table.
+// Essentially, for horizontal portions, any "horizontal like"
+// even though a well formatted table will use the sensible character.
+INLINE_TABLE_BEGIN_END_SEP :  [─┴┬_-] [─┴┬_-] [─┴┬_-] [─┴┬_-]* ;
 
-// Can optionally end inline table with overline character U+203E
-INLINE_TABLE_END : '‾‾‾' '‾'* ;
-
-// 3 or more hyphens separate table header entries
-INLINE_TABLE_HEADER_SEP : '---' '-'* ;
-
-INLINE_TABLE_COL_SEP : '|' ;
+// Column separators are either
+//  - normal pipe
+//  - 'Box Drawings Light Vertical' (U+2502)
+//  - 'Box Drawings Light Vertical and Horizontal' (U+253C)
+INLINE_TABLE_COL_SEP : '|' | '│' | '┼';
 
 BOOLEAN_LITERAL_TRUE : 'true' | '✓' ;
 BOOLEAN_LITERAL_FALSE : 'false' | '✗' ;

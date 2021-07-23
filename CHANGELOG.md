@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
-## 0.4.0
+## 0.4.0 - 2021-07-22
 
 ### Added
 
@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `print` statement is now allowed within a function. Previously it
   was only allowed at the root scope of a file.
 - Added three new built in functions: `type`, `guid`, and `replace`.
+- Added formatting option, analogous to `gofmt`.
+- When loading a delimited text file, there is an option to skip a
+  number of header rows.
 
 ### Changed
 
@@ -32,12 +35,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   expression, instead of a string. This means that the URI for an import
   can now be dynamic. This is not a breaking change.
 
+- Box characters can now be used for inline data tables. Generally, the
+  formatter will be used to redraw the inline data tables with these
+  box characters..
+
 ### Fixed
 
 - The program now exits immediately on any errors in lexing or parsing.
   Previously would still try to walk the broken syntax tree.
 
-### Changed
 
 ## 0.3.0
 

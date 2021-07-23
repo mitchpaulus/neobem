@@ -8,4 +8,5 @@ rather than from a file.
 OPTIONS:
 
 -h, --help              show this help and exit
+-f, --fmt               format file instead of compiling
 -o, --output <filename> output file name, default is standard output

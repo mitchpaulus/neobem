@@ -1,10 +1,12 @@
 #!/bin/sh
 cat <<EOF
 using System.Text;
-namespace src {
-
-    public static class Help {
-        public static string Text() {
+namespace src
+{
+    public static class Help
+    {
+        public static string Text()
+        {
             StringBuilder builder = new StringBuilder();
 EOF
 

@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `print` statement is now allowed within a function. Previously it
   was only allowed at the root scope of a file.
 - Added three new built in functions: `type`, `guid`, and `replace`.
-- Added formatting option, analogous to `gofmt`.
+- Added formatting option `-f` or `--fmt`, analogous to `gofmt`.
 - When loading a delimited text file, there is an option to skip a
   number of header rows.
 
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Box characters can now be used for inline data tables. Generally, the
   formatter will be used to redraw the inline data tables with these
-  box characters..
+  box characters.
 
 ### Fixed
 

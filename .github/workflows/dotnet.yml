@@ -31,8 +31,6 @@ jobs:
         java -jar antlr-4.9.2-complete.jar antlr/excelrange/ExcelRange.g4
     - name: Run redo targets
       run: |
-        pwd
-        ls -la
         ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
     - name: Restore dependencies
       run: |
@@ -44,4 +42,6 @@ jobs:
         dotnet build test --no-restore
     - name: Test
       run: dotnet test test --no-build --verbosity normal
+    - name: Test documentation code samples
+      run: ./do doc/code_samples/test
 

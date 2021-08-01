@@ -14,8 +14,8 @@ namespace test
         [Test]
         public void TestBasicTemplate()
         {
-            string file = File.ReadAllText("/home/mitch/repos/idf-plus/test/test_files/test_1.idfplus");
-            var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "test_files"));
+            string file = File.ReadAllText(Path.Combine(TestDir.Dir, "test_1.idfplus"));
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
 
             var parser = file.ToParser();
 

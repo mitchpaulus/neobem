@@ -30,7 +30,7 @@ jobs:
         java -jar antlr-4.9.2-complete.jar -visitor antlr/NeobemParser.g4
     - name: Run redo targets
       run: |
-        do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+        ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
     - name: Restore dependencies
       run: |
         dotnet restore src

@@ -28,6 +28,7 @@ jobs:
       run: |
         java -jar antlr-4.9.2-complete.jar antlr/NeobemLexer.g4
         java -jar antlr-4.9.2-complete.jar -visitor antlr/NeobemParser.g4
+        java -jar antlr-4.9.2-complete.jar antlr/excelrange/ExcelRange.g4
     - name: Run redo targets
       run: |
         pwd

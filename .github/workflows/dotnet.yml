@@ -17,9 +17,28 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Setup Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - name: Download ANTLR
+      run: curl --output antlr-4.9.2-complete.jar https://www.antlr.org/download/antlr-4.9.2-complete.jar
+    - name: Compile ANTLR grammars
+      run: |
+        java -jar antlr-4.8-complete.jar antlr/NeobemLexer.g4
+        java -jar antlr-4.8-complete.jar -visitor antlr/NeobemParser.g4
+    - name: Run redo targets
+      run: |
+        do src/Help.cs src/Version.cs test/TestFileDirectory.cs
     - name: Restore dependencies
-      run: dotnet restore src
+      run: |
+        dotnet restore src
+        dotnet restore test
     - name: Build
-      run: dotnet build src --no-restore
+      run: |
+        dotnet build src --no-restore
+        dotnet build test --no-restore
     - name: Test
-      run: dotnet test src --no-build --verbosity normal
+      run: dotnet test test --no-build --verbosity normal
+

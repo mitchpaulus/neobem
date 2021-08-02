@@ -1,0 +1,8 @@
+my_template = λ value {
+  Material:AirGap,
+    <value> Air Gap,          ! Name
+    <value>;                  ! Thermal Resistance {m2-K/W}
+}
+
+export (my_template)
+

@@ -1,4 +1,8 @@
 #!/bin/sh
+
+redo-ifchange help.txt
+
+# This shell script generates the C# code for help text.
 cat <<EOF
 using System.Text;
 namespace src

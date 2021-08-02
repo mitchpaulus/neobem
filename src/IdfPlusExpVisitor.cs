@@ -76,6 +76,14 @@ namespace src
                 var found = scope.TryGetValue(context.GetText(), out Expression value);
                 if (found) return value;
             }
+
+            // Try to give more helpful error message if it appears like the variable should be coming from an import.
+            if (context.GetText().Contains("@"))
+            {
+                throw new InvalidOperationException(
+                    $"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope. Possible reasons include missing import or missing export statements within imported file.");
+            }
+
             throw new InvalidOperationException($"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
         }
 

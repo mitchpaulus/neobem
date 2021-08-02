@@ -89,6 +89,9 @@ namespace src
         public static int NumLines(this StringBuilder builder) => builder.ToString().SplitLines().Count;
         public static int NumLines(this string input) => input.SplitLines().Count;
 
+        // Get the length of the last line of a string.
+        public static int CurrentPosition(this string input) => input.SplitLines().Last().Length;
+
         /// <summary>
         /// Split an idf object by comment.  Ex:
         /// my field, ! Comment

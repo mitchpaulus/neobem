@@ -238,7 +238,8 @@ ________________________________________
 
 shows an *inline data table expression*. It looks like a pretty table,
 but it is actually an expression that evaluates to a *list* of
-*structures*.
+*structures*. The borders can be made with hyphens `'-'` and pipe
+characters `'|'`
 
 A list expression is what you would expect. It's a list of expressions.
 This is like an "array" in other programming languages. You can define

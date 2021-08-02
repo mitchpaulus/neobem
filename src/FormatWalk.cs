@@ -322,6 +322,53 @@ namespace src
             return builder.ToString();
         }
 
+        public override string VisitExport_statement(NeobemParser.Export_statementContext context)
+        {
+            if (context.IDENTIFIER().Length < 4)
+            {
+                return $"export ({string.Join(" ", context.IDENTIFIER().Select(node => node.GetText()).ToList())})";
+            }
+            else
+            {
+                string identifierList = string.Join("", context.IDENTIFIER().Select(node => $"{Indent(1, node.GetText())}\n"));
+                return $"export (\n{identifierList})";
+            }
+        }
+
+        public override string VisitImport_statement(NeobemParser.Import_statementContext context)
+        {
+            StringBuilder builder = new();
+            string importText = context.IMPORT().GetText();
+            builder.Append(importText + " ");
+
+            var expressionVisitor = new FormatVisitor(_currentIndentLevel, importText.Length + 2);
+            string expression = expressionVisitor.Visit(context.expression());
+            builder.Append(expression);
+
+            foreach (NeobemParser.Import_optionContext importOptionContext in context.import_option())
+            {
+                FormatVisitor visitor = new(_currentIndentLevel, builder.ToString().CurrentPosition() + 1);
+                string formattedOption = visitor.Visit(importOptionContext);
+                builder.Append(" " + formattedOption);
+            }
+
+            return builder.ToString();
+        }
+
+        public override string VisitAsOption(NeobemParser.AsOptionContext context) => $"{context.AS().GetText()} {context.IDENTIFIER().GetText()}";
+
+        public override string VisitOnlyOption(NeobemParser.OnlyOptionContext context)
+        {
+            string identifiers = string.Join(" ", context.IDENTIFIER().Select(node => node.GetText()));
+            return $"{context.ONLY().GetText()} ({identifiers})";
+        }
+
+        public override string VisitNotOption(NeobemParser.NotOptionContext context)
+        {
+            string identifiers = string.Join(" ", context.IDENTIFIER().Select(node => node.GetText()));
+            return $"{context.NOT().GetText()} ({identifiers})";
+        }
+
         public override string VisitListExp(NeobemParser.ListExpContext context)
         {
             string leftBracket = context.list().LSQUARE().GetText();

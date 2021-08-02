@@ -38,6 +38,7 @@ zips/
 kde-syntax/test.pdf
 
 test/TestFileDirectory.cs
+src/Version.cs
 
 # Generated antlr files
 antlr/NeobemLexer.cs

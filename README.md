@@ -172,14 +172,16 @@ mp@mp-computer:~$ nbem -h
 Usage: nbem [options..] [input file]
 Compile Neobem file to idf output
 
-With no [input file], input is read from in.nbem file in current
-directory. If the input file is '-', input is read from standard input
-rather than from a file.
+With no [input file], input is read from file named 'in.nbem' in the
+current directory. If the input file is '-', input is read from standard
+input rather than from a file.
 
 OPTIONS:
 
 -h, --help              show this help and exit
+-f, --fmt               format file instead of compiling
 -o, --output <filename> output file name, default is standard output
+-v, --version           print version number and exit
 
 ```
 

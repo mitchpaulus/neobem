@@ -68,6 +68,12 @@ namespace test
         [Test]
         public void LetBindings() => AssertMatch("let_bindings");
 
+        [Test]
+        public void SingleImport() => AssertMatch("single_import");
+
+        [Test]
+        public void Export() => AssertMatch("export");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");

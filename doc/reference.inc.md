@@ -552,11 +552,7 @@ print my_template(10)
 where **importfile.nbem** has the contents
 
 ```neobem
-my_template = \ value {
-Material:AirGap,
-  <value> Air Gap, ! Name
-  <value>;         ! Thermal Resistance {m2-K/W}
-}
+INCLUDE code_samples/importfile.nbem
 ```
 
 results in

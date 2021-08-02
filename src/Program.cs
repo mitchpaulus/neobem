@@ -22,7 +22,7 @@ namespace src
                         return 0;
                     case "-v":
                     case "--version":
-                        Console.WriteLine("0.1");
+                        Console.WriteLine(Version.Num());
                         return 0;
                     case "-o":
                     case "--output":

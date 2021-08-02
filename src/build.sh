@@ -1,8 +1,11 @@
 #!/bin/sh
 
-dotnet publish -r win-x64   -c Release --self-contained
-dotnet publish -r linux-x64 -c Release --self-contained
-dotnet publish -r osx-x64   -c Release --self-contained
+for runtime in win-x64 linux-x64 osx-x64; do
+    dotnet publish -r "$runtime" -c Release --self-contained --output publish/
+done
+
+#dotnet publish -r linux-x64 -c Release --self-contained
+#dotnet publish -r osx-x64   -c Release --self-contained
 
 rm -f zips/*
 

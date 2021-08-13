@@ -1,0 +1,24 @@
+import 'my_personal_energyplus_templates.idf'
+
+$chiller_size_tons = 1000
+$chiller_size_watts = $chiller_size_tons * 3516.85
+
+$ahus = [ 'AHU-1', 'AHU-2', 'AHU-3' ]
+
+template ahu_air_loop $ahu_name
+'AirLoopHVAC,
+    $ahu_name,                        ! - Name
+    Dual Duct System 1 Controllers,   ! - Controller List Name
+    Dual Duct System 1 Schedule List, ! - Availability Manager List Name
+    1.3,                              ! - Design Supply Air Flow Rate {m3/s}
+    Dual Duct Air Loop Branches,      ! - Branch List Name
+    Dual Duct Connectors,             ! - Connector List Name
+    Supply Fan Inlet Node,            ! - Supply Side Inlet Node Name
+    Return Air Mixer Outlet,          ! - Demand Side Outlet Node Name
+    Zone Equipment Inlet Node List;   ! - Demand Side Inlet Node Names'
+
+print map ahu_air_loop $ahus
+
+! Regular EnergyPlus object
+Timestep, 6; !- Suggested default for most system simulations
+

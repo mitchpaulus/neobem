@@ -1,1 +1,6 @@
-func = λ name { var1 = 2 var2 = 3 }
+func = λ name { var1 = 2#comment
+# Antoher
+var2 = 3 }
+
+
+func = \ name { var1 = 2var2 = 3}

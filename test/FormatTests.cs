@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using NUnit.Framework;
 using src;
 
@@ -8,13 +10,11 @@ namespace test
     [TestFixture]
     public class FormatTests
     {
-        public FormatVisitor FormatVisitor = new(0, 0);
-
         [Test]
         public void SimpleVariableTest()
         {
             string input = "      my_var   =  2\n";
-            string actual = FormatVisitor.Visit(input.ToIdfTree());
+            string actual = input.Format();
             Assert.AreEqual("my_var = 2\n", actual);
         }
 
@@ -22,7 +22,7 @@ namespace test
         public void SimpleLambdaTest()
         {
             string input = "   my_var        = \\ name     another { name  + 1 }\n";
-            string actual = FormatVisitor.Visit(input.ToIdfTree());
+            string actual = input.Format();
             Assert.AreEqual("my_var = λ name another { name + 1 }\n", actual);
         }
 
@@ -66,6 +66,9 @@ namespace test
         public void InlineDataTable() => AssertMatch("inline_data_table");
 
         [Test]
+        public void NestedInlineDataTableMessy() => AssertMatch("nested_inline_data_table_messy");
+
+        [Test]
         public void LetBindings() => AssertMatch("let_bindings");
 
         [Test]
@@ -74,11 +77,20 @@ namespace test
         [Test]
         public void Export() => AssertMatch("export");
 
+        [Test]
+        public void Comment() => AssertMatch("comment");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");
             string input = File.ReadAllText(inputPath);
-            string actual = FormatVisitor.Visit(input.ToIdfTree());
+            AntlrInputStream inputStream = new(input);
+            NeobemLexer lexer = new(inputStream);
+            CommonTokenStream tokens = new(lexer);
+            NeobemParser parser = new(tokens);
+            NeobemParser.IdfContext idfTree = parser.idf();
+            FormatVisitor visitor = new(0, 0, tokens);
+            string actual = visitor.Visit(idfTree);
             string expected =
                 File.ReadAllText(Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}_expected.nbem"));
             Assert.AreEqual(expected, actual);

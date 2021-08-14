@@ -1,5 +1,6 @@
 lambda_1 = λ var {
   var2 = 1
+
   lambda_2 = λ {
     var3 = 2
   }

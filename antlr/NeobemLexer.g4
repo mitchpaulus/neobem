@@ -84,7 +84,7 @@ IDENTIFIER : [a-z][a-zA-Z0-9@_]* ;
 
 COMMENT :  '!' .*? '\r'?'\n' ;
 
-NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> skip ;
+NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> channel(1) ;
 
 NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? |
           ('.'[0-9]+))([eE]'-'?[0-9]+)? ;
@@ -93,7 +93,7 @@ STRING : '\'' .*? '\'' ;
 
 OBJECT_TYPE : [A-Z][a-zA-Z0-9:]* -> pushMode(IDFOBJECT) ;
 
-WS : [ \t\r\n]+ -> skip ;
+WS : [ \t\r\n]+ -> channel(2) ;
 
 mode IDFOBJECT;
 

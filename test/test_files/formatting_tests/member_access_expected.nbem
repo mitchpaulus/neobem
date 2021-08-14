@@ -8,3 +8,4 @@ version_temp = λ obj {
 }
 
 print map(version_temp, versions)
+# vim:ft=neobem

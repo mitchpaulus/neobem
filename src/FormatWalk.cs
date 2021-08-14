@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime;
 
 namespace src
 {
@@ -11,20 +14,18 @@ namespace src
 
         // This is useful variable for maintaining a non standard indentation when breaking expressions across multiple lines.
         private readonly int _currentPosition = 0;
+        private readonly BufferedTokenStream _tokens;
 
         private IdfObjectPrettyPrinter _prettyPrinter = new();
 
-        public FormatVisitor(int currentIndentLevel, int currentPosition)
+        public FormatVisitor(int currentIndentLevel, int currentPosition, BufferedTokenStream tokens)
         {
             _currentIndentLevel = currentIndentLevel;
             _currentPosition = currentPosition;
+            _tokens = tokens;
         }
 
-        public override string VisitIdfComment(NeobemParser.IdfCommentContext context)
-        {
-            // The TrimEnd is required here, since a newline is handled at the root idf level.
-            return Indent(_currentIndentLevel, context.GetText().TrimEnd());
-        }
+        public override string VisitIdfComment(NeobemParser.IdfCommentContext context) => context.GetText();
 
         public override string VisitIdfplus_object(NeobemParser.Idfplus_objectContext context)
         {
@@ -35,12 +36,12 @@ namespace src
             if (context.idfplus_object_property_def().Length == 1)
             {
                 // Add two to the current position for the left curly brace plus a space.
-                FormatVisitor singleLineVisitor = new(_currentIndentLevel, _currentPosition + 2);
+                FormatVisitor singleLineVisitor = new(_currentIndentLevel, _currentPosition + 2, _tokens);
                 return $"{{ {singleLineVisitor.Visit(context.idfplus_object_property_def().Single())} }}";
             }
 
             // Handle the n-item structure
-            FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing);
+            FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing, _tokens);
             List<string> formattedStructs = context.idfplus_object_property_def().Select(def => subVisitor.IndentSpaces + subVisitor.Visit(def) + ",\n").ToList();
 
             return $"{{\n{string.Join("", formattedStructs)}{IndentSpaces}}}";
@@ -52,7 +53,7 @@ namespace src
             string firstPortion = $"{keyExpression}{context.STRUCT_SEP().GetText()} ";
 
             var valueExpressionStartPosition = _currentPosition + firstPortion.SplitLines().Last().Length;
-            FormatVisitor subVisitor = new(_currentIndentLevel, valueExpressionStartPosition);
+            FormatVisitor subVisitor = new(_currentIndentLevel, valueExpressionStartPosition, _tokens);
             string valueExpression = subVisitor.Visit(context.expression(1));
 
             return $"{firstPortion}{valueExpression}";
@@ -60,9 +61,9 @@ namespace src
 
         public override string VisitVariable_declaration(NeobemParser.Variable_declarationContext context)
         {
-            string identifierPortion = $"{IndentSpaces}{context.IDENTIFIER().GetText()} = ";
-            FormatVisitor visitor = new(_currentIndentLevel, identifierPortion.Length);
-            return $"{IndentSpaces}{context.IDENTIFIER().GetText()} = {visitor.Visit(context.expression())}";
+            string identifierPortion = $"{context.IDENTIFIER().GetText()} = ";
+            FormatVisitor visitor = new(_currentIndentLevel,  _currentPosition + identifierPortion.Length, _tokens);
+            return $"{context.IDENTIFIER().GetText()} = {visitor.Visit(context.expression())}";
         }
 
         public override string VisitIfExp(NeobemParser.IfExpContext context)
@@ -83,17 +84,17 @@ namespace src
             else
             {
                 string ifPortion = $"{exp.IF().GetText()} ";
-                FormatVisitor ifVisitor = new(_currentIndentLevel, _currentPosition + ifPortion.Length);
+                FormatVisitor ifVisitor = new(_currentIndentLevel, _currentPosition + ifPortion.Length, _tokens);
 
                 string ifExpression = ifVisitor.Visit(ifExpressionContext);
 
                 string thenText = $"{CurrentPositionSpaces}{exp.THEN().GetText()} ";
-                FormatVisitor thenVisitor = new(_currentIndentLevel, thenText.Length);
+                FormatVisitor thenVisitor = new(_currentIndentLevel, thenText.Length, _tokens);
 
                 string thenExpression = thenVisitor.Visit(thenExpressionContext);
 
                 string elseText = $"{CurrentPositionSpaces}{exp.ELSE().GetText()} ";
-                FormatVisitor elseVisitor = new(_currentIndentLevel, elseText.Length);
+                FormatVisitor elseVisitor = new(_currentIndentLevel, elseText.Length, _tokens);
 
                 string elseExpression = elseVisitor.Visit(elseExpressionContext);
 
@@ -108,98 +109,223 @@ namespace src
             StringBuilder builder = new();
             for (int i = 0; i < context.base_idf().Length; i++)
             {
-                bool extraSpace;
-                bool isLastItem = i == context.base_idf().Length - 1;
+                NeobemParser.Base_idfContext baseIdfContext = context.base_idf(i);
 
-                if (isLastItem)
+                int startTokenIndex = baseIdfContext.Start.TokenIndex;
+
+                IList<IToken> commentTokens = _tokens.GetHiddenTokensToLeft(startTokenIndex) ?? new List<IToken>();
+
+                // Remove beginning of file whitespace.
+                if (i == 0) commentTokens = commentTokens.SkipWhile(token => token.Channel == 2).ToList();
+
+                foreach (IToken commentToken in commentTokens)
                 {
-                    extraSpace = false;
-                }
-                else if (context.base_idf(i) is NeobemParser.IdfCommentContext)
-                {
-                    extraSpace = false;
-                }
-                else if (Visit(context.base_idf(i)).SplitLines().Count == 1 && Visit(context.base_idf(i + 1)).SplitLines().Count == 1)
-                {
-                    extraSpace = false;
-                }
-                else
-                {
-                    extraSpace = true;
+                    if (commentToken.Channel == 1)
+                    {
+                        int idx = commentToken.TokenIndex - 1;
+                        bool isInlineComment = false;
+                        while (idx >= 0)
+                        {
+                            IToken aPreviousToken = _tokens.Get(idx);
+                            if (aPreviousToken.Channel == 0 && aPreviousToken.Line == commentToken.Line)
+                            {
+                                isInlineComment = aPreviousToken.Line == commentToken.Line;
+                                break;
+                            }
+
+                            idx--;
+                        }
+
+                        string inlineCommentSpace = isInlineComment ? " " : "";
+                        builder.Append($"{inlineCommentSpace}{commentToken.Text.FixComment()}");
+                    }
+                    else if (commentToken.Channel == 2)
+                    {
+                        int maxNewlines = 2;
+                        string whiteSpace = HandleWhiteSpace(commentToken, maxNewlines, 0, 0, builder);
+                        builder.Append(whiteSpace);
+                    }
                 }
 
-                var end = extraSpace ? "\n\n" : "\n";
-
-                builder.Append($"{Visit(context.base_idf(i))}{end}");
+                builder.Append($"{Visit(baseIdfContext)}");
             }
+
+            // Add any final comments
+            if (context.base_idf().Any())
+            {
+                var endingComments = _tokens.GetHiddenTokensToRight(context.base_idf().Last().Stop.TokenIndex) ?? new Collection<IToken>();
+
+                // Remove whitespace at end of file.
+                while (endingComments.Any() && endingComments.Last().Channel == 2)
+                {
+                    endingComments.RemoveAt(endingComments.Count -1);
+                }
+
+                foreach ((IToken endingComment, int index) in endingComments.WithIndex())
+                {
+                    if (endingComment.Channel == 1)
+                    {
+                        // If the first token is a comment, that means that there was no whitespace between it and the previous
+                        // item. Ex:
+                        // \ name {#comment
+                        // So, force an extra space. Otherwise, whitespace should handle itself below.
+                        string extraSpace = index == 0 ? " " : "";
+                        builder.Append($"{extraSpace}{endingComment.Text.FixComment()}");
+                    }
+                    else if (endingComment.Channel == 2)
+                    {
+                        int maxNewlines = 2;
+                        string endingWhiteSpace = HandleWhiteSpace(endingComment, maxNewlines, 0, 0, builder);
+                        builder.Append(endingWhiteSpace);
+                    }
+                }
+            }
+
+            // Make sure we are ending with a newline
+            if (builder[^1] != '\n') builder.Append("\n");
 
             return builder.ToString();
         }
 
         public override string VisitLambda_def(NeobemParser.Lambda_defContext context)
         {
-            FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing);
+            FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing, _tokens);
 
-            FormatVisitor multiLineSingleExpressionVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing);
-
+            // identifier portion - simply separate tokens with single space.
             string identifierContents = context.IDENTIFIER().Any() ? $" {string.Join(" ", context.IDENTIFIER().Select(node => node.GetText()))} " : " ";
 
             // Single line for expression version
-            string expressionContents;
             if (context.expression() is not null)
             {
-                expressionContents = subVisitor.Visit(context.expression());
+                List<IToken> comments = _tokens.GetTokens(context.LCURLY().Symbol.TokenIndex,
+                    context.RCURLY().Symbol.TokenIndex, NeobemLexer.NEOBEM_COMMENT)?.ToList() ?? new List<IToken>() ;
+
+                string expressionContents = Visit(context.expression());
+                // If the expression comes back longer than a single line, we need to use slightly different visitor with
+                // different starting position.
                 if (expressionContents.NumLines() > 1)
                 {
-                    // An expression doesn't add leading spaces or a final newline, so we need to be sure to add those here.
-                    expressionContents =
-                        $"{multiLineSingleExpressionVisitor.IndentSpaces}{multiLineSingleExpressionVisitor.Visit(context.expression())}\n";
+                    expressionContents = subVisitor.Visit(context.expression());
                 }
+                bool multipleLineContents = expressionContents.Any(s => s == '\n');
+
+                if (multipleLineContents)
+                {
+                    return
+                        $"λ{identifierContents}{{{(expressionContents.StartsWith('\n') ? "" : $"\n{subVisitor.IndentSpaces}")}{expressionContents}\n{IndentSpaces}}}";
+                }
+                else
+                {
+                    if (!comments.Any()) return $"λ{identifierContents}{{ {expressionContents} }}";
+                    if (comments.Count == 1)
+                        return $"λ{identifierContents}{{ {expressionContents} }} {comments.First().Text.FixComment()}";
+
+                    string commentString = string.Join("", comments.Select(token => $"\n{subVisitor.IndentSpaces}" + token.Text));
+
+                    return
+                        $"λ{identifierContents}{{{commentString}{(expressionContents.StartsWith('\n') ? "" : $"\n{subVisitor.IndentSpaces}")}{expressionContents}\n{IndentSpaces}}}";
+                }
+
+                return multipleLineContents ?
+                    $"λ{identifierContents}{{{(expressionContents.StartsWith('\n') ? "" : $"\n{subVisitor.IndentSpaces}")}{expressionContents}\n{IndentSpaces}}}" :
+                    $"λ{identifierContents}{{ {expressionContents} }}";
             }
             else
             {
                 StringBuilder statementBuilder = new();
+
+                int minNumberOfNewlines = context.function_statement().Length > 1 ? 1 : 0;
+
                 for (int i = 0; i < context.function_statement().Length; i++)
                 {
-                    bool addSpace;
-                    bool isLastItem = i == context.function_statement().Length - 1;
+                    var functionStatementContext = context.function_statement(i);
+                    int startTokenIndex = functionStatementContext.Start.TokenIndex;
 
-                    if (isLastItem) addSpace = false;
-                    // If we have multiple variable declarations, I think it looks better to not have extra space between them.
-                    else if (context.function_statement(i) is NeobemParser.FunctionVariableDeclarationContext &&
-                             context.function_statement(i + 1) is NeobemParser.FunctionVariableDeclarationContext)
+                    IList<IToken> commentTokens = _tokens.GetHiddenTokensToLeft(startTokenIndex) ?? new List<IToken>();
+
+                    // This is usually a rare edge case, but if there were no whitespace tokens before statement, force a newline or space.
+                    // If there are any comments, we know that a newline exists.
+                    if (!commentTokens.Any())
                     {
-                        addSpace = false;
+                        statementBuilder.Append(minNumberOfNewlines > 0 ? $"\n{subVisitor.IndentSpaces}" : " ");
                     }
                     else
                     {
-                        addSpace = true;
+                        foreach ((IToken commentToken, int index) in commentTokens.WithIndex())
+                        {
+                            if (commentToken.Channel == 1)
+                            {
+                                // If the first token is a comment, that means that there was no whitespace between it and the previous
+                                // item. Ex:
+                                // \ name {#comment
+                                // So, force an extra space. Otherwise, whitespace should handle itself below.
+                                string extraSpace = index == 0 ? " " : "";
+
+                                // If we have two comment tokens in a row, we need to add proper indentation that a whitespace
+                                // token would normally take of.
+                                if (PreviousToken(commentToken).Channel == 1) extraSpace = subVisitor.IndentSpaces;
+
+                                statementBuilder.Append($"{extraSpace}{commentToken.Text.FixComment()}");
+                            }
+                            else if (commentToken.Channel == 2)
+                            {
+                                // The first statement is not allowed to have extra space at the top of the function.
+                                int maxNewlines = i == 0 ? 1 : 2;
+                                statementBuilder.Append(HandleWhiteSpace(commentToken, maxNewlines, subVisitor.IndentSpaces.Length, minNumberOfNewlines));
+                            }
+                        }
+
+                        // If the final token is a comment, we need to add in the proper indentation from a whitespace token
+                        // that we don't have.
+                        if (commentTokens.Last().Channel == 1) statementBuilder.Append(subVisitor.IndentSpaces);
                     }
 
-                    // The trim end is to make sure that we get the correct number of newlines after, even if the Visitor isn't quite right.
-                    string statement = $"{subVisitor.Visit(context.function_statement(i))}".TrimEnd();
 
-                    statementBuilder.Append($"{statement}{(addSpace ? "\n\n" : "\n")}");
+                    string statement = subVisitor.Visit(functionStatementContext);
+                    statementBuilder.Append(statement);
                 }
 
-                // List<string> functionContents = context.function_statement().Select(Visit).ToList();
-                expressionContents = statementBuilder.ToString();
+                // Add any final comments/whitespace
+                var endingComments = _tokens.GetHiddenTokensToLeft(context.RCURLY().Symbol.TokenIndex) ?? new Collection<IToken>();
+
+                // If there are no end whitespace/comment tokens, we have a situation in which the curly brace is right next to the final
+                // common token like:
+                // Ex: \ name { value}
+                // So add in proper indentation or space.
+                if (!endingComments.Any()) statementBuilder.Append(minNumberOfNewlines > 0 ? $"\n{IndentSpaces}" : " ");
+                else
+                {
+                    foreach ((IToken commentToken, int index) in endingComments.WithIndex())
+                    {
+                        if (commentToken.Channel == 1)
+                        {
+                            // If the first token is a comment, that means that there was no whitespace between it and the previous
+                            // item. Ex:
+                            // \ name {#comment
+                            // So, force an extra space. Otherwise, whitespace should handle itself below.
+                            string extraSpace = index == 0 ? " " : "";
+                            statementBuilder.Append($"{extraSpace}{commentToken.Text.FixComment()}");
+                        }
+                        else if (commentToken.Channel == 2)
+                        {
+                            string whitespace = HandleWhiteSpace(commentToken, 1, IndentSpaces.Length, minNumberOfNewlines);
+                            statementBuilder.Append(whitespace);
+                        }
+                    }
+                }
+                statementBuilder.Append(context.RCURLY().GetText());
+
+                return $"λ{identifierContents}{{{statementBuilder}";
             }
-
-            bool multipleLineContents = expressionContents.Any(s => s == '\n');
-
-            return multipleLineContents ?
-                $"λ{identifierContents}{{\n{expressionContents}{IndentSpaces}}}" :
-                $"λ{identifierContents}{{ {expressionContents} }}";
         }
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
         {
-            return _prettyPrinter.ObjectPrettyPrinter(context.GetText(), _currentIndentLevel, _indentSpacing).TrimEnd();
+            return _prettyPrinter.ObjectPrettyPrinter(context.GetText(), _currentIndentLevel, _indentSpacing);
         }
 
         public override string VisitFunctionObjectDeclaration(NeobemParser.FunctionObjectDeclarationContext context)
         {
-            return _prettyPrinter.ObjectPrettyPrinter(context.GetText(), _currentIndentLevel, _indentSpacing).TrimEnd();
+            return _prettyPrinter.ObjectPrettyPrinter(context.GetText(), _currentIndentLevel, _indentSpacing);
         }
 
         public override string VisitNumericExp(NeobemParser.NumericExpContext context) => context.GetText();
@@ -211,7 +337,7 @@ namespace src
         public override string VisitExponientiate(NeobemParser.ExponientiateContext context) => $"{Visit(context.expression(0))}{context.CARET().GetText()}{Visit(context.expression(1))}";
         public override string VisitParensExp(NeobemParser.ParensExpContext context)
         {
-            FormatVisitor subVisitor = new(_currentIndentLevel, _currentPosition + 1);
+            FormatVisitor subVisitor = new(_currentIndentLevel, _currentPosition + 1, _tokens);
             return $"{context.LPAREN().GetText()}{subVisitor.Visit(context.expression())}{context.RPAREN().GetText()}";
         }
 
@@ -226,16 +352,16 @@ namespace src
 
         public override string VisitReturnStatement(NeobemParser.ReturnStatementContext context)
         {
-            string returnPortion = $"{IndentSpaces}{context.return_statement().RETURN().GetText()} ";
-            FormatVisitor subVisitor = new(_currentIndentLevel, returnPortion.Length);
+            string returnPortion = $"{context.return_statement().RETURN().GetText()} ";
+            FormatVisitor subVisitor = new(_currentIndentLevel, _currentPosition + returnPortion.Length, _tokens);
             string expressionPortion = subVisitor.Visit(context.return_statement().expression());
             return $"{returnPortion}{expressionPortion}";
         }
 
         public override string VisitPrint_statment(NeobemParser.Print_statmentContext context)
         {
-            string printPortion = $"{IndentSpaces}{context.PRINT().GetText()} ";
-            FormatVisitor subVisitor = new(_currentIndentLevel, printPortion.Length);
+            string printPortion = $"{context.PRINT().GetText()} ";
+            FormatVisitor subVisitor = new(_currentIndentLevel, _currentPosition + printPortion.Length, _tokens);
             string expressionPortion = subVisitor.Visit(context.expression());
             return $"{printPortion}{expressionPortion}";
         }
@@ -294,7 +420,7 @@ namespace src
                 return string.Join(separator,rowContext.expression().Select(PadCell));
             }).ToList();
 
-            return $"\n{topBorder}\n{headerRow}\n{separatorRow}\n{string.Join("\n", dataRows)}\n{bottomBorder}";
+            return $"\n{IndentSpaces}{topBorder}\n{IndentSpaces}{headerRow}\n{IndentSpaces}{separatorRow}\n{IndentSpaces}{string.Join($"\n{IndentSpaces}", dataRows)}\n{IndentSpaces}{bottomBorder}";
         }
 
         public override string VisitLet_binding(NeobemParser.Let_bindingContext context)
@@ -303,20 +429,20 @@ namespace src
             var firstPortion = $"{context.LET().GetText()} ";
             builder.Append(firstPortion);
             FormatVisitor identifierSubVisitor =
-                new(_currentIndentLevel, _currentPosition + firstPortion.Length);
+                new(_currentIndentLevel, _currentPosition + firstPortion.Length, _tokens);
 
             for (int i = 0; i < context.expression().Length; i++)
             {
                 string startSpace = i == 0 ? "" : new string(' ', _currentPosition + firstPortion.Length);
-                if (i != 0) builder.Append("\n");
+                if (i != 0) builder.Append(",\n");
                 builder.Append($"{startSpace}{context.IDENTIFIER(i).GetText()} = ");
                 int expStartPosition = _currentPosition + firstPortion.Length + context.IDENTIFIER(i).GetText().Length + 3;
-                FormatVisitor expSubVisitor = new FormatVisitor(_currentIndentLevel, expStartPosition);
+                FormatVisitor expSubVisitor = new FormatVisitor(_currentIndentLevel, expStartPosition, _tokens);
                 builder.Append(expSubVisitor.Visit(context.expression(i)));
             }
 
             builder.Append($"\n{new string(' ', _currentPosition)}in ");
-            FormatVisitor finalLetExpressionVisitor = new(_currentIndentLevel, _currentPosition + 3);
+            FormatVisitor finalLetExpressionVisitor = new(_currentIndentLevel, _currentPosition + 3, _tokens);
             builder.Append(finalLetExpressionVisitor.Visit(context.let_expression()));
 
             return builder.ToString();
@@ -341,13 +467,13 @@ namespace src
             string importText = context.IMPORT().GetText();
             builder.Append(importText + " ");
 
-            var expressionVisitor = new FormatVisitor(_currentIndentLevel, importText.Length + 2);
+            var expressionVisitor = new FormatVisitor(_currentIndentLevel, importText.Length + 2, _tokens);
             string expression = expressionVisitor.Visit(context.expression());
             builder.Append(expression);
 
             foreach (NeobemParser.Import_optionContext importOptionContext in context.import_option())
             {
-                FormatVisitor visitor = new(_currentIndentLevel, builder.ToString().CurrentPosition() + 1);
+                FormatVisitor visitor = new(_currentIndentLevel, builder.ToString().CurrentPosition() + 1, _tokens);
                 string formattedOption = visitor.Visit(importOptionContext);
                 builder.Append(" " + formattedOption);
             }
@@ -382,7 +508,7 @@ namespace src
             StringBuilder builder = new();
             for (int i = 0; i < context.list().expression().Length; i++)
             {
-                FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing);
+                FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing, _tokens);
                 if (context.list().expression(i) is NeobemParser.ObjExpContext || context.list().expression(i) is NeobemParser.ListExpContext)
                 {
                     builder.Append($"\n{subVisitor.IndentSpaces}");
@@ -413,5 +539,37 @@ namespace src
         private string CurrentPositionSpaces => new(' ', _currentPosition);
 
         private string Indent(int indentLevel, string line) => $"{new string(' ', indentLevel * _indentSpacing)}{line}";
+
+        private IToken PreviousToken(IToken token)
+        {
+            if (token.TokenIndex == 0) throw new ArgumentException("No previous token for the first token");
+            return _tokens.Get(token.TokenIndex - 1);
+        }
+
+        private string HandleWhiteSpace(IToken whitespaceToken, int maxNewLines, int numberOfIndentSpaces, int minNewLines = 0)
+        {
+            // If the previous token was a comment (neobem or idf) or idf object, it has a newline bound to it. Need to account for that here
+            // when dealing with whitespace.
+            int extraNewlineFromPreviousToken = _tokens.PreviousTokenEndsWithNewline(whitespaceToken) ? 1 : 0;
+
+            int numNewlines = Math.Max(Math.Min(whitespaceToken.Text.Count(c => c == '\n') + extraNewlineFromPreviousToken, maxNewLines), minNewLines);
+            return numNewlines > 0
+                ? $"{new string('\n', numNewlines - extraNewlineFromPreviousToken)}{new string(' ', numberOfIndentSpaces)}"
+                : " ";
+        }
+
+        private string HandleWhiteSpace(IToken whitespaceToken, int maxNewLines, int numberOfIndentSpaces, int minNewLines, StringBuilder builder)
+        {
+            // If the previous token was a comment (neobem or idf) or idf object, it has a newline bound to it. Need to account for that here
+            // when dealing with whitespace.
+            int extraNewlineFromPreviousToken = builder.ToString().EndsWith("\n") ? 1 : 0;
+
+            int numNewlines = Math.Max(Math.Min(whitespaceToken.Text.Count(c => c == '\n') + extraNewlineFromPreviousToken, maxNewLines), minNewLines);
+            return numNewlines > 0
+                ? $"{new string('\n', numNewlines - extraNewlineFromPreviousToken)}{new string(' ', numberOfIndentSpaces)}"
+                : " ";
+        }
+
+
     }
 }

@@ -22,6 +22,6 @@ zone_template = λ zone {
     ,                         ! Zone Inside Convection Algorithm
     ,                         ! Zone Outside Convection Algorithm
     Yes;                      ! Part of Total Floor Area
-}
+ }
 
 print map(zone_template, zones)

@@ -1,0 +1,6 @@
+
+
+func = \ param {
+ ___ 'var' | 'string'| 'hello' ---|---|--- 1 | 2 + param | 3___
+
+}

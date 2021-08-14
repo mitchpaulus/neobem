@@ -1,0 +1,23 @@
+
+
+# A comment
+var = 1        # inline comment
+
+# Second Comment
+# Third Comment
+var2 = if true then if another_long_statement then go else nots      else  big_identifier # inline two
+
+new = \ {
+    expression # Hello
+}
+
+function = \    name  second
+third {# Comment
+    return 'Hello'
+}
+
+# A final comment
+
+
+
+

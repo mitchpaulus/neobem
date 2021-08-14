@@ -1,50 +1,16 @@
-my_name = 'Hello'
-
-myList = [
-    [coolingLoad, 'Hello'],
-    123 - hello
-]
-
-mylist.another.another.hello = 'a string'
-
-test = ( 56 - -45 + 'Hello' * 123^2^3 )
-
-testy = if test == 1 or mylist.another < 2 then sin (5) else cos (6)
-
-filter = λ x { x < 2 }
-
-func = λ var1 var2 { return var1 + var2 }
-
-zones =
-____________________
-name     | origin
----------|----------
-'Zone 1' | 0
-'Zone 2' | 3
-____________________
 
 
-thermostat = λ name {
-ZoneControl:Humidistat,
-   { name },
-   Zone 1,
-   Schedule;
+# A comment
+
+var = 1 # inline comment
+
+# Second Comment
+# Third Comment
+var2 = if true then 2 else 3
+
+function = λ name {
+# Comment
+    return 'Hello'
 }
 
-myObj =
-{
-    hello: if test then 'go' else 2
-}
-
-print myObj.hello
-
-!print map sdvav myList
-
-import 'myfile.idf'
-
-mydata = data 'datafile.tsv' + data 'anotherfile.tsv'
-
-Version,
-    { versionNum },
-    $coolingLoad,
-    $myName;
+# A final comment

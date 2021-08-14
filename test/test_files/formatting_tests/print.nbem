@@ -1,3 +1,4 @@
 template = λ var  { 10 + var }
 
+
 print template()

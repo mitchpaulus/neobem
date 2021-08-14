@@ -19,6 +19,17 @@ namespace src
             return new NeobemParser(tokens);
         }
 
+        public static string Format(this string input)
+        {
+            AntlrInputStream inputStream = new(input);
+            NeobemLexer lexer = new(inputStream);
+            CommonTokenStream tokens = new(lexer);
+            NeobemParser parser = new(tokens);
+            NeobemParser.IdfContext idfTree = parser.idf();
+            FormatVisitor visitor = new(0, 0, tokens);
+            return visitor.Visit(idfTree);
+        }
+
         public static IParseTree ToIdfTree(this string input) => ToParser(input).idf();
 
         public static ExcelRangeParser ToExcelRangeParser(this string input)
@@ -132,6 +143,35 @@ namespace src
 
         public static string IndentSpaces(this int indentLevel, int indentSpaces) =>
             new string(' ', indentLevel * indentSpaces);
+
+        public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> list, int start = 0) =>
+            list.Select((item, index) => (item, index + start));
+
+        public static bool PreviousTokenEndsWithNewline(this BufferedTokenStream tokenStream, int tokenIndex)
+        {
+            if (tokenIndex - 1 >= 0)
+            {
+                IToken token = tokenStream.Get(tokenIndex - 1);
+                // This is here because the formatter for IDF objects always puts a newline at the end of the object.
+                // The final token from the lexer only has the newline if there was a final comment. So this is a bit fragile,
+                // but this should be the only edge case.
+                if (token.Type == NeobemLexer.OBJECT_TERMINATOR) return true;
+                string text = token.Text;
+                return text.EndsWith("\n");
+            }
+            return false;
+        }
+
+        public static bool PreviousTokenEndsWithNewline(this BufferedTokenStream tokenStream, IToken token) =>
+            tokenStream.PreviousTokenEndsWithNewline(token.TokenIndex);
+
+        public static string FixComment(this string commentText)
+        {
+            if (!commentText.StartsWith("#"))
+                throw new ArgumentException($"Looks like improper usage of FixComment. Input should start with #. Received '{commentText}'");
+
+            return Regex.Replace(commentText, "#[ ]*", "# ").TrimEnd() + "\n";
+        }
     }
 
     public class SplitIdfLine

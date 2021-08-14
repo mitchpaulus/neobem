@@ -99,9 +99,14 @@ namespace src
 
             if (options.FormatFile)
             {
-                FormatVisitor formatVisitor = new(0, 0);
+                FormatVisitor formatVisitor = new(0, 0, commonTokenStream);
+                // var listener = new FormatListener(commonTokenStream);
+
+                // ParseTreeWalker walker = new();
+                // walker.Walk(listener, tree);
                 try
                 {
+                    // string output = listener.Rewriter.GetText();
                     string output = formatVisitor.Visit(tree);
                     Console.Write(output);
                     return 0;

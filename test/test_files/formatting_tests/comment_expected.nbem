@@ -1,0 +1,16 @@
+# A comment
+var = 1  # inline comment
+
+# Second Comment
+# Third Comment
+var2 = if ✓
+       then if another_long_statement then go else nots
+       else big_identifier  # inline two
+
+new = λ { expression } # Hello
+
+function = λ name second third { # Comment
+  return 'Hello'
+}
+
+# A final comment

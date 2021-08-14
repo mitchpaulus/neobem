@@ -26,7 +26,7 @@ namespace src
                 var cleanText = string.Join(", ", trimmedFields).TrimEnd();
 
                 // If not the first line, increase indent by 1 level.
-                var startSpaces = firstLine ?  indentLevel.IndentSpaces(indentSpacing) : (indentLevel + 1).IndentSpaces(indentSpacing);
+                var startSpaces = firstLine ?  "" : (indentLevel + 1).IndentSpaces(indentSpacing);
 
                 // Simplest method is same as the default out of the IdfEditor, put all comments in the same position for the entire file.
                 var formatSpaces = new string(' ', Math.Max(2, 30 - cleanText.Length - startSpaces.Length));

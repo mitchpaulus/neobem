@@ -247,5 +247,19 @@ namespace test
 
             Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2,3;", output));
         }
+
+        [Test]
+        public void TestAlternateTerminator()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "alternate_terminator.nbem");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var parser = file.ToParser();
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2,3,4,5,6;", output));
+        }
     }
 }

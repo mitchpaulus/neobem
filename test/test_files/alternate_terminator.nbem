@@ -1,0 +1,17 @@
+to_coords = λ list islast {
+  terminator = if islast then ';' else ','
+  return index(list, 0) + ',' + index(list, 1) + ',' + index(list, 2) + terminator + '  ! X, Y, Z {m}\n'
+}
+
+coords = [
+  [1, 2, 3],
+  [4, 5, 6],
+]
+
+all_coords = λ coords {
+  lines = map(λ list { to_coords(list, ✗) }, init(coords)) + map(λ list { to_coords(list, ✓) }, [last(coords)])
+  return join('', lines)
+}
+
+Version,
+  <all_coords(coords)> $

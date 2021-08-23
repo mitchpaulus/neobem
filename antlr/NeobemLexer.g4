@@ -97,8 +97,8 @@ WS : [ \t\r\n]+ -> channel(2) ;
 
 mode IDFOBJECT;
 
-FIELD : ~[,!;\r\n]+ ;
+FIELD : ~[,!;$\r\n]+ ;
 FIELD_SEP : ',' [ \t\r\n]* ;
 OBJECT_COMMENT : '!' .*? '\r'?'\n' ;
-OBJECT_TERMINATOR : ';' [ \t]* ('!' .*? '\r'?'\n')? -> popMode ;
+OBJECT_TERMINATOR : (';' [ \t]* ('!' .*? '\r'?'\n')? | '$') -> popMode ;
 OBJECT_WS : [ \t\r\n]+ -> skip ;

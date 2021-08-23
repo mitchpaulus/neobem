@@ -1,4 +1,31 @@
+to_coords = λ list islast {
+    terminator = if islast then ';' else ','
+    return index(list, 0) + ',' + index(list, 1) + ',' + index(list, 2) + terminator + '  ! X, Y, Z {m}\n'
+}
 
+coords = '1,2,2;'
+Version,
+  <coords> $
+
+wall_builder = λ wall {
+  type = wall.'Type'
+
+  coords = '1,1,2;'
+
+  Wall:Detailed,
+    < wall.'name' >,          ! Name RefList: [SurfaceNames, SurfAndSubSurfNames, AllHeatTranSurfNames, OutFaceEnvNames, AllHeatTranAngFacNames, RadiantSurfaceNames, AllShadingAndHTSurfNames], REQ, #1
+    ,                         ! Construction Name [ConstructionNames], REQ, #2
+    < wall.'Zone' >,          ! Zone Name [ZoneNames], REQ, #3
+    Zone,  ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Foundation, Ground, GroundFCfactorMethod, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
+    ,                         ! Outside Boundary Condition Object [OutFaceEnvNames], #5
+    NoSun,  ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+    NoWind,  ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+    autocalculate,            ! View Factor to Ground Def: autocalculate, AC, #8
+    autocalculate,            ! Number of Vertices Def: autocalculate, AC, #9
+    <coords> $
+}
+
+print wall_builder({ 'Zone': 'Laundry', 'name': 'wall', 'Type': 'Exterior' })
 
 # A comment
 

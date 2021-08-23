@@ -112,7 +112,9 @@ namespace src
                             builder.Append(replacedComment);
                             break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
-                            var replacedObject = replacer.Replace(objectDeclarationContext.GetText(), updatedEnvironments);
+                            string objectText = objectDeclarationContext.GetText();
+                            if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
+                            var replacedObject = replacer.Replace(objectText, updatedEnvironments);
                             var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
                             builder.AppendLine(prettyPrinted);
                             break;

@@ -26,6 +26,10 @@ doc/reference.tex
 doc/thank_yous_and_inspirations.tex
 doc/tutorials.md
 doc/tutorials.tex
+
+doc/formatting.md
+doc/formatting.tex
+
 kde-syntax/test
 src/Help.cs
 test/TestFileDirectory.cs

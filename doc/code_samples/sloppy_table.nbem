@@ -1,0 +1,9 @@
+my_data =
+___
+'Header 1' | 'Header 2'
+---
+2 | 3
+4| 5
+___
+
+my_function = \ param { if 'Having a formatter is great' == 'Yes' then true else false }

@@ -96,6 +96,7 @@ namespace src
 
             return output;
         }
+        public static string JoinNull(this IEnumerable<string> strings) => string.Join("", strings);
 
         public static int NumLines(this StringBuilder builder) => builder.ToString().SplitLines().Count;
         public static int NumLines(this string input) => input.SplitLines().Count;

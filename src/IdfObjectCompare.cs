@@ -49,6 +49,6 @@ namespace src
             return splitOnSemicolon.Select(s => s.Split(',').ToList()).ToList();
         }
 
-        public static string RemoveComments(string text) => Regex.Replace(text, "!.*$", "");
+        public static string RemoveComments(string text) => text.SplitLines().Select(line => Regex.Replace(line, "!.*$", "") + "\n").JoinNull();
     }
 }

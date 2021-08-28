@@ -49,6 +49,7 @@ ONLY : 'only' ;
 NOT : 'not' ;
 EXPORT : 'export' ;
 PRINT : 'print' ;
+LOG : 'log' ;
 
 // Let expressions
 LET : 'let' ;

@@ -68,6 +68,8 @@ export_statement : EXPORT LPAREN IDENTIFIER+ RPAREN ;
 
 print_statment : PRINT expression ;
 
+log_statement : LOG expression ;
+
 inline_table : INLINE_TABLE_BEGIN_END_SEP
                inline_table_header
                inline_table_header_separator
@@ -88,6 +90,7 @@ function_statement :  COMMENT   # FunctionIdfComment
                     | variable_declaration # FunctionVariableDeclaration
                     | print_statment # FunctionPrintStatement
                     | return_statement # ReturnStatement
+                    | log_statement    # FunctionLogStatement
                     ;
 
 base_idf : COMMENT                # IdfComment
@@ -96,6 +99,7 @@ base_idf : COMMENT                # IdfComment
            | import_statement     # ImportStatement
            | export_statement     # ExportStatment
            | print_statment       # PrintStatment
+           | log_statement        # LogStatement
            ;
 
 let_binding : LET IDENTIFIER EQUALS expression

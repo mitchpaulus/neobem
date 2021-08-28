@@ -133,6 +133,11 @@ namespace src
                             printStatementExpressionVisitor.Visit(printStatmentContext.print_statment().expression());
                             builder.Append(printStatementExpressionVisitor.output.ToString());
                             break;
+                        case NeobemParser.FunctionLogStatementContext logStatementContext:
+                            IdfPlusExpVisitor logStatementVisitor = new(updatedEnvironments, baseDirectory);
+                            Expression resultingExpression = logStatementVisitor.Visit(logStatementContext.log_statement().expression());
+                            Console.Error.Write(resultingExpression.AsString() + "\n");
+                            break;
                         default:
                             // A user should never reach this, as all syntactically valid programs should be handled here.
                             throw new NotImplementedException(

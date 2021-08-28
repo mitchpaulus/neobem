@@ -185,5 +185,13 @@ namespace src
 
             return "";
         }
+
+        public override string VisitLog_statement(NeobemParser.Log_statementContext context)
+        {
+            IdfPlusExpVisitor expressionVisitor = new(_environments, _baseDirectory);
+            Expression resultExpression = expressionVisitor.Visit(context.expression());
+            Console.Error.Write(resultExpression.AsString());
+            return "";
+        }
     }
 }

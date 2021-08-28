@@ -109,7 +109,7 @@ namespace src
         public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 1) throw new ArgumentException( $"'length' expects 1 list parameter, saw {inputs.Count} parameters.");
-            if (!(inputs[0] is ListExpression listExpression)) throw new ArgumentException( $"'length' expects a list as the parameter.");
+            if (!(inputs[0] is ListExpression listExpression)) throw new ArgumentException( $"'length' expects a list as the parameter, received a {inputs[0].TypeName()} with value '{inputs[0].AsString()}'.");
             return ("", new NumericExpression(listExpression.Expressions.Count));
         }
     }

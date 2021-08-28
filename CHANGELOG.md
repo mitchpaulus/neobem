@@ -11,6 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.5.0 - 2021-08-14
+
+### Added
+
+- Added new possible terminator for idf objects, `$`. This is important
+  when building objects that can have arbitrary lengths, such as
+  `Wall:Detailed`. There will likely be a different allowed character
+  for aesthetic purposes in future version.
+
+- New log statement. Allows for simple debugging. Prints value of an
+  expression to standard error.
+
+### Fixed
+
+- Vast improvements to the formatter.
+
 ## 0.4.0 - 2021-07-22
 
 ### Added

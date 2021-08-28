@@ -118,22 +118,6 @@ namespace test
         }
 
         [Test]
-        public void TestVariableReplacement()
-        {
-            string testFile = "$versionNum = 2\nVersion,\n  $versionNum;\n";
-            // string testFile = "$versionNum = 2\n\nVersion, 2;\n";
-
-            var parser = testFile.ToParser();
-            var tree = parser.idf();
-
-            ParseTreeWalker walker = new ParseTreeWalker();
-            IdfPlusListener listener = new IdfPlusListener();
-            walker.Walk(listener, tree);
-
-            Console.WriteLine(listener.Output);
-        }
-
-        [Test]
         public void TestFunctionApplication()
         {
             string test = "ceiling(3.1415926 / 2)";
@@ -164,7 +148,7 @@ namespace test
         [Test]
         public void TestBasicFunctionApplication()
         {
-            string test = "myadd = \\x { x + 2 }\nversionnum = myadd(2)\nVersion, $versionnum;\n";
+            string test = "myadd = \\x { x + 2 }\nversionnum = myadd(2)\nVersion, <versionnum>;\n";
             var parser = test.ToParser();
             var tree = parser.idf();
 

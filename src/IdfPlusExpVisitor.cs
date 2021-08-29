@@ -129,7 +129,7 @@ namespace src
 
                 if (memberAccessExpression is not StringExpression stringMemberExpression)
                 {
-                    throw new InvalidOperationException($"Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
+                    throw new InvalidOperationException($"Line {context.Start.Line}: Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
                 }
 
                 var memberName = stringMemberExpression.Text;
@@ -140,12 +140,12 @@ namespace src
                 else
                 {
                     throw new InvalidOperationException(
-                        $"'{memberName}' is not a member of the structure {context.expression(0).GetText()}. Possible members include:\n\n{string.Join("", objectExpression.Members.Keys.Select(s => $"'{s}'\n"))}");
+                        $"Line {context.Start.Line}: '{memberName}' is not a member of the structure {context.expression(0).GetText()}. Possible members include:\n\n{string.Join("", objectExpression.Members.Keys.Select(s => $"'{s}'\n"))}");
                 }
             }
             else
             {
-                throw new InvalidOperationException($"{context.expression(0).GetText()} is not an object.");
+                throw new InvalidOperationException($"Line {context.Start.Line}: {context.expression(0).GetText()} is not an object.");
             }
         }
 
@@ -249,7 +249,7 @@ namespace src
             if (!(expressionOutput is BooleanExpression booleanExpression))
             {
                 var expressionText = context.if_exp().expression(0).GetText();
-                throw new NotSupportedException($"'{expressionText}' is not a boolean expression");
+                throw new NotSupportedException($"Line {context.Start.Line}: '{expressionText}' is not a boolean expression");
             }
 
             return Visit(booleanExpression.Value ? context.if_exp().expression(1) : context.if_exp().expression(2));
@@ -300,7 +300,7 @@ namespace src
                     "==" => new BooleanExpression(lhsBooleanExpression.Value == rhsBooleanExpression.Value),
                     "!=" => new BooleanExpression(lhsBooleanExpression.Value != rhsBooleanExpression.Value),
                     _ => throw new NotImplementedException(
-                        $"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.")
+                        $"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.")
                 };
             }
 
@@ -310,10 +310,10 @@ namespace src
                     return new BooleanExpression(true);
                 if (lhsListExpression.Expressions.Count != rhsListExpression.Expressions.Count)
                     return new BooleanExpression(false);
-                throw new NotImplementedException($"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented for non empty lists.");
+                throw new NotImplementedException($"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented for non empty lists.");
             }
 
-            throw new NotImplementedException($"Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.");
+            throw new NotImplementedException($"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.");
         }
 
         public override Expression VisitObjExp(NeobemParser.ObjExpContext context)
@@ -328,7 +328,7 @@ namespace src
                 if (!(stringExpression is StringExpression nameExpression))
                 {
                     throw new InvalidOperationException(
-                        $"Tried to set member '{prop.expression(0).GetText()}', which is not a string expression.");
+                        $"Line {context.Start.Line}: Tried to set member '{prop.expression(0).GetText()}', which is not a string expression.");
                 }
 
                 Expression expression = Visit(prop.expression(1));
@@ -352,7 +352,7 @@ namespace src
             if (expressions.Count % names.Count != 0)
             {
                 throw new InvalidDataException(
-                    "The number of expressions in the inline table need to be divisible by the number of identifiers.");
+                    $"Line {context.Start.Line}: The number of expressions in the inline table need to be divisible by the number of identifiers.");
             }
 
             var objectExpressions = new List<Expression>();

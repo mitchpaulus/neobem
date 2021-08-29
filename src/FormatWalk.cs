@@ -122,6 +122,7 @@ namespace src
                 {
                     if (commentToken.Channel == 1)
                     {
+                        // The following is a check to determine whether the comment is inline, or standalone.
                         int idx = commentToken.TokenIndex - 1;
                         bool isInlineComment = false;
                         while (idx >= 0)
@@ -133,21 +134,35 @@ namespace src
                                 break;
                             }
 
+                            if (aPreviousToken.Channel == 0 && aPreviousToken.Line != commentToken.Line)
+                                break;
+
                             idx--;
                         }
 
-                        string inlineCommentSpace = isInlineComment ? " " : "";
+                        string inlineCommentSpace = isInlineComment && builder.ToString().Last() != ' ' ? " " : "";
                         builder.Append($"{inlineCommentSpace}{commentToken.Text.FixComment()}");
                     }
                     else if (commentToken.Channel == 2)
                     {
+                        // If we are followed by normal content, we want to make sure that there
+                        // is at least a single newline separating main statements.
+                        int minNewLines = 0;
+                        // minus 1 is for the EOF symbol that is tacked on in the size count.
+                        if (commentToken.TokenIndex + 1 < _tokens.Size - 1)
+                        {
+                            var followingToken = _tokens.Get(commentToken.TokenIndex + 1);
+                            if (followingToken.Channel != 1) minNewLines = 1;
+                        }
+
                         int maxNewlines = 2;
-                        string whiteSpace = HandleWhiteSpace(commentToken, maxNewlines, 0, 0, builder);
+                        string whiteSpace = HandleWhiteSpace(commentToken, maxNewlines, 0, minNewLines, builder);
                         builder.Append(whiteSpace);
                     }
                 }
 
-                builder.Append($"{Visit(baseIdfContext)}");
+                string formattedContext = Visit(baseIdfContext);
+                builder.Append($"{formattedContext}");
             }
 
             // Add any final comments

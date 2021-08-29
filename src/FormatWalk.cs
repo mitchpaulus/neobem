@@ -366,6 +366,14 @@ namespace src
             return $"{printPortion}{expressionPortion}";
         }
 
+        public override string VisitLog_statement(NeobemParser.Log_statementContext context)
+        {
+            string logPortion = $"{context.LOG().GetText()} ";
+            FormatVisitor subVisitor = new(_currentIndentLevel, _currentPosition + logPortion.Length, _tokens);
+            string expressionPortion = subVisitor.Visit(context.expression());
+            return $"{logPortion}{expressionPortion}";
+        }
+
         public override string VisitFunctionExp(NeobemParser.FunctionExpContext context)
         {
             // Print everything on single line for now.

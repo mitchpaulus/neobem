@@ -1,0 +1,5 @@
+log variable - 12
+function = λ param {
+  log param
+  print param()
+}

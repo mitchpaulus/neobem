@@ -80,6 +80,9 @@ namespace test
         [Test]
         public void Comment() => AssertMatch("comment");
 
+        [Test]
+        public void Log() => AssertMatch("log");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");

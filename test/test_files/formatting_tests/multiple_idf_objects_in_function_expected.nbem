@@ -1,0 +1,10 @@
+function = λ param {
+  Version,
+    9;                        ! A comment
+
+  Version,
+    10;                       ! A comment
+
+  Version,
+    11;                       ! A comment
+}

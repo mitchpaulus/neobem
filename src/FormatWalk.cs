@@ -364,7 +364,9 @@ namespace src
                     // If there are any comments, we know that a newline exists.
                     if (!commentTokens.Any())
                     {
-                        statementBuilder.Append($"\n{subVisitor.IndentSpaces}");
+                        statementBuilder.Append(statementBuilder.ToString().EndsWith("\n")
+                            ? subVisitor.IndentSpaces
+                            : $"\n{subVisitor.IndentSpaces}");
                     }
                     else
                     {
@@ -398,11 +400,10 @@ namespace src
                         if (commentTokens.Last().Channel == 1) statementBuilder.Append(subVisitor.IndentSpaces);
                     }
 
-
                     string statement = subVisitor.Visit(functionStatementContext);
+                    // TODO: Refactor to make design invariant be that all statements do not end with newline.
                     // This is one of the invariants of the design, that the statement do not have a newline associated with them,
                     // it is handled by the whitespace tokens only. This comes into play with tokens like the IDF comment.
-                    if (statement.EndsWith("\n")) statement = statement.Substring(0, statement.Length - 1);
 
                     statementBuilder.Append(statement);
                 }
@@ -414,7 +415,12 @@ namespace src
                 // common token like:
                 // Ex: \ name { value}
                 // So add in proper indentation or space.
-                if (!endingHiddenTokens.Any()) statementBuilder.Append($"\n{IndentSpaces}");
+                if (!endingHiddenTokens.Any())
+                {
+                    statementBuilder.Append(statementBuilder.ToString().EndsWith("\n")
+                        ? IndentSpaces
+                        : $"\n{IndentSpaces}");
+                }
                 else
                 {
                     foreach ((IToken commentToken, int index) in endingHiddenTokens.WithIndex())

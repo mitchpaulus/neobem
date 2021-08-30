@@ -1,0 +1,7 @@
+! One IDF comment
+
+a_function = λ param {
+  ! A second comment
+  Version,
+    10;
+}

@@ -350,7 +350,8 @@ namespace src
             {
                 StringBuilder statementBuilder = new();
 
-                int minNumberOfNewlines = context.function_statement().Length > 1 ? 1 : 0;
+                // If we have statements instead of expression, we don't put it on a single line.
+                int minNumberOfNewlines = 1;
 
                 for (int i = 0; i < context.function_statement().Length; i++)
                 {
@@ -363,7 +364,7 @@ namespace src
                     // If there are any comments, we know that a newline exists.
                     if (!commentTokens.Any())
                     {
-                        statementBuilder.Append(minNumberOfNewlines > 0 ? $"\n{subVisitor.IndentSpaces}" : " ");
+                        statementBuilder.Append($"\n{subVisitor.IndentSpaces}");
                     }
                     else
                     {
@@ -387,7 +388,8 @@ namespace src
                             {
                                 // The first statement is not allowed to have extra space at the top of the function.
                                 int maxNewlines = i == 0 ? 1 : 2;
-                                statementBuilder.Append(HandleWhiteSpace(commentToken, maxNewlines, subVisitor.IndentSpaces.Length, minNumberOfNewlines));
+                                string whiteSpace = HandleWhiteSpace(commentToken, maxNewlines, subVisitor.IndentSpaces.Length, minNumberOfNewlines, statementBuilder);
+                                statementBuilder.Append(whiteSpace);
                             }
                         }
 
@@ -398,20 +400,24 @@ namespace src
 
 
                     string statement = subVisitor.Visit(functionStatementContext);
+                    // This is one of the invariants of the design, that the statement do not have a newline associated with them,
+                    // it is handled by the whitespace tokens only. This comes into play with tokens like the IDF comment.
+                    if (statement.EndsWith("\n")) statement = statement.Substring(0, statement.Length - 1);
+
                     statementBuilder.Append(statement);
                 }
 
                 // Add any final comments/whitespace
-                var endingComments = _tokens.GetHiddenTokensToLeft(context.RCURLY().Symbol.TokenIndex) ?? new Collection<IToken>();
+                var endingHiddenTokens = _tokens.GetHiddenTokensToLeft(context.RCURLY().Symbol.TokenIndex) ?? new Collection<IToken>();
 
                 // If there are no end whitespace/comment tokens, we have a situation in which the curly brace is right next to the final
                 // common token like:
                 // Ex: \ name { value}
                 // So add in proper indentation or space.
-                if (!endingComments.Any()) statementBuilder.Append(minNumberOfNewlines > 0 ? $"\n{IndentSpaces}" : " ");
+                if (!endingHiddenTokens.Any()) statementBuilder.Append($"\n{IndentSpaces}");
                 else
                 {
-                    foreach ((IToken commentToken, int index) in endingComments.WithIndex())
+                    foreach ((IToken commentToken, int index) in endingHiddenTokens.WithIndex())
                     {
                         if (commentToken.Channel == 1)
                         {
@@ -424,7 +430,7 @@ namespace src
                         }
                         else if (commentToken.Channel == 2)
                         {
-                            string whitespace = HandleWhiteSpace(commentToken, 1, IndentSpaces.Length, minNumberOfNewlines);
+                            string whitespace = HandleWhiteSpace(commentToken, 1, IndentSpaces.Length, minNumberOfNewlines, statementBuilder);
                             statementBuilder.Append(whitespace);
                         }
                     }

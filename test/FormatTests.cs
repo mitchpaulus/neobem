@@ -83,6 +83,9 @@ namespace test
         [Test]
         public void Log() => AssertMatch("log");
 
+        [Test]
+        public void IdfComment() => AssertMatch("idf_comment");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");

@@ -106,6 +106,105 @@ namespace src
             }
         }
 
+        private string VisitMain<T1, T>(T1 context, Func<T1, T[]> selector) where T1 : ParserRuleContext where T : ParserRuleContext
+        {
+            var items = selector(context);
+            StringBuilder builder = new();
+            for (int i = 0; i < items.Length; i++)
+            {
+                T baseIdfContext = context.GetRuleContext<T>(i);
+
+                int startTokenIndex = baseIdfContext.Start.TokenIndex;
+
+                IList<IToken> commentTokens = _tokens.GetHiddenTokensToLeft(startTokenIndex) ?? new List<IToken>();
+
+                // Remove beginning of file whitespace.
+                if (i == 0) commentTokens = commentTokens.SkipWhile(token => token.Channel == 2).ToList();
+
+                foreach (IToken commentToken in commentTokens)
+                {
+                    if (commentToken.Channel == 1)
+                    {
+                        // The following is a check to determine whether the comment is inline, or standalone.
+                        int idx = commentToken.TokenIndex - 1;
+                        bool isInlineComment = false;
+                        while (idx >= 0)
+                        {
+                            IToken aPreviousToken = _tokens.Get(idx);
+                            if (aPreviousToken.Channel == 0 && aPreviousToken.Line == commentToken.Line)
+                            {
+                                isInlineComment = aPreviousToken.Line == commentToken.Line;
+                                break;
+                            }
+
+                            if (aPreviousToken.Channel == 0 && aPreviousToken.Line != commentToken.Line)
+                                break;
+
+                            idx--;
+                        }
+
+                        string inlineCommentSpace = isInlineComment && builder.ToString().Last() != ' ' ? " " : "";
+                        builder.Append($"{inlineCommentSpace}{commentToken.Text.FixComment()}");
+                    }
+                    else if (commentToken.Channel == 2)
+                    {
+                        // If we are followed by normal content, we want to make sure that there
+                        // is at least a single newline separating main statements.
+                        int minNewLines = 0;
+                        // minus 1 is for the EOF symbol that is tacked on in the size count.
+                        if (commentToken.TokenIndex + 1 < _tokens.Size - 1)
+                        {
+                            var followingToken = _tokens.Get(commentToken.TokenIndex + 1);
+                            if (followingToken.Channel != 1) minNewLines = 1;
+                        }
+
+                        int maxNewlines = 2;
+                        string whiteSpace = HandleWhiteSpace(commentToken, maxNewlines, 0, minNewLines, builder);
+                        builder.Append(whiteSpace);
+                    }
+                }
+
+                string formattedContext = Visit(baseIdfContext);
+                builder.Append($"{formattedContext}");
+            }
+
+            // Add any final comments
+            if (items.Length > 0)
+            {
+                var endingComments = _tokens.GetHiddenTokensToRight(items.Last().Stop.TokenIndex) ?? new Collection<IToken>();
+
+                // Remove whitespace at end of file.
+                while (endingComments.Any() && endingComments.Last().Channel == 2)
+                {
+                    endingComments.RemoveAt(endingComments.Count -1);
+                }
+
+                foreach ((IToken endingComment, int index) in endingComments.WithIndex())
+                {
+                    if (endingComment.Channel == 1)
+                    {
+                        // If the first token is a comment, that means that there was no whitespace between it and the previous
+                        // item. Ex:
+                        // \ name {#comment
+                        // So, force an extra space. Otherwise, whitespace should handle itself below.
+                        string extraSpace = index == 0 ? " " : "";
+                        builder.Append($"{extraSpace}{endingComment.Text.FixComment()}");
+                    }
+                    else if (endingComment.Channel == 2)
+                    {
+                        int maxNewlines = 2;
+                        string endingWhiteSpace = HandleWhiteSpace(endingComment, maxNewlines, 0, 0, builder);
+                        builder.Append(endingWhiteSpace);
+                    }
+                }
+            }
+
+            // Make sure we are ending with a newline
+            if (builder[^1] != '\n') builder.Append("\n");
+
+            return builder.ToString();
+        }
+
         public override string VisitIdf(NeobemParser.IdfContext context)
         {
             StringBuilder builder = new();

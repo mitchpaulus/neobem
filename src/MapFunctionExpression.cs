@@ -14,6 +14,11 @@ namespace src
 
         public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
+            if (inputs.Count != 2)
+            {
+                throw new ArgumentException(
+                    $"map requires 2 parameters, a function and list. Received {inputs.Count} parameter{(inputs.Count != 1 ? "s" : "")}.");
+            }
             if (inputs[0] is not FunctionExpression function)
             {
                 throw new ArgumentException(

@@ -270,6 +270,32 @@ namespace src
             throw new NotImplementedException($"The operator {context.op.Text} has not been implemented.");
         }
 
+        public override Expression VisitRangeExp(NeobemParser.RangeExpContext context)
+        {
+            var lhsExpression = Visit(context.expression(0));
+            if (lhsExpression is not NumericExpression lhsNumeric)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The left hand expression in the range operator is not a numeric. Received a {lhsExpression.TypeName()}.");
+            var rhsExpression = Visit(context.expression(1));
+            if (rhsExpression is not NumericExpression rhsNumeric)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The right hand expression in the range operator is not a numeric. Received a {rhsExpression.TypeName()}.");
+
+            var initialInteger = Convert.ToInt32(lhsNumeric.Value);
+            var finalInteger =   Convert.ToInt32(rhsNumeric.Value);
+
+            if (initialInteger == finalInteger) return new ListExpression(new List<Expression>());
+
+            List<Expression> expressions = new();
+            if (initialInteger < finalInteger)
+                for (int i = initialInteger; i <= finalInteger; i++)
+                    expressions.Add(new NumericExpression(i));
+            else
+                for (int i = finalInteger; i >= initialInteger; i--)
+                    expressions.Add(new NumericExpression(i));
+            return new ListExpression(expressions);
+        }
+
         private Expression EvaluateMapOperator(NeobemParser.MapPipeExpContext context)
         {
             var lhsExpression = Visit(context.expression(0));

@@ -58,6 +58,7 @@ LOG : 'log' ;
 LET : 'let' ;
 IN : 'in' ;
 
+RANGE_OPERATOR : '..' ;
 MEMBER_ACCESS : '.' ;
 
 STRUCT_SEP : ':' ;

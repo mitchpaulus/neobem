@@ -16,6 +16,7 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | expression op=(PLUSOP|MINUSOP) expression  # AddSub
              | expression boolean_exp_operator expression # BooleanExp
              | expression op=(AND_OP|OR_OP) expression    # LogicExp
+             | expression RANGE_OPERATOR expression         # RangeExp
              | STRING                                     # StringExp
              | NUMERIC                                    # NumericExp
              | BOOLEAN_LITERAL_TRUE                       # BooleanLiteralTrueExp

@@ -679,6 +679,14 @@ namespace src
             return $"{lhs} {context.op.Text} {rhs}";
         }
 
+        public override string VisitRangeExp(NeobemParser.RangeExpContext context)
+        {
+            string lhs = Visit(context.expression(0));
+            string rhs = Visit(context.expression(1));
+
+            return $"{lhs}{context.RANGE_OPERATOR().GetText()}{rhs}";
+        }
+
         private string IndentSpaces => new(' ', _currentIndentLevel * _indentSpacing);
 
         private string CurrentPositionSpaces => new(' ', _currentPosition);

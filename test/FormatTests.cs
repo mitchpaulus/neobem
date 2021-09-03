@@ -92,6 +92,9 @@ namespace test
         [Test]
         public void MapPipe() => AssertMatch("map_pipe");
 
+        [Test]
+        public void RangeOperator() => AssertMatch("range_operator");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");

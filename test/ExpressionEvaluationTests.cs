@@ -281,5 +281,24 @@ namespace test
 
              Assert.IsTrue(IdfObjectCompare.Equals("Version,1,2;", output));
         }
+
+        [Test]
+        public void TestRangeOperator()
+        {
+             string test_filepath = Path.Combine(TestDir.Dir, "range_operator.nbem");
+             string file = File.ReadAllText(test_filepath);
+
+             var visitor = new IdfPlusVisitor(TestDir.Dir);
+
+             var parser = file.ToParser();
+
+             var tree = parser.idf();
+
+             string output = visitor.Visit(tree);
+
+             Assert.IsTrue(IdfObjectCompare.Equals("Version,1;Version,2;Version,3;", output));
+        }
+
+
     }
 }

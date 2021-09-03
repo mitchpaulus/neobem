@@ -1,3 +1,0 @@
-#!/bin/sh
-
-java org.antlr.v4.gui.TestRig Neobem idf -tokens -gui test.idf

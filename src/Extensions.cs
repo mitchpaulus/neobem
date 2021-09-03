@@ -173,6 +173,8 @@ namespace src
 
             return Regex.Replace(commentText, "#[ ]*", "# ").TrimEnd() + "\n";
         }
+
+        public static string Pluralize(this int value) => value == 1 ? "" : "s";
     }
 
     public class SplitIdfLine

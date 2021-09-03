@@ -504,8 +504,9 @@ namespace src
 
         public override string VisitFunctionExp(NeobemParser.FunctionExpContext context)
         {
+            var functionApplication = context.function_application();
             // Print everything on single line for now.
-            return $"{context.funcexp.GetText()}{context.LPAREN().GetText()}{string.Join(", ", context.function_parameter().Select(Visit))}{context.RPAREN().GetText()}";
+            return $"{context.funcexp.GetText()}{functionApplication.LPAREN().GetText()}{string.Join(", ", functionApplication.function_parameter().Select(Visit))}{functionApplication.RPAREN().GetText()}";
         }
 
         public override string VisitInline_table(NeobemParser.Inline_tableContext context)
@@ -668,6 +669,14 @@ namespace src
             var endBracket = builder.ToString().SplitLines().Count > 1 ? $"\n{IndentSpaces}{rightBracket}" : rightBracket;
 
             return $"{leftBracket}{builder}{endBracket}";
+        }
+
+        public override string VisitMapPipeExp(NeobemParser.MapPipeExpContext context)
+        {
+            string lhs = Visit(context.expression(0));
+            string rhs = Visit(context.expression(1));
+
+            return $"{lhs} {context.op.Text} {rhs}";
         }
 
         private string IndentSpaces => new(' ', _currentIndentLevel * _indentSpacing);

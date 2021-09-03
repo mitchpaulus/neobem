@@ -50,13 +50,58 @@ namespace src
         }
     }
 
+    public class PartialApplicationFunctionExpression : FunctionExpression
+    {
+        private readonly FunctionExpression _original;
+        private readonly Dictionary<int, Expression> _partiallyAppliedParameters;
+        public PartialApplicationFunctionExpression(
+            FunctionExpression original,
+            List<Dictionary<string, Expression>> environments,
+            List<string> remainingParameters,
+            Dictionary<int, Expression> partiallyAppliedParameters) : base(environments, remainingParameters)
+        {
+            _original = original;
+            _partiallyAppliedParameters = partiallyAppliedParameters;
+        }
+
+        /// <summary>
+        /// This is an evaluation of the already partially applied function. The number of inputs here should be less than the original expression it
+        /// was formed from.
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <param name="baseDirectory"></param>
+        /// <returns></returns>
+        public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
+        {
+            if (inputs.Count + _partiallyAppliedParameters.Count > _original.Parameters.Count)
+            {
+                string message =
+                    $"The number of parameters supplied to this already partially applied function was too many." +
+                    $" The original function had {_original.Parameters.Count} parameter{_original.Parameters.Count.Pluralize()}, " +
+                    $"{_partiallyAppliedParameters.Count} parameter{_partiallyAppliedParameters.Count.Pluralize()} were partially applied, " +
+                    $"and {inputs.Count} parameter{inputs.Count.Pluralize()} were passed.";
+                throw new ArgumentException(message);
+            }
+
+            var inputQueue = new Queue<Expression>(inputs);
+            List<Expression> newInputs = new();
+            for (int i = 0; i < _original.Parameters.Count; i++)
+            {
+                newInputs.Add(_partiallyAppliedParameters.TryGetValue(i, out Expression partiallyAppliedExpression)
+                    ? partiallyAppliedExpression
+                    : inputQueue.Dequeue());
+            }
+
+            return _original.Evaluate(newInputs, baseDirectory);
+        }
+    }
+
     public class FunctionExpression : Expression
     {
         private readonly NeobemParser.LambdaExpContext _context;
         private readonly List<Dictionary<string, Expression>> _environments;
 
-
-        private readonly List<string> _parameters;
+        public readonly List<string> Parameters;
 
         public override string AsString() => "";
         public override string AsErrorString() => _context.GetText();
@@ -67,22 +112,27 @@ namespace src
         {
             _context = lambdaDefContext;
             _environments = environments;
-            _parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
+            Parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
         }
 
         public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters, string baseDirectory = null)
         {
             _environments = environments;
-            _parameters = parameters;
+            Parameters = parameters;
         }
 
         public virtual (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
 
-            if (inputs.Count != _parameters.Count) throw new InvalidOperationException($"Expected {_parameters.Count} parameters ({string.Join(", ", _parameters)}), received {inputs.Count}");
+            if (inputs.Count != Parameters.Count)
+            {
+                string message =
+                    $"Expected {Parameters.Count} parameter{Parameters.Count.Pluralize()} ({string.Join(", ", Parameters)}), received {inputs.Count}. Types: [{string.Join(", ", inputs.Select(expression => expression.TypeName()))}]";
+                throw new InvalidOperationException(message);
+            }
 
-            for (int i = 0; i < inputs.Count; i++) locals[_parameters[i]] = inputs[i];
+            for (int i = 0; i < inputs.Count; i++) locals[Parameters[i]] = inputs[i];
 
             var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
             updatedEnvironments.Insert(0, locals);
@@ -98,7 +148,8 @@ namespace src
             // or a set of valid function statements.
             if (_context.lambda_def().expression() != null)
             {
-                Expression expression = visitor.Visit(_context.lambda_def().expression());
+                NeobemParser.ExpressionContext expressionContext = _context.lambda_def().expression();
+                Expression expression = visitor.Visit(expressionContext);
                 return (visitor.output.ToString(), expression);
             }
             else

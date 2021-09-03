@@ -89,6 +89,9 @@ namespace test
         [Test]
         public void MultipleIdfObjectsInFunction() => AssertMatch("multiple_idf_objects_in_function");
 
+        [Test]
+        public void MapPipe() => AssertMatch("map_pipe");
+
         public void AssertMatch(string fileName)
         {
             string inputPath = Path.Join(TestDir.Dir, "formatting_tests", $"{fileName}.nbem");

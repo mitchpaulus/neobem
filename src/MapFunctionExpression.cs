@@ -17,7 +17,7 @@ namespace src
             if (inputs.Count != 2)
             {
                 throw new ArgumentException(
-                    $"map requires 2 parameters, a function and list. Received {inputs.Count} parameter{(inputs.Count != 1 ? "s" : "")}.");
+                    $"map requires 2 parameters, a function and list. Received {inputs.Count} parameter{(inputs.Count.Pluralize())}.");
             }
             if (inputs[0] is not FunctionExpression function)
             {

@@ -10,10 +10,7 @@ variable_declaration : IDENTIFIER EQUALS expression;
 
 // See pg. 41 of Antlr reference
 expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
-             | funcexp=expression
-                 ( LPAREN RPAREN |
-                   LPAREN function_parameter (COMMA function_parameter)* RPAREN
-                 )                                        # FunctionExp
+             | funcexp=expression function_application    # FunctionExp
              | <assoc=right> expression CARET expression  # Exponientiate
              | expression op=(MULTOP|DIVIDEOP) expression # MultDivide
              | expression op=(PLUSOP|MINUSOP) expression  # AddSub
@@ -30,8 +27,12 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | lambda_def                                 # LambdaExp
              | let_binding                                # LetBindingExp
              | inline_table                               # InlineTable
+             | expression op=(MAP_OPERATOR|PIPE_OPERATOR) expression # MapPipeExp
              | LPAREN expression RPAREN                   # ParensExp
              ;
+
+function_application : LPAREN RPAREN |
+                       LPAREN function_parameter (COMMA function_parameter)* RPAREN ;
 
 function_parameter : expression ;
 

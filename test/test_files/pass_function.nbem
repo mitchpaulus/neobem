@@ -1,0 +1,5 @@
+run_func = λ function { function(2) }
+
+my_val = run_func(λ x { x + 3 })
+
+Version, <my_val>;

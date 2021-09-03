@@ -25,6 +25,9 @@ GREATER_THAN_OR_EQUAL_TO : '>=' ;
 EQUAL_TO : '==' ;
 NOT_EQUAL_TO : '!=' ;
 
+MAP_OPERATOR : '->' ;
+
+PIPE_OPERATOR : '|>' ;
 
 AND_OP : 'and' ;
 OR_OP : 'or' ;

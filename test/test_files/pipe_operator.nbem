@@ -1,0 +1,5 @@
+my_filter = λ list func { filter(func, list) }
+
+list = [1, 2, 3, 4] |> my_filter(λ x { x < 3 })
+
+Version,<list>;

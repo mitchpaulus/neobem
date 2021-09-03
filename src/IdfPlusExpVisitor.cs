@@ -19,6 +19,7 @@ namespace src
             _variables = variables;
             _baseDirectory = baseDirectory;
         }
+
         public IdfPlusExpVisitor(string baseDirectory)
         {
             _baseDirectory = baseDirectory;
@@ -43,17 +44,16 @@ namespace src
             _variables[0]["replace"] = new StringReplaceFunctionExpression();
 
             _variables[0]["type"] = new TypeFunctionExpression();
-
             _variables[0]["guid"] = new GuidFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =
             new Dictionary<string, Func<double, double, double>>
             {
-                {"+", (lhs, rhs) => lhs + rhs},
-                {"-", (lhs, rhs) => lhs - rhs},
-                {"*", (lhs, rhs) => lhs * rhs},
-                {"/", (lhs, rhs) => lhs / rhs},
+                { "+", (lhs, rhs) => lhs + rhs },
+                { "-", (lhs, rhs) => lhs - rhs },
+                { "*", (lhs, rhs) => lhs * rhs },
+                { "/", (lhs, rhs) => lhs / rhs },
             };
 
 
@@ -84,15 +84,16 @@ namespace src
                     $"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope. Possible reasons include missing import or missing export statements within imported file.");
             }
 
-            throw new InvalidOperationException($"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
+            throw new InvalidOperationException(
+                $"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
         }
 
         public override Expression VisitLogicExp(NeobemParser.LogicExpContext context)
         {
             Dictionary<string, Func<bool, bool, bool>> conditional = new Dictionary<string, Func<bool, bool, bool>>()
             {
-                {"and", (b, b1) => b && b1},
-                {"or", (b, b1) => b || b1},
+                { "and", (b, b1) => b && b1 },
+                { "or", (b, b1) => b || b1 },
             };
 
             var lhs = Visit(context.expression(0));
@@ -129,7 +130,8 @@ namespace src
 
                 if (memberAccessExpression is not StringExpression stringMemberExpression)
                 {
-                    throw new InvalidOperationException($"Line {context.Start.Line}: Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
+                    throw new InvalidOperationException(
+                        $"Line {context.Start.Line}: Attempted a member access with a non string expression. The original expression was {context.expression(1).GetText()}.");
                 }
 
                 var memberName = stringMemberExpression.Text;
@@ -145,7 +147,8 @@ namespace src
             }
             else
             {
-                throw new InvalidOperationException($"Line {context.Start.Line}: {context.expression(0).GetText()} is not an object.");
+                throw new InvalidOperationException(
+                    $"Line {context.Start.Line}: {context.expression(0).GetText()} is not an object.");
             }
         }
 
@@ -158,7 +161,7 @@ namespace src
 
             var operatorFunction = _numericOperatorMapping[op];
 
-            double newValue = operatorFunction(((NumericExpression)lhs).Value, ((NumericExpression) rhs).Value);
+            double newValue = operatorFunction(((NumericExpression)lhs).Value, ((NumericExpression)rhs).Value);
             return new NumericExpression(newValue);
         }
 
@@ -215,7 +218,8 @@ namespace src
             Expression func = Visit(functionExpContext.funcexp);
 
             if (!(func is FunctionExpression functionExpression))
-                throw new InvalidOperationException($"Line {functionExpContext.Start.Line}: Attempt to apply function to non function application.");
+                throw new InvalidOperationException(
+                    $"Line {functionExpContext.Start.Line}: Attempt to apply function to non function expression.");
 
             // string functionName = functionExpContext.function_application().IDENTIFIER().GetText();
             // IFunction function = _functions[functionName];
@@ -224,7 +228,24 @@ namespace src
             Expression expression;
             try
             {
-                var expressions = functionExpContext.function_parameter().Select(Visit).ToList();
+                NeobemParser.Function_parameterContext[] functionParameters = functionExpContext.function_application().function_parameter();
+
+                // Allow this situation to create a partial function application. TODO: Verify length isn't 0 or something
+                if (functionParameters.Length == functionExpression.Parameters.Count - 1)
+                {
+                    List<string> remainingParameters = functionExpression.Parameters.Take(1).ToList();
+
+                    var partiallyAppliedExpressions = functionExpContext.function_application().function_parameter().Select(Visit).ToList();
+                    Dictionary<int, Expression> expressionDictionary = new();
+                    for (int i = 1; i < functionExpression.Parameters.Count ; i++)
+                    {
+                        expressionDictionary[i] = partiallyAppliedExpressions[i - 1];
+                    }
+
+                    return new PartialApplicationFunctionExpression(functionExpression, _variables, remainingParameters, expressionDictionary);
+                }
+
+                var expressions = functionExpContext.function_application().function_parameter().Select(Visit).ToList();
                 (text, expression) = functionExpression.Evaluate(expressions, _baseDirectory);
             }
             catch (Exception exception)
@@ -240,6 +261,80 @@ namespace src
         public override Expression VisitLambdaExp(NeobemParser.LambdaExpContext context)
         {
             return new FunctionExpression(context, _variables, _baseDirectory);
+        }
+
+        public override Expression VisitMapPipeExp(NeobemParser.MapPipeExpContext context)
+        {
+            if (context.op.Type == NeobemLexer.MAP_OPERATOR) return EvaluateMapOperator(context);
+            if (context.op.Type == NeobemLexer.PIPE_OPERATOR) return VisitPipeExp(context);
+            throw new NotImplementedException($"The operator {context.op.Text} has not been implemented.");
+        }
+
+        private Expression EvaluateMapOperator(NeobemParser.MapPipeExpContext context)
+        {
+            var lhsExpression = Visit(context.expression(0));
+            var rhsExpression = Visit(context.expression(1));
+
+            // Do preliminary checks on the input.
+            if (lhsExpression is not ListExpression listExpression)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The left hand side to the map operator is not a list. Received a {lhsExpression.TypeName()}");
+            if (rhsExpression is not FunctionExpression functionExpression)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The right hand side of the map operator is not a function. Received a {rhsExpression.TypeName()}");
+
+            if (functionExpression.Parameters.Count != 1)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The function for the map operator should have one parameter. The function supplied has {functionExpression.Parameters.Count} parameter{functionExpression.Parameters.Count.Pluralize()}, named {string.Join(", ", functionExpression.Parameters)}.");
+
+            // Delegate to existing map function.
+            MapFunctionExpression mapFunctionExpression = new();
+
+            string text;
+            Expression expression;
+            try
+            {
+                (text, expression) =
+                    mapFunctionExpression.Evaluate(new List<Expression>() { functionExpression, listExpression },
+                        _baseDirectory);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: {exception.Message}");
+            }
+
+            output.Append(text);
+            return expression;
+        }
+
+        private Expression VisitPipeExp(NeobemParser.MapPipeExpContext context)
+        {
+            var inputExpression = Visit(context.expression(0));
+            var afterPipeExpression = Visit(context.expression(1));
+
+            if (afterPipeExpression is not FunctionExpression functionExpression)
+                throw new InvalidOperationException(
+                    $"Line {context.Start.Line}: The function to the right of a pipe operation may only be a function expression.");
+
+            if (functionExpression.Parameters.Count != 1)
+                throw new InvalidOperationException(
+                    $"Line {context.Start.Line}: The function to the right of a pipe operation should take 1 parameter. Got a function with {functionExpression.Parameters.Count} parameter{functionExpression.Parameters.Count.Pluralize()}.");
+
+            List<Expression> expressionList = new() { inputExpression };
+
+            string text;
+            Expression expression;
+            try
+            {
+                (text, expression) = functionExpression.Evaluate(expressionList, _baseDirectory);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: {exception.Message}");
+            }
+
+            output.Append(text);
+            return expression;
         }
 
         public override Expression VisitIfExp(NeobemParser.IfExpContext context)

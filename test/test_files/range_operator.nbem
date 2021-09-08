@@ -4,4 +4,4 @@ version_template  = λ num  {
     Version,<num>;
 }
 
-print versions -> version_template
+print versions |= version_template

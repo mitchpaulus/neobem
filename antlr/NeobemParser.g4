@@ -10,13 +10,13 @@ variable_declaration : IDENTIFIER EQUALS expression;
 
 // See pg. 41 of Antlr reference
 expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
+             | expression RANGE_OPERATOR expression         # RangeExp
              | funcexp=expression function_application    # FunctionExp
              | <assoc=right> expression CARET expression  # Exponientiate
              | expression op=(MULTOP|DIVIDEOP) expression # MultDivide
              | expression op=(PLUSOP|MINUSOP) expression  # AddSub
              | expression boolean_exp_operator expression # BooleanExp
              | expression op=(AND_OP|OR_OP) expression    # LogicExp
-             | expression RANGE_OPERATOR expression         # RangeExp
              | STRING                                     # StringExp
              | NUMERIC                                    # NumericExp
              | BOOLEAN_LITERAL_TRUE                       # BooleanLiteralTrueExp
@@ -28,9 +28,11 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | lambda_def                                 # LambdaExp
              | let_binding                                # LetBindingExp
              | inline_table                               # InlineTable
-             | expression op=(MAP_OPERATOR|PIPE_OPERATOR) expression # MapPipeExp
+             | expression functional_operator expression  # MapPipeFilterExp
              | LPAREN expression RPAREN                   # ParensExp
              ;
+
+functional_operator : MAP_OPERATOR | FILTER_OPERATOR | PIPE_OPERATOR ;
 
 function_application : LPAREN RPAREN |
                        LPAREN function_parameter (COMMA function_parameter)* RPAREN ;

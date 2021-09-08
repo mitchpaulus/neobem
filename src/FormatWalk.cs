@@ -671,12 +671,12 @@ namespace src
             return $"{leftBracket}{builder}{endBracket}";
         }
 
-        public override string VisitMapPipeExp(NeobemParser.MapPipeExpContext context)
+        public override string VisitMapPipeFilterExp(NeobemParser.MapPipeFilterExpContext context)
         {
             string lhs = Visit(context.expression(0));
             string rhs = Visit(context.expression(1));
 
-            return $"{lhs} {context.op.Text} {rhs}";
+            return $"{lhs} {context.functional_operator().GetText()} {rhs}";
         }
 
         public override string VisitRangeExp(NeobemParser.RangeExpContext context)

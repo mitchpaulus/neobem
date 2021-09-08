@@ -263,11 +263,12 @@ namespace src
             return new FunctionExpression(context, _variables, _baseDirectory);
         }
 
-        public override Expression VisitMapPipeExp(NeobemParser.MapPipeExpContext context)
+        public override Expression VisitMapPipeFilterExp(NeobemParser.MapPipeFilterExpContext context)
         {
-            if (context.op.Type == NeobemLexer.MAP_OPERATOR) return EvaluateMapOperator(context);
-            if (context.op.Type == NeobemLexer.PIPE_OPERATOR) return VisitPipeExp(context);
-            throw new NotImplementedException($"The operator {context.op.Text} has not been implemented.");
+            if (context.functional_operator().MAP_OPERATOR() != null) return EvaluateMapOperator(context);
+            if (context.functional_operator().PIPE_OPERATOR() != null) return VisitPipeExp(context);
+            if (context.functional_operator().FILTER_OPERATOR() != null) return EvaluateFilterOperator(context);
+            throw new NotImplementedException($"The operator {context.functional_operator().GetText()} has not been implemented.");
         }
 
         public override Expression VisitRangeExp(NeobemParser.RangeExpContext context)
@@ -296,7 +297,43 @@ namespace src
             return new ListExpression(expressions);
         }
 
-        private Expression EvaluateMapOperator(NeobemParser.MapPipeExpContext context)
+        private Expression EvaluateFilterOperator(NeobemParser.MapPipeFilterExpContext context)
+        {
+            var lhsExpression = Visit(context.expression(0));
+            var rhsExpression = Visit(context.expression(1));
+
+            // Do preliminary checks on the input.
+            if (lhsExpression is not ListExpression listExpression)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The left hand side to the filter operator is not a list. Received a {lhsExpression.TypeName()}");
+
+            if (rhsExpression is not FunctionExpression functionExpression) throw new ArgumentException(
+                    $"Line {context.Start.Line}: The right hand side of the filter operator is not a function. Received a {rhsExpression.TypeName()}");
+
+            if (functionExpression.Parameters.Count != 1)
+                throw new ArgumentException(
+                    $"Line {context.Start.Line}: The function for the filter operator should have one parameter. The function supplied has {functionExpression.Parameters.Count} parameter{functionExpression.Parameters.Count.Pluralize()}, named {string.Join(", ", functionExpression.Parameters)}.");
+
+            // Delegate to existing filter function.
+            FilterFunctionExpression filterFunctionExpression = new();
+
+            string text;
+            Expression expression;
+            try
+            {
+                (text, expression) =
+                    filterFunctionExpression.Evaluate(new List<Expression>() { functionExpression, listExpression },
+                        _baseDirectory);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: {exception.Message}");
+            }
+
+            output.Append(text);
+            return expression;
+        }
+        private Expression EvaluateMapOperator(NeobemParser.MapPipeFilterExpContext context)
         {
             var lhsExpression = Visit(context.expression(0));
             var rhsExpression = Visit(context.expression(1));
@@ -305,8 +342,8 @@ namespace src
             if (lhsExpression is not ListExpression listExpression)
                 throw new ArgumentException(
                     $"Line {context.Start.Line}: The left hand side to the map operator is not a list. Received a {lhsExpression.TypeName()}");
-            if (rhsExpression is not FunctionExpression functionExpression)
-                throw new ArgumentException(
+
+            if (rhsExpression is not FunctionExpression functionExpression) throw new ArgumentException(
                     $"Line {context.Start.Line}: The right hand side of the map operator is not a function. Received a {rhsExpression.TypeName()}");
 
             if (functionExpression.Parameters.Count != 1)
@@ -333,7 +370,7 @@ namespace src
             return expression;
         }
 
-        private Expression VisitPipeExp(NeobemParser.MapPipeExpContext context)
+        private Expression VisitPipeExp(NeobemParser.MapPipeFilterExpContext context)
         {
             var inputExpression = Visit(context.expression(0));
             var afterPipeExpression = Visit(context.expression(1));

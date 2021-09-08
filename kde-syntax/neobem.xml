@@ -13,6 +13,7 @@
             <item>as</item>
             <item>only</item>
             <item>not</item>
+            <item>log</item>
         </list>
         <list name="controlflow">
             <item>if</item>

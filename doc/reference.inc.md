@@ -12,6 +12,7 @@ parsed:
 4. An `import` statement (ex: `import 'filename.nbem'`{.nbem})
 5. Print statement (ex: `print <expression>`{.nbem})
 6. A Neobem specific comment (ex: `# Neobem comment`{.nbem})
+7. A log statement (ex: `log myvar`{.nbem})
 
 idf comments and idf objects result in text being output to the final
 target.
@@ -163,6 +164,44 @@ The following operators are only valid for numeric types.
 - Multiplication '`*`'
 - Division '`/`'
 
+### Range Operator
+
+The range operator can be used to quickly make a list of integer values.
+The syntax looks like:
+
+```neobem
+list_normal = [1, 2, 3, 4, 5]
+list_with_range_operator = 1..5
+```
+
+It is a numeric expression, followed by '`..`', then by a second numeric
+expression.
+
+### Map and Filter Operator
+
+Two important concepts in Neobem and functional programming in general
+are *filtering* and *mapping*. They are important enough that a
+dedicated operator in the syntax was created.
+
+A filter takes a list and a function that returns true or false. What is
+returned is a list with only the elements that return true when put
+through the function. The filter operator is `'|>'`, or a pipe followed by
+a greater than sign. You might remember it by thinking of the greater
+than sign as constricting a list, making it smaller from left to right.
+Or like a typical physical filter symbol, rotated counter-clockwise by
+90°.
+
+A map takes a list and a function and returns a new list of the same
+length in which each element has been transformed by the function. The
+operator  is '`|=`' or a pipe followed by an equals sign. You can think
+of the horizontal lines in the equals sign being the individual elements
+being transformed some way 1:1.
+
+Examples:
+
+```neobem
+INCLUDE code_samples/map_operator.nbem
+```
 
 ## Inline Data
 

@@ -1,0 +1,30 @@
+pump_template = λ pump {
+  Pump:ConstantSpeed,
+    <pump.'name'>,            ! Name
+    <pump.'name'> Inlet,      ! Inlet Node Name
+    <pump.'name'> Outlet,     ! Outlet Node Name
+    <pump.'design flow rate'>,  ! Design Flow Rate {m3/s}
+    179352,                   ! Design Pump Head {Pa}
+    ,                         ! Design Power Consumption {W}
+    0.9,                      ! Motor Efficiency
+    0.0,                      ! Fraction of Motor Inefficiencies to Fluid Stream
+    Continuous;               ! Pump Control Type
+}
+
+pumps =
+─────────┬───────────────────
+'name'   │ 'design flow rate'
+─────────┼───────────────────
+'Pump 1' │ 0.5
+'Pump 2' │ 1
+'Pump 3' │ 2
+─────────┴───────────────────
+
+is_high_flow_pump = λ pump { pump.'design flow rate' > 0.75 }
+
+# Filter for high flow pumps based on a property. Same as filter(high_flow_pumps, is_high_flow_pump)
+# Results in [{ 'name': 'Pump 2', 'design flow rate': 1 }, { 'name': 'Pump 3', 'design flow rate': 2 }]
+high_flow_pumps = pumps |> is_high_flow_pump
+
+# Map the template across the resulting list. This is the same as: map(high_flow_pumps, pump_template)
+print high_flow_pumps |= pump_template

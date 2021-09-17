@@ -91,7 +91,6 @@
 \ifluatex
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-
 %\usepackage[defaultmono]{droidmono}
 \usepackage{fontspec}
 \setmonofont{iosevka}
@@ -100,6 +99,8 @@
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
 \author{Mitchell T. Paulus}
 \title{Neobem}
 \date{Version 0.4.0, \today}
@@ -107,42 +108,24 @@
 \begin{document}
 \maketitle
 
-
-
 \begin{abstract}
     Neobem is a preprocessor language for compiling to the input files for
     building energy simulation programs, such as the idf file syntax expected by EnergyPlus.
 \end{abstract}
 
-\section{Introduction}
-
 \input{intro}
-
-\section{Getting Started}
 
 \input{getting_started}
 
-\section{Tutorials}
-
 \input{tutorials}
-
-\section{Automatic Formatting}
 
 \input{formatting}
 
-\section{Reference}
-
 \input{reference}
-
-\section{Design Goals}
 
 \input{design_goals}
 
-\section{FAQ}
-
 \input{faq}
-
-\section{Thank Yous and Inspirations}
 
 \input{thank_yous_and_inspirations}
 

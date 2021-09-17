@@ -1,3 +1,5 @@
+# Design Goals
+
 - Be a superset of the idf input file format.
 
   Current building energy simulation programs should be valid. This lets
@@ -71,3 +73,5 @@
 
 And to be clear, these are the goals and driving principles, it doesn't
 mean all this is finished already :)
+
+

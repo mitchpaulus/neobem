@@ -1,0 +1,45 @@
+code { 
+ font-family: Menlo,Monaco,Consolas,"Courier New",monospace; 
+ font-size: 16px;
+ line-height: 1;
+}
+
+.sansserif {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.co {
+    color: green;
+    font-style: italic;
+}
+
+nav ul { font-size: 14px }
+
+nav, h1, h2, h3, h4, h5, h6  { 
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.st { color: darkred; }
+
+.fu { color: purple; }
+
+.fl { color: darkblue;  }
+
+.kw { color: darkgreen;  }
+
+pre { font-size: 16px }
+
+.header-2 { padding-left: 10px;list-style-type: none;}
+.header-3 { padding-left: 20px;list-style-type: none;}
+
+div.sourceCode { 
+    border-left-style: solid;
+    border-left-color: #d1d2d2;
+    padding-left: 10px;
+}
+
+body { 
+  margin: 0;
+  font-family: Georgia, serif; 
+  color: #333;
+}

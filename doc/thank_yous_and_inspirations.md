@@ -1,3 +1,5 @@
+# Thank Yous and Inspiration
+
 > *If I have seen further it is by standing on the shoulders of Giants.*
 
 A project such as this does not occur in a vacuum. I am indebted to many
@@ -21,4 +23,5 @@ many good ideas from languages before me. Some inspirations include:
   the usual `&&` and `||` and only require one extra character. I also
   prefer the snake case convention for identifiers.
 - The structure grammar matches closely to that of [JSON](https://www.json.org/json-en.html).
+
 

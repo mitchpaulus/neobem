@@ -1,3 +1,5 @@
+# FAQ
+
 **What's with the name?**
 
 The name actually has gone through several iterations. It began as
@@ -30,3 +32,4 @@ these files. I do realize this is going to have to be front and center
 in the documentation for those attempting to run `neobem.exe` and not
 finding it. But that's the price you pay for a unique name and
 reasonably short executable and file extension.
+

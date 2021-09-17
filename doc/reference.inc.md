@@ -1,3 +1,5 @@
+# Reference
+
 ## General
 
 Whitespace is generally ignored, expect within the object definitions and
@@ -24,17 +26,18 @@ expressions everywhere makes things tricky.].
 
 ## Data Types
 
-There are two primitive expression types, the same as EnergyPlus
+There are two primitive expression types, the same as EnergyPlus, along
+with the boolean True/False data type.
 
 1. String expressions (or alpha in idf terminology)
 2. Numeric expressions
+3. Boolean expressions
 
-There are 4 higher order expression types.
+There are 3 higher order expression types.
 
 1. List expressions
 2. Function expressions
 3. Structure expressions
-4. Boolean expressions
 
 ### Strings
 
@@ -203,34 +206,62 @@ Examples:
 INCLUDE code_samples/map_operator.nbem
 ```
 
+### Pipe Operator
+
+The pipe operator allows you to write functional code from left to
+right, like water flowing in a pipe. Many operations can be broken up
+into a series of transformations that can then be composed. The pipe
+operator (`'->'`) is essentially syntax sugar for the following:
+
+```neobem
+# Normal function call
+var = function(parameter)
+
+# Pipe function call
+var = parameter -> function
+```
+
+When the function has more than one parameter, the *first* parameter can
+be piped. For example:
+
+```neobem
+# Normal function call with multiple parameters
+var = function(parameter1, parameter2)
+
+# Using pipe
+var = parameter1 -> function(parameter2)
+```
+
+Technically, what has happened is that Neobem allows something called
+*partial application* of a function. You are allowed to invoke a
+function specifying *1* less parameter than originally specified. This
+returns a new function that is a function of a single variable, the
+first parameter.
+
+In this trivial example, not much has been gained. The real usefulness
+comes when multiple functions are chained. For example:
+
+```neobem
+# Imagine fix_units, to_uppercase, and template are all functions
+print obj -> fix_units -> to_uppercase -> template
+# is more understandable than
+print template(to_uppercase(fix_units(obj)))
+# at least in my opinion
+```
+
 ## Inline Data
 
 Grammar for inline data tables in ANTLR form:
 
 ```antlr
-inline_table :
-    INLINE_TABLE_BEGIN_END
-    inline_table_header
-    inline_table_header_separator
-    inline_table_data_row+
-    INLINE_TABLE_BEGIN_END ;
-
-INLINE_TABLE_BEGIN_END : '___' '_'* ;
-
-INLINE_TABLE_HEADER_SEP : '---' '-'* ;
-
-inline_table_header : IDENTIFIER ('|' IDENTIFIER)* ;
-
-inline_table_header_separator : INLINE_TABLE_HEADER_SEP ('|' INLINE_TABLE_HEADER_SEP)* ;
-
-inline_table_data_row : expression ('|' expression)* ;
-
+INCLUDE text_snippets/inline_data_table_antlr.txt
 ```
 
-In words, it's marked by 3 or more underscores, then identifiers
-separated by pipes (`|`), a header separator row that has sections of 3
-or more hyphens separated by pipes, then data in the form of expressions
-separated by pipes, finished by 3 or more underscores.
+In words, it's marked by 3 or more underscores, hyphens, or box drawing
+characters, then identifiers separated by pipes (`|`), a header
+separator row that has sections of 3 or more hyphens separated by pipes,
+then data in the form of expressions separated by pipes, finished by 3
+or more underscores, hyphens, or box drawing characters.
 
 So these are technically parsed the same:
 
@@ -244,7 +275,6 @@ _________________
 _________________
 
 zones = ___ 'name'|'origin'---'Z1'|0|'Z2'|1___
-
 ```
 
 But I think it's obvious which one is easier for a *human* to parse.
@@ -334,7 +364,7 @@ Value3|Value4
 
 It can be loaded like:
 
-```nbem
+```neobem
 load_options = {
   'type': 'text',
   'path': 'path/to/file.txt',
@@ -661,4 +691,5 @@ INCLUDE code_samples/reference_controlling_what_gets_imported.nbem
 `Version, 9.4`{.nbem} will be printed to the output, but only
 `const_schedule` will be available for use from the script that has
 imported this file.
+
 

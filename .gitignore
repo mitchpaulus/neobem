@@ -26,9 +26,16 @@ doc/reference.tex
 doc/thank_yous_and_inspirations.tex
 doc/tutorials.md
 doc/tutorials.tex
+doc/doc.html
+doc/contents.md
+doc/contents.html
+
+doc/text_snippets/inline_data_table_antlr.txt
 
 doc/formatting.md
 doc/formatting.tex
+
+*.headers
 
 kde-syntax/test
 src/Help.cs

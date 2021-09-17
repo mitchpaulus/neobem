@@ -1,3 +1,5 @@
+# Introduction
+
 While creating you building energy simulation input files, have you ever wanted to:
 
 - Use variables?
@@ -20,3 +22,4 @@ via standard input or a file and writing the results to standard output.
 It is designed to play one role in larger processing pipelines.
 
 I hope you find it as useful as I do.
+

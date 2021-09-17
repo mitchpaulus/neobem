@@ -1,3 +1,5 @@
+# Automatic Formatting
+
 If you have read through the tutorial section, you will have seen some
 unique characters allowed as part of the syntax. For example, you can
 use the `'λ'` character in function definitions, or `'✓'` for a literal
@@ -60,3 +62,4 @@ You can see more arguments for this approach from its inspiration: The
 `gofmt`](https://blog.golang.org/gofmt)), and
 [Prettier](https://prettier.io/), an opinionated JavaScript/TypeScript
 formatter.
+

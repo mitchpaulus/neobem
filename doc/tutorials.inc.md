@@ -1,8 +1,11 @@
+# Tutorials
+
 Instead of starting with the boring details about installation and
 reference material, let's jump right into the good stuff. This will
 focus on the basics, giving you a general understanding of what this
-tool is all about, without worrying too much about the details.^[Took
-this idea straight from the TikZ-PGF manual.]
+tool is all about, without worrying too much about the details.[^tikz]
+
+[^tikz]: Inspiration from the TikZ-PGF manual.
 
 ## Tutorial 1: Variables
 
@@ -513,4 +516,5 @@ To note here:
 
   The `as` option will put whatever string is specified as a prefix to
   all exports from the file, with an `@` sign between.
+
 

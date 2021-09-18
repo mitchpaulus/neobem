@@ -4,6 +4,8 @@ Neobem is a preprocessor programming language primarily targeted for the idf inp
 
 You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](https://neobem.io/neobem.pdf).
 
+# Introduction
+
 While creating you building energy simulation input files, have you ever wanted to:
 
 - Use variables?
@@ -26,6 +28,7 @@ via standard input or a file and writing the results to standard output.
 It is designed to play one role in larger processing pipelines.
 
 I hope you find it as useful as I do.
+
 
 # Getting Started
 
@@ -50,9 +53,10 @@ There you will see 3 main assets:
 2. `neobem_linux-x64_x.x.x.zip`
 3. `neobem_osx-x64_x.x.x.zip`
 
-Download the zip file that matches your operating system.^[If you are
-running the Windows Subsystem for Linux within Windows, I would
-recommend the Linux version, and installing like a Linux program]
+Download the zip file that matches your operating system.[^WSL]
+
+[^WSL]: If you are running the Windows Subsystem for Linux within Windows, I would
+        recommend the Linux version, and installing like a Linux program
 
 Extract that zip file to a location that you will want the program to
 live. It doesn't really matter where you put it, but recommended places
@@ -62,7 +66,10 @@ would be:
 - `/usr/local/neobem` or `~/.local/neobem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
-from a shell environment, that could be anything like^[If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html) or other web searches for 'terminal vs. shell']:
+from a shell environment, that could be anything like[^Shells]:
+
+[^Shells]: If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
+  or other web searches for 'terminal vs. shell'
 
 - `cmd.exe` or PowerShell on Windows
 - `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
@@ -217,6 +224,7 @@ link](https://asciinema.org/a/392845?size=big) that
 shows an example workflow from start to finish. This particular workflow
 example used `bash` as the shell and the files were edited with Neovim.
 
-![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](doc/img/demo.png)
+![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](doc/img/demo.png){ width=80% }
+
 
 <!-- vim:set ft=markdown: -->

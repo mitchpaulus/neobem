@@ -1,2 +1,2 @@
 redo doc.runtex
-redo doc.html
+redo-ifchange doc.html

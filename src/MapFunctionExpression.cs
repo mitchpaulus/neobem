@@ -65,7 +65,7 @@ namespace src
 
     public class HasFunctionExpression : FunctionExpression
     {
-        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "structure" })
+        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "structure", "key" })
         {
         }
 
@@ -75,12 +75,12 @@ namespace src
                 throw new ArgumentException(
                     $"'has' function expects 2 parameters, a structure parameter and string, received {inputs.Count} parameters.");
 
-            if (!(inputs[0] is IdfPlusObjectExpression structure))
+            if (inputs[0] is not IdfPlusObjectExpression structure)
             {
                 throw new ArgumentException($"The first parameter to 'has' is expected to be a structure, received a {inputs[0].TypeName()}");
             }
 
-            if (!(inputs[1] is StringExpression stringExpression))
+            if (inputs[1] is not StringExpression stringExpression)
             {
                 throw new ArgumentException($"The second parameter to 'has' is expected to be a string, received a {inputs[1].TypeName()}");
             }

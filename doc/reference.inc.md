@@ -322,7 +322,7 @@ A number of mathematical functions are built in.
 
 - `keys(structure)`{.nbem}: Returns a list of strings that are the keys
   to the structure.
-- `has(key, structure)`{.nbem}: Returns a boolean representing whether
+- `has(structure, key)`{.nbem}: Returns a boolean representing whether
   the given structure has the string key as a member.
 
 ## Loading Data

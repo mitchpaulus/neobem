@@ -6,8 +6,6 @@ You can view the entire user manual in PDF form at [neobem.io/neobem.pdf](https:
 
 INCLUDE doc/intro.md
 
-# Getting Started
-
 INCLUDE doc/getting_started.md
 
 <!-- vim:set ft=markdown: -->

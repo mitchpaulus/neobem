@@ -1,0 +1,14 @@
+structure = { 'key1': 1 }
+value = if has(structure, 'key1') then 2 else 3
+value2 = if has(structure, 'other') then 4 else 5
+
+value_piped = if structure -> has('key1') then 6 else 7
+
+Version,
+  <value>;
+
+Version,
+  <value2>;
+
+Version,
+  <value_piped>;

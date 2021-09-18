@@ -1,25 +1,24 @@
 coords = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [9, 10, 11]
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [9, 10, 11],
 ]
 
 coords_2_idf = λ coords {
-    lines = map(λ xyz { '  ' + join(',', xyz) + ',  ! Vertex {m}\n'  }, coords)
-    return join('', lines)
+  lines = map(λ xyz { '  ' + (xyz -> join(',')) + ',  ! Vertex {m}\n' }, coords)
+  return lines -> join('')
 }
 
 ! Min Fields: 18
 Wall:Detailed,
-  ,   ! Name
-  ,   ! Construction Name [ConstructionNames], REQ, #2
-  ,   ! Zone Name [ZoneNames], REQ, #3
-  ,   ! Outside Boundary Condition
-  ,   ! Outside Boundary Condition Object [OutFaceEnvNames], #5
-  SunExposed,   ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
-  WindExposed,   ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
-  autocalculate,   ! View Factor to Ground Def: autocalculate, AC, #8
-  autocalculate,   ! Number of Vertices Def: autocalculate, AC, #9
-<coords_2_idf(init(coords))>  <last(coords)>; ! Vertex <length(coords)> {m}
-
+  ,                           ! Name
+  ,                           ! Construction Name [ConstructionNames], REQ, #2
+  ,                           ! Zone Name [ZoneNames], REQ, #3
+  ,                           ! Outside Boundary Condition
+  ,                           ! Outside Boundary Condition Object [OutFaceEnvNames], #5
+  SunExposed,                 ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+  WindExposed,                ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+  autocalculate,              ! View Factor to Ground Def: autocalculate, AC, #8
+  autocalculate,              ! Number of Vertices Def: autocalculate, AC, #9
+  <coords_2_idf(init(coords))>  <last(coords)>;  ! Vertex <length(coords)> {m}

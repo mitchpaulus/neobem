@@ -314,9 +314,9 @@ A number of mathematical functions are built in.
 
 ## String Functions
 
-- `join(separator, list)`{.nbem}: Joins a list of strings together with a
+- `join(list, seperator)`{.nbem}: Joins a list of strings together with a
   separator string.
-    - Ex: `join(', ', ['a', 'b', 'c'])`{.nbem} results in `'a, b, c'`{.nbem}
+    - Ex: `join(['a', 'b', 'c'], ', ')`{.nbem} results in `'a, b, c'`{.nbem}
 
 ## Functions for Structures
 

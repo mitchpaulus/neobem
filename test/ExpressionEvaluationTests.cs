@@ -333,5 +333,23 @@ namespace test
              Assert.IsTrue(IdfObjectCompare.Equals("Version,2;Version,5;Version,6;", output));
         }
 
+        [Test]
+        public void JoinTest()
+        {
+             string test_filepath = Path.Combine(TestDir.Dir, "join_test.nbem");
+             string file = File.ReadAllText(test_filepath);
+
+             var visitor = new IdfPlusVisitor(TestDir.Dir);
+
+             var parser = file.ToParser();
+
+             var tree = parser.idf();
+
+             string output = visitor.Visit(tree);
+
+             Assert.IsTrue(IdfObjectCompare.Equals("Wall:Detailed,  ,  ,  ,  ,  ,  SunExposed,  WindExposed,  autocalculate,  autocalculate,  0, 1, 2,  3, 4, 5,  6, 7, 8,  9, 10, 11;", output));
+        }
+
+
     }
 }

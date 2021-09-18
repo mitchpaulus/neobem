@@ -116,17 +116,17 @@ namespace src
 
     public class StringJoinFunctionExpression : FunctionExpression
     {
-        public StringJoinFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> {"join_character", "list"})
+        public StringJoinFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> {"list", "join character"})
         {
         }
 
         public override (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             if (inputs.Count != 2) throw new ArgumentException( $"'join' expects a string join parameter and a list, saw {inputs.Count} parameters.");
-            if (!(inputs[0] is StringExpression joinExpression)) throw new ArgumentException( $"'join' expects a string as the first parameter.");
-            if (!(inputs[1] is ListExpression listExpression)) throw new ArgumentException( $"'join' expects a list as the second parameter.");
+            if (inputs[0] is not ListExpression listExpression) throw new ArgumentException( $"'join' expects a list as the first parameter. Received a {inputs[0].TypeName()}.");
+            if (inputs[1] is not StringExpression joinExpression) throw new ArgumentException( $"'join' expects a string as the second parameter. Received a {inputs[1].TypeName()}.");
 
-            var resultText = string.Join(joinExpression.Text, listExpression.Expressions.Select(expression => expression.AsString()));
+            string resultText = string.Join(joinExpression.Text, listExpression.Expressions.Select(expression => expression.AsString()));
             return ("", new StringExpression(resultText));
         }
     }

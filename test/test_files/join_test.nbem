@@ -6,7 +6,7 @@ coords = [
 ]
 
 coords_2_idf = λ coords {
-  lines = map(λ xyz { '  ' + (xyz -> join(',')) + ',  ! Vertex {m}\n' }, coords)
+  lines = map(coords, λ xyz { '  ' + (xyz -> join(',')) + ',  ! Vertex {m}\n' })
   return lines -> join('')
 }
 

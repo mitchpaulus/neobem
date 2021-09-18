@@ -13,4 +13,4 @@ template = λ record {
       < record.'Header 2' >;
 }
 
-print map(template, data)
+print map(data, template)

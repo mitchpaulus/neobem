@@ -17,4 +17,4 @@ Zone,
   Yes;               ! Part of Total Floor Area Def: Yes, [Yes, No], #13
 }
 
-print map(zone, data)
+print map(data, zone)

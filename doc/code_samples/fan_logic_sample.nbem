@@ -60,4 +60,4 @@ else
     variable_fan(fan.'name', fan.'cfm', fan.'press')
 }
 
-print map(which_fan, fans)
+print map(fans, which_fan)

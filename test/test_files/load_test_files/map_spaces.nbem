@@ -3,7 +3,7 @@ coordinate_template = λ cartesian_point { join(cartesian_point.'Coordinate', ',
 with_index = λ list start_index { if length(list) == 0 then [] else [ { 'value': head(list), 'index': start_index } ] + with_index(tail(list), start_index + 1) }
 
 polyloop_template = λ polyloop {
-    join(map(coordinate_template, polyloop.'CartesianPoint'), ',\n')
+    polyloop.'CartesianPoint' |= coordinate_template -> join(',\n')
 }
 
 space_template = λ space {
@@ -25,7 +25,7 @@ space_template = λ space {
     surfaces = space.'ShellGeometry'.'AnalyticalShell'.'ShellSurface'
 
     ! Total number of surfaces: <length(surfaces)>
-    print map(λ surface { surface_switch(surface, space.'Name'.'value') }, surfaces)
+    print map(surfaces, λ surface { surface_switch(surface, space.'Name'.'value') })
 }
 
 wall_template = λ shell_surface zone_name {
@@ -89,5 +89,5 @@ gbxml = load({ 'type': 'XML', 'path': 'gbxml.xml' })
 
 spaces = gbxml.'Campus'.'Building'.'Space'
 
-print map(space_template, spaces)
+print map(spaces, space_template)
 

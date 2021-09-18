@@ -60,7 +60,7 @@ namespace test
         [Test]
         public void TestMapFunction()
         {
-            string file = "list = ['9.1', '9.2']\nprint map(\\x {\nVersion,<x>;\n}\n, list) ";
+            string file = "list = ['9.1', '9.2']\nprint map(list, \\x {\nVersion,<x>;\n}\n) ";
 
             var visitor = new IdfPlusVisitor(null);
 

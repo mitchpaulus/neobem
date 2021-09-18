@@ -409,7 +409,7 @@ load_options = {
     'path': 'my_excel_data.xlsx'
 }
 
-print map(my_template, load(load_options))
+print map(load(load_options), my_template)
 ```
 
 ### Loading JSON
@@ -443,7 +443,7 @@ load_options = {
     'path': '../some folder/data.json'
 }
 
-print map(my_template, load(load_options))
+print map(load(load_options), my_template)
 ```
 
 ### Loading XML
@@ -522,15 +522,15 @@ Some tricky edge cases:
 Several functions are staples of functional programming languages.
 Neobem has a few of the most important ones.
 
-- `map(function, list)`{.nbem}: Returns a new list in which the `function` has
+- `map(list, function)`{.nbem}: Returns a new list in which the `function` has
   been applied to each element.
-    - EX: `map(\x { x + 2}, [1, 2, 3])`{.nbem} will equal `[3, 4, 5]`.
+    - EX: `map([1, 2, 3], \x { x + 2})`{.nbem} will equal `[3, 4, 5]`.
 
-- `filter(function, list)`{.nbem}: Returns a new list in which each
+- `filter(list, function)`{.nbem}: Returns a new list in which each
   element is passed to the function provided, and only the ones in which
   the function result is `true`{.nbem} are returned.
 
-    - EX: `filter(\x { x < 3 }, [1, 2, 3, 4])`{.nbem} will equal `[1, 2]`{.nbem}.
+    - EX: `filter([1, 2, 3, 4], \x { x < 3 })`{.nbem} will equal `[1, 2]`{.nbem}.
 
 ## Let Expressions
 

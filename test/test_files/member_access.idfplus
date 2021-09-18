@@ -7,5 +7,5 @@ version_temp = \ obj {
 Version,< obj.'ver' >;
 }
 
-print map(version_temp, versions)
+print map(versions, version_temp)
 # vim:ft=neobem

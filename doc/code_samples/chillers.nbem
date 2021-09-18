@@ -19,4 +19,4 @@ Chiller:ConstantCOP,
   1.0;                       ! Sizing Factor
 }
 
-print map(chiller, [1, 2, 3])
+print map([1, 2, 3], chiller)

@@ -9,7 +9,7 @@ coords = [
 ]
 
 all_coords = λ coords {
-  lines = map(λ list { to_coords(list, ✗) }, init(coords)) + map(λ list { to_coords(list, ✓) }, [last(coords)])
+  lines = map(init(coords), λ list { to_coords(list, false) } ) + map([last(coords)], λ list { to_coords(list, true) })
   return join(lines, '')
 }
 

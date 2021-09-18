@@ -24,4 +24,4 @@ Zone,
   Yes;                 ! Part of Total Floor Area
 }
 
-print map(zone_template, zones)
+print map(zones, zone_template)

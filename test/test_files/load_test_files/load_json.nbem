@@ -17,4 +17,4 @@ Zone,
   Yes;
 }
 
-print map(zone_template, zone_data.'zones')
+print map(zone_data.'zones', zone_template)

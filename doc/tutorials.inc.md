@@ -392,7 +392,7 @@ dive into that rabbit hole.
 The final statement is
 
 ```nbem
-print map(zone_template, zones)
+print map(zones, zone_template)
 ```
 
 This is the evaluation of the built in `map` function, with the function

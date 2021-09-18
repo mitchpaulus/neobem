@@ -322,7 +322,7 @@ namespace src
             try
             {
                 (text, expression) =
-                    filterFunctionExpression.Evaluate(new List<Expression>() { functionExpression, listExpression },
+                    filterFunctionExpression.Evaluate(new List<Expression>() { listExpression, functionExpression },
                         _baseDirectory);
             }
             catch (Exception exception)
@@ -358,7 +358,7 @@ namespace src
             try
             {
                 (text, expression) =
-                    mapFunctionExpression.Evaluate(new List<Expression>() { functionExpression, listExpression },
+                    mapFunctionExpression.Evaluate(new List<Expression>() { listExpression, functionExpression },
                         _baseDirectory);
             }
             catch (Exception exception)

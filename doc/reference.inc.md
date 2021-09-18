@@ -524,7 +524,7 @@ Neobem has a few of the most important ones.
 
 - `map(list, function)`{.nbem}: Returns a new list in which the `function` has
   been applied to each element.
-    - EX: `map([1, 2, 3], \x { x + 2})`{.nbem} will equal `[3, 4, 5]`.
+    - EX: `map([1, 2, 3], \x { x + 2})`{.nbem} will equal `[3, 4, 5]`{.nbem}.
 
 - `filter(list, function)`{.nbem}: Returns a new list in which each
   element is passed to the function provided, and only the ones in which

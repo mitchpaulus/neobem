@@ -11,21 +11,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
-## 0.5.0 - 2021-08-14
+## 0.5.0 - 2021-09-17
 
 ### Added
+
+- Added new dedicated operators for mapping, filtering, and piping. The
+  operators are `|=`, `|>`, and `->`.
 
 - Added new possible terminator for idf objects, `$`. This is important
   when building objects that can have arbitrary lengths, such as
   `Wall:Detailed`. There will likely be a different allowed character
   for aesthetic purposes in future version.
 
+- Added range syntax. Can quickly make lists with integers like `0..10`.
+
 - New log statement. Allows for simple debugging. Prints value of an
   expression to standard error.
+
+- Documentation is now available in HTML form. See it live at neobem.io.
+
+### Changed
+
+- **BREAKING**: The order of the parameters for the `map` and `filter`
+  function have swapped. Old programs will have to swap the order or
+  move to the more concise operators `|=` and `|>`.
+
+- **BREAKING**: The order of the parameters for the `join` function has
+  swapped. Old programs will also have to swap this.
 
 ### Fixed
 
 - Vast improvements to the formatter.
+- The documentation for the 'has' function was previously incorrect on
+  the order of the parameters.
+- Documentation that attempted to use a logarithm now uses the actual
+  logarithm function.
 
 ## 0.4.0 - 2021-07-22
 

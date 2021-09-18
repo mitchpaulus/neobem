@@ -14,7 +14,7 @@ See below for additional details on these steps.
 ### Download Program
 
 The latest release of Neobem is on GitHub, at
-[https://github.com/mitchpaulus/idfplus/releases](https://github.com/mitchpaulus/idfplus/releases).
+[https://github.com/mitchpaulus/neobem/releases](https://github.com/mitchpaulus/neobem/releases).
 There you will see 3 main assets:
 
 1. `neobem_win-x64_x.x.x.zip`

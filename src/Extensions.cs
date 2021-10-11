@@ -175,6 +175,24 @@ namespace src
         }
 
         public static string Pluralize(this int value) => value == 1 ? "" : "s";
+
+        public static string ToSigFigs(this double value, int sigFigs)
+        {
+            // Always have to handle 0 specially.
+            if (value == 0) return "0";
+            //   Original: 100  10  1  0.1
+            //     Log 10:   2   1  0   -1
+            // 4 sig figs:   1   2  3    4
+            int log = (int)Math.Floor(Math.Log10(Math.Abs(value)));
+            var digits = Math.Max(0, sigFigs - 1 - log);
+
+            // Not exactly *true* significant figures, if the value is an integer, that's fine.
+            var rounded = Math.Round(value, digits);
+
+            // Don't want to deal with large numbers getting put into scientific notation on accident.
+            // The 'G' format will take care of trailing zeros for numbers with decimals.
+            return rounded.ToString(digits == 0 ? "F0" : $"G{sigFigs}");
+        }
     }
 
     public class SplitIdfLine

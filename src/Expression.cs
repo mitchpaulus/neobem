@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -311,8 +312,8 @@ namespace src
 
     public class NumericExpression : Expression
     {
-        public double Value;
-        public string Text;
+        public readonly double Value;
+        public readonly string Text;
 
         public NumericExpression(double value, string text)
         {
@@ -323,12 +324,12 @@ namespace src
         public NumericExpression(double value)
         {
             Value = value;
-            Text = value.ToString();
+            Text = value.ToSigFigs(4);
         }
 
         public override string ToString() => Text;
-        public override string AsString() => Value.ToString();
-        public override string AsErrorString() => AsString();
+        public override string AsString() => Value.ToSigFigs(4);
+        public override string AsErrorString() => Value.ToString(CultureInfo.InvariantCulture);
 
         public override string TypeName() => "numeric";
     }

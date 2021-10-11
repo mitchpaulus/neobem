@@ -26,7 +26,7 @@ namespace test
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
-            Assert.IsTrue(IdfObjectCompare.Equals("Site:Location,Boston MA, 42.213, -71.033,0.0,0.0;", output));
+            Assert.IsTrue(IdfObjectCompare.Equals("Site:Location,Boston MA, 42.21, -71.03,0.0,0.0;", output));
         }
 
         [Test]

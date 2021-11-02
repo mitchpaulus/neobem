@@ -1,3 +1,27 @@
+# Takes a list and turns it into new list of structures,
+# with original items, and an index.
+with_index = λ list index {
+  return if length(list) == 0
+         then []
+         else [
+    {
+      'item': head(list),
+      'index': index,
+    },
+  ] + with_index(tail(list), (index + 1))
+}
+
+shift = λ list {
+    if length(list) < 2 then list
+    else tail(list) + head(list)
+}
+
+zip = λ a b func {
+    if length(a) == 0 or length(b) == 0 then []
+    else func(a, b) + zip(tail(a), tail(b), func)
+}
+
+
 # wall_builder
 # Input: Structure with:
 # 'Type': structure with 'Boundary Condition', 'Sun', 'Wind' options
@@ -14,19 +38,19 @@ wall_builder = λ wall {
   # Based on the GlobalGeometryRules object, start in upper left hand corner
   coords = [to_meter_coords(wall.'X1', wall.'Y1', wall.'Height'), to_meter_coords(wall.'X1', wall.'Y1', 0), to_meter_coords(wall.'X2', wall.'Y2', 0), to_meter_coords(wall.'X2', wall.'Y2', wall.'Height')]
 
-  construction = wall_options.type.'Construction'
+  construction = type.'Construction'
 
   Wall:Detailed,
     < wall.'Name' >,          ! Name RefList: [SurfaceNames, SurfAndSubSurfNames, AllHeatTranSurfNames, OutFaceEnvNames, AllHeatTranAngFacNames, RadiantSurfaceNames, AllShadingAndHTSurfNames], REQ, #1
     < construction >,         ! Construction Name [ConstructionNames], REQ, #2
     <wall.'Zone'>,            ! Zone Name [ZoneNames], REQ, #3
-    < wall_options.type.'Boundary Condition' >,  ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Foundation, Ground, GroundFCfactorMethod, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
+    < type.'Boundary Condition' >,  ! Outside Boundary Condition [Adiabatic, Surface, Zone, Outdoors, Foundation, Ground, GroundFCfactorMethod, OtherSideCoefficients, OtherSideConditionsModel, GroundSlabPreprocessorAverage, GroundSlabPreprocessorCore, GroundSlabPreprocessorPerimeter, GroundBasementPreprocessorAverageWall, GroundBasementPreprocessorAverageFloor, GroundBasementPreprocessorUpperWall, GroundBasementPreprocessorLowerWall], REQ, #4
     ,                         ! Outside Boundary Condition Object [OutFaceEnvNames], #5
-    < wall_options.type.'Sun' >,  ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
-    < wall_options.type.'Wind' >,  ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
+    < type.'Sun' >,  ! Sun Exposure Def: SunExposed, [SunExposed, NoSun], #6
+    < type.'Wind' >,  ! Wind Exposure Def: WindExposed, [WindExposed, NoWind], #7
     autocalculate,            ! View Factor to Ground Def: autocalculate, AC, #8
     autocalculate,            ! Number of Vertices Def: autocalculate, AC, #9
     <coords>;
 }
 
-export (wall_builder)
+export (wall_builder, with_index, shift, zip)

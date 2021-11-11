@@ -20,7 +20,7 @@ I didn't continue with this name since it was not unique, and searching
 for 'bemp' online comes up with the ASHRAE certification items along
 with other acronyms.
 
-So it's current name is Neobem. It's partially an ode to
+So its current name is Neobem. It's partially an ode to
 [Neovim](https://neovim.io), the text editor that I will do most raw
 editing of idf files and now these input files. Plus, throwing 'Neo' in
 front of nouns makes things cooler, right? Searching the internet for

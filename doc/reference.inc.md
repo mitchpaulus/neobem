@@ -532,6 +532,12 @@ Neobem has a few of the most important ones.
 
     - EX: `filter([1, 2, 3, 4], \x { x < 3 })`{.nbem} will equal `[1, 2]`{.nbem}.
 
+## Other Functions
+
+- `type(anything)`{.nbem}: Returns a string representing the type of the
+  input parameter. Possibilities include: `'function'`{.nbem}, `'string'`{.nbem},
+  `'list'`{.nbem}, `'numeric'`{.nbem}, `'structure'`{.nbem}, and `'boolean'`{.nbem}.
+
 ## Let Expressions
 
 Oftentimes, it is useful to be able to name a sub-calculation as part of
@@ -692,4 +698,18 @@ INCLUDE code_samples/reference_controlling_what_gets_imported.nbem
 `const_schedule` will be available for use from the script that has
 imported this file.
 
+## Debugging
+
+Currently, debugging is somewhat crude. As of now, there is no step by
+step debugger. What is available is a special keyword `log`. It can be
+invoked similarly to the `print` statement.
+
+```neobem
+log expression
+```
+
+What the log statement does is evaluate the entire expression, and then
+prints a detailed representation of the expression to the *standard
+error* output stream. This allows for the debug information to normally
+be printed to the terminal, without ruining the final compiled idf file.
 

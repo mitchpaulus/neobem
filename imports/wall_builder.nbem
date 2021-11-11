@@ -53,4 +53,4 @@ wall_builder = λ wall {
     <coords>;
 }
 
-export (wall_builder, with_index, shift, zip)
+export (wall_builder with_index shift zip)

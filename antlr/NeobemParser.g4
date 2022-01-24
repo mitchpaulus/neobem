@@ -22,6 +22,7 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | BOOLEAN_LITERAL_TRUE                       # BooleanLiteralTrueExp
              | BOOLEAN_LITERAL_FALSE                      # BooleanLiteralFalseExp
              | IDENTIFIER                                 # VariableExp
+             | BCL_ID UUID                                # BclExp
              | list                                       # ListExp
              | if_exp                                     # IfExp
              | idfplus_object                             # ObjExp

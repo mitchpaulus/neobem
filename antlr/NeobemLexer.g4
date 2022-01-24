@@ -65,6 +65,16 @@ STRUCT_SEP : ':' ;
 
 COMMA : ',' ;
 
+BCL_ID : 'bcl:' ;
+fragment HEX_CHAR : [0-9a-fA-F] ;
+
+UUID : HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR
+       HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR '-'
+       HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR '-'
+       HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR '-'
+       HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR '-'
+       HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR HEX_CHAR ;
+
 // 3 or more
 //  - underscores,
 //  - 'Box Drawings Light Horizontal' (U+2500),

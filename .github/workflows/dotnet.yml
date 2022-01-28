@@ -13,7 +13,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Setup Java
       uses: actions/setup-java@v2
       with:
@@ -41,6 +41,6 @@ jobs:
       run: dotnet test test --no-build --verbosity normal
     - name: Test documentation code samples
       run: |
-        PATH=~/work/neobem/neobem/src/bin/Debug/net5.0:"$PATH"
+        PATH=~/work/neobem/neobem/src/bin/Debug/net6.0:"$PATH"
         ./do doc/code_samples/test
 

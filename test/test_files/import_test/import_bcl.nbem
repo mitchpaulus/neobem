@@ -1,0 +1,6 @@
+bcl = bcl:908accf0-5ea7-0130-b19d-14109fdf0b37
+
+! <bcl.'description'>
+! <bcl.'modeler_description'>
+! <bcl.'org'>
+import bcl.'idf'

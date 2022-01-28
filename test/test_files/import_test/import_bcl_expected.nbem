@@ -1,0 +1,68 @@
+! Constructions based on building codes and standards. 2144 Mtl/ClrMpr-Std-ClrSue
+! null
+! BuildingComponentLibrary
+Version,
+  7.1.0;                      ! Version Identifier
+
+
+! Type: Window:fixed
+! Description: 2144 Mtl/ClrMpr-Std-ClrSue
+! Glazing Facade: East
+! Glazing Facade: South
+! Glazing Facade: West
+! Glazing Facade: North
+! Glazing Range Min: 0
+! Glazing Range Max: 1
+! Effective U-Value (SI): 3.237
+! SHGC: 0.35
+! VLT: 0.37
+! Layer 1: Theoretical Glass [408]
+WindowMaterial:Glazing,
+  Theoretical Glass [408],    !- Name
+  SpectralAverage,            !-
+  ,                           !-
+  0.003,                      !- Thickness
+  0.342898,                   !- Solar Transmittance
+  0.607102,                   !- Solar Reflectance Front
+  0.607102,                   !- Solar Reflectance Back
+  0.370537,                   !- Visible Transmittance
+  0.579463,                   !- Visible Reflectance Front
+  0.579463,                   !- Visible Reflectance Back
+  0,                          !- IR Transmittance
+  0.9,                        !- IR Emmissivity Front
+  0.9,                        !- IR Emmissivity Back
+  0.0198691;                  !- Conductivity
+
+
+Construction,
+  90.1 Windows Window Fixed 2144 Mtl-ClrMpr-Std-ClrSue,  !- Name
+  Theoretical Glass [408];    !- Layer 1
+
+
+! CostSource: 
+! InstallCost {$/m2}: 0.000
+! MaterialCost {$/m2}: 0.000
+! AnnualOM {$/m2}: 0.000
+! MinorOM {$/m2}: 0.000
+! MinorOMInt {years}: 1
+! MajorOM {$/m2}: 0
+! MajorOMInt {years}: 1
+! ExpectedLife {years}: 0
+! ResidualValue {$/m2}: 0.000
+ComponentCost:LineItem,
+  90.1 Windows Window Fixed 2144 Mtl-ClrMpr-Std-ClrSue,  !- Name
+  ,                           !- Type
+  Construction,               !- Line Item Type
+  90.1 Windows Window Fixed 2144 Mtl-ClrMpr-Std-ClrSue,  !- Item Name
+  ,                           !- Object End Use Key
+  ,                           !- Cost per Each {$}
+  0.000,                      !- Cost per Area {$/m2}
+  ,                           !- Cost per Unit of Output Capacity {$/kW}
+  ,                           !- Cost per Unit of Output Capacity per COP {$/kW}
+  ,                           !- Cost per Volume {$/m3}
+  ,                           !- Cost per Volume Rate {$/(m3/s)}
+  ,                           !- Cost per Energy per Temperature Difference {$/(W/K)}
+  ;                           !- Quantity
+
+
+

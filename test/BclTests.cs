@@ -21,5 +21,34 @@ namespace test
             var response = bcl.GetByUUID(uuid);
             Console.Write(response);
         }
+
+        [Test]
+        public void TestBclParsing()
+        {
+            string uuid = "908accf0-5ea7-0130-b19d-14109fdf0b37";
+            Bcl bcl = new Bcl();
+            var response = bcl.GetByUUID(uuid);
+
+            var structure = bcl.ParseUUIDResponse(response);
+
+            Console.WriteLine(structure.AsErrorString());
+        }
+
+        [Test]
+        public void TestBclFile()
+        {
+            string file = File.ReadAllText(Path.Combine(TestDir.Dir, "import_test", "import_bcl.nbem" ));
+            var visitor = new IdfPlusVisitor(TestDir.Dir);
+
+            var parser = file.ToParser();
+
+            var tree = parser.idf();
+
+            string output = visitor.Visit(tree);
+
+            string expected = File.ReadAllText(Path.Combine(TestDir.Dir, "import_test", "import_bcl_expected.nbem"));
+
+            Assert.IsTrue(IdfObjectCompare.Equals(expected, output));
+        }
     }
 }

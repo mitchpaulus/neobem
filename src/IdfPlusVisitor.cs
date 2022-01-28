@@ -97,13 +97,15 @@ namespace src
             }
             else
             {
-                throw new Exception(
-                    $"The import statement expects a string expression, received a {uriExpression.TypeName()}");
+                throw new Exception($"The import statement expects a string expression, received a {uriExpression.TypeName()}");
             }
 
             string contents;
             IdfPlusVisitor visitor;
-            if (filePath.Contains("http"))
+
+            // Set the contents and the visitor based on the type of URI.
+            // Right now we support http{s} or files.
+            if (filePath.StartsWith("http"))
             {
                 // See: https://stackoverflow.com/a/943875/5932184
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(filePath);
@@ -135,10 +137,10 @@ namespace src
                 visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
             }
 
-            var options = context.import_option();
+            NeobemParser.Import_optionContext[] options = context.import_option();
 
             string prefix = "";
-            List<string> onlyOptions = new List<string>();
+            List<string> onlyOptions = new();
 
             // An import statement can have n number of options appended after it. This loop is
             // parsing those options in order. Can be an "as" option, "only" option, or "not" option.
@@ -157,10 +159,9 @@ namespace src
             NeobemParser parser = contents.ToParser();
             NeobemParser.IdfContext tree = parser.idf();
 
-
             string  outputResult = visitor.VisitIdf(tree);
 
-            foreach (var item in visitor.exports)
+            foreach (string item in visitor.exports)
             {
                 if (!onlyOptions.Any() || onlyOptions.Contains(item))
                 {

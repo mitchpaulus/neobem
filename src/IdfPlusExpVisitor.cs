@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Antlr4.Runtime.Atn;
 
 namespace src
@@ -113,6 +116,27 @@ namespace src
             string numericText = context.GetText();
             double value = double.Parse(numericText);
             return new NumericExpression(value, numericText);
+        }
+
+        public override Expression VisitBclExp(NeobemParser.BclExpContext context)
+        {
+            Bcl bcl = new();
+            string uuid = context.UUID().GetText();
+            string jsonResponse = bcl.GetByUUID(uuid);
+
+            return bcl.ParseUUIDResponse(jsonResponse);
+
+            using JsonDocument jsonObject = JsonDocument.Parse(jsonResponse);
+
+            if (!jsonObject.RootElement.TryGetProperty("total_results", out JsonElement totalResultsElement))
+            {
+                throw new HttpRequestException("The response for the BCL component was not expected.");
+            }
+
+            JsonElement result = jsonObject.RootElement.GetProperty("result").EnumerateArray().First()
+                .GetProperty("component");
+
+            return base.VisitBclExp(context);
         }
 
         public override Expression VisitStringExp(NeobemParser.StringExpContext context) =>

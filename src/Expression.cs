@@ -211,8 +211,8 @@ namespace src
             Text = StringEscape.Escape(text);
         }
 
-        public override string ToString() => Text;
-        public override string AsString() => Text;
+        public override string ToString() => Text ?? "";
+        public override string AsString() => Text ?? "";
         public override string AsErrorString() => $"'{Text}'";
 
         public override string TypeName() => "string";

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.IO.Compression;
+using System.Text.Json;
 
 namespace src
 {
@@ -49,6 +50,47 @@ namespace src
 
             string allContents = reader.ReadToEnd();
             return allContents;
+        }
+
+
+        public Expression ParseUUIDResponse(string uuidResponse)
+        {
+            using JsonDocument jsonObject = JsonDocument.Parse(uuidResponse);
+
+            if (!jsonObject.RootElement.TryGetProperty("total_results", out JsonElement totalResultsElement))
+            {
+                throw new HttpRequestException("The response for the BCL component was not expected.");
+            }
+
+            JsonElement result = jsonObject.RootElement.GetProperty("result").EnumerateArray().First().GetProperty("component");
+
+            BclComponentJson bclComponent = result.Deserialize<BclComponentJson>();
+
+            JsonDataLoader loader = new();
+
+            // See https://bcl.nrel.gov/static/assets/json/component_schema.json for documented component schema
+            IdfPlusObjectExpression structure = (IdfPlusObjectExpression)loader.Load(result.GetRawText());
+
+            foreach (Attribute property in bclComponent.Attributes.Attribute)
+            {
+                Expression propertyExpression = property.Datatype switch
+                {
+                    "string" => new StringExpression(property.Value),
+                    "float" => new NumericExpression(double.Parse(property.Value)),
+                    // Couldn't find actual documentation is to what boolean like attribute would show up as.
+                    "boolean" or "bool" => new BooleanExpression(bool.Parse(property.Value)),
+                    _ => throw new NotImplementedException($"The BCL datatype {property.Datatype} has not been implemented.")
+                };
+
+                structure.Members[property.Name] = propertyExpression;
+            }
+
+            foreach (BclFile file in bclComponent.Files.File)
+            {
+                if (file.Filetype == "idf") structure.Members["idf"] = new StringExpression(file.Url);
+            }
+
+            return structure;
         }
     }
 }

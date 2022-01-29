@@ -67,5 +67,16 @@ namespace test
 
              Assert.IsTrue(IdfObjectCompare.Equals(expected, output));
         }
+
+        [Test]
+        public void TestVersionRemoval()
+        {
+            string test = "! A comment\nVersion,\n  9.4; ! another comment\n\nOtherObject,stuff;\n";
+            string removedVersion = Bcl.RemoveVersion(test);
+
+            string expected = "! A comment\n\nOtherObject,stuff;\n";
+
+            Assert.AreEqual(expected, removedVersion);
+        }
     }
 }

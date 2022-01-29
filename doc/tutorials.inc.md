@@ -517,4 +517,165 @@ To note here:
   The `as` option will put whatever string is specified as a prefix to
   all exports from the file, with an `@` sign between.
 
+## Tutorial 6: Using the Building Component Library
 
+The [Building Component Library](https://bcl.nrel.gov/) (BCL) is a library of "components" and "measures" to be used in energy models.
+It is hosted by NREL in conjunction with other National Laboratories from the United States.
+The data is hosted in GitHub repositories, searchable through a straightforward API.
+
+Components contain the raw data for building up an energy model. Straight from the BCL,
+here is how they are described:
+
+> The BCL contains components which are the building blocks of an energy model.
+> They can represent physical characteristics of the building such as roofs,
+> walls, and windows, or can refer to related operational information such as occupancy and equipment schedules and weather information.
+> Each component is identified through a set of attributes that are specific to its type,
+> as well as other metadata such as provenance information and associated files.
+
+As the BCL is currently the de facto standard hosting entity for this type of information, it seemed pragmatic to dedicate
+*Neobem programming language syntax* to it.
+
+### Using BCL Attributes
+
+For example, let's imagine we are trying to model the loads in our zone, and we have a Mr. Coffee coffee maker.
+Using the BCL, we search for components with the tag `Appliance.Coffee Maker`.
+
+I see the component exists, and I download it to check it out.
+
+![BCL search results for coffee makers](img/bcl_search.png){width=80%}
+
+If I download that component, it will be a compressed zip file with a single directory and a file called `component.xml`.
+The `xml` file contains our data to be used in the energy model.
+
+Here's the contents of the `component.xml` file for our coffee maker:
+
+```xml
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="component.xsd">
+ <schema_version/>
+ <name>Mr. Coffee -VBX20</name>
+ <uid>b87b9630-c2c7-012f-13bc-00ff10b04504</uid>
+ <version_id>664faf5e-a91b-4b06-bc73-0c79c39c9afb</version_id>
+ <xml_checksum/>
+ <display_name/>
+ <description/>
+ <modeler_description/>
+ <source>
+  <manufacturer>Mr. Coffee</manufacturer>
+  <model>VBX20</model>
+  <serial_no/>
+  <year>2012</year>
+  <url>http://www.mrcoffee.com/Manuals/MANUALS/VBX20_43_65900646.PDF </url>
+ </source>
+ <tags>
+  <tag>Appliance.Coffee Maker</tag>
+ </tags>
+ <attributes>
+  <attribute>
+   <name>Peak Power</name>
+   <value>830.0</value>
+   <datatype>float</datatype>
+  </attribute>
+ </attributes>
+</component>
+```
+
+Notice there are lots of fields and data available. We have a description of the manufacturer, URL reference, and a peak power consumption of 830 W.
+
+Also notice that every component in the BCL has a [*universally unique identifier (UUID)*](https://en.wikipedia.org/wiki/Universally_unique_identifier),
+a 128 bit id that as you might expect, *uniquely identifies it*.
+
+So we want to inject this data into our energy model. We can do that using the UUID.
+
+Let's make an `ElectricEquipment` object to represent the heat gain from the coffee maker.
+
+```neobem
+INCLUDE code_samples/coffee_maker.nbem
+```
+
+The idf output from this is:
+
+```neobem
+INCLUDE code_samples/coffee_maker.output.idf
+```
+
+The line
+
+```neobem
+coffee_maker = bcl:b87b9630-c2c7-012f-13bc-00ff10b04504
+```
+
+sets the variable `coffee_maker` to a structure representing that component.
+It will match the schema found in the XML file.
+It also lifts all the `attributes` to the root of the structure.
+That's why the `<coffee_maker.'Peak Power'>`{.neobem} expression works.
+Otherwise you'd have to something extremely verbose to extract out the attribute, something like:
+
+```neobem
+wattage = (coffee_maker.'attributes'.'attribute'
+            |> λ attr { attr.'name' == 'Peak Power' }
+            -> index(0)).'value'
+```
+
+and nobody wants to do stuff like that.
+
+
+### Using BCL Files
+
+For some components, idf objects will already be defined in an attached idf file.
+This is quite useful, as we can then simply import that file.
+
+For example, let's look at the component with the UUID `2e613270-5ea8-0130-c85b-14109fdf0b37`,
+a non residential swinging door meeting ASHRAE Standard 90.1-2007 requirements for climate zone 1A.
+
+If you download that component you'll see the `component.xml` file as before, but now there is a directory called `files`.
+
+The contents looks like:
+
+![Door component contents](img/bcl_component_directory_structure.png){width=80%}
+
+There are files for OpenStudio (`.osc` and `.osm`) and EnergyPlus (`.idf`).
+
+When the component is loaded as a structure in Neobem, it will populate the URL to these files.
+
+This makes including the file straightforward. An example would look like this:
+
+```neobem
+INCLUDE code_samples/include_door.nbem
+```
+
+Remember that the `import`{.neobem} statement in Neobem is simple and explicit.
+You give it a string URI, and Neobem downloads it as a Neobem file, executes it, and includes any idf output in the final result.
+
+The expression `bcl:2e613270-5ea8-0130-c85b-14109fdf0b37` is a structure.
+We are then getting the value for the key `idf`.
+That key is a long string with the with the value of a URL (Breaking it up onto several lines so as to not ruin the documentation layout).
+
+```neobem
+'https://bcl.nrel.gov/api/file?' +
+'path=BuildingComponentLibrary-nrel-components/' +
+'v0.3/90.1-2007 Nonres 1A Door Swinging/files/' +
+'90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf'
+```
+
+You can try out that endpoint directly in your browser by clicking the link
+[here](https://bcl.nrel.gov/api/file?path=BuildingComponentLibrary-nrel-components/v0.3/90.1-2007 Nonres 1A Door Swinging/files/90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf).
+
+You could have manually put this URL in the `import`{.neobem} statement like:
+
+```neobem
+import 'https://bcl.nrel.gov/api/file?' +
+       'path=BuildingComponentLibrary-nrel-components/' +
+       'v0.3/90.1-2007 Nonres 1A Door Swinging/files/' +
+       '90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf'
+```
+
+but using the UUID and the '`idf`' key expresses the intent more clearly and with fewer characters.
+
+This will download the associated idf file, which has the contents:
+
+```idf
+INCLUDE code_samples/include_door.output.idf
+```
+
+<!-- Force break between sections -->

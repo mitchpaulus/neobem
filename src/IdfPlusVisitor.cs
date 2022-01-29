@@ -191,7 +191,9 @@ namespace src
         {
             IdfPlusExpVisitor expressionVisitor = new(_environments, _baseDirectory);
             Expression resultExpression = expressionVisitor.Visit(context.expression());
-            Console.Error.Write(resultExpression.AsString());
+            string stringResult = resultExpression.AsString();
+            if (stringResult.Any() && stringResult.Last() != '\n') stringResult = stringResult + '\n';
+            Console.Error.Write(stringResult);
             return "";
         }
     }

@@ -1,6 +1,11 @@
-bcl = bcl:908accf0-5ea7-0130-b19d-14109fdf0b37
+window = bcl:908accf0-5ea7-0130-b19d-14109fdf0b37
 
-! <bcl.'description'>
-! <bcl.'modeler_description'>
-! <bcl.'org'>
-import bcl.'idf'
+! <window.'description'>
+! <window.'modeler_description'>
+! <window.'org'>
+
+# Make sure the attributes are lifted to the root of the structure.
+Version,
+  <window.'SHGC'>;
+
+import window.'idf'

@@ -47,11 +47,11 @@ nav, h1, h2, h3, h4, h5, h6  {
 
 pre { font-size: 16px }
 
-.header-1 { list-style-type: none; }
+.header-1 { list-style-type: none; font-size: 16px; border-bottom: 1px solid #CCC }
 .header-2 { margin-left: 10px; list-style-type: none;}
 .header-3 { margin-left: 20px; list-style-type: none;}
 
-.header-1:hover { margin-left: 2; color: blue; transition: color 0.5s ease; }
+.header-1:hover { margin-left: 2px; color: blue; transition: color 0.5s ease; }
 .header-2:hover { margin-left: 12px; color: blue; transition: color 0.5s ease;}
 .header-3:hover { margin-left: 22px; color: blue; transition: color 0.5s ease; }
 

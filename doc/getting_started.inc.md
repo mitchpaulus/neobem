@@ -4,8 +4,8 @@
 
 ### Quick Instructions
 
-1. Download program files.
-2. Add folder location containing program files to `PATH` environment
+1. Download program file from [GitHub](https://github.com/mitchpaulus/neobem/releases).
+2. Add directory location containing program file to `PATH` environment
    variable or symlink the executable `nbem` to a location in `PATH`.
 3. Execute `nbem` in shell or command interpreter.
 
@@ -15,18 +15,26 @@ See below for additional details on these steps.
 
 The latest release of Neobem is on GitHub, at
 [https://github.com/mitchpaulus/neobem/releases](https://github.com/mitchpaulus/neobem/releases).
-There you will see 3 main assets:
+There you will see zips containing a compiled executable for various operating systems and CPU architectures.
 
-1. `neobem_win-x64_x.x.x.zip`
-2. `neobem_linux-x64_x.x.x.zip`
-3. `neobem_osx-x64_x.x.x.zip`
+1. linux-arm64.zip
+2. linux-arm.zip
+3. linux-musl-x64.zip
+4. linux-x64.zip
+5. osx-x64.zip
+6. win-arm64.zip
+7. win-arm.zip
+8. win-x64.zip
+9. win-x86.zip
 
-Download the zip file that matches your operating system.[^WSL]
+Download the zip file that matches your operating system and architecture.[^WSL]
+For most people, this will be `win-x64`, `linux-x64`, or `osx-x64`.
 
 [^WSL]: If you are running the Windows Subsystem for Linux within Windows, I would
         recommend the Linux version, and installing like a Linux program
 
-Extract that zip file to a location that you will want the program to
+The zip file will contain a single self contained executable.
+Extract that file from the zip file to a location that you will want the program to
 live. It doesn't really matter where you put it, but recommended places
 would be:
 

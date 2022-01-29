@@ -1,0 +1,15 @@
+ElectricEquipment,
+  Mr. Coffee VBX20,           ! Name
+  Kitchen,                    ! Zone or ZoneList or Space or SpaceList Name
+  Coffee Maker Schedule,      ! Schedule Name
+  EquipmentLevel,             ! Design Level Calculation Method
+  830,                        ! Design Level {W}
+  ,                           ! Watts per Zone Floor Area {W/m2}
+  ,                           ! Watts per Person {W/person}
+  0,                          ! Fraction Latent
+  0,                          ! Fraction Radiant
+  0,                          ! Fraction Lost
+  General;                    ! End-Use Subcategory
+
+
+

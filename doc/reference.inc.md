@@ -136,7 +136,7 @@ others are there for consistency, but the usage should be rare.
     - If using `'+'` operator with a string and a numeric, the
       numeric is coerced to a string, and then the two strings are
       concatenated. So `'Chiller ' + 1`{.nbem} (notice no quotes
-      around the number 1) becomes the string `'Chiller 1'` as you
+      around the number 1) becomes the string `'Chiller 1'`{.nbem} as you
       would expect.
 - List concatenation for list types
     - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`

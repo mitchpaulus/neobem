@@ -678,4 +678,9 @@ This will download the associated idf file, which has the contents:
 INCLUDE code_samples/include_door.output.idf
 ```
 
+**Note**: In some of the idf files provided in the BCL, a '`Version`' object is supplied.
+If multiple idf files were included, you would run into an EnergyPlus error for providing multiple
+'`Version`' objects. Because of this, Neobem will automatically remove any '`Version`' objects from the
+downloaded idf file.
+
 <!-- Force break between sections -->

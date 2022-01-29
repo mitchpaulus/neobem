@@ -29,6 +29,8 @@ namespace src
 
         public override string VisitFunctionIdfComment(NeobemParser.FunctionIdfCommentContext context) => context.GetText();
 
+        public override string VisitBclExp(NeobemParser.BclExpContext context) => context.GetText();
+
         public override string VisitIdfplus_object(NeobemParser.Idfplus_objectContext context)
         {
             // Handle the empty structure

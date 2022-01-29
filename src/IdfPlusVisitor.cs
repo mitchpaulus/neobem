@@ -111,8 +111,17 @@ namespace src
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(filePath);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 Stream resStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(resStream);
+                StreamReader reader = new(resStream);
                 contents = reader.ReadToEnd();
+
+                // Many of the idf files in the BCL include a 'Version' object. This causes issues when
+                // more than a single import occurs. So we have this hardcoded check to remove that
+                // in the case it appears that we are loading an idf file from the BCL.
+                if (filePath.StartsWith("https://bcl.nrel.gov/api/file") && filePath.ToLower().EndsWith(".idf"))
+                {
+                    contents = Bcl.RemoveVersion(contents);
+                }
+
                 // When reading from a web URI, the concept of a base directory doesn't apply.
                 visitor = new IdfPlusVisitor(null);
             }

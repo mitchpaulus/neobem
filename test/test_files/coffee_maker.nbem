@@ -1,0 +1,14 @@
+coffee_maker = bcl:b87b9630-c2c7-012f-13bc-00ff10b04504
+
+ElectricEquipment,
+  <coffee_maker.'source'.'manufacturer'> <coffee_maker.'source'.'model'>,  ! Name
+  Kitchen,                    ! Zone or ZoneList or Space or SpaceList Name
+  Coffee Maker Schedule,      ! Schedule Name
+  EquipmentLevel,             ! Design Level Calculation Method
+  <coffee_maker.'Peak Power'>,  ! Design Level {W}
+  ,                           ! Watts per Zone Floor Area {W/m2}
+  ,                           ! Watts per Person {W/person}
+  0,                          ! Fraction Latent
+  0,                          ! Fraction Radiant
+  0,                          ! Fraction Lost
+  General;                    ! End-Use Subcategory

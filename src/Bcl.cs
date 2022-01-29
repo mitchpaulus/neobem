@@ -85,9 +85,12 @@ namespace src
                 structure.Members[property.Name] = propertyExpression;
             }
 
-            foreach (BclFile file in bclComponent.Files.File)
+            if (bclComponent.Files?.File != null)
             {
-                if (file.Filetype == "idf") structure.Members["idf"] = new StringExpression(file.Url);
+                foreach (BclFile file in bclComponent.Files.File)
+                {
+                    structure.Members[file.Filetype] = new StringExpression(file.Url);
+                }
             }
 
             return structure;

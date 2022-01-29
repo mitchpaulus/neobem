@@ -120,23 +120,19 @@ namespace src
 
         public override Expression VisitBclExp(NeobemParser.BclExpContext context)
         {
-            Bcl bcl = new();
-            string uuid = context.UUID().GetText();
-            string jsonResponse = bcl.GetByUUID(uuid);
-
-            return bcl.ParseUUIDResponse(jsonResponse);
-
-            using JsonDocument jsonObject = JsonDocument.Parse(jsonResponse);
-
-            if (!jsonObject.RootElement.TryGetProperty("total_results", out JsonElement totalResultsElement))
+            // There are lots of things that could go wrong here, catch em.
+            try
             {
-                throw new HttpRequestException("The response for the BCL component was not expected.");
+                Bcl bcl = new();
+                string uuid = context.UUID().GetText();
+                string jsonResponse = bcl.GetByUUID(uuid);
+                Expression expression = bcl.ParseUUIDResponse(jsonResponse);
+                return expression;
             }
-
-            JsonElement result = jsonObject.RootElement.GetProperty("result").EnumerateArray().First()
-                .GetProperty("component");
-
-            return base.VisitBclExp(context);
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: There was an issue parsing the BCL expression: '{context.GetText()}'");
+            }
         }
 
         public override Expression VisitStringExp(NeobemParser.StringExpContext context) =>

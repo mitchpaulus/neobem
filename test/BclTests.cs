@@ -50,5 +50,22 @@ namespace test
 
             Assert.IsTrue(IdfObjectCompare.Equals(expected, output));
         }
+
+
+        [Test]
+
+        public void TestCoffeeMaker()
+        {
+            // This test will check that a component without files defined works. Also double checks the example in the doc.
+             string file = File.ReadAllText(Path.Combine(TestDir.Dir, "coffee_maker.nbem"));
+             var visitor = new IdfPlusVisitor(TestDir.Dir);
+             var parser = file.ToParser();
+             var tree = parser.idf();
+             string output = visitor.Visit(tree);
+
+             string expected = File.ReadAllText(Path.Combine(TestDir.Dir,  "coffee_maker_expected.idf"));
+
+             Assert.IsTrue(IdfObjectCompare.Equals(expected, output));
+        }
     }
 }

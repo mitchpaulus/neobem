@@ -5,7 +5,7 @@ BEGIN { in_code = 0}
    else in_code = 1
 }
 
-/^#+/ && in_code == 0 { 
+/^#+/ && in_code == 0 {
 
 
     match_index = match($0, /^#+/)
@@ -18,9 +18,13 @@ BEGIN { in_code = 0}
     header_text = substr($0, RSTART + RLENGTH + 1)
 
     id_text = tolower(header_text)
-    gsub(/[^a-zA-Z0-9 ]/, "", id_text)
+    # https://pandoc.org/MANUAL.html#extension-auto_identifiers
+    gsub(/`.*`/, "", id_text)
+    gsub(/[^a-zA-Z0-9 _.-]/, "", id_text)
+    gsub(/ +$/, "", id_text)
     gsub(/ +/, "-", id_text)
+    gsub(/^[^a-zA-Z]+/, "", id_text)
 
-    printf "<li class=\"header-%s\"><a href=\"#%s\">%s</a></li>\n", header_depth, id_text, header_text
+    printf "<li class=\"header-%s\"><a class=\"header-link\" href=\"#%s\">%s</a></li>\n", header_depth, id_text, header_text
 
 }

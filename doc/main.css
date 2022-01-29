@@ -1,5 +1,5 @@
-code { 
- font-family: Menlo,Monaco,Consolas,"Courier New",monospace; 
+code {
+ font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
  font-size: 16px;
  line-height: 1;
 }
@@ -13,10 +13,28 @@ code {
     font-style: italic;
 }
 
-nav ul { font-size: 14px }
+nav ul {
+    font-size: 14px;
+    padding-left: 5px;
+}
 
-nav, h1, h2, h3, h4, h5, h6  { 
+nav li {
+    cursor: pointer;
+}
+
+nav a {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    display: block;
+}
+
+nav, h1, h2, h3, h4, h5, h6  {
     font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.header-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .st { color: darkred; }
@@ -29,17 +47,22 @@ nav, h1, h2, h3, h4, h5, h6  {
 
 pre { font-size: 16px }
 
-.header-2 { padding-left: 10px;list-style-type: none;}
-.header-3 { padding-left: 20px;list-style-type: none;}
+.header-1 { list-style-type: none; }
+.header-2 { margin-left: 10px; list-style-type: none;}
+.header-3 { margin-left: 20px; list-style-type: none;}
 
-div.sourceCode { 
+.header-1:hover { margin-left: 2; color: blue; transition: color 0.5s ease; }
+.header-2:hover { margin-left: 12px; color: blue; transition: color 0.5s ease;}
+.header-3:hover { margin-left: 22px; color: blue; transition: color 0.5s ease; }
+
+div.sourceCode {
     border-left-style: solid;
     border-left-color: #d1d2d2;
     padding-left: 10px;
 }
 
-body { 
+body {
   margin: 0;
-  font-family: Georgia, serif; 
+  font-family: Georgia, serif;
   color: #333;
 }

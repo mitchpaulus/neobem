@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.6.1 - 2022-02-13
+
+### Changed
+
+- References to 'structure' for associative arrays has been replaced with 'dictionary'.
+
 ## 0.6.0 - 2022-01-29
 
 ### Added

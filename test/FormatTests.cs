@@ -42,10 +42,10 @@ namespace test
         public void MultiLineIf() => AssertMatch("multi_line_if");
 
         [Test]
-        public void Structure() => AssertMatch("structure");
+        public void Dictionary() => AssertMatch("dictionary");
 
         [Test]
-        public void ListOfStructures() => AssertMatch("list_of_structures");
+        public void ListOfDictionaries() => AssertMatch("list_of_dictionaries");
 
         [Test]
         public void ListOfLists() => AssertMatch("list_of_lists");

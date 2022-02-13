@@ -1,15 +1,9 @@
-mystruct = {
-    'substruct1': {
-        'substruct2': {
-            'value': 9.3
-        }
-    }
-}
+mydict = { 'subdict1': { 'subdict2': { 'value': 9.3 } } }
 
-mystruct = mystruct + { 'substruct1': { 'new_id':  9.4 } }
-mystruct = mystruct + { 'substruct1': { 'this_should_be_made': {'new_id2': 9.5 }}}
+mydict = mydict + { 'subdict1': { 'new_id': 9.4 } }
+mydict = mydict + { 'subdict1': { 'this_should_be_made': { 'new_id2': 9.5 } } }
 
 Version,
-< mystruct.'substruct1'.'new_id' >,
-< mystruct.'substruct1'.'substruct2'.'value' >,
-< mystruct.'substruct1'.'this_should_be_made'.'new_id2' >;
+  < mydict.'subdict1'.'new_id' >,
+  < mydict.'subdict1'.'subdict2'.'value' >,
+  < mydict.'subdict1'.'this_should_be_made'.'new_id2' >;

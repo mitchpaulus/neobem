@@ -4,7 +4,7 @@ window = bcl:908accf0-5ea7-0130-b19d-14109fdf0b37
 ! <window.'modeler_description'>
 ! <window.'org'>
 
-# Make sure the attributes are lifted to the root of the structure.
+# Make sure the attributes are lifted to the root of the dictionary.
 Version,
   <window.'SHGC'>;
 

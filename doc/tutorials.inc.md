@@ -206,7 +206,7 @@ statement would be:
 INCLUDE code_samples/hard_computation.nbem
 ```
 
-## Tutorial 3: Utilizing Tabular Data, Structures, and Lists
+## Tutorial 3: Utilizing Tabular Data, Dictionaries, and Lists
 
 The goal with a domain specific language like this is to reduce the
 amount of syntax required to express our intent. At the extreme, the
@@ -241,7 +241,7 @@ ________________________________________
 
 shows an *inline data table expression*. It looks like a pretty table,
 but it is actually an expression that evaluates to a *list* of
-*structures*. The borders can be made with hyphens `'-'` and pipe
+*dictionaries*. The borders can be made with hyphens `'-'` and pipe
 characters `'|'`
 
 A list expression is what you would expect. It's a list of expressions.
@@ -261,7 +261,7 @@ list. The example has 2 numeric expressions, a string expression, a
 numeric expression that is the result of function application, and a
 function expression.
 
-A *structure* is a way to group expressions into a single identifier.
+A *dictionary* is a way to group expressions into a single identifier.
 This is the concept of an ["associative
 array"](https://en.wikipedia.org/wiki/Associative_array) implemented as
 a ["hash table"](https://en.wikipedia.org/wiki/Hash_table) with a string
@@ -270,20 +270,20 @@ Unfortunately for me, I cannot name this an "object" since the concept
 of an object is already taken by the "objects" in the resulting building
 energy simulation files we are trying to create.
 
-You define a structure like this:
+You define a dictionary like this:
 
 ```nbem
-INCLUDE code_samples/structure_example.nbem
+INCLUDE code_samples/dictionary_example.nbem
 ```
 
-You can access the contents of the structure using the member access
+You can access the contents of the dictionary using the member access
 operator, a period `.`, followed by the string key.
 
-So for our structure example:
+So for our dictionary example:
 
 ```nbem
-my_struct.'prop2' == 'Some text'
-my_struct.'prop_3'.'nested_struct_prop' == 'I am nested'
+my_dictionary.'prop2' == 'Some text'
+my_dictionary.'prop_3'.'nested_dictionary' == 'I am nested'
 ```
 
 Note the key used in the member access can be *any* string. For example,
@@ -291,12 +291,12 @@ you can use pretty much any Unicode characters you'd like. Using music
 notes is totally valid:
 
 ```neobem
-struct = {
+dictionary = {
     '♬': 9.4
 }
 
 Version,
-    < struct.'♬' >;
+    < dictionary.'♬' >;
 ```
 
 And the key doesn't have to be a *string literal*, it just has to
@@ -316,8 +316,8 @@ INCLUDE code_samples/wild_example.nbem
 
 That does evaluate to `Version,9.4;`{.nbem}, give it a try!
 
-Now that we know what a list and structure are, what is the result of
-that inline data table? It's a *list of structures*.
+Now that we know what a list and dictionary are, what is the result of
+that inline data table? It's a *list of dictionaries*.
 
 That means these are exactly the same.
 
@@ -352,8 +352,8 @@ zones = [
 
 Why would you use one version over another? I would generally prefer the
 inline data table for situations when you have data *that doesn't
-include nested structures*. If nested structures are required, then
-you'd have to use the normal structure syntax.
+include nested dictionaries*. If nested dictionaries are required, then
+you'd have to use the normal dictionary syntax.
 
 That covers the first variable declaration of our example file.
 
@@ -380,8 +380,8 @@ Zone,
 ```
 
 is a normal function with an object declaration. The only unique thing
-about it is that the input parameter is expected to be a structure that
-has 3 properties: `name`, `x_origin`, and `y_origin`.
+about it is that the input parameter is expected to be a dictionary that
+has 3 keys: `name`, `x_origin`, and `y_origin`.
 
 Did you also notice that lambda (`λ`) character in the function
 definition? It's allowed instead of the boring `\` character if you'd
@@ -396,7 +396,7 @@ print map(zones, zone_template)
 ```
 
 This is the evaluation of the built in `map` function, with the function
-`zone_template` and list of structures `zones` as inputs.
+`zone_template` and list of dictionaries `zones` as inputs.
 
 The `map` function is a extremely important function in functional
 programming languages. It allows you to "map" or evaluate a function
@@ -605,9 +605,9 @@ The line
 coffee_maker = bcl:b87b9630-c2c7-012f-13bc-00ff10b04504
 ```
 
-sets the variable `coffee_maker` to a structure representing that component.
+sets the variable `coffee_maker` to a dictionary representing that component.
 It will match the schema found in the XML file.
-It also lifts all the `attributes` to the root of the structure.
+It also lifts all the `attributes` to the root of the dictionary.
 That's why the `<coffee_maker.'Peak Power'>`{.neobem} expression works.
 Otherwise you'd have to something extremely verbose to extract out the attribute, something like:
 
@@ -636,7 +636,7 @@ The contents looks like:
 
 There are files for OpenStudio (`.osc` and `.osm`) and EnergyPlus (`.idf`).
 
-When the component is loaded as a structure in Neobem, it will populate the URL to these files.
+When the component is loaded as a dictionary in Neobem, it will populate the URL to these files.
 
 This makes including the file straightforward. An example would look like this:
 
@@ -647,7 +647,7 @@ INCLUDE code_samples/include_door.nbem
 Remember that the `import`{.neobem} statement in Neobem is simple and explicit.
 You give it a string URI, and Neobem downloads it as a Neobem file, executes it, and includes any idf output in the final result.
 
-The expression `bcl:2e613270-5ea8-0130-c85b-14109fdf0b37` is a structure.
+The expression `bcl:2e613270-5ea8-0130-c85b-14109fdf0b37` is a dictionary.
 We are then getting the value for the key `idf`.
 That key is a long string with the with the value of a URL (Breaking it up onto several lines so as to not ruin the documentation layout).
 

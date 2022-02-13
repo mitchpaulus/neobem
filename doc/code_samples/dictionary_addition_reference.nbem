@@ -1,0 +1,15 @@
+original_dictionary = {
+  'key': 'value',
+  'second key': 10,
+}
+
+updated_dictionary = original_dictionary + {
+  'other key': 'passed along',
+  'second key': 20,
+}
+
+# This isn't a valid Version object, but go along with it.
+Version,
+  <updated_dictionary.'key'>,
+  <updated_dictionary.'second key'>,
+  <updated_dictionary.'other key'>;

@@ -70,7 +70,7 @@ public class Bcl
         JsonDataLoader loader = new();
 
         // See https://bcl.nrel.gov/static/assets/json/component_schema.json for documented component schema
-        IdfPlusObjectExpression structure = (IdfPlusObjectExpression)loader.Load(result.GetRawText());
+        IdfPlusObjectExpression dictionary = (IdfPlusObjectExpression)loader.Load(result.GetRawText());
 
         foreach (Attribute property in bclComponent.Attributes.Attribute)
         {
@@ -83,18 +83,18 @@ public class Bcl
                 _ => throw new NotImplementedException($"The BCL datatype {property.Datatype} has not been implemented.")
             };
 
-            structure.Members[property.Name] = propertyExpression;
+            dictionary.Members[property.Name] = propertyExpression;
         }
 
         if (bclComponent.Files?.File != null)
         {
             foreach (BclFile file in bclComponent.Files.File)
             {
-                structure.Members[file.Filetype] = new StringExpression(file.Url);
+                dictionary.Members[file.Filetype] = new StringExpression(file.Url);
             }
         }
 
-        return structure;
+        return dictionary;
     }
 
     public static string RemoveVersion(string idfContents)

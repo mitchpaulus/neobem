@@ -29,9 +29,9 @@ namespace test
             Bcl bcl = new Bcl();
             var response = bcl.GetByUUID(uuid);
 
-            var structure = bcl.ParseUUIDResponse(response);
+            var bclDict = bcl.ParseUUIDResponse(response);
 
-            Console.WriteLine(structure.AsErrorString());
+            Console.WriteLine(bclDict.AsErrorString());
         }
 
         [Test]

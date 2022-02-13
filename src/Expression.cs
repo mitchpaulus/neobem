@@ -344,9 +344,9 @@ namespace src
             return '{' + string.Join(", ", Members.Select(ErrorMemberString)) + '}';
         }
 
-        public IdfPlusObjectExpression Add(IdfPlusObjectExpression right) => StructureAdd.Add(this, right);
+        public IdfPlusObjectExpression Add(IdfPlusObjectExpression right) => DictionaryAdd.Add(this, right);
 
-        public override string TypeName() => "structure";
+        public override string TypeName() => "dictionary";
 
         private string ErrorMemberString(KeyValuePair<string, Expression> keyValuePair)
         {
@@ -354,29 +354,29 @@ namespace src
         }
     }
 
-    public static class StructureAdd
+    public static class DictionaryAdd
     {
         public static IdfPlusObjectExpression Add(IdfPlusObjectExpression left, IdfPlusObjectExpression right)
         {
-            IdfPlusObjectExpression newStructure = new IdfPlusObjectExpression();
+            IdfPlusObjectExpression newDictionary = new IdfPlusObjectExpression();
 
             foreach (var member in left.Members.Keys)
             {
                 if (!right.Members.ContainsKey(member))
                 {
-                    newStructure.Members[member] = left.Members[member];
+                    newDictionary.Members[member] = left.Members[member];
                 }
                 else
                 {
                     if (left.Members[member] is IdfPlusObjectExpression subLeftExpression &&
                         right.Members[member] is IdfPlusObjectExpression subRightExpression)
                     {
-                        newStructure.Members[member] = Add(subLeftExpression, subRightExpression);
+                        newDictionary.Members[member] = Add(subLeftExpression, subRightExpression);
                     }
                     else
                     {
                         // If both items have the same key, the right side overrides.
-                        newStructure.Members[member] = right.Members[member];
+                        newDictionary.Members[member] = right.Members[member];
                     }
                 }
             }
@@ -385,11 +385,11 @@ namespace src
             {
                 if (!left.Members.ContainsKey(member))
                 {
-                    newStructure.Members[member] = right.Members[member];
+                    newDictionary.Members[member] = right.Members[member];
                 }
             }
 
-            return newStructure;
+            return newDictionary;
         }
     }
 

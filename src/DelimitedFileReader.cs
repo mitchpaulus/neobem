@@ -34,7 +34,7 @@ namespace src
             // TODO: Potentially add warning capability?
             if (lines.Count == 0) return new ListExpression(new List<Expression>());
 
-            // Generally use header line verbatim. Otherwise use 0-based index as structure members.
+            // Generally use header line verbatim. Otherwise use 0-based index as dictionary members.
             List<string> headers;
             if (hasHeaderLine)
             {

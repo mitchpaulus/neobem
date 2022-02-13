@@ -11,7 +11,12 @@ exec >&2
 # file (which lists additional dependencies)
 #redo-ifchange "$2.tex" "$2.deps"
 redo-ifchange "$2.tex"
-redo-ifchange "../kde-syntax/neobem.xml"
+
+redo-ifchange neobem_syntax_kde.txt
+
+# Read first line of neobem_syntax_kde.txt to variable
+SYNTAX_HIGHLIGHT_FILE=$(head -n 1 neobem_syntax_kde.txt)
+redo-ifchange "$SYNTAX_HIGHLIGHT_FILE"
 
 awk '/input{/' doc.tex | \
 awk 'BEGIN { FS="{|}" } { print $2 ".tex" }' | \

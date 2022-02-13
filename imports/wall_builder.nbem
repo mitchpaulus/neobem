@@ -1,4 +1,4 @@
-# Takes a list and turns it into new list of structures,
+# Takes a list and turns it into new list of dictionaries
 # with original items, and an index.
 with_index = λ list index {
   return if length(list) == 0
@@ -23,8 +23,8 @@ zip = λ a b func {
 
 
 # wall_builder
-# Input: Structure with:
-# 'Type': structure with 'Boundary Condition', 'Sun', 'Wind' options
+# Input: Dictionary with:
+# 'Type': Dictionary with 'Boundary Condition', 'Sun', 'Wind' options
 # 'X1', 'Y1', 'X2', 'Y2', 'Height',
 # 'Name'
 # 'Zone'

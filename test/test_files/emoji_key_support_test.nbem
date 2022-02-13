@@ -1,8 +1,8 @@
-struct = {
+dict = {
     '😐': 'Neutral Face'
 }
 
 
 Version,
-    < struct.'😐' >;
+    < dict.'😐' >;
 

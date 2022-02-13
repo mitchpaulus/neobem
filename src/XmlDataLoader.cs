@@ -13,19 +13,19 @@ namespace src
 
             // The assumption is that the XML data has a single root element.
             var firstElement = document.ChildElements().First();
-            var structure = ParseXmlNode(firstElement);
-            return structure;
+            var dictionary = ParseXmlNode(firstElement);
+            return dictionary;
         }
 
         private IdfPlusObjectExpression ParseXmlNode(XmlElement node)
         {
-            IdfPlusObjectExpression structure = new IdfPlusObjectExpression();
+            IdfPlusObjectExpression dictionary = new IdfPlusObjectExpression();
             var attributes = node.AttributeList();
 
             foreach (var attribute in attributes)
             {
                 Expression parsedExpression = Expression.Parse(attribute.Value);
-                structure.Members[attribute.Name] = parsedExpression;
+                dictionary.Members[attribute.Name] = parsedExpression;
             }
 
             var groupedChildren = node.ChildElements().GroupBy(elem => elem.Name);
@@ -34,18 +34,18 @@ namespace src
             {
                 if (elemGroup.Count() == 1)
                 {
-                    structure.Members[elemGroup.Key] = ParseXmlNode(elemGroup.First());
+                    dictionary.Members[elemGroup.Key] = ParseXmlNode(elemGroup.First());
                 }
                 else
                 {
                     var expressions = elemGroup.Select(ParseXmlNode).Cast<Expression>().ToList();
-                    structure.Members[elemGroup.Key] = new ListExpression(expressions);
+                    dictionary.Members[elemGroup.Key] = new ListExpression(expressions);
                 }
             }
 
-            structure.Members["value"] = Expression.Parse(node.ElementValue());
+            dictionary.Members["value"] = Expression.Parse(node.ElementValue());
 
-            return structure;
+            return dictionary;
         }
     }
     public static class XmlExtensions

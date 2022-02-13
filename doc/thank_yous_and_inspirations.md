@@ -22,6 +22,6 @@ many good ideas from languages before me. Some inspirations include:
   [Python](https://www.python.org/). I think that they are clearer than
   the usual `&&` and `||` and only require one extra character. I also
   prefer the snake case convention for identifiers.
-- The structure grammar matches closely to that of [JSON](https://www.json.org/json-en.html).
+- The dictionary grammar matches closely to that of [JSON](https://www.json.org/json-en.html).
 
 

@@ -37,7 +37,7 @@ There are 3 higher order expression types.
 
 1. List expressions
 2. Function expressions
-3. Structure expressions
+3. Dictionary expressions
 
 ### Strings
 
@@ -112,8 +112,8 @@ The representation of each is as follows:
 - *Function Expression*: Nothing, the empty string `''`. This should
   rarely be used.
 
-- *Structure Expression*: Returns the string representation of each
-  expression for each member of the structure, separated by a comma.
+- *Dictionary Expression*: Returns the string representation of each
+  expression for each member of the dictionary, separated by a comma.
   Note that there is currently no way to specify the order here, unlike
   the list expression, so this is rarely something that you would want
   to do.
@@ -140,21 +140,21 @@ others are there for consistency, but the usage should be rare.
       would expect.
 - List concatenation for list types
     - `[1, 2, 3] + [4, 5]` equals `[1, 2, 3, 4, 5]`
-- Structures - concatenate/update
-    - When two structures are used with the `+` operator, the keys from
-      both structures are combined into a new structure. If both
-      structures have the same key, then the value from the *second*
-      structure is used. This is how structures can be "updated" or
+- Dictionaries - concatenate/update
+    - When two dictionaries are used with the `+` operator, the keys from
+      both dictionaries are combined into a new dictionary. If both
+      dictionaries have the same key, then the value from the *second*
+      dictionary is used. This is how dictionaries can be "updated" or
       modified. An example is shown below.
 
 ```neobem
-INCLUDE code_samples/structure_addition_reference.nbem
+INCLUDE code_samples/dictionary_addition_reference.nbem
 ```
 
 Compiling the above code results in:
 
 ```neobem
-INCLUDE code_samples/structure_addition_reference.output.idf
+INCLUDE code_samples/dictionary_addition_reference.output.idf
 ```
 
 
@@ -318,31 +318,31 @@ A number of mathematical functions are built in.
   separator string.
     - Ex: `join(['a', 'b', 'c'], ', ')`{.nbem} results in `'a, b, c'`{.nbem}
 
-## Functions for Structures
+## Functions for Dictionaries
 
-- `keys(structure)`{.nbem}: Returns a list of strings that are the keys
-  to the structure.
-- `has(structure, key)`{.nbem}: Returns a boolean representing whether
-  the given structure has the string key as a member.
+- `keys(dictionary)`{.nbem}: Returns a list of strings that are the keys
+  to the dictionary.
+- `has(dictionary, key)`{.nbem}: Returns a boolean representing whether
+  the given dictionary has the string key as a member.
 
 ## Loading Data
 
-- `load(expression)`{.nbem}: Load data from a file to a list of structures.
+- `load(expression)`{.nbem}: Load data from a file to a list of dictionaries.
 
   The single input parameter can either be a string expression or
-  structure.
+  dictionary.
 
   If the input parameter is a string, it is a relative file path
   location. `..` represents the parent folder.
 
-  If a structure is passed as the parameter, the members are used as
+  If a dictionary is passed as the parameter, the members are used as
   options.
 
 
 ### Loading Delimited Text Data
 
 The most straightforward file type to load is the delimited text file.
-To load, pass a structure with the following options:
+To load, pass a dictionary with the following options:
 
 1. `type`: This must be set to `'text'`{.nbem}.
 2. `path`: Required. A string that is the relative path to the text file.
@@ -384,7 +384,7 @@ data = [
 
 ### Loading from Excel
 
-To load data from Excel, you can use a structure with the following options.
+To load data from Excel, you can use a dictionary with the following options.
 
 1. `type`: This must be set to `'Excel'`{.nbem}.
 2. `path`: Required. A string that is the relative path to the Excel file.
@@ -414,7 +414,7 @@ print map(load(load_options), my_template)
 
 ### Loading JSON
 
-To load JSON formatted data, you can use a structure with the following
+To load JSON formatted data, you can use a dictionary with the following
 options.
 
 1. `type`: Required. This must be set to `'JSON'`{.nbem}.
@@ -427,7 +427,7 @@ contents `'null'`{.nbem}.
 
 JSON values | Neobem types
 ------------|-------------
-object      | Structure
+object      | Dictionary
 array       | List
 string      | String
 number      | Number
@@ -448,7 +448,7 @@ print map(load(load_options), my_template)
 
 ### Loading XML
 
-In a similar manner to JSON, you can load XML passing in a structure
+In a similar manner to JSON, you can load XML passing in a dictionary
 with the following properties.
 
 1. `type`: Required. This must be set to `'XML'`{.nbem}.
@@ -494,14 +494,14 @@ root = {
 
 The basics are that
 
-1. A structure is returned.
+1. A dictionary is returned.
 2. Each child element is made as a property
 3. If there are more than one of the same child element, the value for
-   that property is a list of structures.
+   that property is a list of dictionaries.
 4. Each element has a `'value'`{.nbem} property, which holds the text inside of
    a given element.
 5. Booleans and numeric values are attempted to be parsed for all
-   structure values, with a string type as the fall back.
+   dictionary values, with a string type as the fall back.
 
 Some tricky edge cases:
 
@@ -536,7 +536,7 @@ Neobem has a few of the most important ones.
 
 - `type(anything)`{.nbem}: Returns a string representing the type of the
   input parameter. Possibilities include: `'function'`{.nbem}, `'string'`{.nbem},
-  `'list'`{.nbem}, `'numeric'`{.nbem}, `'structure'`{.nbem}, and `'boolean'`{.nbem}.
+  `'list'`{.nbem}, `'numeric'`{.nbem}, `'dictionary'`{.nbem}, and `'boolean'`{.nbem}.
 
 ## Let Expressions
 

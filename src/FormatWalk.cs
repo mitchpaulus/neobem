@@ -33,10 +33,10 @@ namespace src
 
         public override string VisitIdfplus_object(NeobemParser.Idfplus_objectContext context)
         {
-            // Handle the empty structure
+            // Handle the empty dictionary case
             if (!context.idfplus_object_property_def().Any()) return $"{context.LCURLY().GetText()} {context.RCURLY().GetText()}";
 
-            // Handle the single item structure
+            // Handle the single item dictionary
             if (context.idfplus_object_property_def().Length == 1)
             {
                 // Add two to the current position for the left curly brace plus a space.
@@ -44,11 +44,11 @@ namespace src
                 return $"{{ {singleLineVisitor.Visit(context.idfplus_object_property_def().Single())} }}";
             }
 
-            // Handle the n-item structure
+            // Handle the n-item dictionary
             FormatVisitor subVisitor = new(_currentIndentLevel + 1, (_currentIndentLevel + 1) * _indentSpacing, _tokens);
-            List<string> formattedStructs = context.idfplus_object_property_def().Select(def => subVisitor.IndentSpaces + subVisitor.Visit(def) + ",\n").ToList();
+            List<string> formattedDicts = context.idfplus_object_property_def().Select(def => subVisitor.IndentSpaces + subVisitor.Visit(def) + ",\n").ToList();
 
-            return $"{{\n{string.Join("", formattedStructs)}{IndentSpaces}}}";
+            return $"{{\n{string.Join("", formattedDicts)}{IndentSpaces}}}";
         }
 
         public override string VisitIdfplus_object_property_def(NeobemParser.Idfplus_object_property_defContext context)
@@ -657,7 +657,7 @@ namespace src
 
                 if (i != context.list().expression().Length - 1)
                 {
-                    // don't add space after comma if we know a newline is coming for next structure.
+                    // don't add space after comma if we know a newline is coming for next dictionary.
                     builder.Append(context.list().expression(i + 1) is NeobemParser.ObjExpContext || context.list().expression(i + 1) is NeobemParser.ListExpContext ? "," : ", ");
                 }
                 else

@@ -51,11 +51,11 @@ namespace test
         {
             XmlDataLoader loader = new();
             string xmlWithoutDeclaration = "<element attribute=\"attribute value\">inner value</element>";
-            var structure = loader.Load(xmlWithoutDeclaration);
+            var dictionary = loader.Load(xmlWithoutDeclaration);
 
-            Assert.AreEqual(2, structure.Members.Count);
-            Assert.AreEqual(new StringExpression("attribute value"), structure.Members["attribute"]);
-            Assert.AreEqual(new StringExpression("inner value"), structure.Members["value"]);
+            Assert.AreEqual(2, dictionary.Members.Count);
+            Assert.AreEqual(new StringExpression("attribute value"), dictionary.Members["attribute"]);
+            Assert.AreEqual(new StringExpression("inner value"), dictionary.Members["value"]);
         }
 
         [Test]
@@ -63,10 +63,10 @@ namespace test
         {
              XmlDataLoader loader = new();
              string xmlWithoutDeclaration = "<element>   inner  <br></br>  value   </element>";
-             var structure = loader.Load(xmlWithoutDeclaration);
+             var dictionary = loader.Load(xmlWithoutDeclaration);
 
-             Assert.AreEqual(2, structure.Members.Count);
-             Assert.AreEqual(new StringExpression("inner value"), structure.Members["value"]);
+             Assert.AreEqual(2, dictionary.Members.Count);
+             Assert.AreEqual(new StringExpression("inner value"), dictionary.Members["value"]);
         }
     }
 }

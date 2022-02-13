@@ -27,24 +27,24 @@ namespace src
             {
                 if (!objectExpression.Members.TryGetValue("type", out Expression typeExpression))
                 {
-                    throw new ArgumentException("'type' is a mandatory member of the structure for the load function.");
+                    throw new ArgumentException("'type' is a mandatory member of the dictionary for the load function.");
                 }
 
                 if (!objectExpression.Members.TryGetValue("path", out Expression pathExpression))
                 {
-                    throw new ArgumentException("'path' is a mandatory member of the structure for the load function.");
+                    throw new ArgumentException("'path' is a mandatory member of the dictionary for the load function.");
                 }
 
                 if (typeExpression is not StringExpression typeStringExpression)
                 {
                     throw new ArgumentException(
-                        $"The 'type' member of the structure passed to load is expected to evaluate to a string, found a {typeExpression.TypeName()} with value {typeExpression.AsErrorString()}");
+                        $"The 'type' member of the dictionary passed to load is expected to evaluate to a string, found a {typeExpression.TypeName()} with value {typeExpression.AsErrorString()}");
                 }
 
                 if (pathExpression is not StringExpression pathStringExpression)
                 {
                     throw new ArgumentException(
-                        $"The 'path' member of the structure passed to load is expected to evaluate to a string, found a {pathExpression.TypeName()} with value {pathExpression.AsErrorString()}");
+                        $"The 'path' member of the dictionary passed to load is expected to evaluate to a string, found a {pathExpression.TypeName()} with value {pathExpression.AsErrorString()}");
                 }
 
                 if (typeStringExpression.TextEqualsCaseIns("text"))
@@ -133,7 +133,7 @@ namespace src
                 }
             }
 
-            throw new ArgumentException($"load function expects string or structure - found {inputs[0].TypeName()}");
+            throw new ArgumentException($"load function expects string or dictionary - found {inputs[0].TypeName()}");
         }
 
         private static (string, Expression) EvaluateDelimitedFile(string fullPath, DelimitedFileReader reader, bool hasHeaderLine, int skipLines)

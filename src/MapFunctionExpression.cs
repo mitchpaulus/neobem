@@ -42,7 +42,7 @@ namespace src
 
     public class KeysFunctionExpression : FunctionExpression
     {
-        public KeysFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "structure" })
+        public KeysFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary" })
         {
         }
 
@@ -50,21 +50,21 @@ namespace src
         {
             if (inputs.Count != 1)
                 throw new ArgumentException(
-                    $"'keys' function expects one structure parameter, received {inputs.Count} parameters.");
+                    $"'keys' function expects one dictionary parameter, received {inputs.Count} parameters.");
 
-            if (!(inputs[0] is IdfPlusObjectExpression structure))
+            if (!(inputs[0] is IdfPlusObjectExpression dictionary))
             {
-                throw new ArgumentException($"The parameter to 'keys' is expected to be a structure, received a {inputs[0].TypeName()}");
+                throw new ArgumentException($"The parameter to 'keys' is expected to be a dictionary, received a {inputs[0].TypeName()}");
             }
 
-            ListExpression listExpression = new ListExpression(structure.Members.Keys.Select(s => new StringExpression(s)).Cast<Expression>().ToList());
+            ListExpression listExpression = new ListExpression(dictionary.Members.Keys.Select(s => new StringExpression(s)).Cast<Expression>().ToList());
             return ("",  listExpression);
         }
     }
 
     public class HasFunctionExpression : FunctionExpression
     {
-        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "structure", "key" })
+        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary", "key" })
         {
         }
 
@@ -72,11 +72,11 @@ namespace src
         {
             if (inputs.Count != 2)
                 throw new ArgumentException(
-                    $"'has' function expects 2 parameters, a structure parameter and string, received {inputs.Count} parameters.");
+                    $"'has' function expects 2 parameters, a dictionary parameter and string, received {inputs.Count} parameters.");
 
-            if (inputs[0] is not IdfPlusObjectExpression structure)
+            if (inputs[0] is not IdfPlusObjectExpression dictionary)
             {
-                throw new ArgumentException($"The first parameter to 'has' is expected to be a structure, received a {inputs[0].TypeName()}");
+                throw new ArgumentException($"The first parameter to 'has' is expected to be a dictionary, received a {inputs[0].TypeName()}");
             }
 
             if (inputs[1] is not StringExpression stringExpression)
@@ -84,7 +84,7 @@ namespace src
                 throw new ArgumentException($"The second parameter to 'has' is expected to be a string, received a {inputs[1].TypeName()}");
             }
 
-            bool hasMember = structure.Members.ContainsKey(stringExpression.Text);
+            bool hasMember = dictionary.Members.ContainsKey(stringExpression.Text);
             return ("",  new BooleanExpression(hasMember));
         }
     }

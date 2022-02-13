@@ -162,7 +162,7 @@ namespace src
                 else
                 {
                     throw new InvalidOperationException(
-                        $"Line {context.Start.Line}: '{memberName}' is not a member of the structure {context.expression(0).GetText()}. Possible members include:\n\n{string.Join("", objectExpression.Members.Keys.Select(s => $"'{s}'\n"))}");
+                        $"Line {context.Start.Line}: '{memberName}' is not a member of the dictionary {context.expression(0).GetText()}. Possible members include:\n\n{string.Join("", objectExpression.Members.Keys.Select(s => $"'{s}'\n"))}");
                 }
             }
             else
@@ -218,9 +218,9 @@ namespace src
             if (lhs is StringExpression lhsString && rhs is StringExpression rhsString && op == "+")
                 return new StringExpression(lhsString.Text + rhsString.Text);
 
-            // Merge/Update structures on '+' operation
-            if (lhs is IdfPlusObjectExpression lhsStructure && rhs is IdfPlusObjectExpression rhsStructure)
-                return lhsStructure.Add(rhsStructure);
+            // Merge/Update dictionary on '+' operation
+            if (lhs is IdfPlusObjectExpression lhsDictionary && rhs is IdfPlusObjectExpression rhsDictionary)
+                return lhsDictionary.Add(rhsDictionary);
 
             // If you have one string, one numeric, cast numeric to string and concatenate.
             if (lhs is StringExpression lhsString1 && rhs is NumericExpression rhsNumeric1 && op == "+")

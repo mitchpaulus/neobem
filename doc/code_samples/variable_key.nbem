@@ -1,7 +1,5 @@
 assigned = 'my key'
-struct = {
-    'my key': 10
-}
+dictionary = { 'my key': 10 }
 
 Version,
-  < struct.assigned >;
+  < dictionary.assigned >;

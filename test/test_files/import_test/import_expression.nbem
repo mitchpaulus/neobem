@@ -1,2 +1,2 @@
-a_structure = { 'a file reference': 'import1.nbem' }
-import a_structure.'a file reference'
+a_dictionary = { 'a file reference': 'import1.nbem' }
+import a_dictionary.'a file reference'

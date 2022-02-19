@@ -73,7 +73,7 @@ namespace test
         [Test]
         public void TestListConcatenation()
         {
-            string test = "$var1 = [2 3 4]\n$var2 = [5 6 7]\n$var3 = $var1 + $var2\nprint $var3\n";
+            string test = "var1 = [2, 3, 4]\nvar2 = [5, 6, 7]\nvar3 = var1 + var2\nprint var3\n";
             var parser = test.ToParser();
 
             var tree = parser.idf();
@@ -103,7 +103,7 @@ namespace test
         [Test]
         public void TestVariablePrinting()
         {
-            string file = "$myvariable = 12\nprint $myvariable / 6";
+            string file = "myvariable = 12\nprint myvariable / 6";
 
             AntlrInputStream inputStream = new AntlrInputStream(file);
             NeobemLexer lexer = new NeobemLexer(inputStream);

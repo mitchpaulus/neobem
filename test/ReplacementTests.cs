@@ -28,5 +28,21 @@ namespace test
 
         }
 
+        [Test]
+        public void TestOnlyReplacement()
+        {
+            // This test used to fail for index out of bounds exception
+            const string objectText = "<num>";
+            ObjectVariableReplacer replacer = new(TestDir.Dir);
+            List<Dictionary<string, Expression>> variables = new()
+            {
+                new Dictionary<string, Expression>
+                {
+                    { "num",  new StringExpression("1") }
+                }
+            };
+            string actual = replacer.Replace(objectText, variables);
+            Assert.AreEqual("1", actual);
+        }
     }
 }

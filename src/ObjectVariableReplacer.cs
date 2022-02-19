@@ -36,7 +36,7 @@ namespace src
                 }
                 else
                 {
-                    if (objectText[i] == endingChar && objectText[i + 1] != endingChar)
+                    if (objectText[i] == endingChar && ((i + 1) >= objectText.Length || objectText[i + 1] != endingChar))
                     {
                         if (leftCurlyBraceIndicies.TryPop(out int startIndex))
                         {

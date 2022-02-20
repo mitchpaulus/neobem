@@ -1,0 +1,40 @@
+INPUT ..
+
+TITLE        LINE-1 = *ONE-ZONE EXAMPLE FOR BASICS MANUAL* ..
+
+RUN-PERIOD   JAN 1 1974 THRU DEC 31 1974 ..
+
+ABORT        ERRORS ..
+DIAGNOSTIC   WARNINGS ..
+
+                 $ MILWAUKEE ALTITUDE
+SITE-PARAMETERS  ALTITUDE = 610 ..
+
+                 $-------------$
+                 $ LOADS input $
+                 $-------------$
+
+                 $ CONSTRUCTIONS, USING MATERIALS FROM LIBRARY:
+WA-1            =LAYERS       MATERIAL = ( "Wood Sft 3/4in (WD01)",
+                                           "Plywd 1/2in (PW03)",
+                                           "MinWool Batt R11 (IN02)",
+                                           "GypBd 1/2in (GP01)") ..
+
+WALL-1          =CONSTRUCTION TYPE = LAYERS
+                              LAYERS = WA-1 ..
+
+                $ Roof construction --
+                $ Gravel, built-up roofing, insulation, wood
+
+RF-1           =LAYERS        MATERIAL = ( "Gravel 1/2in (RG01)",
+                                           "Blt-Up Roof 3/8in (BR01)",
+                                           "MinBd 1in R-3.5 (IN22)",
+                                           "Wood Sft 3/4in (WD01)")
+                              INSIDE-FILM-RES = 0.76 ..
+
+ROOF-1 = CONSTRUCTION
+  TYPE = LAYERS
+  LAYERS = RF-1 ..
+
+  $ Slab-on-grade construction --
+  $ ficticious insulaiton layer, soil, concrete.

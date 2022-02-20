@@ -15,9 +15,9 @@ namespace test
         public void TestBasicTemplate()
         {
             string file = File.ReadAllText(Path.Combine(TestDir.Dir, "test_1.idfplus"));
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToIdfParser();
 
             var tree = parser.idf();
 
@@ -30,9 +30,9 @@ namespace test
         public void TestRecursiveFunction()
         {
             string file = "factorial = \\ n { if n == 0 then 1 else n * factorial(n - 1)  }\nVersion,< factorial(4) >;\n";
-            var visitor = new IdfPlusVisitor(null);
+            var visitor = new IdfPlusVisitor(null, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToIdfParser();
 
             var tree = parser.idf();
 
@@ -45,9 +45,9 @@ namespace test
         public void TestFileWithMathFunction()
         {
             string file = "myangle = ceiling(2.1)\nVersion,< myangle >;\n";
-            var visitor = new IdfPlusVisitor(null);
+            var visitor = new IdfPlusVisitor(null, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToIdfParser();
 
             var tree = parser.idf();
 
@@ -62,9 +62,9 @@ namespace test
         {
             string file = "list = ['9.1', '9.2']\nprint map(list, \\x {\nVersion,<x>;\n}\n) ";
 
-            var visitor = new IdfPlusVisitor(null);
+            var visitor = new IdfPlusVisitor(null, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToIdfParser();
 
             var tree = parser.idf();
 
@@ -78,9 +78,9 @@ namespace test
         public void TestMemberAccess()
         {
             var file = File.ReadAllText(Path.Combine(TestDir.Dir, "member_access.idfplus"));
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToParser(FileType.Idf);
 
             var tree = parser.idf();
 
@@ -93,8 +93,8 @@ namespace test
         public void TestNestedMemberAccess()
         {
             var file = File.ReadAllText(Path.Combine(TestDir.Dir, "nested_member_access.nbem"));
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -105,8 +105,8 @@ namespace test
         public void TestNestedMemberAddField()
         {
             var file = File.ReadAllText(Path.Combine(TestDir.Dir, "nested_member_access_add_field.nbem"));
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -119,8 +119,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "test_nested_list_replacement.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -132,8 +132,8 @@ namespace test
         {
              var filepath = Path.Combine(TestDir.Dir, "test_filter_function.nbem");
              var file = File.ReadAllText(filepath);
-             var visitor = new IdfPlusVisitor(TestDir.Dir);
-             var parser = file.ToParser();
+             var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+             var parser = file.ToParser(FileType.Idf);
              var tree = parser.idf();
              string output = visitor.Visit(tree);
 
@@ -146,8 +146,8 @@ namespace test
         {
               var filepath = Path.Combine(TestDir.Dir, "import_test/in2.nbem");
               var file = File.ReadAllText(filepath);
-              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"));
-              var parser = file.ToParser();
+              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"), FileType.Idf);
+              var parser = file.ToParser(FileType.Idf);
               var tree = parser.idf();
               string output = visitor.Visit(tree);
 
@@ -160,8 +160,8 @@ namespace test
         {
               var filepath = Path.Combine(TestDir.Dir, "import_test/import_expression.nbem");
               var file = File.ReadAllText(filepath);
-              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"));
-              var parser = file.ToParser();
+              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "import_test"), FileType.Idf);
+              var parser = file.ToParser(FileType.Idf);
               var tree = parser.idf();
               string output = visitor.Visit(tree);
 
@@ -174,8 +174,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "inline_data_table_test.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -198,7 +198,7 @@ namespace test
             parser.RemoveErrorListeners();
             parser.AddErrorListener(errorListener);
 
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
             var tree = parser.idf();
 
             Assert.AreEqual(0, errorListener.Errors.Count, "There should be no errors in lexing or parsing.");
@@ -212,8 +212,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "object_format_test.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -226,8 +226,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "emoji_key_support_test.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -240,8 +240,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "test_trailing_comma.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -254,8 +254,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "alternate_terminator.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 

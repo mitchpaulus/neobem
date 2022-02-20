@@ -38,8 +38,8 @@ Extract that file from the zip file to a location that you will want the program
 live. It doesn't really matter where you put it, but recommended places
 would be:
 
-- `C:\Program Files\neobem` on Windows
-- `/usr/local/neobem` or `~/.local/neobem` on Linux
+- `C:\Program Files\neobem\neobem.exe` on Windows
+- `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
 from a shell environment, that could be anything like[^Shells]:

@@ -5,7 +5,7 @@ namespace src
 {
     public class StringReplaceFunctionExpression : FunctionExpression
     {
-        public StringReplaceFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "originalString", "oldString", "newString" } )
+        public StringReplaceFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "originalString", "oldString", "newString" }, FileType.Any)
         {
         }
 

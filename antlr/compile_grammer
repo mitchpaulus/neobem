@@ -1,4 +1,4 @@
 #!/bin/sh
 
-java -jar /usr/local/lib/antlr-4.8-complete.jar NeobemLexer.g4
-java -jar /usr/local/lib/antlr-4.8-complete.jar -visitor NeobemParser.g4
+java -jar /usr/local/lib/antlr-4.8-complete.jar -o ../src/antlr/ NeobemLexer.g4
+java -jar /usr/local/lib/antlr-4.8-complete.jar -o ../src/antlr/ -visitor NeobemParser.g4

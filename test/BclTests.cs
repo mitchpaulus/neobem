@@ -38,9 +38,9 @@ namespace test
         public void TestBclFile()
         {
             string file = File.ReadAllText(Path.Combine(TestDir.Dir, "import_test", "import_bcl.nbem" ));
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
 
-            var parser = file.ToParser();
+            var parser = file.ToParser(FileType.Idf);
 
             var tree = parser.idf();
 
@@ -58,8 +58,8 @@ namespace test
         {
             // This test will check that a component without files defined works. Also double checks the example in the doc.
              string file = File.ReadAllText(Path.Combine(TestDir.Dir, "coffee_maker.nbem"));
-             var visitor = new IdfPlusVisitor(TestDir.Dir);
-             var parser = file.ToParser();
+             var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+             var parser = file.ToParser(FileType.Idf);
              var tree = parser.idf();
              string output = visitor.Visit(tree);
 

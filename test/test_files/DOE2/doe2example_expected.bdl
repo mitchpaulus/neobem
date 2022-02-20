@@ -1,0 +1,11 @@
+SYS-1 = SYSTEM ..
+
+"Zone 1" = ZONE
+  SPACE         = SPACE-1
+  DESIGN-HEAT-T = 68
+  DESIGN-COOL-T = 75 ..
+
+"Zone 2" = ZONE
+  SPACE         = SPACE-1
+  DESIGN-HEAT-T = 69
+  DESIGN-COOL-T = 72 ..

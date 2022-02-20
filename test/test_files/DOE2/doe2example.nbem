@@ -1,0 +1,18 @@
+zone_template = λ zone {
+  "<zone.'name'>" = ZONE
+  SPACE         = SPACE-1
+  DESIGN-HEAT-T = <zone.'heat'>
+  DESIGN-COOL-T = <zone.'cool'> ..
+}
+
+SYS-1 = SYSTEM ..
+
+zones =
+─────────┬────────┬───────
+'name'   │ 'heat' │ 'cool'
+─────────┼────────┼───────
+'Zone 1' │ 68     │ 75
+'Zone 2' │ 69     │ 72
+─────────┴────────┴───────
+
+print zones |= zone_template

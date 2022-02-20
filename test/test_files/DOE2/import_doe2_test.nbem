@@ -1,0 +1,7 @@
+import 'import_doe2_1.nbem'
+
+uvalue = 0.306
+
+LIGHT = CONSTRUCTION
+  TYPE = U-VALUE
+  U-VALUE = <uvalue> ..

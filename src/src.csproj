@@ -6,8 +6,6 @@
     <AssemblyName>nbem</AssemblyName>
     <Company>Mitchell T. Paulus</Company>
     <Product>neobem</Product>
-    <!-- https://docs.microsoft.com/en-us/dotnet/core/deploying/trimming/trim-self-contained#enable-trimming -->
-    <PublishTrimmed>true</PublishTrimmed>
     <!-- https://github.com/dotnet/designs/blob/main/accepted/2020/single-file/design.md -->
     <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>

@@ -6,7 +6,7 @@ namespace src
 {
     public class FilterFunctionExpression : FunctionExpression
     {
-        public FilterFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "list", "func" })
+        public FilterFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "list", "func" }, FileType.Any)
         {
 
         }

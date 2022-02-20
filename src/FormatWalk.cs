@@ -27,6 +27,8 @@ namespace src
 
         public override string VisitIdfComment(NeobemParser.IdfCommentContext context) => context.GetText();
 
+        public override string VisitDoe2Comment(NeobemParser.Doe2CommentContext context) => context.GetText();
+        public override string VisitDoe2object(NeobemParser.Doe2objectContext context) => context.GetText();
         public override string VisitFunctionIdfComment(NeobemParser.FunctionIdfCommentContext context) => context.GetText();
 
         public override string VisitBclExp(NeobemParser.BclExpContext context) => context.GetText();

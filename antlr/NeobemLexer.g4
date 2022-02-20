@@ -1,5 +1,6 @@
 lexer grammar NeobemLexer;
-
+@lexer::header  {using src;}
+@lexer::members {public FileType FileType = FileType.Idf;}
 options {
     language=CSharp;
 }
@@ -99,6 +100,8 @@ IDENTIFIER : [a-z][a-zA-Z0-9@_]* ;
 
 COMMENT :  '!' .*? '\r'?'\n' ;
 
+DOE2COMMENT : '$' .*? '\r'?'\n' ;
+
 NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> channel(1) ;
 
 NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? |
@@ -106,7 +109,10 @@ NUMERIC : '-'?(([1-9][0-9]*|'0')('.'[0-9]+)? |
 
 STRING : '\'' .*? '\'' ;
 
-OBJECT_TYPE : [A-Z][a-zA-Z0-9:]* -> pushMode(IDFOBJECT) ;
+OBJECT_TYPE : [A-Z][a-zA-Z0-9:]* { FileType == FileType.Idf }? -> pushMode(IDFOBJECT)  ;
+
+DOE2IDENTIFIER : [A-Z]([a-zA-Z0-9-] | '<' .*? '>')* { FileType == FileType.Doe2 }? -> pushMode(DOE2OBJECT)  ;
+DOE2STRING_UNAME : '"' .*? '"' -> pushMode(DOE2OBJECT) ;
 
 WS : [ \t\r\n]+ -> channel(2) ;
 
@@ -115,5 +121,17 @@ mode IDFOBJECT;
 FIELD : ~[,!;$\r\n]+ ;
 FIELD_SEP : ',' [ \t\r\n]* ;
 OBJECT_COMMENT : '!' .*? '\r'?'\n' ;
-OBJECT_TERMINATOR : (';' [ \t]* ('!' .*? '\r'?'\n')? | '$') -> popMode ;
+OBJECT_TERMINATOR : (';' [ \t]* ('!' .*? '\r'?'\n')? | '$' ) -> popMode ;
 OBJECT_WS : [ \t\r\n]+ -> skip ;
+
+mode DOE2OBJECT;
+
+// Technically, these separators are the same as blanks (see pg. 24 of DOE22 Volume 1 Basics)
+// But we'll want to keep them for output.
+DOE2_LIST_START : '(' ;
+DOE2_LIST_END : ')' ;
+DOE2_OBJECT_COMMENT : '$' .*? ('$' | '\r'?'\n') ;
+DOE2_STRING : '"' .*? '"' ;
+DOE2_TERMINATOR : '..' -> popMode ;
+DOE2_FIELD_SEP :  [ \t\r\n=,]+ ;
+DOE2_FIELD : (~[,= ()\t\r\n] | '<' .*? '>') + ;

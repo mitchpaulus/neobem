@@ -92,20 +92,24 @@ inline_table_data_row : expression (INLINE_TABLE_COL_SEP expression)* ;
 
 function_statement :  COMMENT   # FunctionIdfComment
                     | object    # FunctionObjectDeclaration
+                    | doe2object # FunctionDoe2ObjectDeclaration
                     | variable_declaration # FunctionVariableDeclaration
                     | print_statment # FunctionPrintStatement
                     | return_statement # ReturnStatement
                     | log_statement    # FunctionLogStatement
                     ;
 
-base_idf : COMMENT                # IdfComment
-           | object               # ObjectDeclaration
-           | variable_declaration # VariableDeclaration
-           | import_statement     # ImportStatement
-           | export_statement     # ExportStatment
-           | print_statment       # PrintStatment
-           | log_statement        # LogStatement
-           ;
+base_idf
+  : COMMENT              # IdfComment
+  | DOE2COMMENT          # Doe2Comment
+  | object               # ObjectDeclaration
+  | doe2object           # Doe2ObjectDeclaration
+  | variable_declaration # VariableDeclaration
+  | import_statement     # ImportStatement
+  | export_statement     # ExportStatment
+  | print_statment       # PrintStatment
+  | log_statement        # LogStatement
+  ;
 
 let_binding : LET IDENTIFIER EQUALS expression
               (COMMA IDENTIFIER EQUALS expression)* COMMA?
@@ -116,6 +120,27 @@ let_expression : expression ;
 object : OBJECT_TYPE OBJECT_COMMENT?
            (FIELD_SEP OBJECT_COMMENT? (FIELD OBJECT_COMMENT?)?)+
            OBJECT_TERMINATOR ;
+
+// Keeping the whitespace - makes formatting and output easier.
+doe2object : (DOE2IDENTIFIER | DOE2STRING_UNAME)
+             (DOE2_FIELD_SEP DOE2_OBJECT_COMMENT DOE2_FIELD_SEP?)? doe2word)*
+              DOE2_FIELD_SEP (DOE2_OBJECT_COMMENT DOE2_FIELD_SEP?)? DOE2_TERMINATOR ;
+
+doe2word
+  : DOE2_FIELD
+  | DOE2_STRING
+  | doe2list
+  ;
+
+doe2_list_item
+  : DOE2_FIELD
+  | DOE2_STRING
+  ;
+
+doe2list
+  : DOE2_LIST_START DOE2_FIELD_SEP? doe2_list_item (DOE2_FIELD_SEP doe2_list_item)* DOE2_FIELD_SEP? DOE2_LIST_END
+  | DOE2_LIST_START DOE2_FIELD_SEP? DOE2_LIST_END
+  ;
 
 idf : (base_idf)* EOF;
 

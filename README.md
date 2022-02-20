@@ -1,10 +1,13 @@
 # Neobem
 
 Neobem is a preprocessor programming language primarily targeted for the
-idf input files for EnergyPlus.
+idf input files for [EnergyPlus](https://energyplus.net). It also
+support the Building Description Language used for
+[DOE-2](https://www.doe2.com/).
 
 You can view the entire user manual in PDF form at
-[neobem.io/neobem.pdf](https://neobem.io/neobem.pdf).
+[here](https://neobem.io/neobem.pdf) and online at
+[neobem.io](https://neobem.io).
 
 # Introduction
 
@@ -184,8 +187,8 @@ If things are working correctly, you should see help text like:
 
 ``` console
 mp@mp-computer:~$ nbem -h
-Usage: nbem [options..] [input file]
-Compile Neobem file to idf output
+USAGE: nbem [options..] [input file]
+Compile Neobem file to EnergyPlus or DOE-2 input files.
 
 With no [input file], input is read from file named 'in.nbem' in the
 current directory. If the input file is '-', input is read from standard
@@ -193,10 +196,13 @@ input rather than from a file.
 
 OPTIONS:
 
--h, --help              show this help and exit
--f, --fmt               format file instead of compiling
--o, --output <filename> output file name, default is standard output
--v, --version           print version number and exit
+    --doe2              Parse input file in DOE-2 Building Description Language format
+-h, --help              Show this help and exit
+-f, --fmt               Format file instead of compiling
+-o, --output <filename> Output file name. Output is printed to standard output by default.
+    --tokens            Print lexed tokens for debugging
+    --tree              Print parse tree in Lisp format for debugging
+-v, --version           Print version number and exit
 ```
 
 In general, you will call the execute the program `nbem`, passing in

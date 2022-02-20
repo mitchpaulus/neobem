@@ -14,6 +14,7 @@ namespace src
 
     public class IdfPlusListener : NeobemParserBaseListener
     {
+        private readonly FileType _fileType;
         readonly Dictionary<string, Expression> _variables = new Dictionary<string, Expression>();
 
         public StringBuilder Output = new StringBuilder();
@@ -21,12 +22,17 @@ namespace src
 
         private readonly Dictionary<string, IFunction> _functions = new Dictionary<string, IFunction>();
 
+        public IdfPlusListener(FileType fileType)
+        {
+            _fileType = fileType;
+        }
+
         public override void EnterVariable_declaration(NeobemParser.Variable_declarationContext context)
         {
             IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(new List<Dictionary<string, Expression>>()
             {
                 _variables
-            }, null);
+            }, _fileType, null);
             var name = context.IDENTIFIER().GetText();
             var expression = visitor.Visit(context.expression());
 
@@ -37,7 +43,7 @@ namespace src
 
         public override void EnterPrint_statment(NeobemParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor( new List<Dictionary<string, Expression>>() { _variables }, null);
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor( new List<Dictionary<string, Expression>>() { _variables }, _fileType, null);
             var expression = visitor.Visit(context.expression());
             Output.Append(expression.AsString() + '\n');
         }

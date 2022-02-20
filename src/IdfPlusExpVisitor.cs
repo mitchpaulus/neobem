@@ -13,19 +13,22 @@ namespace src
     public class IdfPlusExpVisitor : NeobemParserBaseVisitor<Expression>
     {
         private readonly List<Dictionary<string, Expression>> _variables;
+        private readonly FileType _fileType;
         private readonly string _baseDirectory;
 
         public StringBuilder output = new StringBuilder();
 
-        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables, string baseDirectory)
+        public IdfPlusExpVisitor(List<Dictionary<string, Expression>> variables, FileType fileType, string baseDirectory)
         {
             _variables = variables;
+            _fileType = fileType;
             _baseDirectory = baseDirectory;
         }
 
-        public IdfPlusExpVisitor(string baseDirectory)
+        public IdfPlusExpVisitor(string baseDirectory, FileType fileType)
         {
             _baseDirectory = baseDirectory;
+            _fileType = fileType;
             _variables = new List<Dictionary<string, Expression>>
             {
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
@@ -84,11 +87,11 @@ namespace src
             if (context.GetText().Contains("@"))
             {
                 throw new InvalidOperationException(
-                    $"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope. Possible reasons include missing import or missing export statements within imported file.");
+                    $"Line {context.Start.Line}: Could not find variable '{context.GetText()}' in scope. Possible reasons include missing import or missing export statements within imported file.");
             }
 
             throw new InvalidOperationException(
-                $"Line {context.Start.Line}: Could not find variable {context.GetText()} in scope.");
+                $"Line {context.Start.Line}: Could not find variable '{context.GetText()}' in scope.");
         }
 
         public override Expression VisitLogicExp(NeobemParser.LogicExpContext context)
@@ -280,7 +283,7 @@ namespace src
 
         public override Expression VisitLambdaExp(NeobemParser.LambdaExpContext context)
         {
-            return new FunctionExpression(context, _variables, _baseDirectory);
+            return new FunctionExpression(context, _variables, _fileType, _baseDirectory);
         }
 
         public override Expression VisitMapPipeFilterExp(NeobemParser.MapPipeFilterExpContext context)
@@ -557,7 +560,7 @@ namespace src
             foreach (var dict in _variables) variableContext.Add(dict);
             variableContext.Insert(0, dictionary);
 
-            IdfPlusExpVisitor newVisitor = new IdfPlusExpVisitor(variableContext, _baseDirectory);
+            IdfPlusExpVisitor newVisitor = new IdfPlusExpVisitor(variableContext, _fileType, _baseDirectory);
             Expression evaluatedExpression = newVisitor.Visit(context.let_expression());
             output.Append(newVisitor.output.ToString());
             return evaluatedExpression;

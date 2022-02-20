@@ -19,10 +19,9 @@ namespace test
         public void TestGBXML()
         {
             var filepath = Path.Combine(TestDir.Dir, "load_test_files" , "load_xml.nbem");
-
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(Path.Combine( TestDir.Dir, "load_test_files"));
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(Path.Combine( TestDir.Dir, "load_test_files"), FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
@@ -35,8 +34,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "load_test_files" , "map_spaces.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(Path.Combine( TestDir.Dir, "load_test_files"));
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(Path.Combine( TestDir.Dir, "load_test_files"), FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 

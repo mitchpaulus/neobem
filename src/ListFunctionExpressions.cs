@@ -6,7 +6,7 @@ namespace src
 {
     public class ListHeadFunctionExpression : FunctionExpression
     {
-        public ListHeadFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" })
+        public ListHeadFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" }, FileType.Any)
         {
         }
 
@@ -21,7 +21,7 @@ namespace src
 
     public class ListTailFunctionExpression : FunctionExpression
     {
-        public ListTailFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" })
+        public ListTailFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" }, FileType.Any)
         {
         }
 
@@ -36,7 +36,7 @@ namespace src
 
     public class ListInitFunctionExpression : FunctionExpression
     {
-        public ListInitFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" })
+        public ListInitFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" }, FileType.Any)
         {
         }
 
@@ -51,7 +51,7 @@ namespace src
 
     public class ListLastFunctionExpression : FunctionExpression
     {
-        public ListLastFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" })
+        public ListLastFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" }, FileType.Any)
         {
         }
 
@@ -65,7 +65,7 @@ namespace src
     }
     public class ListIndexFunctionExpression : FunctionExpression
     {
-        public ListIndexFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list", "index" })
+        public ListIndexFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list", "index" }, FileType.Any)
         {
         }
 
@@ -102,7 +102,7 @@ namespace src
 
     public class ListLengthFunctionExpression : FunctionExpression
     {
-        public ListLengthFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" })
+        public ListLengthFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "list" }, FileType.Any)
         {
         }
 
@@ -116,7 +116,7 @@ namespace src
 
     public class StringJoinFunctionExpression : FunctionExpression
     {
-        public StringJoinFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> {"list", "join character"})
+        public StringJoinFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> {"list", "join character"}, FileType.Any)
         {
         }
 

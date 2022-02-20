@@ -6,7 +6,7 @@ namespace src
 {
     public class MapFunctionExpression : FunctionExpression
     {
-        public MapFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "list", "func" })
+        public MapFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "list", "func" }, FileType.Any)
         {
 
         }
@@ -42,7 +42,7 @@ namespace src
 
     public class KeysFunctionExpression : FunctionExpression
     {
-        public KeysFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary" })
+        public KeysFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary" }, FileType.Any)
         {
         }
 
@@ -64,7 +64,7 @@ namespace src
 
     public class HasFunctionExpression : FunctionExpression
     {
-        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary", "key" })
+        public HasFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "dictionary", "key" }, FileType.Any)
         {
         }
 

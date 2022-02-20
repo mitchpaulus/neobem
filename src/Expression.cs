@@ -59,7 +59,7 @@ namespace src
             FunctionExpression original,
             List<Dictionary<string, Expression>> environments,
             List<string> remainingParameters,
-            Dictionary<int, Expression> partiallyAppliedParameters) : base(environments, remainingParameters)
+            Dictionary<int, Expression> partiallyAppliedParameters) : base(environments, remainingParameters, FileType.Any)
         {
             _original = original;
             _partiallyAppliedParameters = partiallyAppliedParameters;
@@ -101,6 +101,7 @@ namespace src
     {
         private readonly NeobemParser.LambdaExpContext _context;
         private readonly List<Dictionary<string, Expression>> _environments;
+        private readonly FileType _fileType;
 
         public readonly List<string> Parameters;
 
@@ -109,17 +110,19 @@ namespace src
 
         public override string TypeName() => "function";
 
-        public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, string baseDirectory = null)
+        public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, FileType fileType, string baseDirectory = null)
         {
             _context = lambdaDefContext;
             _environments = environments;
+            _fileType = fileType;
             Parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
         }
 
-        public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters, string baseDirectory = null)
+        public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters, FileType fileType, string baseDirectory = null)
         {
             _environments = environments;
             Parameters = parameters;
+            _fileType = fileType;
         }
 
         public virtual (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
@@ -138,7 +141,7 @@ namespace src
             var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
             updatedEnvironments.Insert(0, locals);
 
-            IdfPlusExpVisitor visitor = new(updatedEnvironments, baseDirectory);
+            IdfPlusExpVisitor visitor = new(updatedEnvironments, _fileType, baseDirectory);
 
             StringBuilder builder = new StringBuilder();
 
@@ -160,15 +163,20 @@ namespace src
                     switch (item)
                     {
                         case NeobemParser.FunctionIdfCommentContext commentContext:
-                            var replacedComment = replacer.Replace(commentContext.GetText(), updatedEnvironments);
+                            var replacedComment = replacer.Replace(commentContext.GetText(), updatedEnvironments, _fileType);
                             builder.Append(replacedComment);
                             break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             string objectText = objectDeclarationContext.GetText();
                             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
-                            var replacedObject = replacer.Replace(objectText, updatedEnvironments);
+                            var replacedObject = replacer.Replace(objectText, updatedEnvironments, _fileType);
                             var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
                             builder.AppendLine(prettyPrinted);
+                            break;
+                        case NeobemParser.FunctionDoe2ObjectDeclarationContext doe2ObjectDeclarationContext:
+                            Doe2Printer printer = new(replacer, updatedEnvironments, _fileType);
+                            string prettyPrintedDoe2 = printer.PrettyPrint(doe2ObjectDeclarationContext.doe2object());
+                            builder.Append($"{prettyPrintedDoe2}\n\n");
                             break;
                         case NeobemParser.FunctionVariableDeclarationContext variableDeclarationContext:
                             var expressionResult = visitor.Visit(variableDeclarationContext.variable_declaration().expression());
@@ -181,12 +189,12 @@ namespace src
                         case NeobemParser.FunctionPrintStatementContext printStatmentContext:
                             // Need a clean visitor, so that only the output from evaluating the single expression
                             // is appended.
-                            IdfPlusExpVisitor printStatementExpressionVisitor = new(updatedEnvironments, baseDirectory);
+                            IdfPlusExpVisitor printStatementExpressionVisitor = new(updatedEnvironments, _fileType, baseDirectory);
                             printStatementExpressionVisitor.Visit(printStatmentContext.print_statment().expression());
                             builder.Append(printStatementExpressionVisitor.output.ToString());
                             break;
                         case NeobemParser.FunctionLogStatementContext logStatementContext:
-                            IdfPlusExpVisitor logStatementVisitor = new(updatedEnvironments, baseDirectory);
+                            IdfPlusExpVisitor logStatementVisitor = new(updatedEnvironments, _fileType, baseDirectory);
                             Expression resultingExpression = logStatementVisitor.Visit(logStatementContext.log_statement().expression());
                             Console.Error.Write(resultingExpression.AsString() + "\n");
                             break;

@@ -11,13 +11,16 @@ namespace src
 {
     public static class Extensions
     {
-        public static NeobemParser ToParser(this string input)
+        public static NeobemParser ToParser(this string input, FileType fileType)
         {
             AntlrInputStream inputStream = new AntlrInputStream(input);
             NeobemLexer lexer = new NeobemLexer(inputStream);
+            lexer.FileType = fileType;
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             return new NeobemParser(tokens);
         }
+
+        public static NeobemParser ToIdfParser(this string input) => ToParser(input, FileType.Idf);
 
         public static string Format(this string input)
         {
@@ -29,8 +32,6 @@ namespace src
             FormatVisitor visitor = new(0, 0, tokens);
             return visitor.Visit(idfTree);
         }
-
-        public static IParseTree ToIdfTree(this string input) => ToParser(input).idf();
 
         public static ExcelRangeParser ToExcelRangeParser(this string input)
         {
@@ -97,6 +98,7 @@ namespace src
             return output;
         }
         public static string JoinNull(this IEnumerable<string> strings) => string.Join("", strings);
+        public static string Join(this IEnumerable<string> strings, string join = "") => string.Join(join, strings);
 
         public static int NumLines(this StringBuilder builder) => builder.ToString().SplitLines().Count;
         public static int NumLines(this string input) => input.SplitLines().Count;
@@ -193,6 +195,61 @@ namespace src
             // The 'G' format will take care of trailing zeros for numbers with decimals.
             return rounded.ToString(digits == 0 ? "F0" : $"G{sigFigs}");
         }
+
+        public static int NumNewLinesRequired(this string input, int numNewLines = 2)
+        {
+            int newLinesFound = 0;
+            for (int i = input.Length - 1; i > -1; i--)
+            {
+                if (input[i] == '\n') newLinesFound++;
+                else break;
+            }
+            return numNewLines - newLinesFound;
+        }
+
+        public static string AddNewLines(this string input, int numNewLines = 2)
+        {
+            int additionalNewLineCount = input.NumNewLinesRequired(numNewLines);
+            if (additionalNewLineCount == 0) return input;
+            if (additionalNewLineCount < 0) return input[..(input.Length + additionalNewLineCount)];
+            string additionalNewLines = new('\n', additionalNewLineCount);
+            return $"{input}{additionalNewLines}";
+        }
+
+        public static string ParagraphJoin(this IEnumerable<string> items)
+        {
+            StringBuilder builder = new();
+            bool firstItem = true;
+            int newLinesRequired = 0;
+            foreach (string item in items)
+            {
+                if (firstItem)
+                {
+                    builder.Append(item);
+                    firstItem = false;
+                }
+                else
+                {
+                    if (newLinesRequired == 0) builder.Append(item);
+                    else builder.Append($"{new string('\n', newLinesRequired)}{item}");
+                }
+                newLinesRequired = item.NumNewLinesRequired(2);
+            }
+            return builder.ToString();
+        }
+
+        public static string ToString(this IToken token, NeobemLexer lexer)
+        {
+            string tokenTypeDisplayName = lexer.Vocabulary.GetDisplayName(token.Type);
+
+            string replacedText = token.Text.Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r");
+
+            string channelString = token.Channel == 0 ? "" : $"channel={token.Channel}";
+
+            return
+                $"[@{token.TokenIndex},{token.StartIndex}:{token.StopIndex}='{replacedText}',<{tokenTypeDisplayName}>{channelString},{token.Line},{token.Column}";
+        }
+
     }
 
     public class SplitIdfLine

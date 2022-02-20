@@ -39,8 +39,8 @@ namespace test
         {
               var filepath = Path.Combine(TestDir.Dir, "Excel", "load_excel_test_1.nbem");
               var file = File.ReadAllText(filepath);
-              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "Excel"));
-              var parser = file.ToParser();
+              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "Excel"), FileType.Idf);
+              var parser = file.ToParser(FileType.Idf);
               var tree = parser.idf();
               string output = visitor.Visit(tree);
 
@@ -98,65 +98,35 @@ namespace test
         [Test]
         public void LoadJSONNbemTest()
         {
-              var filepath = Path.Combine(TestDir.LoadTestFiles, "load_json.nbem");
-              var file = File.ReadAllText(filepath);
-              var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
-              var parser = file.ToParser();
-              var tree = parser.idf();
-              string output = visitor.Visit(tree);
-
-              string expectedOutputFilePath = Path.Combine(TestDir.LoadTestFiles, "load_json.expected");
-              string expectedOutput = File.ReadAllText(expectedOutputFilePath);
-
-              Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+            string expectedOutputFilePath = Path.Combine(TestDir.LoadTestFiles, "load_json.expected");
+            string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+            IdfTester.TestIdfFile(Path.Combine(TestDir.LoadTestFiles, "load_json.nbem"), expectedOutput);
         }
 
         [Test]
         public void TestNoHeaderOption()
         {
-               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "no_header_data.nbem");
-               var file = File.ReadAllText(filepath);
-               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
-               var parser = file.ToParser();
-               var tree = parser.idf();
-               string output = visitor.Visit(tree);
-
-               string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "no_header_data_expected.idf");
-               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
-
-               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+            string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "no_header_data_expected.idf");
+            string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+            IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "load_test_files", "no_header_data.nbem"), expectedOutput);
         }
 
         [Test]
         public void TestLoadingCSV()
         {
-               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "csv.nbem");
-               var file = File.ReadAllText(filepath);
-               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
-               var parser = file.ToParser();
-               var tree = parser.idf();
-               string output = visitor.Visit(tree);
-
                string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "csv_expected.idf");
                string expectedOutput = File.ReadAllText(expectedOutputFilePath);
-
-               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "csv.nbem");
+               IdfTester.TestIdfFile(filepath, expectedOutput);
         }
 
         [Test]
         public void TestSkippingHeaderLines()
         {
-               var filepath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data.nbem");
-               var file = File.ReadAllText(filepath);
-               var visitor = new IdfPlusVisitor(Path.Combine(TestDir.Dir, "load_test_files"));
-               var parser = file.ToParser();
-               var tree = parser.idf();
-               string output = visitor.Visit(tree);
-
-               string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data_expected.idf");
-               string expectedOutput = File.ReadAllText(expectedOutputFilePath);
-
-               Assert.IsTrue(IdfObjectCompare.Equals(expectedOutput, output));
+            string expectedOutputFilePath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data_expected.idf");
+            string expectedOutput = File.ReadAllText(expectedOutputFilePath);
+            string filepath = Path.Combine(TestDir.Dir, "load_test_files", "skip_test_data.nbem");
+            IdfTester.TestIdfFile(filepath, expectedOutput);
         }
     }
 }

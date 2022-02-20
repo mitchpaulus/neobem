@@ -22,7 +22,7 @@ namespace test
                 { "versionNum",  new StringExpression("9.4") }
             });
 
-            var replaced = replacer.Replace(objectText, variables);
+            var replaced = replacer.Replace(objectText, variables, FileType.Idf);
 
             Assert.AreEqual("Version\n  9.4;\n", replaced);
 
@@ -41,7 +41,7 @@ namespace test
                     { "num",  new StringExpression("1") }
                 }
             };
-            string actual = replacer.Replace(objectText, variables);
+            string actual = replacer.Replace(objectText, variables, FileType.Idf);
             Assert.AreEqual("1", actual);
         }
     }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 namespace src
 {
@@ -18,11 +20,11 @@ namespace src
                 {
                     case "-h":
                     case "--help":
-                        Console.WriteLine(Help.Text());
+                        WriteLine(Help.Text());
                         return 0;
                     case "-v":
                     case "--version":
-                        Console.WriteLine(Version.Num());
+                        WriteLine(Version.Num());
                         return 0;
                     case "-o":
                     case "--output":
@@ -33,7 +35,7 @@ namespace src
                         }
                         else
                         {
-                            Console.WriteLine("No file path given for output option.");
+                            WriteLine("No file path given for output option.");
                             return 1;
                         }
                         i++;
@@ -42,6 +44,16 @@ namespace src
                     case "-f":
                     case "--fmt":
                         options.FormatFile = true;
+                        break;
+                    // Tokens for debugging purposes
+                    case "--tokens":
+                        options.Tokens = true;
+                        break;
+                    case "--tree":
+                        options.Tree = true;
+                        break;
+                    case "--doe2":
+                        options.FileType = FileType.Doe2;
                         break;
                     default:
                         options.InputFile = args[i];
@@ -59,7 +71,7 @@ namespace src
                 if (!fileInfo.Exists)
                 {
                     string errorMessage = $"The input file '{fileInfo.FullName}' does not exist.";
-                    Console.WriteLine(errorMessage);
+                    Console.Error.Write(errorMessage + "\n");
                     return 1;
                 }
                 inputStream = new AntlrFileStream(fileInfo.FullName);
@@ -72,15 +84,26 @@ namespace src
             }
 
             NeobemLexer lexer = new(inputStream);
+            lexer.FileType = options.FileType;
             lexer.RemoveErrorListeners();
             SimpleAntlrErrorListener lexerErrorListener = new();
             lexer.AddErrorListener(lexerErrorListener);
 
+
             CommonTokenStream commonTokenStream = new(lexer);
+
+            if (options.Tokens)
+            {
+                commonTokenStream.Fill();
+                foreach (IToken token in commonTokenStream.GetTokens())
+                {
+                    Console.Error.Write($"{token.ToString(lexer)}\n");
+                }
+            }
 
             if (lexerErrorListener.Errors.Any())
             {
-                foreach (AntlrError error in lexerErrorListener.Errors) Console.Error.WriteLine(error.WriteError());
+                foreach (AntlrError error in lexerErrorListener.Errors) Console.Error.Write(error.WriteError() + "\n");
                 return 1;
             }
 
@@ -91,9 +114,11 @@ namespace src
 
             NeobemParser.IdfContext tree = parser.idf();
 
+            if (options.Tree) Console.Error.Write(tree.ToStringTree(parser).AddNewLines(1));
+
             if (parserErrorListener.Errors.Any())
             {
-                foreach (AntlrError error in parserErrorListener.Errors) Console.Error.WriteLine(error.WriteError());
+                foreach (AntlrError error in parserErrorListener.Errors) Console.Error.Write(error.WriteError() + "\n");
                 return 1;
             }
 
@@ -119,7 +144,7 @@ namespace src
             }
 
             // Construct the main visitor for the initial file.
-            IdfPlusVisitor visitor = new(baseDirectory);
+            IdfPlusVisitor visitor = new(baseDirectory, options.FileType);
 
             string result;
             try
@@ -134,7 +159,7 @@ namespace src
             // If no output file was specified in the command line options, then dump results to standard output.
             if (string.IsNullOrWhiteSpace(options.OutputFile))
             {
-                Console.WriteLine(result);
+                Console.Write(result);
             }
             else
             {
@@ -152,11 +177,17 @@ namespace src
             return 0;
         }
 
+        // Until I get complaints otherwise, going to print using Unix newlines.
+        public static void WriteLine(string message) => Console.Write($"{message}\n");
+
         public class BempOptions
         {
             public string OutputFile = "";
             public string InputFile = "in.nbem";
             public bool FormatFile = false;
+            public FileType FileType = FileType.Idf;
+            public bool Tokens = false;
+            public bool Tree = false;
         }
     }
 }

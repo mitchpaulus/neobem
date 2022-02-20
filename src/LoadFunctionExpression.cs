@@ -9,7 +9,7 @@ namespace src
 {
     public class LoadFunctionExpression : FunctionExpression
     {
-        public LoadFunctionExpression(string baseDirectory) : base(new List<Dictionary<string, Expression>>(), new List<string>{ "options"} )
+        public LoadFunctionExpression(string baseDirectory) : base(new List<Dictionary<string, Expression>>(), new List<string>{ "options"}, FileType.Any)
         {
         }
 

@@ -13,7 +13,7 @@ namespace src
             _baseDirectory = baseDirectory;
         }
 
-        public string Replace(string objectText, List<Dictionary<string, Expression>> variables)
+        public string Replace(string objectText, List<Dictionary<string, Expression>> variables, FileType fileType)
         {
             var openingChar = '<';
             var endingChar = '>';
@@ -42,9 +42,9 @@ namespace src
                         {
                             var expressionText = objectText.Substring(startIndex + 1, i - startIndex - 1);
 
-                            IdfPlusExpVisitor expVisitor = new IdfPlusExpVisitor(variables, _baseDirectory);
+                            IdfPlusExpVisitor expVisitor = new(variables, fileType, _baseDirectory);
 
-                            var parser = expressionText.ToParser();
+                            var parser = expressionText.ToParser(fileType);
                             var tree = parser.expression();
                             var evaluatedExpression = expVisitor.Visit(tree);
                             output.Append(evaluatedExpression.AsString());

@@ -10,15 +10,17 @@ namespace src
     public class IdfPlusVisitor : NeobemParserBaseVisitor<string>
     {
         private readonly string _baseDirectory;
+        private readonly FileType _fileType;
         private readonly List<Dictionary<string, Expression>> _environments;
         private readonly ObjectVariableReplacer _objectVariableReplacer;
 
         public HashSet<string> exports = new HashSet<string>();
         private readonly IdfObjectPrettyPrinter _idfObjectPrettyPrinter = new IdfObjectPrettyPrinter();
 
-        public IdfPlusVisitor(string baseDirectory)
+        public IdfPlusVisitor(string baseDirectory, FileType fileType)
         {
             _baseDirectory = baseDirectory;
+            _fileType = fileType;
             _environments = new List<Dictionary<string, Expression>>()
             {
                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
@@ -46,14 +48,52 @@ namespace src
 
         public override string VisitIdf(NeobemParser.IdfContext context)
         {
-            var items = context.base_idf().Select(Visit).Select(s => s.Replace("\r\n", "\n")).ToList();
+            // var items = context.base_idf().Select(Visit).Select(s => s.Replace("\r\n", "\n")).ToList();
+            List<string> items = new();
+            foreach (var item in context.base_idf())
+            {
+                string visitResult = Visit(item);
 
-            return string.Join("", items);
+                if (visitResult == null)
+                    throw new NotImplementedException(
+                        $"{item.Start.Line}:{item.Start.Column}: Input file item not implemented.");
+
+                items.Add(visitResult.Replace("\r\n", "\n"));
+            }
+
+            string joined = string.Join("", items);
+            // Make sure we end with a single newline.
+            return joined.AddNewLines(1);
+        }
+
+        public override string VisitDoe2Comment(NeobemParser.Doe2CommentContext context)
+        {
+            try
+            {
+                return _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: {exception.Message}");
+            }
+        }
+
+        public override string VisitDoe2object(NeobemParser.Doe2objectContext context)
+        {
+            try
+            {
+                Doe2Printer printer = new(_objectVariableReplacer, _environments, _fileType);
+                return printer.PrettyPrint(context) + "\n\n";
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Line {context.Start.Line}: {exception.Message}");
+            }
         }
 
         public override string VisitIdfComment(NeobemParser.IdfCommentContext context)
         {
-            return _objectVariableReplacer.Replace(context.GetText(), _environments);
+            return _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
         }
 
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
@@ -62,14 +102,14 @@ namespace src
 
             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
 
-            var replaced = _objectVariableReplacer.Replace(objectText, _environments);
+            var replaced = _objectVariableReplacer.Replace(objectText, _environments, _fileType);
             var prettyPrinted = _idfObjectPrettyPrinter.ObjectPrettyPrinter(replaced, 0, Consts.IndentSpaces);
             return prettyPrinted + "\n\n";
         }
 
         public override string VisitVariable_declaration(NeobemParser.Variable_declarationContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _fileType, _baseDirectory);
             Expression expression = expressionVisitor.Visit(context.expression());
 
             var identifier = context.IDENTIFIER().GetText();
@@ -80,14 +120,14 @@ namespace src
 
         public override string VisitPrint_statment(NeobemParser.Print_statmentContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _fileType, _baseDirectory);
             expressionVisitor.Visit(context.expression());
             return expressionVisitor.output.ToString();
         }
 
         public override string VisitImport_statement(NeobemParser.Import_statementContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _baseDirectory);
+            IdfPlusExpVisitor expressionVisitor = new IdfPlusExpVisitor(_environments, _fileType, _baseDirectory);
             Expression uriExpression =  expressionVisitor.Visit(context.expression());
 
             string filePath;
@@ -123,7 +163,7 @@ namespace src
                 }
 
                 // When reading from a web URI, the concept of a base directory doesn't apply.
-                visitor = new IdfPlusVisitor(null);
+                visitor = new IdfPlusVisitor(null, _fileType);
             }
             else
             {
@@ -143,7 +183,7 @@ namespace src
                 }
 
                 // Read the imported file, with the current directory set to directory of the input file.
-                visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
+                visitor = new IdfPlusVisitor(fileInfo.DirectoryName, _fileType);
             }
 
             NeobemParser.Import_optionContext[] options = context.import_option();
@@ -165,7 +205,7 @@ namespace src
                 }
             }
 
-            NeobemParser parser = contents.ToParser();
+            NeobemParser parser = contents.ToParser(_fileType);
             NeobemParser.IdfContext tree = parser.idf();
 
             string  outputResult = visitor.VisitIdf(tree);
@@ -179,7 +219,8 @@ namespace src
                 }
             }
 
-            return outputResult;
+            // Make a paragraph between imported stuff.
+            return outputResult.AddNewLines(2);
         }
 
         public override string VisitExport_statement(NeobemParser.Export_statementContext context)
@@ -198,7 +239,7 @@ namespace src
 
         public override string VisitLog_statement(NeobemParser.Log_statementContext context)
         {
-            IdfPlusExpVisitor expressionVisitor = new(_environments, _baseDirectory);
+            IdfPlusExpVisitor expressionVisitor = new(_environments, _fileType, _baseDirectory);
             Expression resultExpression = expressionVisitor.Visit(context.expression());
             string stringResult = resultExpression.AsString();
             if (stringResult.Any() && stringResult.Last() != '\n') stringResult = stringResult + '\n';

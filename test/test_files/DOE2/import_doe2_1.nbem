@@ -1,0 +1,7 @@
+absorptance = 0.65
+
+HEAVY = CONSTRUCTION
+  TYPE = LAYERS
+  LAYERS = CBLOCK
+  ABSORPTANCE = <absorptance> ..
+

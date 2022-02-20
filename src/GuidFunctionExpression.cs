@@ -5,7 +5,7 @@ namespace src
 {
     public class GuidFunctionExpression : FunctionExpression
     {
-        public GuidFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>())
+        public GuidFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>(), FileType.Any)
         {
 
         }

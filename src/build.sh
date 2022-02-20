@@ -1,4 +1,5 @@
 #!/bin/sh
+redo-ifchange ../csharp
 
 rm -rf publish/*
 

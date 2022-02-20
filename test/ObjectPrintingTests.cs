@@ -14,8 +14,8 @@ namespace test
             var filepath = Path.Combine(TestDir.Dir, "object_pretty_print.nbem");
 
             var file = File.ReadAllText(filepath);
-            var visitor = new IdfPlusVisitor(TestDir.Dir);
-            var parser = file.ToParser();
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 

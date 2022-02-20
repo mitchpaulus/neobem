@@ -5,7 +5,7 @@ namespace src
 {
     public class TypeFunctionExpression : FunctionExpression
     {
-        public TypeFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "expression" })
+        public TypeFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string> { "expression" }, FileType.Any)
         {
         }
 

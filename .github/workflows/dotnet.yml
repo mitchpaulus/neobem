@@ -25,6 +25,7 @@ jobs:
       run: |
         java -jar antlr-4.9.3-complete.jar -o src antlr/NeobemLexer.g4
         java -jar antlr-4.9.3-complete.jar -o src -visitor antlr/NeobemParser.g4
+        find src/antlr src/antlr-idf -type f
         java -jar antlr-4.9.3-complete.jar -o src antlr/excelrange/ExcelRange.g4
         cd antlr/idf/
         java -jar ../../antlr-4.9.3-complete.jar -o ../../src/antlr-idf -Dlanguage=CSharp Idf.g4

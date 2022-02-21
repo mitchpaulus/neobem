@@ -23,9 +23,10 @@ jobs:
       run: curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
     - name: Compile ANTLR grammars
       run: |
+        pwd
         ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
         cd antlr
-        ./compile_grammer
+        pwd && ./compile_grammer
         java -jar "$ANTLR_JAR" -o src antlr/excelrange/ExcelRange.g4
         cd idf/
         java -jar "$ANTLR_JAR" -o ../../src/antlr-idf -Dlanguage=CSharp Idf.g4

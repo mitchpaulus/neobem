@@ -26,8 +26,9 @@ jobs:
         export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
         cd antlr
         ./compile_grammer
-        java -jar "$ANTLR_JAR" -o src antlr/excelrange/ExcelRange.g4
-        cd idf/
+        cd excelrange
+        java -jar "$ANTLR_JAR" -o ../../src/antlr/ ./*.g4
+        cd ../idf/
         java -jar "$ANTLR_JAR" -o ../../src/antlr-idf -Dlanguage=CSharp Idf.g4
     - name: Run redo targets
       run: |

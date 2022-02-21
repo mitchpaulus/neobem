@@ -23,10 +23,10 @@ jobs:
       run: curl --output antlr-4.9.2-complete.jar https://www.antlr.org/download/antlr-4.9.2-complete.jar
     - name: Compile ANTLR grammars
       run: |
-        java -jar antlr-4.9.2-complete.jar antlr/NeobemLexer.g4
-        java -jar antlr-4.9.2-complete.jar -visitor antlr/NeobemParser.g4
-        java -jar antlr-4.9.2-complete.jar antlr/excelrange/ExcelRange.g4
-        java -jar antlr-4.9.2-complete.jar -Dlanguage=CSharp antlr/idf/Idf.g4
+        java -jar antlr-4.9.2-complete.jar -o src/antlr/ antlr/NeobemLexer.g4
+        java -jar antlr-4.9.2-complete.jar -o src/antlr/ -visitor antlr/NeobemParser.g4
+        java -jar antlr-4.9.2-complete.jar -o src/antlr/ antlr/excelrange/ExcelRange.g4
+        java -jar antlr-4.9.2-complete.jar -o src/antlr-idf/ -Dlanguage=CSharp antlr/idf/Idf.g4
     - name: Run redo targets
       run: |
         ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs

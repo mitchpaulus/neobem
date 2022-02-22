@@ -8,6 +8,9 @@ README.pdf
 
 *.output.idf
 
+# Used as sentinel file for the ANTLR compilations
+compiled
+
 # This is the default tex template fromm pandoc that I have
 # to steal preamble information from
 pandoc_latex.tex

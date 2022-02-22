@@ -23,6 +23,7 @@ jobs:
       run: curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
     - name: Compile ANTLR grammars
       run: |
+        export ANTLR_JAR=antlr-4.9.3-complete.jar
         ./do src/antlr/compiled
         ./do src/antlr/excelrange/compiled
         ./do src/antlr/idf/compiled

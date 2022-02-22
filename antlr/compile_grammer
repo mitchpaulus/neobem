@@ -1,4 +1,0 @@
-#!/bin/sh
-
-java -jar "$ANTLR_JAR" -o ../src/antlr/ NeobemLexer.g4
-java -jar "$ANTLR_JAR" -o ../src/antlr/ -visitor NeobemParser.g4

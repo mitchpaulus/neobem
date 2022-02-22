@@ -167,7 +167,7 @@ namespace src
                 {
                     File.WriteAllText(options.OutputFile, result);
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     Console.Error.WriteLine($"Could not write output to {options.OutputFile}.");
                     return 1;

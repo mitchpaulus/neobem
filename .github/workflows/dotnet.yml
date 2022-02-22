@@ -23,13 +23,9 @@ jobs:
       run: curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
     - name: Compile ANTLR grammars
       run: |
-        export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
-        cd antlr
-        ./compile_grammer
-        cd excelrange
-        java -jar "$ANTLR_JAR" -o ../../src/antlr/ ./*.g4
-        cd ../idf/
-        java -jar "$ANTLR_JAR" -o ../../src/antlr-idf -Dlanguage=CSharp Idf.g4
+        ./do src/antlr/compiled
+        ./do src/antlr/excelrange/compiled
+        ./do src/antlr/idf/compiled
     - name: Run redo targets
       run: |
         ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs

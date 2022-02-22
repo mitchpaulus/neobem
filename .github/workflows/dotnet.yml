@@ -24,7 +24,7 @@ jobs:
     - name: Compile ANTLR grammars
       run: |
         export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
-        export CLASSPATH=.:"$(pwd)"
+        export CLASSPATH=.:"$(pwd)/antlr-4.9.3-complete.jar"
         ./do src/antlr/compiled
         ./do src/antlr/excelrange/compiled
         ./do src/antlr/idf/compiled

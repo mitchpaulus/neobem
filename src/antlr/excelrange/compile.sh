@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java "$ANTLR_JAR" ./*.g4
+java -jar "$ANTLR_JAR" ./*.g4

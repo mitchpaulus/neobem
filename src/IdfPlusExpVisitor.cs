@@ -132,7 +132,7 @@ namespace src
                 Expression expression = bcl.ParseUUIDResponse(jsonResponse);
                 return expression;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 throw new Exception($"Line {context.Start.Line}: There was an issue parsing the BCL expression: '{context.GetText()}'");
             }

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+java -jar "$ANTLR_JAR"  NeobemLexer.g4
+java -jar "$ANTLR_JAR"  -visitor NeobemParser.g4

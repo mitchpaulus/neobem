@@ -123,8 +123,8 @@ object : OBJECT_TYPE OBJECT_COMMENT?
 
 // Keeping the whitespace - makes formatting and output easier.
 doe2object : (DOE2IDENTIFIER | DOE2STRING_UNAME)
-             (DOE2_FIELD_SEP DOE2_OBJECT_COMMENT DOE2_FIELD_SEP?)? doe2word)*
-              DOE2_FIELD_SEP (DOE2_OBJECT_COMMENT DOE2_FIELD_SEP?)? DOE2_TERMINATOR ;
+             ((DOE2_OBJECT_COMMENT | DOE2_FIELD_SEP)+ doe2word)*
+             (DOE2_OBJECT_COMMENT | DOE2_FIELD_SEP)+ DOE2_TERMINATOR ;
 
 doe2word
   : DOE2_FIELD

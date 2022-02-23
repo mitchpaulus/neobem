@@ -2,10 +2,10 @@
 
 Neobem is a preprocessor programming language primarily targeted for the
 idf input files for [EnergyPlus](https://energyplus.net). It also
-support the Building Description Language used for
+supports the Building Description Language used for
 [DOE-2](https://www.doe2.com/).
 
-You can view the entire user manual in PDF form at
+You can view the entire user manual in PDF form
 [here](https://neobem.io/neobem.pdf) and online at
 [neobem.io](https://neobem.io).
 

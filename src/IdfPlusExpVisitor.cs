@@ -51,6 +51,8 @@ namespace src
 
             _variables[0]["type"] = new TypeFunctionExpression();
             _variables[0]["guid"] = new GuidFunctionExpression();
+
+            _variables[0]["mod"] = new ModFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

@@ -38,6 +38,7 @@ namespace src
             _environments[0]["length"] = new ListLengthFunctionExpression();
             _environments[0]["join"] = new StringJoinFunctionExpression();
             _environments[0]["replace"] = new StringReplaceFunctionExpression();
+            _environments[0]["mod"] = new ModFunctionExpression();
 
             _environments[0]["type"] = new TypeFunctionExpression();
 

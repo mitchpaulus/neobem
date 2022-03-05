@@ -1,0 +1,3 @@
+print 1..4 |> λ num { mod(num, 2) == 0 } |= λ num {
+  Version, <num>;
+}

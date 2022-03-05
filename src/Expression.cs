@@ -414,7 +414,15 @@ namespace src
 
     public abstract class Expression
     {
+        /// <summary>
+        /// The output of the expression when used in replacements.
+        /// </summary>
+        /// <returns></returns>
         public abstract string AsString();
+        /// <summary>
+        /// This is a human readable version of the type to present in error messages and logging.
+        /// </summary>
+        /// <returns></returns>
         public abstract string TypeName();
 
         // For error messages, we may want to present the current value

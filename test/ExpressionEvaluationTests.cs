@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -259,5 +258,65 @@ namespace test
                 "Wall:Detailed,  ,  ,  ,  ,  ,  SunExposed,  WindExposed,  autocalculate,  autocalculate,  0, 1, 2,  3, 4, 5,  6, 7, 8,  9, 10, 11;";
             IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "join_test.nbem"), expectedOutput );
         }
+
+        [Test]
+        public void TestModulo()
+        {
+            string expression = "mod(5, 2)";
+            var parser = expression.ToParser(FileType.Idf);
+            var parsedExpression = parser.expression();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null, FileType.Idf);
+
+            var output = visitor.Visit(parsedExpression);
+            if (output is NumericExpression numericExpression)
+            {
+                Assert.AreEqual(1, numericExpression.Value);
+            }
+            else
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [Test]
+        public void TestNegativeModulo()
+        {
+            string expression = "mod(-5, 2)";
+            var parser = expression.ToParser(FileType.Idf);
+            var parsedExpression = parser.expression();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null, FileType.Idf);
+
+            var output = visitor.Visit(parsedExpression);
+            if (output is NumericExpression numericExpression)
+            {
+                Assert.AreEqual(-1, numericExpression.Value);
+            }
+            else
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [Test]
+        public void TestNegativeDivisorModulo()
+        {
+            string expression = "mod(5, -2)";
+            var parser = expression.ToParser(FileType.Idf);
+            var parsedExpression = parser.expression();
+            IdfPlusExpVisitor visitor = new IdfPlusExpVisitor(null, FileType.Idf);
+
+            var output = visitor.Visit(parsedExpression);
+            if (output is NumericExpression numericExpression)
+            {
+                Assert.AreEqual(1, numericExpression.Value);
+            }
+            else
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [Test]
+        public void TestModuloFile() => IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "modulo.nbem"), File.ReadAllText(Path.Combine(TestDir.Dir, "modulo_expected.nbem")));
     }
 }

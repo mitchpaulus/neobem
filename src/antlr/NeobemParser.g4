@@ -12,6 +12,7 @@ variable_declaration : IDENTIFIER EQUALS expression;
 expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | expression RANGE_OPERATOR expression         # RangeExp
              | funcexp=expression function_application    # FunctionExp
+             | expression functional_operator expression  # MapPipeFilterExp
              | <assoc=right> expression CARET expression  # Exponientiate
              | expression op=(MULTOP|DIVIDEOP) expression # MultDivide
              | expression op=(PLUSOP|MINUSOP) expression  # AddSub
@@ -29,7 +30,6 @@ expression :   expression MEMBER_ACCESS expression        # MemberAccessExp
              | lambda_def                                 # LambdaExp
              | let_binding                                # LetBindingExp
              | inline_table                               # InlineTable
-             | expression functional_operator expression  # MapPipeFilterExp
              | LPAREN expression RPAREN                   # ParensExp
              ;
 

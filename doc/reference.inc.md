@@ -294,6 +294,7 @@ A number of mathematical functions are built in.
 - `ln(x)`{.nbem}: Natural logarithm, logarithm with base $e$
 - `log10(x)`{.nbem}: logarithm with base 10
 - `log2(x)`{.nbem}: logarithm with base 2
+- `mod(a, n)`{.nbem}: Returns the modulus of `a` divided by `n`. Uses *truncated* division (See [Wikipedia](https://en.wikipedia.org/wiki/Modulo_operation)) for details.
 - `sin(x)`{.nbem}: Returns the sine of the angle specified in radians
 - `sqrt(x)`{.nbem}: Returns the positive root of the value (always remember there are 2 roots!)
 - `tan(x)`{.nbem}: Returns the tangent of the angle specified in radians

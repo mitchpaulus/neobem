@@ -318,5 +318,8 @@ namespace test
 
         [Test]
         public void TestModuloFile() => IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "modulo.nbem"), File.ReadAllText(Path.Combine(TestDir.Dir, "modulo_expected.nbem")));
+
+        [Test]
+        public void TestFoldFunction() => IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "fold.nbem"), "Version,6;");
     }
 }

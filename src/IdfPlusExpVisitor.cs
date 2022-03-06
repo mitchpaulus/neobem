@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Antlr4.Runtime.Atn;
+using src.Functions;
 
 namespace src
 {
@@ -35,6 +36,7 @@ namespace src
             };
             _variables[0]["map"] = new MapFunctionExpression();
             _variables[0]["filter"] = new FilterFunctionExpression();
+            _variables[0]["fold"] = new FoldFunctionExpression();
             _variables[0]["keys"] = new KeysFunctionExpression();
             _variables[0]["has"] = new HasFunctionExpression();
             _variables[0]["load"] = new LoadFunctionExpression(baseDirectory);

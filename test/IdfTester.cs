@@ -18,6 +18,6 @@ public class IdfTester
         NeobemParser parser = contents.ToParser(FileType.Idf);
         NeobemParser.IdfContext tree = parser.idf();
         string output = visitor.Visit(tree);
-        Assert.IsTrue(IdfObjectCompare.Equals(expectedIdfOutput, output));
+        Assert.IsTrue(IdfObjectCompare.Equals(expectedIdfOutput, output), $"Contents do not match.\nExpected:\n{expectedIdfOutput}\nActual:\n{output}");
     }
 }

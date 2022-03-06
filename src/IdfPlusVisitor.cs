@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using src.Functions;
 
 namespace src
 {
@@ -27,6 +28,7 @@ namespace src
             };
             _environments[0]["map"] = new MapFunctionExpression();
             _environments[0]["filter"] = new FilterFunctionExpression();
+            _environments[0]["fold"] = new FoldFunctionExpression();
             _environments[0]["keys"] = new KeysFunctionExpression();
             _environments[0]["has"] = new HasFunctionExpression();
             _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);

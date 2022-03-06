@@ -1,0 +1,5 @@
+list = [1, 2, 3]
+
+num = fold(list, λ x y { x + y }, 0)
+
+Version,<num>;

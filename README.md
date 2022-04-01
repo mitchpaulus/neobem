@@ -11,8 +11,8 @@ You can view the entire user manual in PDF form
 
 # Introduction
 
-While creating you building energy simulation input files, have you ever
-wanted to:
+While creating your building energy simulation input files, have you
+ever wanted to:
 
 -   Use variables?
 -   Break out sections into custom templates?
@@ -25,7 +25,7 @@ wanted to:
 
 If so, Neobem is what you have always wanted.
 
-At is core, Neobem is a command line application that follows the Unix
+At its core, Neobem is a command line application that follows the Unix
 principle of doing one thing and doing it well. That thing is compiling
 an expressive programming syntax into building energy simulation input.
 

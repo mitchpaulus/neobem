@@ -65,9 +65,9 @@ syntax used by the idf files, beginning with an exclamation point
 character (`!`). These comments are available to have portions replaced
 by expressions and they are always passed along on to the output.
 
-The second comment type is internal to Neobem itself. These are like
-traditional comments in that they are parsed an then completely ignored.
-They are only there to aid the reader of the code.
+The second comment type is internal to Neobem itself.
+These are like traditional comments in that they are parsed and then completely ignored.
+They are intended to aid the reader of the code.
 
 So for example, given:
 

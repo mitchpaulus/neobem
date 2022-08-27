@@ -302,7 +302,8 @@ Building from source requires the following dependencies:
     `do` shell executable in the root of the repository.
 
 You can then follow along with the steps in the GitHub workflow that
-tests that commits build (`.github/workflows/dotnet.yml`).
+tests that commits build
+([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
 
 The minimum steps after .NET and Java installation are:
 

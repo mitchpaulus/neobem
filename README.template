@@ -56,7 +56,7 @@ Building from source requires the following dependencies:
    I now use the `redo` from [`zombiezen`](https://github.com/zombiezen/redo-rs) and have used [`apenwarr`s redo](https://github.com/apenwarr/redo) in the past.
    However, just to get things building, there is a minimal `do` shell executable in the root of the repository.
 
-You can then follow along with the steps in the GitHub workflow that tests that commits build (`.github/workflows/dotnet.yml`).
+You can then follow along with the steps in the GitHub workflow that tests that commits build ([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
 
 The minimum steps after .NET and Java installation are:
 

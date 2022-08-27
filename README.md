@@ -11,7 +11,7 @@ You can download the entire user manual in PDF form
 
 Quick links:
 
--   [Intro](#introduction)
+-   [Introduction](#introduction)
 -   [Getting Started](#getting-started)
 -   [Support](#support)
 -   [Contributing](#contributing)

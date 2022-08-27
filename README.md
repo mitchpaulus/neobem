@@ -5,13 +5,13 @@ idf input files for [EnergyPlus](https://energyplus.net). It also
 supports the Building Description Language used for
 [DOE-2](https://www.doe2.com/).
 
-You can view the entire user manual in PDF form
-[here](https://neobem.io/neobem.pdf) and online at
+You can download the entire user manual in PDF form
+[here](https://neobem.io/neobem.pdf) or view online at
 [neobem.io](https://neobem.io).
 
 Quick links:
 
--   [Intro](#intro)
+-   [Intro](#introduction)
 -   [Getting Started](#getting-started)
 -   [Support](#support)
 -   [Contributing](#contributing)
@@ -254,9 +254,10 @@ href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>
 # Support
 
 If you believe you have come across a bug, please open a new GitHub
-issue. Please attempt to produce a “Minimum Working Example (MWE)” file
-that reproduces the problem. If the MWE is small enough, include
-directly in the issue, otherwise attach associated file.
+issue. Please attempt to produce a [“minimum reproducible example
+(MRE)”](https://en.wikipedia.org/wiki/Minimal_reproducible_example) file
+that reproduces the problem. If the code snippet is small enough,
+include directly in the issue, otherwise attach the associated file.
 
 You can also attempt to get support on [Unmet
 Hours](https://unmethours.com/questions/), a site similar in spirit to

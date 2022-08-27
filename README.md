@@ -15,6 +15,7 @@ Quick links:
 -   [Getting Started](#getting-started)
 -   [Support](#support)
 -   [Contributing](#contributing)
+-   [Building from Source](#building-from-source)
 
 # Introduction
 
@@ -275,9 +276,51 @@ wasted effort. Please use the
 within the GitHub repository, likely in the “General” or “Ideas”
 category.
 
+If the change adds functionality, corresponding unit tests would be
+expected. Tests are located in the `test` project/directory.
+
 For coding style conventions, you can follow the conventions laid out by
 Microsoft
 ([link](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)).
+
+# Building from Source
+
+Building from source requires the following dependencies:
+
+1.  A .NET environment. Typically installed with [Visual
+    Studio](https://visualstudio.microsoft.com/),
+    [Rider](https://www.jetbrains.com/rider/), or directly through the
+    [SDK libraries](https://dotnet.microsoft.com/en-us/download).
+2.  [ANTLR](https://www.antlr.org/) and Java. I typically use the open
+    source version of Java at [`jdk.java.net`](https://jdk.java.net/).
+3.  Optional: A `redo`. This is a `make` alternative (see original
+    description from [Daniel J. Berstein](https://cr.yp.to/redo.html)).
+    There are several existing implementations out there. I now use the
+    `redo` from [`zombiezen`](https://github.com/zombiezen/redo-rs) and
+    have used [`apenwarr`s redo](https://github.com/apenwarr/redo) in
+    the past. However, just to get things building, there is a minimal
+    `do` shell executable in the root of the repository.
+
+You can then follow along with the steps in the GitHub workflow that
+tests that commits build (`.github/workflows/dotnet.yml`).
+
+The minimum steps after .NET and Java installation are:
+
+``` sh
+# Get ANTLR (version 4.9.3 in this example)
+curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
+# Compile ANTLR grammars - environment variables ANTLR_JAR and CLASSPATH required.
+export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
+export CLASSPATH=.:"$(pwd)/antlr-4.9.3-complete.jar"
+./do src/antlr/compiled
+./do src/antlr/excelrange/compiled
+./do src/antlr/idf/compiled
+# Run redo targets
+./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+# Build
+dotnet build src
+dotnet build test
+```
 
 <!-- vim:set ft=markdown: -->
 

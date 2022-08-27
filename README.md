@@ -5,9 +5,17 @@ idf input files for [EnergyPlus](https://energyplus.net). It also
 supports the Building Description Language used for
 [DOE-2](https://www.doe2.com/).
 
-You can view the entire user manual in PDF form
-[here](https://neobem.io/neobem.pdf) and online at
+You can download the entire user manual in PDF form
+[here](https://neobem.io/neobem.pdf) or view online at
 [neobem.io](https://neobem.io).
+
+Quick links:
+
+-   [Introduction](#introduction)
+-   [Getting Started](#getting-started)
+-   [Support](#support)
+-   [Contributing](#contributing)
+-   [Building from Source](#building-from-source)
 
 # Introduction
 
@@ -68,7 +76,7 @@ CPU architectures.
 9.  win-x86.zip
 
 Download the zip file that matches your operating system and
-architecture.[1] For most people, this will be `win-x64`, `linux-x64`,
+architecture.[^1] For most people, this will be `win-x64`, `linux-x64`,
 or `osx-x64`.
 
 The zip file will contain a single self contained executable. Extract
@@ -80,7 +88,7 @@ places would be:
 -   `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
-from a shell environment, that could be anything like[2]:
+from a shell environment, that could be anything like[^2]:
 
 -   `cmd.exe` or PowerShell on Windows
 -   `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
@@ -238,14 +246,89 @@ workflow from start to finish. This particular workflow example used
 `bash` as the shell and the files were edited with Neovim.
 
 <figure>
-<img src="doc/img/demo.png" style="width:80.0%" alt="Sample screenshot from demo at: asciinema.org." /><figcaption aria-hidden="true">Sample screenshot from demo at: <a href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>
+<img src="doc/img/demo.png" style="width:80.0%"
+alt="Sample screenshot from demo at: asciinema.org." />
+<figcaption aria-hidden="true">Sample screenshot from demo at: <a
+href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>
 </figure>
+
+# Support
+
+If you believe you have come across a bug, please open a new GitHub
+issue. Please attempt to produce a [“minimum reproducible example
+(MRE)”](https://en.wikipedia.org/wiki/Minimal_reproducible_example) file
+that reproduces the problem. If the code snippet is small enough,
+include directly in the issue, otherwise attach the associated file.
+
+You can also attempt to get support on [Unmet
+Hours](https://unmethours.com/questions/), a site similar in spirit to
+[Stack Overflow](https://stackoverflow.com/), but for building energy
+modelers. Make sure to tag the question with `neobem` as I have an email
+alert set up for those questions.
+
+# Contributing
+
+Feedback and contributions are welcomed. Small contributions can made
+directly in Pull Requests. If you’d like to propose a more significant
+or more fundamental change, I ask that it first be discussed to prevent
+wasted effort. Please use the
+[“Discussions”](https://github.com/mitchpaulus/neobem/discussions)
+within the GitHub repository, likely in the “General” or “Ideas”
+category.
+
+If the change adds functionality, corresponding unit tests would be
+expected. Tests are located in the `test` project/directory.
+
+For coding style conventions, you can follow the conventions laid out by
+Microsoft
+([link](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)).
+
+# Building from Source
+
+Building from source requires the following dependencies:
+
+1.  A .NET environment. Typically installed with [Visual
+    Studio](https://visualstudio.microsoft.com/),
+    [Rider](https://www.jetbrains.com/rider/), or directly through the
+    [SDK libraries](https://dotnet.microsoft.com/en-us/download).
+2.  [ANTLR](https://www.antlr.org/) and Java. I typically use the open
+    source version of Java at [jdk.java.net](https://jdk.java.net/).
+3.  Optional: A `redo`. This is a `make` alternative (see original
+    description from [Daniel J. Berstein](https://cr.yp.to/redo.html)).
+    There are several existing implementations out there. I now use the
+    `redo` from [`zombiezen`](https://github.com/zombiezen/redo-rs) and
+    have used [`apenwarr`s redo](https://github.com/apenwarr/redo) in
+    the past. However, just to get things building, there is a minimal
+    `do` shell executable in the root of the repository.
+
+You can then follow along with the steps in the GitHub workflow that
+tests that commits build
+([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
+
+The minimum steps after .NET and Java installation are:
+
+``` sh
+# Get ANTLR (version 4.9.3 in this example)
+curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
+# Compile ANTLR grammars - environment variables ANTLR_JAR and CLASSPATH required.
+export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
+export CLASSPATH=.:"$(pwd)/antlr-4.9.3-complete.jar"
+./do src/antlr/compiled
+./do src/antlr/excelrange/compiled
+./do src/antlr/idf/compiled
+# Run redo targets
+./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+# Build
+dotnet build src
+dotnet build test
+```
 
 <!-- vim:set ft=markdown: -->
 
-[1] If you are running the Windows Subsystem for Linux within Windows, I
-would recommend the Linux version, and installing like a Linux program
+[^1]: If you are running the Windows Subsystem for Linux within Windows,
+    I would recommend the Linux version, and installing like a Linux
+    program
 
-[2] If none of this makes sense, take a look at [this
-link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
-or other web searches for ‘terminal vs. shell’
+[^2]: If none of this makes sense, take a look at [this
+    link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
+    or other web searches for ‘terminal vs. shell’

@@ -292,7 +292,7 @@ Building from source requires the following dependencies:
     [Rider](https://www.jetbrains.com/rider/), or directly through the
     [SDK libraries](https://dotnet.microsoft.com/en-us/download).
 2.  [ANTLR](https://www.antlr.org/) and Java. I typically use the open
-    source version of Java at [`jdk.java.net`](https://jdk.java.net/).
+    source version of Java at [jdk.java.net](https://jdk.java.net/).
 3.  Optional: A `redo`. This is a `make` alternative (see original
     description from [Daniel J. Berstein](https://cr.yp.to/redo.html)).
     There are several existing implementations out there. I now use the

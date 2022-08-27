@@ -1,5 +1,5 @@
 ---
-title: Neobem: A domain specific language for generating EnergyPlus and DOE-2 input files
+title: "Neobem: A domain specific language for generating EnergyPlus and DOE-2 input files"
 tags:
   - Building energy simulation
   - Domain specific language

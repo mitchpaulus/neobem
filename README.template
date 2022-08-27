@@ -6,8 +6,38 @@ It also supports the Building Description Language used for [DOE-2](https://www.
 You can view the entire user manual in PDF form [here](https://neobem.io/neobem.pdf)
 and online at [neobem.io](https://neobem.io).
 
+Quick links:
+
+ - [Intro](#intro)
+ - [Getting Started](#getting-started)
+ - [Support](#support)
+ - [Contributing](#contributing)
+
+
 INCLUDE doc/intro.md
 
 INCLUDE doc/getting_started.md
+
+# Support
+
+If you believe you have come across a bug, please open a new GitHub issue.
+Please attempt to produce a "Minimum Working Example (MWE)" file that reproduces the problem.
+If the MWE is small enough, include directly in the issue, otherwise attach associated file.
+
+You can also attempt to get support on [Unmet Hours](https://unmethours.com/questions/),
+a site similar in spirit to [Stack Overflow](https://stackoverflow.com/),
+but for building energy modelers.
+Make sure to tag the question with `neobem` as I have an email alert set up for those questions.
+
+# Contributing
+
+Feedback and contributions are welcomed.
+Small contributions can made directly in Pull Requests.
+If you'd like to propose a more significant or more fundamental change, I ask that it first be discussed to prevent wasted effort.
+Please use the ["Discussions"](https://github.com/mitchpaulus/neobem/discussions) within the GitHub repository,
+likely in the "General" or "Ideas" category.
+
+For coding style conventions,
+you can follow the conventions laid out by Microsoft ([link](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)).
 
 <!-- vim:set ft=markdown: -->

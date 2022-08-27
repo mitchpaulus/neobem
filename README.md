@@ -9,6 +9,13 @@ You can view the entire user manual in PDF form
 [here](https://neobem.io/neobem.pdf) and online at
 [neobem.io](https://neobem.io).
 
+Quick links:
+
+-   [Intro](#intro)
+-   [Getting Started](#getting-started)
+-   [Support](#support)
+-   [Contributing](#contributing)
+
 # Introduction
 
 While creating your building energy simulation input files, have you
@@ -68,7 +75,7 @@ CPU architectures.
 9.  win-x86.zip
 
 Download the zip file that matches your operating system and
-architecture.[1] For most people, this will be `win-x64`, `linux-x64`,
+architecture.[^1] For most people, this will be `win-x64`, `linux-x64`,
 or `osx-x64`.
 
 The zip file will contain a single self contained executable. Extract
@@ -80,7 +87,7 @@ places would be:
 -   `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
-from a shell environment, that could be anything like[2]:
+from a shell environment, that could be anything like[^2]:
 
 -   `cmd.exe` or PowerShell on Windows
 -   `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
@@ -238,14 +245,45 @@ workflow from start to finish. This particular workflow example used
 `bash` as the shell and the files were edited with Neovim.
 
 <figure>
-<img src="doc/img/demo.png" style="width:80.0%" alt="Sample screenshot from demo at: asciinema.org." /><figcaption aria-hidden="true">Sample screenshot from demo at: <a href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>
+<img src="doc/img/demo.png" style="width:80.0%"
+alt="Sample screenshot from demo at: asciinema.org." />
+<figcaption aria-hidden="true">Sample screenshot from demo at: <a
+href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>
 </figure>
+
+# Support
+
+If you believe you have come across a bug, please open a new GitHub
+issue. Please attempt to produce a “Minimum Working Example (MWE)” file
+that reproduces the problem. If the MWE is small enough, include
+directly in the issue, otherwise attach associated file.
+
+You can also attempt to get support on [Unmet
+Hours](https://unmethours.com/questions/), a site similar in spirit to
+[Stack Overflow](https://stackoverflow.com/), but for building energy
+modelers. Make sure to tag the question with `neobem` as I have an email
+alert set up for those questions.
+
+# Contributing
+
+Feedback and contributions are welcomed. Small contributions can made
+directly in Pull Requests. If you’d like to propose a more significant
+or more fundamental change, I ask that it first be discussed to prevent
+wasted effort. Please use the
+[“Discussions”](https://github.com/mitchpaulus/neobem/discussions)
+within the GitHub repository, likely in the “General” or “Ideas”
+category.
+
+For coding style conventions, you can follow the conventions laid out by
+Microsoft
+([link](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)).
 
 <!-- vim:set ft=markdown: -->
 
-[1] If you are running the Windows Subsystem for Linux within Windows, I
-would recommend the Linux version, and installing like a Linux program
+[^1]: If you are running the Windows Subsystem for Linux within Windows,
+    I would recommend the Linux version, and installing like a Linux
+    program
 
-[2] If none of this makes sense, take a look at [this
-link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
-or other web searches for ‘terminal vs. shell’
+[^2]: If none of this makes sense, take a look at [this
+    link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
+    or other web searches for ‘terminal vs. shell’

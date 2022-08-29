@@ -39,7 +39,7 @@ Building,
   Suburbs,                    !- Terrain
   0.04,                       !- Loads Convergence Tolerance Value
   0.4000000,                  !- Temperature Convergence Tolerance Value {deltaC}
-  FullInteriorAndExterior ,   !- Solar Distribution
+  FullInteriorAndExterior,    !- Solar Distribution
   40,                         !- Maximum Number of Warmup Days
   6;                          !- Minimum Number of Warmup Days
 ```
@@ -55,6 +55,23 @@ Neobem is a programming language and corresponding compiler designed to meet thi
 
 # Statement of Need
 
+Neobem is focused on parameterizing the initial model creation in an expressive and succinct manner.
+
+EP-Macro [@EpMacro2021]
+
+OpenStudio [@Guglielmetti2011]
+
+Eplusr [@Jia2021]
+
+Eppy [@eppy]
+
+# Key Syntax Features
+
+Two pieces of syntax
+
+Integration with the building component library.
+
+Inline data tables
 
 
 # References

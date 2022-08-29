@@ -29,8 +29,9 @@ Building energy simulation plays a key role in the design and operation of build
 An important simulation program is EnergyPlus, developed by the United States Department of Energy [@Crawley2001].
 EnergyPlus is used extensively in both academic and industrial settings.
 
-The input for EnergyPlus simulations are simple text files,
-with data formatted in "Objects" separated by semi-colons (`;`) and fields separated by commas (`,`). For example:
+The input for EnergyPlus simulations are simple text files, with data formatted in "Objects".
+Fields separated by commas (`,`), and Objects separated by semicolons (`;`).
+For example:
 
 ```
 Building,
@@ -56,6 +57,7 @@ Neobem is a programming language and corresponding compiler designed to meet thi
 # Statement of Need
 
 Neobem is focused on parameterizing the initial model creation in an expressive and succinct manner.
+An IDF source file is essentially data entry; there is no computation (that is the purpose of the simulation engine).
 
 EP-Macro [@EpMacro2021]
 
@@ -65,13 +67,117 @@ Eplusr [@Jia2021]
 
 Eppy [@eppy]
 
-# Key Syntax Features
+# Example Syntax Features
 
-Two pieces of syntax
+## Inline Data Tables
 
-Integration with the building component library.
+The required raw data for parameterization can often be organized as a table.
+Neobem offers built-in syntax to specify this data directly in the source code in a readable fashion.
 
-Inline data tables
+The syntax for the inline data table was inspired by the syntax for tables in Markdown, a simple markup language.
+The syntax appears like:
 
+```neobem
+zones =
+________________________________________
+'name'        | 'x_origin'  | 'y_origin'
+--------------|------------ |-----------
+'Bedroom'     | 0           | 0
+'Living Room' | 10          | 20
+'Kitchen'     | 5           | 12
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+```
+
+The result of this expression is a list of dictionaries, with the column headers serving as the dictionary keys.
+It is equivalent to the syntax:
+
+```neobem
+zones = [
+    { 'name': 'Bedroom'    , 'x_origin': 0 , 'y_origin': 0 },
+    { 'name': 'Living Room', 'x_origin': 10, 'y_origin': 20 },
+    { 'name': 'Kitchen'    , 'x_origin': 5 , 'y_origin': 12 },
+]
+```
+
+Inline data tables are designed to be used when the number of table cells is relatively small.
+There are additional language constructs for similar functionality for loading large datasets from external files such as Microsoft Excel spreadsheets and tab delimited text data.
+
+## Integration with Building Component Library (BCL)
+
+The Building Component Library (BCL) is a collection of data used in creating building energy models [@Fleming2012].
+The data is broken up into "components" and "measures". "Components" typically contain data related to physical properties, such as thermal resistance, along with additional meta data.
+
+This data is stored in XML files hosted on [GitHub](https://github.com).
+
+For example, the following component is for a double pane window construction (note some tags removed for brevity).
+
+```xml
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="component.xsd">
+ <schema_version/>
+ <name>Dbl Clr 6mm-6mm Air</name>
+ <uid>c8cf1c10-c23e-012f-0fe5-00ff10b04504</uid>
+ <version_id>9b1dadb4-7bb5-424b-bff2-6e937d4a63a3</version_id>
+ <description>Window construction from EnergyPlus
+     8.0 WindowConstructs.idf dataset.</description>
+ <tags> <tag>Fenestration.Window</tag> </tags>
+ <attributes>
+     <attribute>
+         <name>Overall U-factor</name>
+         <value>3.058</value>
+         <datatype>float</datatype>
+     </attribute>
+     <attribute>
+         <name>Solar Heat Gain Coefficient</name>
+         <value>0.7</value>
+         <datatype>float</datatype>
+     </attribute>
+     <attribute>
+         <name>Visible Light Transmittance</name>
+         <value>0.781</value>
+         <datatype>float</datatype>
+     </attribute>
+ </attributes>
+ <files>
+  <file>
+   <version>
+    <software_program>EnergyPlus</software_program>
+    <identifier>8.0.0.008</identifier>
+   </version>
+   <filename>Dbl Clr 6mm-6mm Air_v8.0.0.008.idf</filename>
+   <filetype>idf</filetype>
+  </file>
+</component>
+```
+
+Important pieces of data for an energy model would be the solar heat gain coefficient and the visible light transmittance.
+
+Neobem provides dedicated syntax for including this data in the output.
+Each component in the BCL has a Universally Unique Identifier (UUID), a 128 bit number.
+The window component above has a id of `c8cf1c10-c23e-012f-0fe5-00ff10b04504`.
+
+The `bcl:<UUID>` syntax loads the component data into a *dictionary*, or an associative array, with all the corresponding attributes available by name.
+The attributes are also converted to the corresponding data types, such as floats, strings, or booleans.
+
+```neobem
+component = bcl:c8cf1c10-c23e-012f-0fe5-00ff10b04504
+
+WindowMaterial:SimpleGlazingSystem,
+  Window,                                    ! Name
+  <component.'Overall U-factor'>,            ! U-Factor {W/m2-K}
+  <component.'Solar Heat Gain Coefficient'>, ! SHGC
+  <component.'Visible Light Transmittance'>; ! Vis. Transmittance
+```
+
+Components in the BCL can also optionally provide associated files, including IDF input files.
+When loading the BCL component, Neobem also populates the dictionary with key-value pairs,
+in which the key is the file type, like `'idf'`{.neobem}, and the value is the URL pointing to the file contents.
+
+In this way, the file can be directly imported using the normal `import`{.nbem} syntax.
+
+```neobem
+swinging_door = bcl:2e613270-5ea8-0130-c85b-14109fdf0b37
+import swinging_door.'idf'
+```
 
 # References

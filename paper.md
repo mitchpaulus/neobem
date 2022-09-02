@@ -1,8 +1,13 @@
 ---
-title: "Neobem: A domain specific language for generating EnergyPlus and DOE-2 input files"
+title: "Neobem: A domain specific language for generating EnergyPlus input files"
 tags:
   - Building energy simulation
   - Domain specific language
+  - EnergyPlus
+  - Command line
+  - DOE-2
+  - BDL
+  - Building component library
 
 authors:
   - name: Mitchell T. Paulus
@@ -29,17 +34,17 @@ Building energy simulation plays a key role in the design and operation of build
 An important simulation program is EnergyPlus, developed by the United States Department of Energy [@Crawley2001].
 EnergyPlus is used extensively in both academic and industrial settings.
 
-The input for EnergyPlus simulations are simple text files, with data formatted in "Objects".
-Fields separated by commas (`,`), and Objects separated by semicolons (`;`).
-For example:
+The input for EnergyPlus simulations are simple text files, with data formatted in *Objects*.
+*Fields* are separated by commas (`,`), and *Objects* are separated by semicolons (`;`).
+For example, an *Object* describing a building:
 
-```
+```idf
 Building,
   PSI HOUSE DORM AND OFFICES, !- Name
-  36.87000,                   !- North Axis {deg}
+  36.87,                      !- North Axis {deg}
   Suburbs,                    !- Terrain
   0.04,                       !- Loads Convergence Tolerance Value
-  0.4000000,                  !- Temperature Convergence Tolerance Value {deltaC}
+  0.4,                        !- Temperature Convergence Tolerance Value {deltaC}
   FullInteriorAndExterior,    !- Solar Distribution
   40,                         !- Maximum Number of Warmup Days
   6;                          !- Minimum Number of Warmup Days
@@ -52,20 +57,40 @@ Neobem is a programming language and corresponding compiler designed to meet thi
 
 1. Neobem files are a superset of the original input files.
 3. Expressive syntax designed for the domain.
-2. Simplified installation and limited dependencies.
+2. Simplified installation with no dependencies.
 
 # Statement of Need
 
-Neobem is focused on parameterizing the initial model creation in an expressive and succinct manner.
-An IDF source file is essentially data entry; there is no computation (that is the purpose of the simulation engine).
+Neobem focuses on parameterizing the initial model creation expressively and succinctly.
+An EnergyPlus IDF (input data file) file is data entry; there is no computation (that is the purpose of the simulation engine which consumes the input).
+Virtually any programming language that can write to files can be used to aid in generating this data; however, the ease of use may vary drastically.
 
-EP-Macro [@EpMacro2021]
+In the distribution of EnergyPlus, several auxiliary programs are provided.
+One of these programs that aid in input file development is EP-Macro [@EpMacro2021].
+It is a console application that does allow for incorporating external files, defining macros with arguments, and limited arithmetic.
+It has several major drawbacks that limit its use, including:
 
-OpenStudio [@Guglielmetti2011]
+ - No ability to loop.
+ - Verbose syntax. An example of an `if` statement from the documentation:
 
-Eplusr [@Jia2021]
+   ```
+   ##if #[#[** city[ ] EQS Chicago ] and#[** occup[ ] NES low **]** **]**
+   ```
 
-Eppy [@eppy]
+ - Difficult to use within a build system. It does not take input on standard input, and file must reside in the same directory as the executable.
+
+Other commonly used software tools and their associated programming ecosystem are:
+
+ - OpenStudio [@Guglielmetti2011], Ruby
+ - eplusr [@Jia2021], R
+ - Eppy [@eppy], Python
+
+A drawback of all three of these tools is that they each require the setup of the corresponding programming environments.
+
+The intended audience for the software is researchers or practitioners needing complete control over the initial model input, and want the tooling to fit in well within a larger software build system.
+The tooling is intended to complement and be used alongside existing software.
+The language and tooling were also designed for those with limited programming experience, but who need to be able to do the simple first steps: variable extraction and loops.
+
 
 # Example Syntax Features
 

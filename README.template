@@ -51,12 +51,12 @@ Building from source requires the following dependencies:
 1. A .NET environment. Typically installed with [Visual Studio](https://visualstudio.microsoft.com/),
    [Rider](https://www.jetbrains.com/rider/), or directly through the [SDK libraries](https://dotnet.microsoft.com/en-us/download).
 2. [ANTLR](https://www.antlr.org/) and Java. I typically use the open source version of Java at [jdk.java.net](https://jdk.java.net/).
-3. Optional: A `redo`. This is a `make` alternative (see original description from [Daniel J. Berstein](https://cr.yp.to/redo.html)).
+3. Optional: A `redo`. This is a `make` alternative (see original description from [Daniel J. Bernstein](https://cr.yp.to/redo.html)).
    There are several existing implementations out there.
    I now use the `redo` from [`zombiezen`](https://github.com/zombiezen/redo-rs) and have used [`apenwarr`s redo](https://github.com/apenwarr/redo) in the past.
    However, just to get things building, there is a minimal `do` shell executable in the root of the repository.
 
-You can then follow along with the steps in the GitHub workflow that tests that commits build ([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
+You can then follow along with the steps in the GitHub workflow that tests building commits ([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
 
 The minimum steps after .NET and Java installation are:
 

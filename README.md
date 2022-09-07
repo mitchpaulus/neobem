@@ -294,7 +294,7 @@ Building from source requires the following dependencies:
 2.  [ANTLR](https://www.antlr.org/) and Java. I typically use the open
     source version of Java at [jdk.java.net](https://jdk.java.net/).
 3.  Optional: A `redo`. This is a `make` alternative (see original
-    description from [Daniel J. Berstein](https://cr.yp.to/redo.html)).
+    description from [Daniel J. Bernstein](https://cr.yp.to/redo.html)).
     There are several existing implementations out there. I now use the
     `redo` from [`zombiezen`](https://github.com/zombiezen/redo-rs) and
     have used [`apenwarr`s redo](https://github.com/apenwarr/redo) in
@@ -302,7 +302,7 @@ Building from source requires the following dependencies:
     `do` shell executable in the root of the repository.
 
 You can then follow along with the steps in the GitHub workflow that
-tests that commits build
+tests building commits
 ([`.github/workflows/dotnet.yml`](https://github.com/mitchpaulus/neobem/blob/main/.github/workflows/dotnet.yml)).
 
 The minimum steps after .NET and Java installation are:

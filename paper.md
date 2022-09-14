@@ -50,7 +50,7 @@ Building,
   6;                          !- Minimum Number of Warmup Days
 ```
 
-Most users will use GUI software such as OpenStudio to create simple building energy models.
+Most users will use graphical software such as OpenStudio to create simple building energy models.
 However, as with any data entry, a point comes quickly when researchers and developers will want to remove duplication and parameterize models as concisely as possible.
 
 Neobem is a programming language and corresponding compiler designed to meet this need with the following considerations in mind:
@@ -87,9 +87,9 @@ Other commonly used software tools and their associated programming ecosystem ar
 
 A drawback of all three of these tools is that they each require the setup of the corresponding programming environments.
 
-The intended audience for the software is researchers or practitioners needing complete control over the initial model input, and want the tooling to fit in well within a larger software build system.
-The tooling is intended to complement and be used alongside existing software.
-The language and tooling were also designed for those with limited programming experience, but who need to be able to do the simple first steps: variable extraction and loops.
+The intended audience for the software is researchers or practitioners needing complete control over the initial model input, and want the program to fit in well within a larger software build system.
+The tool is intended to complement and be used alongside existing software.
+The language was designed for those with limited programming experience, but who need to be able to do the simple first steps: variable extraction and loops.
 
 
 # Example Syntax Features
@@ -125,7 +125,7 @@ zones = [
 ```
 
 Inline data tables are designed to be used when the number of table cells is relatively small.
-There are additional language constructs for similar functionality for loading large datasets from external files such as Microsoft Excel spreadsheets and tab delimited text data.
+There are additional language constructs for similar functionality for loading large datasets from external files such as Microsoft Excel spreadsheets, JSON, XML, and tab delimited text data.
 
 ## Integration with Building Component Library (BCL)
 
@@ -143,19 +143,14 @@ For example, the following component is for a double pane window construction (n
  <name>Dbl Clr 6mm-6mm Air</name>
  <uid>c8cf1c10-c23e-012f-0fe5-00ff10b04504</uid>
  <version_id>9b1dadb4-7bb5-424b-bff2-6e937d4a63a3</version_id>
- <description>Window construction from EnergyPlus
-     8.0 WindowConstructs.idf dataset.</description>
+ <description>Window construction from EnergyPlus 8.0 WindowConstructs.idf dataset.</description>
  <tags> <tag>Fenestration.Window</tag> </tags>
  <attributes>
      <attribute>
-         <name>Overall U-factor</name>
-         <value>3.058</value>
-         <datatype>float</datatype>
+         <name>Overall U-factor</name><value>3.058</value><datatype>float</datatype>
      </attribute>
      <attribute>
-         <name>Solar Heat Gain Coefficient</name>
-         <value>0.7</value>
-         <datatype>float</datatype>
+         <name>Solar Heat Gain Coefficient</name><value>0.7</value><datatype>float</datatype>
      </attribute>
      <attribute>
          <name>Visible Light Transmittance</name>
@@ -166,8 +161,7 @@ For example, the following component is for a double pane window construction (n
  <files>
   <file>
    <version>
-    <software_program>EnergyPlus</software_program>
-    <identifier>8.0.0.008</identifier>
+    <software_program>EnergyPlus</software_program><identifier>8.0.0.008</identifier>
    </version>
    <filename>Dbl Clr 6mm-6mm Air_v8.0.0.008.idf</filename>
    <filetype>idf</filetype>

@@ -143,29 +143,33 @@ For example, the following component is for a double pane window construction (n
  <name>Dbl Clr 6mm-6mm Air</name>
  <uid>c8cf1c10-c23e-012f-0fe5-00ff10b04504</uid>
  <version_id>9b1dadb4-7bb5-424b-bff2-6e937d4a63a3</version_id>
- <description>Window construction from EnergyPlus 8.0 WindowConstructs.idf dataset.</description>
+ <description>Window construction from EnergyPlus 8.0
+              WindowConstructs.idf dataset.</description>
  <tags> <tag>Fenestration.Window</tag> </tags>
  <attributes>
-     <attribute>
-         <name>Overall U-factor</name><value>3.058</value><datatype>float</datatype>
-     </attribute>
-     <attribute>
-         <name>Solar Heat Gain Coefficient</name><value>0.7</value><datatype>float</datatype>
-     </attribute>
-     <attribute>
-         <name>Visible Light Transmittance</name>
-         <value>0.781</value>
-         <datatype>float</datatype>
-     </attribute>
+  <attribute>
+   <name>Overall U-factor</name>
+   <value>3.058</value><datatype>float</datatype>
+  </attribute>
+  <attribute>
+   <name>Solar Heat Gain Coefficient</name>
+   <value>0.7</value><datatype>float</datatype>
+  </attribute>
+  <attribute>
+   <name>Visible Light Transmittance</name>
+   <value>0.781</value><datatype>float</datatype>
+  </attribute>
  </attributes>
  <files>
   <file>
    <version>
-    <software_program>EnergyPlus</software_program><identifier>8.0.0.008</identifier>
+    <software_program>EnergyPlus</software_program>
+    <identifier>8.0.0.008</identifier>
    </version>
    <filename>Dbl Clr 6mm-6mm Air_v8.0.0.008.idf</filename>
    <filetype>idf</filetype>
   </file>
+ </files>
 </component>
 ```
 

@@ -345,10 +345,6 @@ namespace src
                     return
                         $"λ{identifierContents}{{{commentString}{(expressionContents.StartsWith('\n') ? "" : $"\n{subVisitor.IndentSpaces}")}{expressionContents}\n{IndentSpaces}}}";
                 }
-
-                return multipleLineContents ?
-                    $"λ{identifierContents}{{{(expressionContents.StartsWith('\n') ? "" : $"\n{subVisitor.IndentSpaces}")}{expressionContents}\n{IndentSpaces}}}" :
-                    $"λ{identifierContents}{{ {expressionContents} }}";
             }
             else
             {

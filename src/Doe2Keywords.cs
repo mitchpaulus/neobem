@@ -35,13 +35,5 @@ public class Doe2Printer
         string replaced = _replacer.Replace(context.GetText(), _environments, _fileType);
 
         return replaced;
-
-        bool firstWordIsCommand;
-
-        firstWordIsCommand = context.DOE2STRING_UNAME() == null && Doe2Keywords.Keywords.Contains(context.DOE2IDENTIFIER().GetText());
-
-        var items = context.children.Select(tree => _replacer.Replace(tree.GetText(), _environments, _fileType));
-
-        return $"{items.Join(" ")}";
     }
 }

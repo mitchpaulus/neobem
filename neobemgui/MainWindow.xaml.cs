@@ -58,15 +58,15 @@ namespace neobemgui
 
                 AntlrInputStream inputStream = new AntlrInputStream(fileText);
 
-                IdfplusLexer lexer = new IdfplusLexer(inputStream);
+                var lexer = new NeobemLexer(inputStream);
 
                 CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
 
-                IdfplusParser parser = new IdfplusParser(commonTokenStream);
+                var parser = new NeobemParser(commonTokenStream);
 
-                IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName);
+                IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName, FileType.Idf);
 
-                IdfplusParser.IdfContext tree = parser.idf();
+                var tree = parser.idf();
 
                 string result;
                 try

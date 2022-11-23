@@ -45,4 +45,3 @@ jobs:
       run: |
         PATH=~/work/neobem/neobem/src/bin/Debug/net6.0:"$PATH"
         ./do doc/code_samples/test
-

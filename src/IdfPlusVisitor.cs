@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using src.Functions;
 
@@ -150,12 +151,14 @@ namespace src
             // Right now we support http{s} or files.
             if (filePath.StartsWith("http"))
             {
-                // See: https://stackoverflow.com/a/943875/5932184
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(filePath);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream resStream = response.GetResponseStream();
-                StreamReader reader = new(resStream);
-                contents = reader.ReadToEnd();
+                // Use HttpClient to get the contents of the file.
+                // I'm aware that the documentation states:
+                // "HttpClient is intended to be instantiated once and reused throughout the life of an application."
+                // But we aren't running a web server here, just loading some simple text files.
+                using (HttpClient client = new())
+                {
+                    contents = client.GetStringAsync(filePath).Result;
+                }
 
                 // Many of the idf files in the BCL include a 'Version' object. This causes issues when
                 // more than a single import occurs. So we have this hardcoded check to remove that

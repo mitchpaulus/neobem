@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.7.1 - 2022-12-28
+
+### Changed
+
+- Now targets .NET 7.
+
 ## 0.7.0 - 2022-02-20
 
 ### Added

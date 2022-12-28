@@ -13,8 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Antlr4.Runtime;
-using src;
+//using Antlr4.Runtime;
 
 namespace neobemgui
 {
@@ -53,31 +52,31 @@ namespace neobemgui
             }
             else
             {
-                var fileText = File.ReadAllText(_file);
-                SampleOutput.Text = fileText;
+                //var fileText = File.ReadAllText(_file);
+                //SampleOutput.Text = fileText;
 
-                AntlrInputStream inputStream = new AntlrInputStream(fileText);
+                //AntlrInputStream inputStream = new AntlrInputStream(fileText);
 
-                var lexer = new NeobemLexer(inputStream);
+                //var lexer = new NeobemLexer(inputStream);
 
-                CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+                //CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
 
-                var parser = new NeobemParser(commonTokenStream);
+                //var parser = new NeobemParser(commonTokenStream);
 
-                IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName, FileType.Idf);
+                //IdfPlusVisitor visitor = new IdfPlusVisitor(fileInfo.DirectoryName, FileType.Idf);
 
-                var tree = parser.idf();
+                //var tree = parser.idf();
 
-                string result;
-                try
-                {
-                    result = visitor.Visit(tree);
-                    SampleOutput.Text = result;
-                }
-                catch (Exception exception)
-                {
-                    SampleOutput.Text = exception.Message;
-                }
+                //string result;
+                //try
+                //{
+                //    result = visitor.Visit(tree);
+                //    SampleOutput.Text = result;
+                //}
+                //catch (Exception exception)
+                //{
+                //    SampleOutput.Text = exception.Message;
+                //}
 
             }
 

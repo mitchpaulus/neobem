@@ -173,10 +173,14 @@ namespace src
                 sheet = excelFile.Workbook.Worksheets.FirstOrDefault(excelWorksheet =>
                     excelWorksheet.Name == worksheet);
 
-                if (sheet == default)
-                {
-                    throw new ArgumentException($"The sheet '{worksheet}' was not found in file {fileInfo.FullName}.");
-                }
+                if (sheet != default) return range.ReadSheet(sheet);
+
+                // Throw argument exception as the worksheet name is not found.
+                // Provide a list of all the worksheets in the file.
+                string message = $"The sheet '{worksheet}' was not found in file {fileInfo.FullName}.";
+                string allSheets = string.Join(", ", excelFile.Workbook.Worksheets.Select(ws => $"'{ws.Name}'"));
+                message += $" Available sheets are: {allSheets}";
+                throw new ArgumentException(message);
             }
             return range.ReadSheet(sheet);
         }

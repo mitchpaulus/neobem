@@ -43,5 +43,5 @@ jobs:
       run: dotnet test test --no-build --verbosity normal
     - name: Test documentation code samples
       run: |
-        PATH=~/work/neobem/neobem/src/bin/Debug/net7.0:"$PATH"
+        PATH=~/work/neobem/neobem/src/bin/Debug/net7.0/linux-x64:"$PATH"
         ./do doc/code_samples/test

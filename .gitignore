@@ -37,6 +37,7 @@ doc/doc.html
 doc/contents.md
 doc/contents.html
 doc/neobem_syntax_kde.txt
+doc/syntax.xml
 
 doc/text_snippets/inline_data_table_antlr.txt
 
@@ -442,4 +443,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-

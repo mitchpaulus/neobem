@@ -1,5 +1,5 @@
 #!/bin/sh
-redo-ifchange ../csharp
+redo-ifchange ../csharp || exit 1
 
 rm -rf publish/*
 
@@ -14,6 +14,6 @@ for runtime in win-x64 win-x86 win-arm win-arm64 linux-x64 linux-musl-x64 linux-
     rm -rf publish/"$runtime"
 done
 
-redo ../doc/all
+redo ../doc/all || exit 1
 
 cp ../doc/doc.pdf publish/neobem.pdf

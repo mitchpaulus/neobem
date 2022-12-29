@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 # This is more less straight from the redo
 # documentation: https://redo.readthedocs.io/en/latest/cookbook/latex/
 
@@ -10,13 +11,8 @@ exec >&2
 # We depend on both the .latex file and its .deps
 # file (which lists additional dependencies)
 #redo-ifchange "$2.tex" "$2.deps"
-redo-ifchange "$2.tex"
-
-redo-ifchange neobem_syntax_kde.txt
-
-# Read first line of neobem_syntax_kde.txt to variable
-SYNTAX_HIGHLIGHT_FILE=$(head -n 1 neobem_syntax_kde.txt)
-redo-ifchange "$SYNTAX_HIGHLIGHT_FILE"
+redo-ifchange "$2.tex" || { printf 'Could not make %s.tex\n' "$2" >&2; exit 1; }
+redo-ifchange syntax.xml
 
 awk '/input{/' doc.tex | \
 awk 'BEGIN { FS="{|}" } { print $2 ".tex" }' | \

@@ -132,6 +132,7 @@ DOE2_LIST_START : '(' ;
 DOE2_LIST_END : ')' ;
 DOE2_OBJECT_COMMENT : '$' .*? ('$' | '\r'?'\n') ;
 DOE2_STRING : '"' .*? '"' ;
+DOE2_LITERAL : '*' .*? '*' ;
 DOE2_TERMINATOR : '..' -> popMode ;
 DOE2_FIELD_SEP :  [ \t\r\n=,]+ ;
 DOE2_FIELD : (~[,= ()\t\r\n] | '<' .*? '>') + ;

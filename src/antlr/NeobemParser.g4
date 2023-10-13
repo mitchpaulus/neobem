@@ -129,6 +129,7 @@ doe2object : (DOE2IDENTIFIER | DOE2STRING_UNAME)
 doe2word
   : DOE2_FIELD
   | DOE2_STRING
+  | DOE2_LITERAL
   | doe2list
   ;
 
@@ -143,4 +144,3 @@ doe2list
   ;
 
 idf : (base_idf)* EOF;
-

@@ -8,6 +8,9 @@ README.pdf
 
 *.output.idf
 
+paper.jats
+paper.pdf
+
 # Used as sentinel file for the ANTLR compilations
 compiled
 

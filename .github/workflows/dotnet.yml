@@ -43,8 +43,8 @@ jobs:
       run: dotnet test test --no-build --verbosity normal
     - name: Test documentation code samples
       run: |
-        find -name nbem
-        PATH="$(dirname "$(find -name nbem | head -n 1)")":"$PATH"
+        find "$PWD" -name nbem
+        PATH="$(dirname $(find "$PWD" -name nbem | head -n 1)")":"$PATH"
         echo "PATH:"
         echo "$PATH"
         ./do doc/code_samples/test

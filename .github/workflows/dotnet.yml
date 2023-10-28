@@ -43,5 +43,8 @@ jobs:
       run: dotnet test test --no-build --verbosity normal
     - name: Test documentation code samples
       run: |
-        PATH=~/work/neobem/neobem/src/bin/Debug/net7.0/linux-x64:"$PATH"
+        find "$PWD" -name nbem
+        PATH="$(dirname "$(find "$PWD" -name nbem | head -n 1)")":"$PATH"
+        echo "PATH:"
+        echo "$PATH"
         ./do doc/code_samples/test

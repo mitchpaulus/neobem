@@ -44,7 +44,7 @@ jobs:
     - name: Test documentation code samples
       run: |
         find "$PWD" -name nbem
-        PATH="$(dirname $(find "$PWD" -name nbem | head -n 1)")":"$PATH"
+        PATH="$(dirname "$(find "$PWD" -name nbem | head -n 1)")":"$PATH"
         echo "PATH:"
         echo "$PATH"
         ./do doc/code_samples/test

@@ -166,6 +166,10 @@ namespace src
                             var replacedComment = replacer.Replace(commentContext.GetText(), updatedEnvironments, _fileType);
                             builder.Append(replacedComment);
                             break;
+                        case NeobemParser.FunctionDoe2CommentContext doe2CommentContext:
+                            var replacedDoe2 = replacer.Replace(doe2CommentContext.GetText(), updatedEnvironments, _fileType);
+                            builder.Append(replacedDoe2);
+                            break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             string objectText = objectDeclarationContext.GetText();
                             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);

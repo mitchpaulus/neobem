@@ -511,6 +511,17 @@ public partial class NeobemParserBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// <return>The visitor result.</return>
 	public virtual Result VisitFunctionIdfComment([NotNull] NeobemParser.FunctionIdfCommentContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>FunctionObjectDeclaration</c>
 	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
 	/// <para>

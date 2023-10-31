@@ -90,14 +90,16 @@ inline_table_header_separator :
 inline_table_data_row : expression (INLINE_TABLE_COL_SEP expression)* ;
 
 
-function_statement :  COMMENT   # FunctionIdfComment
-                    | object    # FunctionObjectDeclaration
-                    | doe2object # FunctionDoe2ObjectDeclaration
-                    | variable_declaration # FunctionVariableDeclaration
-                    | print_statment # FunctionPrintStatement
-                    | return_statement # ReturnStatement
-                    | log_statement    # FunctionLogStatement
-                    ;
+function_statement
+    : COMMENT   # FunctionIdfComment
+    | DOE2COMMENT # FunctionDoe2Comment
+    | object # FunctionObjectDeclaration
+    | doe2object # FunctionDoe2ObjectDeclaration
+    | variable_declaration # FunctionVariableDeclaration
+    | print_statment # FunctionPrintStatement
+    | return_statement # ReturnStatement
+    | log_statement    # FunctionLogStatement
+    ;
 
 base_idf
   : COMMENT              # IdfComment

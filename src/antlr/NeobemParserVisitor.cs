@@ -328,6 +328,13 @@ public interface INeobemParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFunctionIdfComment([NotNull] NeobemParser.FunctionIdfCommentContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>FunctionObjectDeclaration</c>
 	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
 	/// </summary>

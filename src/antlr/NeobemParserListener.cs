@@ -533,6 +533,18 @@ public interface INeobemParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunctionIdfComment([NotNull] NeobemParser.FunctionIdfCommentContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>FunctionObjectDeclaration</c>
 	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
 	/// </summary>

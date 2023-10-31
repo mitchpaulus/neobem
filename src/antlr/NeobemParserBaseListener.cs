@@ -628,6 +628,20 @@ public partial class NeobemParserBaseListener : INeobemParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFunctionIdfComment([NotNull] NeobemParser.FunctionIdfCommentContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>FunctionDoe2Comment</c>
+	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunctionDoe2Comment([NotNull] NeobemParser.FunctionDoe2CommentContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>FunctionObjectDeclaration</c>
 	/// labeled alternative in <see cref="NeobemParser.function_statement"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -131,6 +131,7 @@ mode DOE2OBJECT;
 DOE2_LIST_START : '(' ;
 DOE2_LIST_END : ')' ;
 DOE2_OBJECT_COMMENT : '$' .*? ('$' | '\r'?'\n') ;
+DOE2_NEOBEM_COMMENT : '#' .*? '\r'?'\n' -> channel(1) ;
 DOE2_STRING : '"' .*? '"' ;
 DOE2_LITERAL : '*' .*? '*' ;
 DOE2_TERMINATOR : '..' -> popMode ;

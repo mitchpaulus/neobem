@@ -47,8 +47,9 @@ public partial class NeobemParser : Parser {
 		IDENTIFIER=48, COMMENT=49, DOE2COMMENT=50, NEOBEM_COMMENT=51, NUMERIC=52, 
 		STRING=53, OBJECT_TYPE=54, DOE2IDENTIFIER=55, DOE2STRING_UNAME=56, WS=57, 
 		FIELD=58, FIELD_SEP=59, OBJECT_COMMENT=60, OBJECT_TERMINATOR=61, OBJECT_WS=62, 
-		DOE2_LIST_START=63, DOE2_LIST_END=64, DOE2_OBJECT_COMMENT=65, DOE2_STRING=66, 
-		DOE2_LITERAL=67, DOE2_TERMINATOR=68, DOE2_FIELD_SEP=69, DOE2_FIELD=70;
+		DOE2_LIST_START=63, DOE2_LIST_END=64, DOE2_OBJECT_COMMENT=65, DOE2_NEOBEM_COMMENT=66, 
+		DOE2_STRING=67, DOE2_LITERAL=68, DOE2_TERMINATOR=69, DOE2_FIELD_SEP=70, 
+		DOE2_FIELD=71;
 	public const int
 		RULE_variable_declaration = 0, RULE_expression = 1, RULE_functional_operator = 2, 
 		RULE_function_application = 3, RULE_function_parameter = 4, RULE_boolean_exp_operator = 5, 
@@ -90,7 +91,8 @@ public partial class NeobemParser : Parser {
 		"DOE2COMMENT", "NEOBEM_COMMENT", "NUMERIC", "STRING", "OBJECT_TYPE", "DOE2IDENTIFIER", 
 		"DOE2STRING_UNAME", "WS", "FIELD", "FIELD_SEP", "OBJECT_COMMENT", "OBJECT_TERMINATOR", 
 		"OBJECT_WS", "DOE2_LIST_START", "DOE2_LIST_END", "DOE2_OBJECT_COMMENT", 
-		"DOE2_STRING", "DOE2_LITERAL", "DOE2_TERMINATOR", "DOE2_FIELD_SEP", "DOE2_FIELD"
+		"DOE2_NEOBEM_COMMENT", "DOE2_STRING", "DOE2_LITERAL", "DOE2_TERMINATOR", 
+		"DOE2_FIELD_SEP", "DOE2_FIELD"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -2672,6 +2674,26 @@ public partial class NeobemParser : Parser {
 			else return visitor.VisitChildren(this);
 		}
 	}
+	public partial class FunctionDoe2CommentContext : Function_statementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOE2COMMENT() { return GetToken(NeobemParser.DOE2COMMENT, 0); }
+		public FunctionDoe2CommentContext(Function_statementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INeobemParserListener typedListener = listener as INeobemParserListener;
+			if (typedListener != null) typedListener.EnterFunctionDoe2Comment(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INeobemParserListener typedListener = listener as INeobemParserListener;
+			if (typedListener != null) typedListener.ExitFunctionDoe2Comment(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INeobemParserVisitor<TResult> typedVisitor = visitor as INeobemParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFunctionDoe2Comment(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
 
 	[RuleVersion(0)]
 	public Function_statementContext function_statement() {
@@ -2689,9 +2711,17 @@ public partial class NeobemParser : Parser {
 				Match(COMMENT);
 				}
 				break;
+			case DOE2COMMENT:
+				_localctx = new FunctionDoe2CommentContext(_localctx);
+				EnterOuterAlt(_localctx, 2);
+				{
+				State = 287;
+				Match(DOE2COMMENT);
+				}
+				break;
 			case OBJECT_TYPE:
 				_localctx = new FunctionObjectDeclarationContext(_localctx);
-				EnterOuterAlt(_localctx, 2);
+				EnterOuterAlt(_localctx, 3);
 				{
 				State = 287;
 				@object();
@@ -2700,7 +2730,7 @@ public partial class NeobemParser : Parser {
 			case DOE2IDENTIFIER:
 			case DOE2STRING_UNAME:
 				_localctx = new FunctionDoe2ObjectDeclarationContext(_localctx);
-				EnterOuterAlt(_localctx, 3);
+				EnterOuterAlt(_localctx, 4);
 				{
 				State = 288;
 				doe2object();
@@ -2708,7 +2738,7 @@ public partial class NeobemParser : Parser {
 				break;
 			case IDENTIFIER:
 				_localctx = new FunctionVariableDeclarationContext(_localctx);
-				EnterOuterAlt(_localctx, 4);
+				EnterOuterAlt(_localctx, 5);
 				{
 				State = 289;
 				variable_declaration();
@@ -2716,7 +2746,7 @@ public partial class NeobemParser : Parser {
 				break;
 			case PRINT:
 				_localctx = new FunctionPrintStatementContext(_localctx);
-				EnterOuterAlt(_localctx, 5);
+				EnterOuterAlt(_localctx, 6);
 				{
 				State = 290;
 				print_statment();
@@ -2724,7 +2754,7 @@ public partial class NeobemParser : Parser {
 				break;
 			case RETURN:
 				_localctx = new ReturnStatementContext(_localctx);
-				EnterOuterAlt(_localctx, 6);
+				EnterOuterAlt(_localctx, 7);
 				{
 				State = 291;
 				return_statement();
@@ -2732,7 +2762,7 @@ public partial class NeobemParser : Parser {
 				break;
 			case LOG:
 				_localctx = new FunctionLogStatementContext(_localctx);
-				EnterOuterAlt(_localctx, 7);
+				EnterOuterAlt(_localctx, 8);
 				{
 				State = 292;
 				log_statement();

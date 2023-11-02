@@ -275,5 +275,19 @@ namespace test
 
             Assert.IsTrue(IdfObjectCompare.Equals("Version,2;", output));
         }
+
+        [Test]
+        public void TestLogicAndShortCircuit()
+        {
+            var filepath = Path.Combine(TestDir.Dir, "logic.nbem");
+
+            var file = File.ReadAllText(filepath);
+            var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+            var parser = file.ToParser(FileType.Idf);
+            var tree = parser.idf();
+            string output = visitor.Visit(tree);
+
+            Assert.IsTrue(IdfObjectCompare.Equals("Version,1,0,0,0,1,1,1,0;", output));
+        }
     }
 }

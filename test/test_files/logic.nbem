@@ -1,0 +1,22 @@
+t = true
+f = false
+
+case_1 = if t and t then 1 else 0
+case_2 = if t and f then 1 else 0
+case_3 = if f and t then 1 else 0
+case_4 = if f and f then 1 else 0
+
+case_5 = if t or t then 1 else 0
+case_6 = if t or f then 1 else 0
+case_7 = if f or t then 1 else 0
+case_8 = if f or f then 1 else 0
+
+Version,
+    <case_1>,
+    <case_2>,
+    <case_3>,
+    <case_4>,
+    <case_5>,
+    <case_6>,
+    <case_7>,
+    <case_8>;

@@ -109,15 +109,23 @@ namespace src
             };
 
             var lhs = Visit(context.expression(0));
-            var rhs = Visit(context.expression(1));
 
-            if (lhs is BooleanExpression lhsBooleanExp && rhs is BooleanExpression rhsBooleanExp)
+            if (lhs is not BooleanExpression lhsBoolExp)
             {
-                return new BooleanExpression(conditional[context.op.Text](lhsBooleanExp.Value, rhsBooleanExp.Value));
+                throw new NotImplementedException($"Line {context.Start.Line}: The logic expression is not defined for type on LHS {lhs.TypeName()}.");
             }
 
-            throw new NotImplementedException(
-                $"Line {context.Start.Line}: The logic expression is not defined for types {lhs.TypeName()} and {rhs.TypeName()}");
+            // Short-circuit and if the LHS is false.
+            if (context.op.Text == "and" && !lhsBoolExp.Value) return new BooleanExpression(false);
+            if (context.op.Text == "or" && lhsBoolExp.Value) return new BooleanExpression(true);
+
+            var rhs = Visit(context.expression(1));
+            if (rhs is not BooleanExpression rhsBoolExp)
+            {
+                throw new NotImplementedException($"Line {context.Start.Line}: The logic expression is not defined for type on RHS {rhs.TypeName()}.");
+            }
+
+            return new BooleanExpression(rhsBoolExp.Value);
         }
 
         public override Expression VisitNumericExp(NeobemParser.NumericExpContext context)

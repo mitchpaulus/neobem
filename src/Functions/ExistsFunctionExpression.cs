@@ -20,7 +20,7 @@ public class ExistsFunctionExpression : FunctionExpression
         {
             throw new ArgumentException($"Expected a list as the first parameter to map, received a {inputs[0].TypeName()} of value '{inputs[0].AsErrorString()}'");
         }
-        
+
         // Check whether string name exists in file
         var exists = Environments.Any(dictionary => dictionary.ContainsKey(stringExp.Text));
         return (string.Empty, new BooleanExpression(exists));

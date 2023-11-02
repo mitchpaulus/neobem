@@ -100,7 +100,8 @@ namespace src
     public class FunctionExpression : Expression
     {
         private readonly NeobemParser.LambdaExpContext _context;
-        private readonly List<Dictionary<string, Expression>> _environments;
+        // Environments should always be checked from first to last.
+        protected readonly List<Dictionary<string, Expression>> Environments;
         private readonly FileType _fileType;
 
         public readonly List<string> Parameters;
@@ -113,18 +114,27 @@ namespace src
         public FunctionExpression(NeobemParser.LambdaExpContext lambdaDefContext, List<Dictionary<string, Expression>> environments, FileType fileType, string baseDirectory = null)
         {
             _context = lambdaDefContext;
-            _environments = environments;
+            Environments = environments;
             _fileType = fileType;
             Parameters = lambdaDefContext.lambda_def().IDENTIFIER().Select(node => node.GetText()).ToList();
         }
 
         public FunctionExpression(List<Dictionary<string, Expression>> environments, List<string> parameters, FileType fileType, string baseDirectory = null)
         {
-            _environments = environments;
+            Environments = environments;
             Parameters = parameters;
             _fileType = fileType;
         }
 
+        /// <summary>
+        /// Evaluates inputs, returns string of printed contents for output file and resulting expression value.
+        /// Within a built-in function evaluation, the string should almost always be empty.
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <param name="baseDirectory"></param>
+        /// <returns>Tuple of string, Expression. The string is contents to be printed in the output.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public virtual (string, Expression) Evaluate(List<Expression> inputs, string baseDirectory)
         {
             Dictionary<string, Expression> locals = new Dictionary<string, Expression>();
@@ -138,7 +148,7 @@ namespace src
 
             for (int i = 0; i < inputs.Count; i++) locals[Parameters[i]] = inputs[i];
 
-            var updatedEnvironments = new List<Dictionary<string, Expression>>(_environments);
+            var updatedEnvironments = new List<Dictionary<string, Expression>>(Environments);
             updatedEnvironments.Insert(0, locals);
 
             IdfPlusExpVisitor visitor = new(updatedEnvironments, _fileType, baseDirectory);

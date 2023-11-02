@@ -1,0 +1,6 @@
+does_not_exist = exists('var_that_does_not_exist')
+
+value = if does_not_exist then 1 else 2
+
+Version,
+    <value>;

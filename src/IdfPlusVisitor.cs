@@ -46,6 +46,7 @@ namespace src
             _environments[0]["type"] = new TypeFunctionExpression();
 
             _environments[0]["guid"] = new GuidFunctionExpression();
+            _environments[0]["exists"] = new ExistsFunctionExpression();
 
             _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
         }

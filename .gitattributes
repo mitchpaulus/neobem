@@ -1,3 +1,11 @@
 * text=auto
+
+*.awk text eol=lf
+*.bib text eol=lf
+*.cs text eol=lf
+*.g4 text eol=lf
+*.md text eol=lf
+
 *.do text eol=lf
 *.sh text eol=lf
+*.nbem text eol=lf

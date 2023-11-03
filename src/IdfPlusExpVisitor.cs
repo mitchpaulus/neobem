@@ -56,7 +56,7 @@ namespace src
 
             _variables[0]["mod"] = new ModFunctionExpression();
 
-            _variables[0]["exists"] = new ExistsFunctionExpression();
+            _variables[0]["exists"] = new ExistsFunctionExpression(_variables);
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

@@ -19,37 +19,41 @@ namespace src
         public HashSet<string> exports = new HashSet<string>();
         private readonly IdfObjectPrettyPrinter _idfObjectPrettyPrinter = new IdfObjectPrettyPrinter();
 
-        public IdfPlusVisitor(string baseDirectory, FileType fileType)
+        public IdfPlusVisitor(string baseDirectory, FileType fileType, List<string> flags)
         {
-            _baseDirectory = baseDirectory;
-            _fileType = fileType;
-            _environments = new List<Dictionary<string, Expression>>()
-            {
-                new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
-            };
-            _environments[0]["map"] = new MapFunctionExpression();
-            _environments[0]["filter"] = new FilterFunctionExpression();
-            _environments[0]["fold"] = new FoldFunctionExpression();
-            _environments[0]["keys"] = new KeysFunctionExpression();
-            _environments[0]["has"] = new HasFunctionExpression();
-            _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
-            _environments[0]["head"] = new ListHeadFunctionExpression();
-            _environments[0]["tail"] = new ListTailFunctionExpression();
-            _environments[0]["init"] = new ListInitFunctionExpression();
-            _environments[0]["last"] = new ListLastFunctionExpression();
-            _environments[0]["index"] = new ListIndexFunctionExpression();
-            _environments[0]["length"] = new ListLengthFunctionExpression();
-            _environments[0]["join"] = new StringJoinFunctionExpression();
-            _environments[0]["replace"] = new StringReplaceFunctionExpression();
-            _environments[0]["mod"] = new ModFunctionExpression();
+             _baseDirectory = baseDirectory;
+             _fileType = fileType;
+             _environments = new List<Dictionary<string, Expression>>()
+             {
+                 new Dictionary<string, Expression>(MathematicalFunction.FunctionDict)
+             };
+             _environments[0]["map"] = new MapFunctionExpression();
+             _environments[0]["filter"] = new FilterFunctionExpression();
+             _environments[0]["fold"] = new FoldFunctionExpression();
+             _environments[0]["keys"] = new KeysFunctionExpression();
+             _environments[0]["has"] = new HasFunctionExpression();
+             _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
+             _environments[0]["head"] = new ListHeadFunctionExpression();
+             _environments[0]["tail"] = new ListTailFunctionExpression();
+             _environments[0]["init"] = new ListInitFunctionExpression();
+             _environments[0]["last"] = new ListLastFunctionExpression();
+             _environments[0]["index"] = new ListIndexFunctionExpression();
+             _environments[0]["length"] = new ListLengthFunctionExpression();
+             _environments[0]["join"] = new StringJoinFunctionExpression();
+             _environments[0]["replace"] = new StringReplaceFunctionExpression();
+             _environments[0]["mod"] = new ModFunctionExpression();
 
-            _environments[0]["type"] = new TypeFunctionExpression();
+             _environments[0]["type"] = new TypeFunctionExpression();
 
-            _environments[0]["guid"] = new GuidFunctionExpression();
-            _environments[0]["exists"] = new ExistsFunctionExpression();
+             _environments[0]["guid"] = new GuidFunctionExpression();
+             _environments[0]["exists"] = new ExistsFunctionExpression(_environments);
 
-            _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
+             _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
+
+             foreach (var flag in flags) _environments[0][flag] = new BooleanExpression(true);
         }
+
+        public IdfPlusVisitor(string baseDirectory, FileType fileType) : this(baseDirectory, fileType, new List<string>()) { }
 
         public override string VisitIdf(NeobemParser.IdfContext context)
         {

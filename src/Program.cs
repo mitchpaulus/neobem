@@ -55,6 +55,24 @@ namespace src
                     case "--doe2":
                         options.FileType = FileType.Doe2;
                         break;
+                    case "--flags":
+                        if (i + 1 < args.Length)
+                        {
+                            // Split flags on comma and append if not already in list
+                            var allFlags = args[i + 1].Split(",").Select(s => s.Trim());
+                            foreach (var flag in allFlags)
+                            {
+                                if (!options.Flags.Contains(flag)) options.Flags.Add(flag);
+                            }
+                        }
+                        else
+                        {
+                            WriteLine($"No flags given for {args[i]} option.");
+                            return 1;
+                        }
+                        i++;
+                        break;
+
                     default:
                         options.InputFile = args[i];
                         break;
@@ -144,7 +162,7 @@ namespace src
             }
 
             // Construct the main visitor for the initial file.
-            IdfPlusVisitor visitor = new(baseDirectory, options.FileType);
+            IdfPlusVisitor visitor = new(baseDirectory, options.FileType, options.Flags);
 
             string result;
             try
@@ -188,6 +206,7 @@ namespace src
             public FileType FileType = FileType.Idf;
             public bool Tokens = false;
             public bool Tree = false;
+            public List<string> Flags = new();
         }
     }
 }

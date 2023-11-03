@@ -10,6 +10,7 @@ OPTIONS:
     --doe2              Parse input file in DOE-2 Building Description Language format
 -h, --help              Show this help and exit
 -f, --fmt               Format file instead of compiling
+    --flags <flags>     Set flags for simulation. Multiple flags can be set, comma separated.
 -o, --output <filename> Output file name. Output is printed to standard output by default.
     --tokens            Print lexed tokens for debugging
     --tree              Print parse tree in Lisp format for debugging

@@ -5,25 +5,24 @@ redo-ifchange help.txt
 # This shell script generates the C# code for help text.
 cat <<EOF
 using System.Text;
-namespace src
+namespace src;
+
+public static class Help
 {
-    public static class Help
+    public static string Text()
     {
-        public static string Text()
-        {
-            StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 EOF
 
 awk '
 {
-    print "            builder.Append(\"" $0 "\\n\");"
+    print "        builder.Append(\"" $0 "\\n\");"
 }
 ' help.txt
 
 
 cat <<EOF
-            return builder.ToString();
-        }
+        return builder.ToString();
     }
 }
 

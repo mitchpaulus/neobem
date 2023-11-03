@@ -6,7 +6,7 @@ namespace src.Functions;
 
 public class ExistsFunctionExpression : FunctionExpression
 {
-    public ExistsFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>() { "name" }, FileType.Any)
+    public ExistsFunctionExpression(List<Dictionary<string, Expression>> environments) : base(environments, new List<string>() { "name" }, FileType.Any)
     {
     }
 

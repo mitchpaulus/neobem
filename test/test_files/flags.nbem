@@ -1,0 +1,2 @@
+val = if exists('myflag') then 1 else 0
+Version,<val>;

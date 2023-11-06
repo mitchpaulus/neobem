@@ -1,10 +1,15 @@
 README.pdf
+
 # Redo files
 .redo/
 *.aux
 *.fls
 *.old
 *.out
+
+.do_built.dir/
+.do_built
+*.did
 
 *.output.idf
 

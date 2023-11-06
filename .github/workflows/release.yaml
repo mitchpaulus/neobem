@@ -53,8 +53,8 @@ jobs:
         ./do src/do-publish.do
 
     - name: GH Release
-        uses: softprops/action-gh-release@v0.1.15
-        with:
-          fail_on_unmatched_files: true
-          files: |
-            src/publish/*
+      uses: softprops/action-gh-release@v0.1.15
+      with:
+        fail_on_unmatched_files: true
+        files: |
+          src/publish/*

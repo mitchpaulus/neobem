@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.8.0 - 2023-11-06
+
+### Added
+
+- Added modulo operation `mod`
+- Added `fold` function
+- Added literal `* *` parsing for DOE-2 files
+- Added ability to pass boolean flags through CLI
+
+### Changed
+
+- Added short circuit logic evaluation for `and` and `or` operators
+
 ## 0.7.1 - 2022-12-28
 
 ### Changed

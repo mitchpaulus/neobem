@@ -1,0 +1,60 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7
+    - name: Setup Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - name: Download ANTLR
+      run: curl --output antlr-4.13.1-complete.jar https://www.antlr.org/download/antlr-4.13.1-complete.jar
+    - name: Compile ANTLR grammars
+      run: |
+        export ANTLR_JAR="$(pwd)"/antlr-4.13.1-complete.jar
+        export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
+        ./do src/antlr/compiled
+        ./do src/antlr/excelrange/compiled
+        ./do src/antlr/idf/compiled
+    - name: Run redo targets
+      run: |
+        ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+    - name: Restore dependencies
+      run: |
+        dotnet restore src
+        dotnet restore test
+    - name: Build
+      run: |
+        dotnet build src --no-restore
+        dotnet build test --no-restore
+    - name: Test
+      run: dotnet test test --no-build --verbosity normal
+    - name: Test documentation code samples
+      run: |
+        find "$PWD" -name nbem
+        PATH="$(dirname "$(find "$PWD" -name nbem | head -n 1)")":"$PATH"
+        echo "PATH:"
+        echo "$PATH"
+        ./do doc/code_samples/test
+
+    - name: Create Release
+      run: |
+        ./do src/do-publish.do
+
+    - name: GH Release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          fail_on_unmatched_files: true
+          files: |
+            src/publish/*

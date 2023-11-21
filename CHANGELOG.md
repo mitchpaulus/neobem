@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `fold` function
 - Added literal `* *` parsing for DOE-2 files
 - Added ability to pass boolean flags through CLI
+- Added `exists` function for checking for boolean flags
 
 ### Changed
 

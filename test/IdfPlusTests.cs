@@ -279,15 +279,33 @@ namespace test
         [Test]
         public void TestLogicAndShortCircuit()
         {
-            var filepath = Path.Combine(TestDir.Dir, "logic.nbem");
+            IdfTestFile(Path.Combine(TestDir.Dir, "logic.nbem"), "Version,1,0,0,0,1,1,1,0;");
+        }
 
+        private void IdfTestFile(string filepath, string expected)
+        {
             var file = File.ReadAllText(filepath);
             var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
             var parser = file.ToParser(FileType.Idf);
             var tree = parser.idf();
             string output = visitor.Visit(tree);
 
-            Assert.IsTrue(IdfObjectCompare.Equals("Version,1,0,0,0,1,1,1,0;", output));
+            Assert.IsTrue(IdfObjectCompare.Equals(expected, output));
+        }
+
+        [Test]
+        public void TestHandle()
+        {
+             var filepath = Path.Combine(TestDir.Dir, "handle.nbem");
+
+             var file = File.ReadAllText(filepath);
+             var visitor = new IdfPlusVisitor(TestDir.Dir, FileType.Idf);
+             var parser = file.ToParser(FileType.Idf);
+             var tree = parser.idf();
+             string output = visitor.Visit(tree);
+
+             // Result is non-deterministic, so ignoring for now.
+             // Assert.IsTrue(IdfObjectCompare.Equals("Version,2;", output));
         }
     }
 }

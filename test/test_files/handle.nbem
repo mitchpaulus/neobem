@@ -1,0 +1,4 @@
+my_handle = handle()
+
+Version,
+    <my_handle>;

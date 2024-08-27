@@ -58,6 +58,10 @@ namespace src
 
             _variables[0]["exists"] = new ExistsFunctionExpression(_variables);
             _variables[0]["handle"] = new HandleFunctionExpression();
+
+            _variables[0]["contains"] = new ContainsFunctionExpression();
+            _variables[0]["lower"] = new LowerFunctionExpression();
+            _variables[0]["upper"] = new UpperFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =
@@ -496,7 +500,7 @@ namespace src
                     "==" => new BooleanExpression(lhsBooleanExpression.Value == rhsBooleanExpression.Value),
                     "!=" => new BooleanExpression(lhsBooleanExpression.Value != rhsBooleanExpression.Value),
                     _ => throw new NotImplementedException(
-                        $"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.")
+                        $"Line {context.Start.Line}: Boolean expression like `{context.GetText()}` ({lhs.TypeName()} {oper} {rhs.TypeName()}, {lhs.AsErrorString()} {oper} {rhs.AsErrorString()}) not implemented.")
                 };
             }
 
@@ -509,7 +513,7 @@ namespace src
                 throw new NotImplementedException($"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented for non empty lists.");
             }
 
-            throw new NotImplementedException($"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}) not implemented.");
+            throw new NotImplementedException($"Line {context.Start.Line}: Boolean expression like '{context.GetText()}' ({lhs.TypeName()} {oper} {rhs.TypeName()}, {lhs.AsErrorString()} {oper} {rhs.AsErrorString()}) not implemented.");
         }
 
         public override Expression VisitObjExp(NeobemParser.ObjExpContext context)

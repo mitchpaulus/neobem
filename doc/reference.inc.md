@@ -318,6 +318,9 @@ A number of mathematical functions are built in.
 - `join(list, seperator)`{.nbem}: Joins a list of strings together with a
   separator string.
     - Ex: `join(['a', 'b', 'c'], ', ')`{.nbem} results in `'a, b, c'`{.nbem}
+- `contains(inputString, searchString)`{.nbem}: Returns a boolean representing whether the `searchString` is found in the `inputString`.
+- `lower(inputString)`{.nbem}: Returns the input string with all characters converted to lowercase.
+- `upper(inputString)`{.nbem}: Returns the input string with all characters converted to uppercase.
 
 ## Functions for Dictionaries
 
@@ -718,4 +721,3 @@ What the log statement does is evaluate the entire expression, and then
 prints a detailed representation of the expression to the *standard
 error* output stream. This allows for the debug information to normally
 be printed to the terminal, without ruining the final compiled idf file.
-

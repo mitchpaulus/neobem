@@ -49,6 +49,10 @@ namespace src
              _environments[0]["exists"] = new ExistsFunctionExpression(_environments);
              _environments[0]["handle"] = new HandleFunctionExpression();
 
+             _environments[0]["contains"] = new ContainsFunctionExpression();
+             _environments[0]["lower"] = new LowerFunctionExpression();
+             _environments[0]["upper"] = new UpperFunctionExpression();
+
              _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
 
              foreach (var flag in flags) _environments[0][flag] = new BooleanExpression(true);

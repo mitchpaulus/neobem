@@ -383,10 +383,10 @@ namespace src
             // Do preliminary checks on the input.
             if (lhsExpression is not ListExpression listExpression)
                 throw new ArgumentException(
-                    $"Line {context.Start.Line}: The left hand side to the map operator is not a list. Received a {lhsExpression.TypeName()}");
+                    $"Line {context.Start.Line}: The left hand side to the map operator `{context.expression(0).GetText()}` is not a list. Received a {lhsExpression.TypeName()}.");
 
             if (rhsExpression is not FunctionExpression functionExpression) throw new ArgumentException(
-                    $"Line {context.Start.Line}: The right hand side of the map operator is not a function. Received a {rhsExpression.TypeName()}");
+                    $"Line {context.Start.Line}: The right hand side of the map operator is not a function. Received a {rhsExpression.TypeName()}.");
 
             if (functionExpression.Parameters.Count != 1)
                 throw new ArgumentException(

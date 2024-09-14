@@ -18,6 +18,7 @@ namespace src
 
         public HashSet<string> exports = new HashSet<string>();
         private readonly IdfObjectPrettyPrinter _idfObjectPrettyPrinter = new IdfObjectPrettyPrinter();
+        private readonly List<string> _flags;
 
         public IdfPlusVisitor(string baseDirectory, FileType fileType, List<string> flags)
         {
@@ -54,6 +55,8 @@ namespace src
              _environments[0]["upper"] = new UpperFunctionExpression();
 
              _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
+
+             _flags = flags;
 
              foreach (var flag in flags) _environments[0][flag] = new BooleanExpression(true);
         }
@@ -179,7 +182,7 @@ namespace src
                 }
 
                 // When reading from a web URI, the concept of a base directory doesn't apply.
-                visitor = new IdfPlusVisitor(null, _fileType);
+                visitor = new IdfPlusVisitor(null, _fileType, _flags);
             }
             else
             {
@@ -199,7 +202,7 @@ namespace src
                 }
 
                 // Read the imported file, with the current directory set to directory of the input file.
-                visitor = new IdfPlusVisitor(fileInfo.DirectoryName, _fileType);
+                visitor = new IdfPlusVisitor(fileInfo.DirectoryName, _fileType, _flags);
             }
 
             NeobemParser.Import_optionContext[] options = context.import_option();

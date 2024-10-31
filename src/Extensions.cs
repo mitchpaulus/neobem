@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using Microsoft.Extensions.Primitives;
 
 namespace src
 {
@@ -249,6 +250,19 @@ namespace src
             return
                 $"[@{token.TokenIndex},{token.StartIndex}:{token.StopIndex}='{replacedText}',<{tokenTypeDisplayName}>{channelString},{token.Line},{token.Column}";
         }
+
+        public static string LineListConcat(this IEnumerable<string> lines)
+        {
+            StringBuilder b = new();
+            foreach (var l in lines)
+            {
+                b.Append(l);
+                if (b[^1] != '\n') b.Append('\n');
+            }
+            return b.ToString();
+        }
+
+        public static string FullErrorMessage(this IEnumerable<AntlrError> antlrErrors) => antlrErrors.Select(error => error.WriteError()).LineListConcat();
 
     }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Antlr4.Runtime;
 
 namespace src
 {
@@ -13,7 +15,7 @@ namespace src
             _baseDirectory = baseDirectory;
         }
 
-        public string Replace(string objectText, List<Dictionary<string, Expression>> variables, FileType fileType)
+        public (string, List<AntlrError>) Replace(string objectText, List<Dictionary<string, Expression>> variables, FileType fileType)
         {
             var openingChar = '<';
             var endingChar = '>';
@@ -44,8 +46,24 @@ namespace src
 
                             IdfPlusExpVisitor expVisitor = new(variables, fileType, _baseDirectory);
 
-                            var parser = expressionText.ToParser(fileType);
+                            AntlrInputStream inputStream = new AntlrInputStream(expressionText);
+                            NeobemLexer lexer = new NeobemLexer(inputStream);
+                            var eListener = new SimpleAntlrErrorListener();
+                            lexer.RemoveErrorListeners();
+                            lexer.AddErrorListener(eListener);
+                            lexer.FileType = fileType;
+                            CommonTokenStream tokens = new CommonTokenStream(lexer);
+                            var parser = new NeobemParser(tokens);
+                            parser.RemoveErrorListeners();
+                            parser.AddErrorListener(eListener);
+                            // var parser = expressionText.ToParser(fileType);
                             var tree = parser.expression();
+
+                            if (eListener.Errors.Any())
+                            {
+                                return ("", eListener.Errors);
+                            }
+
                             var evaluatedExpression = expVisitor.Visit(tree);
                             output.Append(evaluatedExpression.AsString());
                         }
@@ -62,8 +80,7 @@ namespace src
                 }
             }
 
-            return output.ToString();
+            return (output.ToString(), new List<AntlrError>(0));
         }
-
     }
 }

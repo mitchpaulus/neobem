@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Antlr4.Runtime;
 using src.Functions;
 
 namespace src
@@ -87,7 +88,13 @@ namespace src
         {
             try
             {
-                return _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
+                var (replaced, errors) = _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
+                if (errors.Count > 0)
+                {
+                    throw new Exception($"Line {context.Start.Line}: {errors.FullErrorMessage()}");
+                }
+
+                return replaced;
             }
             catch (Exception exception)
             {
@@ -110,7 +117,13 @@ namespace src
 
         public override string VisitIdfComment(NeobemParser.IdfCommentContext context)
         {
-            return _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
+            var (replaced, errors) = _objectVariableReplacer.Replace(context.GetText(), _environments, _fileType);
+            if (errors.Count > 0)
+            {
+                throw new Exception(errors.Select(error => error.WriteError()).LineListConcat());
+            }
+
+            return replaced;
         }
 
         public override string VisitObjectDeclaration(NeobemParser.ObjectDeclarationContext context)
@@ -119,7 +132,13 @@ namespace src
 
             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
 
-            var replaced = _objectVariableReplacer.Replace(objectText, _environments, _fileType);
+            (string replaced, List<AntlrError> errors) = _objectVariableReplacer.Replace(objectText, _environments, _fileType);
+
+            if (errors.Count > 0)
+            {
+                throw new Exception(errors.Select(error => error.WriteError()).LineListConcat());
+            }
+
             var prettyPrinted = _idfObjectPrettyPrinter.ObjectPrettyPrinter(replaced, 0, Consts.IndentSpaces);
             return prettyPrinted + "\n\n";
         }
@@ -224,8 +243,23 @@ namespace src
                 }
             }
 
-            NeobemParser parser = contents.ToParser(_fileType);
+            AntlrInputStream inputStream = new AntlrInputStream(contents);
+            NeobemLexer lexer = new NeobemLexer(inputStream);
+            var eListener = new SimpleAntlrErrorListener();
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(eListener);
+            lexer.FileType = _fileType;
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            var parser = new NeobemParser(tokens);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(eListener);
+            // NeobemParser parser = contents.ToParser(_fileType);
             NeobemParser.IdfContext tree = parser.idf();
+
+            if (eListener.Errors.Count > 0)
+            {
+                throw new Exception($"{context.Start.Line}:{context.Start.Column + 1}: There were issues parsing import '{filePath}'.\n{eListener.Errors.FullErrorMessage()}");
+            }
 
             string  outputResult = visitor.VisitIdf(tree);
 

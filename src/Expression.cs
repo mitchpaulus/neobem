@@ -183,8 +183,12 @@ namespace src
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             string objectText = objectDeclarationContext.GetText();
                             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
-                            var replacedObject = replacer.Replace(objectText, updatedEnvironments, _fileType);
-                            var prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
+                            var (replacedObject, errors) = replacer.Replace(objectText, updatedEnvironments, _fileType);
+                            if (errors.Count > 0)
+                            {
+                                throw new Exception(errors.FullErrorMessage());
+                            }
+                            string prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
                             builder.AppendLine(prettyPrinted);
                             break;
                         case NeobemParser.FunctionDoe2ObjectDeclarationContext doe2ObjectDeclarationContext:

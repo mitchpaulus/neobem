@@ -32,7 +32,12 @@ public class Doe2Printer
 
     public string PrettyPrint(NeobemParser.Doe2objectContext context)
     {
-        string replaced = _replacer.Replace(context.GetText(), _environments, _fileType);
+        var (replaced, errors) = _replacer.Replace(context.GetText(), _environments, _fileType);
+
+        if (errors.Count > 0)
+        {
+            throw new Exception(errors.Select(error => error.WriteError()).LineListConcat());
+        }
 
         return replaced;
     }

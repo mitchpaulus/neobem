@@ -41,7 +41,7 @@ namespace test
                     { "num",  new StringExpression("1") }
                 }
             };
-            string actual = replacer.Replace(objectText, variables, FileType.Idf);
+            var (actual, _) = replacer.Replace(objectText, variables, FileType.Idf);
             Assert.AreEqual("1", actual);
         }
     }

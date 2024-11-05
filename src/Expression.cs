@@ -170,24 +170,24 @@ namespace src
             {
                 foreach (NeobemParser.Function_statementContext item in _context.lambda_def().function_statement())
                 {
+                    List<AntlrError> errors;
                     switch (item)
                     {
                         case NeobemParser.FunctionIdfCommentContext commentContext:
-                            var replacedComment = replacer.Replace(commentContext.GetText(), updatedEnvironments, _fileType);
+                            (string replacedComment, errors) = replacer.Replace(commentContext.GetText(), updatedEnvironments, _fileType);
+                            if (errors.Count > 0) { throw new Exception(errors.FullErrorMessage()); }
                             builder.Append(replacedComment);
                             break;
                         case NeobemParser.FunctionDoe2CommentContext doe2CommentContext:
-                            var replacedDoe2 = replacer.Replace(doe2CommentContext.GetText(), updatedEnvironments, _fileType);
+                            (string replacedDoe2, errors) = replacer.Replace(doe2CommentContext.GetText(), updatedEnvironments, _fileType);
+                            if (errors.Count > 0) { throw new Exception(errors.FullErrorMessage()); }
                             builder.Append(replacedDoe2);
                             break;
                         case NeobemParser.FunctionObjectDeclarationContext objectDeclarationContext:
                             string objectText = objectDeclarationContext.GetText();
                             if (objectText.EndsWith("$")) objectText = objectText.Remove(objectText.Length - 1);
-                            var (replacedObject, errors) = replacer.Replace(objectText, updatedEnvironments, _fileType);
-                            if (errors.Count > 0)
-                            {
-                                throw new Exception(errors.FullErrorMessage());
-                            }
+                            (string replacedObject, errors) = replacer.Replace(objectText, updatedEnvironments, _fileType);
+                            if (errors.Count > 0) { throw new Exception(errors.FullErrorMessage()); }
                             string prettyPrinted = prettyPrinter.ObjectPrettyPrinter(replacedObject, 0, Consts.IndentSpaces);
                             builder.AppendLine(prettyPrinted);
                             break;

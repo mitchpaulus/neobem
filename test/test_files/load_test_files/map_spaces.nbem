@@ -90,4 +90,3 @@ gbxml = load({ 'type': 'XML', 'path': 'gbxml.xml' })
 spaces = gbxml.'Campus'.'Building'.'Space'
 
 print map(spaces, space_template)
-

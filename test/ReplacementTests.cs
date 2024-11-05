@@ -22,7 +22,7 @@ namespace test
                 { "versionNum",  new StringExpression("9.4") }
             });
 
-            var replaced = replacer.Replace(objectText, variables, FileType.Idf);
+            (string replaced, _) = replacer.Replace(objectText, variables, FileType.Idf);
 
             Assert.AreEqual("Version\n  9.4;\n", replaced);
 

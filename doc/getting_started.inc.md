@@ -184,5 +184,4 @@ link](https://asciinema.org/a/392845?size=big) that
 shows an example workflow from start to finish. This particular workflow
 example used `bash` as the shell and the files were edited with Neovim.
 
-![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](img/demo.png){ width=80% }
-
+![Sample screenshot from demo at: [asciinema.org](https://asciinema.org/a/392845?size=big).](img_neobem/demo.png){ width=80% }

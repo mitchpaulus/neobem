@@ -6,30 +6,30 @@ supports the Building Description Language used for
 [DOE-2](https://www.doe2.com/).
 
 You can download the entire user manual in PDF form
-[here](https://neobem.io/neobem.pdf) or view online at
-[neobem.io](https://neobem.io).
+[here](https://mitchellt.com/neobem.pdf) or view online at
+[neobem.io](https://mitchellt.com/neobem.html).
 
 Quick links:
 
--   [Introduction](#introduction)
--   [Getting Started](#getting-started)
--   [Support](#support)
--   [Contributing](#contributing)
--   [Building from Source](#building-from-source)
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+- [Support](#support)
+- [Contributing](#contributing)
+- [Building from Source](#building-from-source)
 
 # Introduction
 
 While creating your building energy simulation input files, have you
 ever wanted to:
 
--   Use variables?
--   Break out sections into custom templates?
--   Use arithmetic?
--   Build objects directly from Excel or JSON data?
--   Loop over lists?
--   Easily incorporate work from others?
--   Do all this without setting up a full Python, R, or Ruby working
-    environment?
+- Use variables?
+- Break out sections into custom templates?
+- Use arithmetic?
+- Build objects directly from Excel or JSON data?
+- Loop over lists?
+- Easily incorporate work from others?
+- Do all this without setting up a full Python, R, or Ruby working
+  environment?
 
 If so, Neobem is what you have always wanted.
 
@@ -84,21 +84,21 @@ that file from the zip file to a location that you will want the program
 to live. It doesn’t really matter where you put it, but recommended
 places would be:
 
--   `C:\Program Files\neobem\neobem.exe` on Windows
--   `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
+- `C:\Program Files\neobem\neobem.exe` on Windows
+- `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
 
 Neobem is a console or command line application. It is meant to be run
 from a shell environment, that could be anything like[^2]:
 
--   `cmd.exe` or PowerShell on Windows
--   `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
-    -   Windows Terminal
-    -   Terminal.app
-    -   iTerm2
-    -   Gnome Terminal
-    -   Alacritty
-    -   Konsole
-    -   Terminator
+- `cmd.exe` or PowerShell on Windows
+- `bash`, `zsh`, or `fish` running in any terminal emulator, such as:
+  - Windows Terminal
+  - Terminal.app
+  - iTerm2
+  - Gnome Terminal
+  - Alacritty
+  - Konsole
+  - Terminator
 
 ### Add Program Location to PATH Variable
 
@@ -119,8 +119,8 @@ by doing a search for ‘Edit System Environment Variables’. There are
 several biog posts on the Internet that can guide you through this with
 screenshots, here are a curated few:
 
--   <https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/>
--   <https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/>
+- <https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/>
+- <https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/>
 
 Here’s a post on Superuser answering the question, [“What are PATH and
 other environment variables, and how can I set or use
@@ -246,7 +246,7 @@ workflow from start to finish. This particular workflow example used
 `bash` as the shell and the files were edited with Neovim.
 
 <figure>
-<img src="doc/img/demo.png" style="width:80.0%"
+<img src="img_neobem/demo.png" style="width:80.0%"
 alt="Sample screenshot from demo at: asciinema.org." />
 <figcaption aria-hidden="true">Sample screenshot from demo at: <a
 href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>

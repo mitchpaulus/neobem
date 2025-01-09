@@ -542,7 +542,7 @@ Using the BCL, we search for components with the tag `Appliance.Coffee Maker`.
 
 I see the component exists, and I download it to check it out.
 
-![BCL search results for coffee makers](img/bcl_search.png){width=80%}
+![BCL search results for coffee makers](img_neobem/bcl_search.png){width=80%}
 
 If I download that component, it will be a compressed zip file with a single directory and a file called `component.xml`.
 The `xml` file contains our data to be used in the energy model.
@@ -632,7 +632,7 @@ If you download that component you'll see the `component.xml` file as before, bu
 
 The contents looks like:
 
-![Door component contents](img/bcl_component_directory_structure.png){width=80%}
+![Door component contents](img_neobem/bcl_component_directory_structure.png){width=80%}
 
 There are files for OpenStudio (`.osc` and `.osm`) and EnergyPlus (`.idf`).
 

@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.10.0 - 2025-03-05
+
+### Added
+
+- `replace` string function.
+
+### Changed
+
+- Now targets .NET 9.
+
+### Fixed
+
+- Fixed issues with certain replacements in comments.
+- Fixed handling of lexing/parsing errors within a replacement.
+
 ## 0.9.0 - 2025-01-09
 
 ### Changed

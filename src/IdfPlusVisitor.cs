@@ -54,6 +54,7 @@ namespace src
              _environments[0]["contains"] = new ContainsFunctionExpression();
              _environments[0]["lower"] = new LowerFunctionExpression();
              _environments[0]["upper"] = new UpperFunctionExpression();
+             _environments[0]["replace"] = new ReplaceFunctionExpression();
 
              _objectVariableReplacer = new ObjectVariableReplacer(baseDirectory);
 

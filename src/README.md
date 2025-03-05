@@ -13,3 +13,4 @@ Currently a bit of a mess.
    2. Evaluate the function as desired.
 
 4. Add the functions to the environment dictionaries in the constructors for `IdfPlusExpVisitor` and `IdfPlusVisitor`.
+5. Add appropriate documentation.

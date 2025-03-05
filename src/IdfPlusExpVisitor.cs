@@ -62,6 +62,7 @@ namespace src
             _variables[0]["contains"] = new ContainsFunctionExpression();
             _variables[0]["lower"] = new LowerFunctionExpression();
             _variables[0]["upper"] = new UpperFunctionExpression();
+            _variables[0]["replace"] = new ReplaceFunctionExpression();
         }
 
         private readonly Dictionary<string, Func<double, double, double>> _numericOperatorMapping =

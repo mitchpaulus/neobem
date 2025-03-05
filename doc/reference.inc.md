@@ -321,6 +321,7 @@ A number of mathematical functions are built in.
 - `contains(inputString, searchString)`{.nbem}: Returns a boolean representing whether the `searchString` is found in the `inputString`.
 - `lower(inputString)`{.nbem}: Returns the input string with all characters converted to lowercase.
 - `upper(inputString)`{.nbem}: Returns the input string with all characters converted to uppercase.
+- `replace(inputString, searchString, replaceString)`{.nbem}: Returns a new string with all occurrences of `searchString` replaced with `replaceString`.
 
 ## Functions for Dictionaries
 

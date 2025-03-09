@@ -17,4 +17,4 @@ jobs:
         sudo apt-get install pandoc texlive-luatex texlive-latex-base
 
     - name: Build docs
-      run: redo doc/all
+      run: ./do doc/all

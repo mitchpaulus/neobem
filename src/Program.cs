@@ -41,6 +41,9 @@ namespace src
                         i++;
                         break;
                     }
+                    case "--objects":
+                        options.PrintObjects = true;
+                        break;
                     case "-f":
                     case "--fmt":
                         options.FormatFile = true;
@@ -161,6 +164,14 @@ namespace src
                 }
             }
 
+            if (options.PrintObjects)
+            {
+                EnergyPlusObjectListener listener = new();
+                ParseTreeWalker w = new();
+                w.Walk(listener, tree);
+                return 0;
+            }
+
             // Construct the main visitor for the initial file.
             IdfPlusVisitor visitor = new(baseDirectory, options.FileType, options.Flags);
 
@@ -207,6 +218,7 @@ namespace src
             public bool Tokens = false;
             public bool Tree = false;
             public List<string> Flags = new();
+            public bool PrintObjects = false;
         }
     }
 }

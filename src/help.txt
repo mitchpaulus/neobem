@@ -1,9 +1,8 @@
 USAGE: nbem [options..] [input file]
 Compile Neobem file to EnergyPlus or DOE-2 input files.
 
-With no [input file], input is read from file named 'in.nbem' in the
-current directory. If the input file is '-', input is read from standard
-input rather than from a file.
+With no [input file], input is read from file named 'in.nbem' in the current directory.
+If the input file is '-', input is read from standard input rather than from a file.
 
 OPTIONS:
 
@@ -11,6 +10,7 @@ OPTIONS:
 -h, --help              Show this help and exit
 -f, --fmt               Format file instead of compiling
     --flags <flags>     Set flags for simulation. Multiple flags can be set, comma separated.
+    --objects           Print EnergyPlus objects in TSV format
 -o, --output <filename> Output file name. Output is printed to standard output by default.
     --tokens            Print lexed tokens for debugging
     --tree              Print parse tree in Lisp format for debugging

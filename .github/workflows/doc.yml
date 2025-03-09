@@ -1,0 +1,18 @@
+name: Build docs
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: apt install pandoc texlive-lualatex texlive-latex-base
+
+    - name: Build docs
+      run: redo doc/all

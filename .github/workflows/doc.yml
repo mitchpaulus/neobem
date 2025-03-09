@@ -14,7 +14,16 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install pandoc texlive-luatex texlive-latex-base
+        sudo apt-get install pandoc texlive-luatex texlive-latex-base jq
+        tlmgr init-usertree
+        tlmgr install tcolorbox
+
+    - name: Install iosevka
+      run: |
+        mkdir -p ~/.fonts
+        cd ~/.fonts
+        curl -s 'https://api.github.com/repos/be5invis/Iosevka/releases/latest' | jq -r ".assets[] | .browser_download_url" | grep PkgTTC-Iosevka | xargs -n 1 curl -L -O --fail --silent --show-error
+        sudo fc-cache
 
     - name: Build docs
       run: ./do doc/all

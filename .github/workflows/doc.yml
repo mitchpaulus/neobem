@@ -12,7 +12,9 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: apt install pandoc texlive-lualatex texlive-latex-base
+      run: |
+        sudo apt update
+        sudo apt install pandoc texlive-lualatex texlive-latex-base
 
     - name: Build docs
       run: redo doc/all

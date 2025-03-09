@@ -13,8 +13,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install pandoc texlive-lualatex texlive-latex-base
+        sudo apt-get update
+        sudo apt-get install pandoc texlive-luatex texlive-latex-base
 
     - name: Build docs
       run: redo doc/all

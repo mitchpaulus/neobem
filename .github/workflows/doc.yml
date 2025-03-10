@@ -2,7 +2,8 @@ name: Build docs
 
 on:
   push:
-
+    tags:
+      - "doc*"
 jobs:
   build:
 

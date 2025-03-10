@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar "$ANTLR_JAR" ./*.g4
+java -Dfile.encoding=UTF-8 -jar "$ANTLR_JAR" ./*.g4

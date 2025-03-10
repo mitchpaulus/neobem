@@ -1,4 +1,4 @@
 #!/bin/sh
 
-java -jar "$ANTLR_JAR"  NeobemLexer.g4
-java -jar "$ANTLR_JAR"  -visitor NeobemParser.g4
+java -Dfile.encoding=UTF-8 -jar "$ANTLR_JAR"  NeobemLexer.g4
+java -Dfile.encoding=UTF-8 -jar "$ANTLR_JAR"  -visitor NeobemParser.g4

@@ -6,6 +6,7 @@
 
 # latex produces log output on stdout, which is
 # not really correct.  Send it to stderr instead.
+set -e
 exec >&2
 
 # We depend on both the .latex file and its .deps

@@ -10,9 +10,34 @@ jobs:
     container:
       image: mitchpaulus/neobem_doc:0.1.0
 
-
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - name: Download ANTLR
+      run: curl --output antlr-4.13.1-complete.jar https://www.antlr.org/download/antlr-4.13.1-complete.jar
+    - name: Compile ANTLR grammars
+      run: |
+        export ANTLR_JAR="$(pwd)"/antlr-4.13.1-complete.jar
+        export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
+        ./do src/antlr/compiled
+        ./do src/antlr/excelrange/compiled
+        ./do src/antlr/idf/compiled
+    - name: Run redo targets
+      run: |
+        ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+    - name: Build
+      run: |
+        dotnet build src
+        dirname "$(find . -name nbem -executable)" >> $GITHUB_PATH
 
     - name: Build docs
       run: ./do doc/all

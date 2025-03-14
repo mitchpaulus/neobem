@@ -29,7 +29,7 @@ namespace src
                 {
                     leftCurlyBraceIndicies.Push(i);
                     if (leftCurlyBraceIndicies.Count > 1)
-                        throw new NotSupportedException("Nested expression replacement is not supported.");
+                        throw new NotSupportedException($"Nested expression replacement is not supported. Occurred at index {i} in '{objectText}'.");
                 }
                 else if (objectText[i] == openingChar && objectText[i + 1] == openingChar)
                 {

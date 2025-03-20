@@ -189,12 +189,25 @@ namespace src
             int log = (int)Math.Floor(Math.Log10(Math.Abs(value)));
             var digits = Math.Max(0, sigFigs - 1 - log);
 
-            // Not exactly *true* significant figures, if the value is an integer, that's fine.
-            var rounded = Math.Round(value, digits);
+            if (digits == 0) return value.ToString("F0");
 
-            // Don't want to deal with large numbers getting put into scientific notation on accident.
-            // The 'G' format will take care of trailing zeros for numbers with decimals.
-            return rounded.ToString(digits == 0 ? "F0" : $"G{sigFigs}");
+            string baseString = value.ToString($"F{digits}");
+
+            // Remove any trailing 0's.
+            var index = baseString.Length - 1;
+            while (true)
+            {
+                char c = baseString[index];
+                if (c == '.')
+                {
+                    index--;
+                    break;
+                }
+                if (c != '0') break;
+                index--;
+            }
+
+            return baseString[..(index + 1)];
         }
 
         public static int NumNewLinesRequired(this string input, int numNewLines = 2)

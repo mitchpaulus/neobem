@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.11.0 - 2025-03-31
+
+### Added
+
+- Added `--deps` option to be able to dynamically list out the dependencies of a neobem files as part of the evaluation.
+- Added `--objects` option to be able to print out the E+ objects directly as they are in the file.
+
+### Changed
+
+- The significant figure handling for numbers being printed has changed to prevent scientific notation.
+
 ## 0.10.0 - 2025-03-05
 
 ### Added

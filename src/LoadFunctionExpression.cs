@@ -9,7 +9,7 @@ namespace src
 {
     public class LoadFunctionExpression : FunctionExpression
     {
-        public LoadFunctionExpression(string baseDirectory) : base(new List<Dictionary<string, Expression>>(), new List<string>{ "options"}, FileType.Any)
+        public LoadFunctionExpression() : base(new List<Dictionary<string, Expression>>(), new List<string>{ "options"}, FileType.Any)
         {
         }
 
@@ -21,6 +21,8 @@ namespace src
             {
                 DelimitedFileReader reader = new();
                 var fullPath = Path.GetFullPath(stringExpression.Text, baseDirectory);
+
+                Dependencies.Set.Add(fullPath);
                 return EvaluateDelimitedFile(fullPath, reader, true, 0);
             }
             else if (inputs[0] is IdfPlusObjectExpression objectExpression)
@@ -69,6 +71,8 @@ namespace src
 
                     DelimitedFileReader reader = new(delimiter);
                     var fullPath = Path.GetFullPath(pathStringExpression.Text, baseDirectory);
+
+                    Dependencies.Set.Add(fullPath);
                     return EvaluateDelimitedFile(fullPath, reader, hasHeaderLine, skipLines);
                 }
                 else if (typeStringExpression.Text == "Excel")
@@ -107,12 +111,16 @@ namespace src
 
                     string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
                     var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
+
+                    Dependencies.Set.Add(fullFilePath);
+
                     return ("", ExcelDataLoader.Load( fullFilePath, worksheetName, range));
                 }
                 else if (objectExpression.Members["type"] is StringExpression {Text: "JSON"})
                 {
                     string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
                     var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
+                    Dependencies.Set.Add(fullFilePath);
                     string jsonData = File.ReadAllText(fullFilePath);
                     JsonDataLoader jsonLoader = new();
 
@@ -122,6 +130,7 @@ namespace src
                 {
                     string filePath = ((StringExpression) objectExpression.Members["path"]).Text;
                     var fullFilePath = Path.GetFullPath(filePath, baseDirectory);
+                    Dependencies.Set.Add(fullFilePath);
                     string jsonData = File.ReadAllText(fullFilePath);
                     XmlDataLoader xmlDataLoader = new();
 

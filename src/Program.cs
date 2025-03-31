@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 namespace src
 {
@@ -58,6 +57,18 @@ namespace src
                     case "--doe2":
                         options.FileType = FileType.Doe2;
                         break;
+                    case "--deps":
+                         if (i + 1 < args.Length)
+                         {
+                             options.DependenciesFile = args[i + 1];
+                         }
+                         else
+                         {
+                             WriteLine("No file path given for --deps option.");
+                             return 1;
+                         }
+                         i++;
+                         break;
                     case "--flags":
                         if (i + 1 < args.Length)
                         {
@@ -203,6 +214,26 @@ namespace src
                 }
             }
 
+            if (!string.IsNullOrEmpty(options.DependenciesFile))
+            {
+                StringBuilder b = new();
+                foreach (var dep in Dependencies.Set.Order())
+                {
+                    b.Append(dep);
+                    b.Append('\n');
+                }
+
+                try
+                {
+                    File.WriteAllText(options.DependenciesFile, b.ToString());
+                }
+                catch (Exception)
+                {
+                    Console.Error.WriteLine($"Could not write dependencies output to {options.DependenciesFile}.");
+                    return 1;
+                }
+            }
+
             return 0;
         }
 
@@ -219,6 +250,7 @@ namespace src
             public bool Tree = false;
             public List<string> Flags = new();
             public bool PrintObjects = false;
+            public string DependenciesFile = "";
         }
     }
 }

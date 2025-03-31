@@ -34,7 +34,7 @@ namespace src
              _environments[0]["fold"] = new FoldFunctionExpression();
              _environments[0]["keys"] = new KeysFunctionExpression();
              _environments[0]["has"] = new HasFunctionExpression();
-             _environments[0]["load"] = new LoadFunctionExpression(baseDirectory);
+             _environments[0]["load"] = new LoadFunctionExpression();
              _environments[0]["head"] = new ListHeadFunctionExpression();
              _environments[0]["tail"] = new ListTailFunctionExpression();
              _environments[0]["init"] = new ListInitFunctionExpression();
@@ -221,6 +221,8 @@ namespace src
                     throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
                 }
 
+                Dependencies.Set.Add(fileInfo.FullName);
+
                 // Read the imported file, with the current directory set to directory of the input file.
                 visitor = new IdfPlusVisitor(fileInfo.DirectoryName, _fileType, _flags);
             }
@@ -300,5 +302,10 @@ namespace src
             Console.Error.Write(stringResult);
             return "";
         }
+    }
+
+    public static class Dependencies
+    {
+        public static HashSet<string> Set = new();
     }
 }

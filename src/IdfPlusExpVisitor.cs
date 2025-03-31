@@ -39,7 +39,7 @@ namespace src
             _variables[0]["fold"] = new FoldFunctionExpression();
             _variables[0]["keys"] = new KeysFunctionExpression();
             _variables[0]["has"] = new HasFunctionExpression();
-            _variables[0]["load"] = new LoadFunctionExpression(baseDirectory);
+            _variables[0]["load"] = new LoadFunctionExpression();
             _variables[0]["head"] = new ListHeadFunctionExpression();
             _variables[0]["tail"] = new ListTailFunctionExpression();
             _variables[0]["init"] = new ListInitFunctionExpression();

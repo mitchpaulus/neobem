@@ -7,6 +7,7 @@ If the input file is '-', input is read from standard input rather than from a f
 OPTIONS:
 
     --doe2              Parse input file in DOE-2 Building Description Language format
+    --deps <filename>   Print dependencies encountered in the input file to the specified file
 -h, --help              Show this help and exit
 -f, --fmt               Format file instead of compiling
     --flags <flags>     Set flags for simulation. Multiple flags can be set, comma separated.

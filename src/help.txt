@@ -14,5 +14,6 @@ OPTIONS:
     --objects           Print EnergyPlus objects in TSV format
 -o, --output <filename> Output file name. Output is printed to standard output by default.
     --tokens            Print lexed tokens for debugging
+    --lsp               Start the language server on standard input/output
     --tree              Print parse tree in Lisp format for debugging
 -v, --version           Print version number and exit

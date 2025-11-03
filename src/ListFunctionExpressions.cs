@@ -15,7 +15,7 @@ namespace src
             if (inputs.Count != 1) throw new ArgumentException($"'head' expects one parameter, saw {inputs.Count}");
             if (!(inputs[0] is ListExpression listExpression)) throw new NotImplementedException($"'head' is not defined for types other than list.");
             if (listExpression.Expressions.Any()) return ("", listExpression.Expressions[0]);
-            throw new IndexOutOfRangeException($"The list has no elements.");
+            throw new IndexOutOfRangeException($"'head': The list has no elements.");
         }
     }
 
@@ -29,7 +29,7 @@ namespace src
         {
             if (inputs.Count != 1) throw new ArgumentException($"'tail' expects one parameter, saw {inputs.Count}");
             if (!(inputs[0] is ListExpression listExpression)) throw new NotImplementedException($"'tail' is not defined for types other than list.");
-            if (!listExpression.Expressions.Any()) throw new IndexOutOfRangeException($"The list has no elements.");
+            if (!listExpression.Expressions.Any()) throw new IndexOutOfRangeException($"'tail': The list has no elements.");
             return ("", new ListExpression(listExpression.Expressions.Skip(1).ToList()));
         }
     }
@@ -77,7 +77,7 @@ namespace src
             if (!(inputs[0] is ListExpression listExpression)) throw new NotImplementedException($"First parameter of 'index' should be a list");
             if (!(inputs[1] is NumericExpression numericExpression))
                 throw new NotImplementedException("Second parameter of 'index' should be a numeric");
-            if (!listExpression.Expressions.Any()) throw new IndexOutOfRangeException($"The list has no elements.");
+            if (!listExpression.Expressions.Any()) throw new IndexOutOfRangeException($"'index': The list has no elements.");
 
             int index = Convert.ToInt32(numericExpression.Value);
 

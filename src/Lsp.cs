@@ -1,11 +1,11 @@
 #nullable enable
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Antlr4.Runtime;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
@@ -37,6 +37,12 @@ internal sealed class LanguageServer
     private int _exitCode;
 
     private static readonly Dictionary<string, BuiltInSymbol> BuiltInSymbols = CreateBuiltInSymbols();
+    private static readonly object LogLock = new();
+    private static readonly string LogFilePath = DetermineLogFilePath();
+
+    private readonly List<byte> _byteBuffer = new();
+    private byte[] _contentBuffer = new byte[1024*1024];
+    private int _contentBufferSize = 1024*1024;
 
     public LanguageServer(Stream input, Stream output)
     {
@@ -44,8 +50,53 @@ internal sealed class LanguageServer
         _output = output;
         _serializer = JsonSerializer.Create(new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Include
         });
+    }
+
+    private string? ReadHeader()
+    {
+        _byteBuffer.Clear();
+        while (true)
+        {
+            var b = _input.ReadByte();
+            if (b < 0)
+                return null;
+
+            if (b == '\r')
+            {
+                var b2 = _input.ReadByte();
+                if (b2 == '\n')
+                {
+                    return Encoding.ASCII.GetString(_byteBuffer.ToArray());
+                }
+
+                _byteBuffer.Add((byte)b);
+            }
+            else
+            {
+                _byteBuffer.Add((byte)b);
+            }
+        }
+    }
+
+    private string ReadContent(int contentLength)
+    {
+        _byteBuffer.Clear();
+        if (contentLength > _contentBufferSize)
+        {
+            _contentBufferSize *= 2;
+            _contentBuffer = new byte[_contentBufferSize];
+        }
+
+        int totalRead = 0;
+        while (totalRead < contentLength)
+        {
+            int readCount = _input.Read(_contentBuffer, totalRead, contentLength - totalRead);
+            totalRead += readCount;
+        }
+        string content = Encoding.UTF8.GetString(_contentBuffer,0, contentLength);
+        return content;
     }
 
     public int Run()
@@ -54,7 +105,31 @@ internal sealed class LanguageServer
 
         while (true)
         {
-            string? payload = ReadMessage(reader);
+            int contentLength = -1;
+            while (true)
+            {
+                string? header = ReadHeader();
+                if (header is null) return _exitCode;
+                if (header == "") break;
+                if (header.ToLower().StartsWith("content-length:"))
+                {
+                    string length = header["Content-Length:".Length..].Trim();
+                    if (!int.TryParse(length, NumberStyles.Integer, CultureInfo.InvariantCulture, out contentLength))
+                    {
+                        contentLength = -1;
+                    }
+                }
+            }
+
+            if (contentLength < 0)
+            {
+                continue;
+            }
+
+            string payload = ReadContent(contentLength);
+            // string? payload = ReadMessage(reader);
+            Log(payload ?? "NULL", $"neobem_{DateTime.Now:yyyy-MM-ddThhmmss}_message.json");
+
             if (payload is null)
             {
                 break;
@@ -67,6 +142,7 @@ internal sealed class LanguageServer
             }
             catch (JsonException jsonException)
             {
+                // Log(payload, $"neobem_{DateTime.Now:yyyy-mm-ddThhmmss}_message.json");
                 SendLogMessage($"Failed to parse JSON RPC payload: {jsonException.Message}", MessageType.Error);
                 continue;
             }
@@ -253,6 +329,7 @@ internal sealed class LanguageServer
         }
 
         string identifier = token.Text ?? string.Empty;
+        Log(identifier);
         if (string.IsNullOrEmpty(identifier) || !BuiltInSymbols.TryGetValue(identifier, out var info))
         {
             SendResponse(idToken, null);
@@ -335,6 +412,8 @@ internal sealed class LanguageServer
 
     private void SendLogMessage(string message, MessageType type)
     {
+        Log($"{type}: {message}");
+
         LogMessageParams logMessage = new()
         {
             MessageType = type,
@@ -363,6 +442,70 @@ internal sealed class LanguageServer
             _output.Write(jsonBytes, 0, jsonBytes.Length);
             _output.Flush();
         }
+    }
+
+    private static void Log(string message)
+    {
+        try
+        {
+            string logEntry = $"{DateTime.UtcNow:O} {message}{Environment.NewLine}";
+            lock (LogLock)
+            {
+                File.AppendAllText(LogFilePath, logEntry, Encoding.UTF8);
+            }
+        }
+        catch (Exception)
+        {
+            // Swallow logging failures to avoid impacting server behavior.
+        }
+    }
+
+    private static void Log(string message, string filename)
+    {
+        try
+        {
+            string logEntry = $"{DateTime.UtcNow:O} {message}{Environment.NewLine}";
+            lock (LogLock)
+            {
+                File.AppendAllText(DetermineLogFilePath(filename), logEntry, Encoding.UTF8);
+            }
+        }
+        catch (Exception)
+        {
+            // Swallow logging failures to avoid impacting server behavior.
+        }
+    }
+
+    private static string DetermineLogFilePath()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string? tempDirectory = Environment.GetEnvironmentVariable("TMP");
+            if (string.IsNullOrEmpty(tempDirectory))
+            {
+                tempDirectory = Path.GetTempPath();
+            }
+
+            return Path.Combine(tempDirectory, "neobem_lsp.log");
+        }
+
+        return Path.Combine("/tmp", "neobem_lsp.log");
+    }
+
+    private static string DetermineLogFilePath(string filename)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string? tempDirectory = Environment.GetEnvironmentVariable("TMP");
+            if (string.IsNullOrEmpty(tempDirectory))
+            {
+                tempDirectory = Path.GetTempPath();
+            }
+
+            return Path.Combine(tempDirectory, filename);
+        }
+
+        return Path.Combine("/tmp", filename);
     }
 
     private static string? ReadMessage(StreamReader reader)
@@ -502,149 +645,63 @@ internal sealed class LanguageServer
 
         public void UpdateText(string text)
         {
+            Log("Updating text");
             Text = text;
             _inputStream = new AntlrInputStream(text);
             _lexer.SetInputStream(_inputStream);
-            _lexer.Reset();
-
             _tokenStream.SetTokenSource(_lexer);
             _tokenStream.Reset();
-
-            _parser.TokenStream = _tokenStream;
             _parser.Reset();
-
             Parse();
         }
 
         public IToken? FindToken(int zeroBasedLine, int zeroBasedCharacter)
         {
-            if (zeroBasedLine < 0 || zeroBasedCharacter < 0)
-            {
-                return null;
-            }
-
-            int targetLine = zeroBasedLine;
-            int targetCharacter = zeroBasedCharacter;
+            if (zeroBasedLine < 0 || zeroBasedCharacter < 0) return null;
 
             int low = 0;
             int high = _tokenCache.Count - 1;
 
-            while (low <= high)
+            int loops = 0;
+            while (loops < 1000)
             {
+                if (low > high) return null;
                 int mid = low + ((high - low) / 2);
-                IToken token = _tokenCache[mid];
-                if (!TryGetTokenBounds(token, out int startLine, out int startCharacter, out int endLine, out int endCharacter))
-                {
-                    break;
-                }
 
-                if (IsPositionBefore(targetLine, targetCharacter, startLine, startCharacter))
+                IToken token = _tokenCache[mid];
+                int relativePosition = TokenRelativePosition(token, zeroBasedLine, zeroBasedCharacter);
+
+                // Log($"Searching token: {low} {mid} {high}, {zeroBasedLine} {zeroBasedCharacter}, {token.Line} {token.Column} {token.StartIndex} {token.StopIndex} '{token.Text}' {relativePosition}");
+
+                if (relativePosition == 0) return token;
+                loops++;
+                if (relativePosition < 0)
                 {
                     high = mid - 1;
-                    continue;
                 }
-
-                if (IsPositionAfterOrAt(targetLine, targetCharacter, endLine, endCharacter))
+                else
                 {
                     low = mid + 1;
-                    continue;
-                }
-
-                return token;
-            }
-
-            for (int i = low - 1; i >= 0; i--)
-            {
-                IToken token = _tokenCache[i];
-                if (!TryGetTokenBounds(token, out int startLine, out int startCharacter, out int endLine, out int endCharacter))
-                {
-                    continue;
-                }
-
-                if (IsPositionBefore(targetLine, targetCharacter, startLine, startCharacter))
-                {
-                    break;
-                }
-
-                if (!IsPositionAfterOrAt(targetLine, targetCharacter, endLine, endCharacter))
-                {
-                    return token;
-                }
-            }
-
-            for (int i = Math.Max(low, 0); i < _tokenCache.Count; i++)
-            {
-                IToken token = _tokenCache[i];
-                if (!TryGetTokenBounds(token, out int startLine, out int startCharacter, out int endLine, out int endCharacter))
-                {
-                    continue;
-                }
-
-                if (IsPositionBefore(targetLine, targetCharacter, startLine, startCharacter))
-                {
-                    break;
-                }
-
-                if (!IsPositionAfterOrAt(targetLine, targetCharacter, endLine, endCharacter))
-                {
-                    return token;
                 }
             }
 
             return null;
         }
 
-        private static bool TryGetTokenBounds(IToken token, out int startLine, out int startCharacter, out int endLine, out int endCharacter)
+        /// <summary>
+        /// Returns -1 if the position is before token, 0 in token, or 1 if after.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="zeroBasedStartLine"></param>
+        /// <param name="zeroBasedCharacter"></param>
+        /// <returns></returns>
+        public static int TokenRelativePosition(IToken token, int zeroBasedStartLine, int zeroBasedCharacter)
         {
-            if (token.Line <= 0 || token.Column < 0)
-            {
-                startLine = default;
-                startCharacter = default;
-                endLine = default;
-                endCharacter = default;
-                return false;
-            }
-
-            startLine = token.Line - 1;
-            startCharacter = token.Column;
-            (endLine, endCharacter) = ComputeTokenEndPosition(token, startLine, startCharacter);
-
-            if (startLine == endLine && startCharacter == endCharacter)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool IsPositionBefore(int line, int character, int otherLine, int otherCharacter)
-        {
-            if (line < otherLine)
-            {
-                return true;
-            }
-
-            if (line > otherLine)
-            {
-                return false;
-            }
-
-            return character < otherCharacter;
-        }
-
-        private static bool IsPositionAfterOrAt(int line, int character, int otherLine, int otherCharacter)
-        {
-            if (line > otherLine)
-            {
-                return true;
-            }
-
-            if (line < otherLine)
-            {
-                return false;
-            }
-
-            return character >= otherCharacter;
+            if (zeroBasedStartLine < token.Line - 1) return -1;
+            if (zeroBasedStartLine > token.Line - 1) return 1;
+            if (zeroBasedCharacter < token.Column) return -1;
+            if (zeroBasedCharacter > token.Column + (token.StopIndex - token.StartIndex) + 1) return 1;
+            return 0;
         }
 
         private void Parse()
@@ -661,6 +718,7 @@ internal sealed class LanguageServer
             }
             catch (Exception ex)
             {
+                Log($"Exception in parsing: {ex.Message}");
                 LastParseException = ex;
                 ParseTree = null;
             }

@@ -86,11 +86,19 @@ namespace src
                         }
                         i++;
                         break;
+                    case "--lsp":
+                        options.LanguageServer = true;
+                        break;
 
                     default:
                         options.InputFile = args[i];
                         break;
                 }
+            }
+
+            if (options.LanguageServer)
+            {
+                return Lsp.ServerLoop();
             }
 
             AntlrInputStream inputStream;
@@ -251,6 +259,7 @@ namespace src
             public List<string> Flags = new();
             public bool PrintObjects = false;
             public string DependenciesFile = "";
+            public bool LanguageServer = false;
         }
     }
 }

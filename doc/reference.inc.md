@@ -538,7 +538,7 @@ Neobem has a few of the most important ones.
     - EX: `filter([1, 2, 3, 4], \x { x < 3 })`{.nbem} will equal `[1, 2]`{.nbem}.
 
 - `fold(list, function, initial_value)`{.nbem}: Applies a [fold (aka reduce or aggregate)](https://en.wikipedia.org/wiki/Fold_(higher-order_function)) to the supplied list.
-  The function parameter must take 2 arguments. The fold works left to right.
+  The function parameter must take 2 arguments. The accumulator is passed as the first argument and the current list element as the second. The fold works left to right.
 
     - EX: `fold([1, 2, 3], \ x y { x + y}, 0)`{.nbem} will equal `6`{.nbem}.
 

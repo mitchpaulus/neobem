@@ -182,6 +182,79 @@ public class LspTests
         Assert.AreEqual(0, definitions.Count);
     }
 
+    [Test]
+    public void CompletionLookupReturnsKnownKeysForExistingFieldValue()
+    {
+        var document = new LanguageServer.DocumentState(CreateSimulationControlSample("Y", "No"), FileType.Idf);
+
+        var completions = document.FindCompletions(
+            1,
+            FindCharacter(document.Text, 1, "Y"));
+
+        CollectionAssert.AreEquivalent(new[] { "Yes", "No" }, completions.Select(item => item.Label).ToArray());
+        Assert.AreEqual("Do Zone Sizing Calculation", completions.Single(item => item.Label == "Yes").Detail);
+    }
+
+    [Test]
+    public void CompletionLookupUsesPhysicalFieldOrderForBuildingTerrain()
+    {
+        var document = new LanguageServer.DocumentState(CreateBuildingCompletionSample(), FileType.Idf);
+
+        var completions = document.FindCompletions(
+            3,
+            FindCharacter(document.Text, 3, "FullExterior"));
+
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Country");
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "City");
+        CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "MinimalShadowing");
+    }
+
+    [Test]
+    public void CompletionLookupReturnsKnownKeysForEmptyFieldWhenCursorIsOnComma()
+    {
+        var document = new LanguageServer.DocumentState(CreateSimulationControlSample("No", ""), FileType.Idf);
+
+        var completions = document.FindCompletions(2, 2);
+
+        CollectionAssert.AreEquivalent(new[] { "Yes", "No" }, completions.Select(item => item.Label).ToArray());
+    }
+
+    [Test]
+    public void CompletionLookupRefreshesAfterIncrementalObjectTypeUpdate()
+    {
+        var document = new LanguageServer.DocumentState(CreateSimulationControlSample("No", "No"), FileType.Idf);
+
+        document.ApplyContentChanges(new[]
+        {
+            new TextDocumentContentChangeEvent
+            {
+                Range = new LspRange
+                {
+                    Start = new Position { Line = 0, Character = 0 },
+                    End = new Position { Line = 0, Character = "SimulationControl".Length }
+                },
+                Text = "PerformancePrecisionTradeoffs"
+            },
+            new TextDocumentContentChangeEvent
+            {
+                Range = new LspRange
+                {
+                    Start = new Position { Line = 2, Character = 2 },
+                    End = new Position { Line = 2, Character = 4 }
+                },
+                Text = "C"
+            }
+        });
+
+        var completions = document.FindCompletions(
+            2,
+            FindCharacter(document.Text, 2, "C"));
+
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "CarrollMRT");
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "ScriptF");
+        CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "Yes");
+    }
+
     private static string CreateDefinitionSample() => string.Join("\n", new[]
     {
         "Schedule:Compact,",
@@ -199,6 +272,30 @@ public class LspTests
         "adjustedLoad = baseLoad + 2",
         "print adjustedLoad",
         "log baseLoad"
+    }) + "\n";
+
+    private static string CreateSimulationControlSample(string firstFieldValue, string secondFieldValue) => string.Join("\n", new[]
+    {
+        "SimulationControl,",
+        $"  {firstFieldValue},",
+        $"  {secondFieldValue},",
+        "  No,",
+        "  No,",
+        "  No,",
+        "  No;"
+    }) + "\n";
+
+    private static string CreateBuildingCompletionSample() => string.Join("\n", new[]
+    {
+        "Building,",
+        "  NONE,",
+        "  0.0,",
+        "  FullExterior,",
+        "  .04,",
+        "  .4,",
+        "  FullExterior,",
+        "  25,",
+        "  1;"
     }) + "\n";
 
     private static int FindCharacter(string text, int zeroBasedLine, string fragment)

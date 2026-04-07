@@ -195,6 +195,9 @@ internal sealed class LanguageServer
             case "textDocument/definition":
                 HandleDefinition(message, idToken);
                 break;
+            case "textDocument/completion":
+                HandleCompletion(message, idToken);
+                break;
             case "shutdown":
                 HandleShutdown(idToken);
                 break;
@@ -224,7 +227,12 @@ internal sealed class LanguageServer
                     OpenClose = true
                 },
                 HoverProvider = true,
-                DefinitionProvider = true
+                DefinitionProvider = true,
+                CompletionProvider = new CompletionOptions
+                {
+                    ResolveProvider = false,
+                    TriggerCharacters = new[] { "," }
+                }
             }
         };
 
@@ -401,6 +409,34 @@ internal sealed class LanguageServer
             parameters.Position.Character);
 
         SendResponse(idToken, definitions.Count == 0 ? null : definitions.ToArray());
+    }
+
+    private void HandleCompletion(JObject message, JToken? idToken)
+    {
+        if (idToken is null)
+        {
+            return;
+        }
+
+        CompletionParams? parameters = message["params"]?.ToObject<CompletionParams>(_serializer);
+        if (parameters?.TextDocument?.Uri is null)
+        {
+            SendResponse(idToken, Array.Empty<CompletionItem>());
+            return;
+        }
+
+        string key = parameters.TextDocument.Uri.ToString();
+        if (!_documents.TryGetValue(key, out DocumentState? document))
+        {
+            SendResponse(idToken, Array.Empty<CompletionItem>());
+            return;
+        }
+
+        IReadOnlyList<CompletionItem> completions = document.FindCompletions(
+            parameters.Position.Line,
+            parameters.Position.Character);
+
+        SendResponse(idToken, completions.ToArray());
     }
 
     private void HandleShutdown(JToken? idToken)
@@ -652,6 +688,7 @@ internal sealed class LanguageServer
         private readonly NeobemParser _parser;
         private readonly List<IToken> _tokenCache = new();
         private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<int, ObjectFieldCompletionTarget> _objectFieldCompletionTargetsByTokenIndex = new();
         private readonly Dictionary<int, VariableDefinition> _variableDefinitionsByUsageTokenIndex = new();
 
         public string Text { get; private set; }
@@ -738,6 +775,116 @@ internal sealed class LanguageServer
             }
 
             return definitions.Select(definition => definition.ToLocation(documentUri)).ToArray();
+        }
+
+        public IReadOnlyList<CompletionItem> FindCompletions(int zeroBasedLine, int zeroBasedCharacter)
+        {
+            if (_fileType != FileType.Idf)
+            {
+                return Array.Empty<CompletionItem>();
+            }
+
+            if (!TryGetObjectFieldCompletionTarget(
+                    zeroBasedLine,
+                    zeroBasedCharacter,
+                    out IToken? token,
+                    out ObjectFieldCompletionTarget? completionTarget))
+            {
+                Log($"Completion miss at {zeroBasedLine}:{zeroBasedCharacter}");
+                return Array.Empty<CompletionItem>();
+            }
+
+            ObjectFieldCompletionTarget resolvedTarget = completionTarget!;
+
+            if (!EnergyPlusFieldKeyData.Objects.TryGetValue(resolvedTarget.ObjectType, out EnergyPlusObjectFieldKeyMap? objectFieldMap) ||
+                objectFieldMap is null ||
+                !objectFieldMap.FieldsByPosition.TryGetValue(resolvedTarget.FieldPosition, out EnergyPlusFieldKeyDefinition? fieldDefinition) ||
+                fieldDefinition is null)
+            {
+                Log($"Completion map miss at {zeroBasedLine}:{zeroBasedCharacter} token={DescribeToken(token)} target={resolvedTarget.ObjectType}#{resolvedTarget.FieldPosition}");
+                return Array.Empty<CompletionItem>();
+            }
+
+            Log($"Completion hit at {zeroBasedLine}:{zeroBasedCharacter} token={DescribeToken(token)} target={resolvedTarget.ObjectType}#{resolvedTarget.FieldPosition}");
+
+            return fieldDefinition.Keys.Select(key => new CompletionItem
+            {
+                Label = key,
+                Kind = CompletionItemKind.EnumMember,
+                Detail = fieldDefinition.Label,
+                InsertText = key,
+                TextEdit = new TextEdit
+                {
+                    NewText = key,
+                    Range = resolvedTarget.ReplacementRange
+                }
+            }).ToArray();
+        }
+
+        private bool TryGetObjectFieldCompletionTarget(
+            int zeroBasedLine,
+            int zeroBasedCharacter,
+            out IToken? token,
+            out ObjectFieldCompletionTarget? completionTarget)
+        {
+            token = FindToken(zeroBasedLine, zeroBasedCharacter);
+            completionTarget = null;
+
+            if (token is null)
+            {
+                return false;
+            }
+
+            if (token.Type != NeobemLexer.FIELD && token.Type != NeobemLexer.FIELD_SEP)
+            {
+                return false;
+            }
+
+            // Some clients request completion at the comma token for an empty field.
+            // In that case the preceding FIELD_SEP owns the empty slot's replacement range.
+            if (token.Type == NeobemLexer.FIELD_SEP &&
+                zeroBasedLine == token.Line - 1 &&
+                zeroBasedCharacter == token.Column)
+            {
+                IToken? previousToken = FindPreviousDefaultToken(token.TokenIndex);
+                if (previousToken?.Type == NeobemLexer.FIELD_SEP &&
+                    _objectFieldCompletionTargetsByTokenIndex.TryGetValue(previousToken.TokenIndex, out completionTarget))
+                {
+                    token = previousToken;
+                    return true;
+                }
+            }
+
+            return _objectFieldCompletionTargetsByTokenIndex.TryGetValue(token.TokenIndex, out completionTarget);
+        }
+
+        private IToken? FindPreviousDefaultToken(int tokenIndex)
+        {
+            for (int index = tokenIndex - 1; index >= 0; index--)
+            {
+                IToken token = _tokenStream.Get(index);
+                if (token.Type == TokenConstants.EOF || token.Channel != TokenConstants.DefaultChannel)
+                {
+                    continue;
+                }
+
+                return token;
+            }
+
+            return null;
+        }
+
+        private static string DescribeToken(IToken? token)
+        {
+            if (token is null)
+            {
+                return "null";
+            }
+
+            string text = (token.Text ?? string.Empty)
+                .Replace("\r", "\\r", StringComparison.Ordinal)
+                .Replace("\n", "\\n", StringComparison.Ordinal);
+            return $"{token.Type}:{text}";
         }
 
         public IToken? FindToken(int zeroBasedLine, int zeroBasedCharacter)
@@ -843,6 +990,7 @@ internal sealed class LanguageServer
         private void RebuildObjectDefinitions()
         {
             _objectDefinitions.Clear();
+            _objectFieldCompletionTargetsByTokenIndex.Clear();
 
             if (_fileType != FileType.Idf || ParseTree is null)
             {
@@ -851,6 +999,7 @@ internal sealed class LanguageServer
 
             ParseTreeWalker walker = new();
             walker.Walk(new ObjectDefinitionListener(_objectDefinitions), ParseTree);
+            walker.Walk(new ObjectFieldCompletionListener(_tokenStream, _objectFieldCompletionTargetsByTokenIndex), ParseTree);
 
             RebuildVariableDefinitions();
         }
@@ -1043,6 +1192,81 @@ internal sealed class LanguageServer
         }
     }
 
+    private sealed class ObjectFieldCompletionListener : NeobemParserBaseListener
+    {
+        private readonly CommonTokenStream _tokenStream;
+        private readonly Dictionary<int, ObjectFieldCompletionTarget> _completionTargetsByTokenIndex;
+
+        public ObjectFieldCompletionListener(
+            CommonTokenStream tokenStream,
+            Dictionary<int, ObjectFieldCompletionTarget> completionTargetsByTokenIndex)
+        {
+            _tokenStream = tokenStream;
+            _completionTargetsByTokenIndex = completionTargetsByTokenIndex;
+        }
+
+        public override void EnterObject(NeobemParser.ObjectContext context)
+        {
+            string objectType = context.OBJECT_TYPE().GetText().Trim();
+            if (!EnergyPlusFieldKeyData.Objects.ContainsKey(objectType))
+            {
+                return;
+            }
+
+            int fieldPosition = 0;
+            IToken? currentFieldSeparator = null;
+
+            for (int tokenIndex = context.Start.TokenIndex + 1; tokenIndex <= context.Stop.TokenIndex; tokenIndex++)
+            {
+                IToken token = _tokenStream.Get(tokenIndex);
+                if (token.Channel != TokenConstants.DefaultChannel)
+                {
+                    continue;
+                }
+
+                switch (token.Type)
+                {
+                    case NeobemLexer.FIELD_SEP:
+                        AddEmptyFieldCompletionTargetIfNeeded(objectType, fieldPosition, currentFieldSeparator);
+                        fieldPosition++;
+                        currentFieldSeparator = token;
+                        break;
+                    case NeobemLexer.FIELD:
+                        if (currentFieldSeparator is null)
+                        {
+                            break;
+                        }
+
+                        ObjectFieldCompletionTarget completionTarget = new(
+                            objectType,
+                            fieldPosition,
+                            CreateTokenRange(token));
+                        _completionTargetsByTokenIndex[currentFieldSeparator.TokenIndex] = completionTarget;
+                        _completionTargetsByTokenIndex[token.TokenIndex] = completionTarget;
+                        currentFieldSeparator = null;
+                        break;
+                    case NeobemLexer.OBJECT_TERMINATOR:
+                        AddEmptyFieldCompletionTargetIfNeeded(objectType, fieldPosition, currentFieldSeparator);
+                        currentFieldSeparator = null;
+                        break;
+                }
+            }
+        }
+
+        private void AddEmptyFieldCompletionTargetIfNeeded(string objectType, int fieldPosition, IToken? fieldSeparatorToken)
+        {
+            if (fieldSeparatorToken is null || fieldPosition <= 0)
+            {
+                return;
+            }
+
+            _completionTargetsByTokenIndex[fieldSeparatorToken.TokenIndex] = new ObjectFieldCompletionTarget(
+                objectType,
+                fieldPosition,
+                CreateEmptyRangeAtTokenEnd(fieldSeparatorToken));
+        }
+    }
+
     internal sealed record ObjectDefinition(string ObjectType, string Name, LspRange Range)
     {
         public Location ToLocation(Uri documentUri) => new()
@@ -1052,12 +1276,32 @@ internal sealed class LanguageServer
         };
     }
 
+    internal sealed record ObjectFieldCompletionTarget(string ObjectType, int FieldPosition, LspRange ReplacementRange);
+
     internal sealed record VariableDefinition(string Name, LspRange Range)
     {
         public Location ToLocation(Uri documentUri) => new()
         {
             Uri = documentUri,
             Range = Range
+        };
+    }
+
+    private static LspRange CreateEmptyRangeAtTokenEnd(IToken token)
+    {
+        int startLine = Math.Max(token.Line - 1, 0);
+        int startCharacter = Math.Max(token.Column, 0);
+        (int endLine, int endCharacter) = ComputeTokenEndPosition(token, startLine, startCharacter);
+        Position position = new()
+        {
+            Line = endLine,
+            Character = endCharacter
+        };
+
+        return new LspRange
+        {
+            Start = position,
+            End = position
         };
     }
 

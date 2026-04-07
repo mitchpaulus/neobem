@@ -15,6 +15,11 @@ def fieldHasKeys (dict -- bool)
     "keys" [] getDef len 0 >
 end
 
+def enumeratedFieldHasKeys ([any] -- bool)
+    2unpack field!, fieldIndex!
+    @field fieldHasKeys
+end
+
 def formatStringArrayLiteral ([str] -- str)
     ("\"" swap csharpEscape + "\"" +) map
     ", " join
@@ -23,8 +28,9 @@ def formatStringArrayLiteral ([str] -- str)
 end
 
 def formatFieldEntry ([any] -- str)
-    2unpack keyListNameByLiteral!, field!
-    @field "position" 0 getDef str position!
+    2unpack keyListNameByLiteral!, fieldRecord!
+    @fieldRecord 2unpack field!, zeroBasedIndex!
+    @zeroBasedIndex 1 + str position!
     @field "label" getDefStr csharpEscape label!
     @field "keys" getDefList formatStringArrayLiteral keysLiteral!
     @keyListNameByLiteral @keysLiteral "" getDef sharedKeysName!
@@ -47,14 +53,14 @@ def formatObjectEntry ([any] -- str)
     2unpack keyListNameByLiteral!, object!
     @object "name" getDefStr csharpEscape objectName!
     @object "fields" getDefList fieldList!
-    @fieldList (fieldHasKeys) filter fieldHasCompletionKeys!
+    @fieldList enumerate (enumeratedFieldHasKeys) filter fieldHasCompletionKeys!
     @fieldHasCompletionKeys (@keyListNameByLiteral swap 2tuple formatFieldEntry) map ",\n" join fieldEntries!
     [
         $"        [\"{@objectName}\"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>"
         "        {"
         @fieldEntries
         "        })"
-    ] "\n" join
+    ] unlines
 end
 
 args args!
@@ -90,7 +96,7 @@ end
 @objectsWithKeyedFields ("fields" getDefList (fieldHasKeys) filter) map concat allKeyedFields!
 @allKeyedFields ("keys" getDefList formatStringArrayLiteral) map uniq enumerate (buildKeyListRecord) map sharedKeyRecords!
 @sharedKeyRecords (:1:) (:0:) listToDict keyListNameByLiteral!
-@sharedKeyRecords (formatKeyListDeclaration) map "\n" join sharedKeyDeclarations!
+@sharedKeyRecords (formatKeyListDeclaration) map unlines sharedKeyDeclarations!
 @objectsWithKeyedFields (@keyListNameByLiteral swap 2tuple formatObjectEntry) map ",\n" join objectEntries!
     "    public const string IddVersion = \"" iddVersionPrefix!
 @iddVersionPrefix @iddVersion + "\";" + iddVersionLine!
@@ -117,4 +123,4 @@ end
     @objectEntries
     "        };"
     "}"
-] "\n" join @outputPath writeFile
+] unlines @outputPath writeFile

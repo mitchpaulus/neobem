@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -191,6 +192,9 @@ internal sealed class LanguageServer
             case "textDocument/hover":
                 HandleHover(message, idToken);
                 break;
+            case "textDocument/definition":
+                HandleDefinition(message, idToken);
+                break;
             case "shutdown":
                 HandleShutdown(idToken);
                 break;
@@ -216,10 +220,11 @@ internal sealed class LanguageServer
             {
                 TextDocumentSync = new TextDocumentSyncOptions
                 {
-                    Change = TextDocumentSyncKind.Full,
+                    Change = TextDocumentSyncKind.Incremental,
                     OpenClose = true
                 },
-                HoverProvider = true
+                HoverProvider = true,
+                DefinitionProvider = true
             }
         };
 
@@ -263,25 +268,25 @@ internal sealed class LanguageServer
 
         string key = parameters.TextDocument.Uri.ToString();
 
+        if (_documents.TryGetValue(key, out DocumentState? document))
+        {
+            document.ApplyContentChanges(parameters.ContentChanges ?? Enumerable.Empty<TextDocumentContentChangeEvent>());
+            return;
+        }
+
         string? latest = null;
         if (parameters.ContentChanges is not null)
         {
             foreach (TextDocumentContentChangeEvent change in parameters.ContentChanges)
             {
-                latest = change.Text;
+                if (change.Range is null)
+                {
+                    latest = change.Text;
+                }
             }
         }
 
-        if (latest is null)
-        {
-            return;
-        }
-
-        if (_documents.TryGetValue(key, out DocumentState? document))
-        {
-            document.UpdateText(latest);
-        }
-        else
+        if (latest is not null)
         {
             FileType fileType = DetermineFileType(parameters.TextDocument.Uri);
             _documents[key] = new DocumentState(latest, fileType);
@@ -367,6 +372,35 @@ internal sealed class LanguageServer
         };
 
         SendResponse(idToken, hover);
+    }
+
+    private void HandleDefinition(JObject message, JToken? idToken)
+    {
+        if (idToken is null)
+        {
+            return;
+        }
+
+        TextDocumentPositionParams? parameters = message["params"]?.ToObject<TextDocumentPositionParams>(_serializer);
+        if (parameters?.TextDocument?.Uri is null)
+        {
+            SendResponse(idToken, null);
+            return;
+        }
+
+        string key = parameters.TextDocument.Uri.ToString();
+        if (!_documents.TryGetValue(key, out DocumentState? document))
+        {
+            SendResponse(idToken, null);
+            return;
+        }
+
+        IReadOnlyList<Location> definitions = document.FindDefinitions(
+            parameters.TextDocument.Uri,
+            parameters.Position.Line,
+            parameters.Position.Character);
+
+        SendResponse(idToken, definitions.Count == 0 ? null : definitions.ToArray());
     }
 
     private void HandleShutdown(JToken? idToken)
@@ -607,15 +641,17 @@ internal sealed class LanguageServer
         return (line, character);
     }
 
-    private sealed class DocumentState
+    internal sealed class DocumentState
     {
         private readonly SimpleAntlrErrorListener _lexerErrorListener = new();
         private readonly SimpleAntlrErrorListener _parserErrorListener = new();
+        private readonly FileType _fileType;
         private AntlrInputStream _inputStream;
         private readonly NeobemLexer _lexer;
         private readonly CommonTokenStream _tokenStream;
         private readonly NeobemParser _parser;
         private readonly List<IToken> _tokenCache = new();
+        private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions = new(StringComparer.OrdinalIgnoreCase);
 
         public string Text { get; private set; }
         public NeobemParser.IdfContext? ParseTree { get; private set; }
@@ -626,6 +662,7 @@ internal sealed class LanguageServer
         public DocumentState(string text, FileType fileType)
         {
             Text = text;
+            _fileType = fileType;
             _inputStream = new AntlrInputStream(text);
             _lexer = new NeobemLexer(_inputStream)
             {
@@ -643,6 +680,20 @@ internal sealed class LanguageServer
             Parse();
         }
 
+        public void ApplyContentChanges(IEnumerable<TextDocumentContentChangeEvent> changes)
+        {
+            string updatedText = Text;
+
+            foreach (TextDocumentContentChangeEvent change in changes)
+            {
+                updatedText = change.Range is null
+                    ? change.Text ?? string.Empty
+                    : ApplyIncrementalChange(updatedText, change.Range, change.Text ?? string.Empty);
+            }
+
+            UpdateText(updatedText);
+        }
+
         public void UpdateText(string text)
         {
             Log("Updating text");
@@ -653,6 +704,28 @@ internal sealed class LanguageServer
             _tokenStream.Reset();
             _parser.Reset();
             Parse();
+        }
+
+        public IReadOnlyList<Location> FindDefinitions(Uri documentUri, int zeroBasedLine, int zeroBasedCharacter)
+        {
+            if (_fileType != FileType.Idf)
+            {
+                return Array.Empty<Location>();
+            }
+
+            IToken? token = FindToken(zeroBasedLine, zeroBasedCharacter);
+            if (token is null || token.Type != NeobemLexer.FIELD)
+            {
+                return Array.Empty<Location>();
+            }
+
+            string lookupName = NormalizeFieldValue(token.Text);
+            if (string.IsNullOrEmpty(lookupName) || !_objectDefinitions.TryGetValue(lookupName, out List<ObjectDefinition>? definitions))
+            {
+                return Array.Empty<Location>();
+            }
+
+            return definitions.Select(definition => definition.ToLocation(documentUri)).ToArray();
         }
 
         public IToken? FindToken(int zeroBasedLine, int zeroBasedCharacter)
@@ -751,8 +824,147 @@ internal sealed class LanguageServer
 
                 _tokenCache.Add(token);
             }
+
+            RebuildObjectDefinitions();
         }
 
+        private void RebuildObjectDefinitions()
+        {
+            _objectDefinitions.Clear();
+
+            if (_fileType != FileType.Idf || ParseTree is null)
+            {
+                return;
+            }
+
+            ParseTreeWalker walker = new();
+            walker.Walk(new ObjectDefinitionListener(_objectDefinitions), ParseTree);
+        }
+
+        private static string ApplyIncrementalChange(string currentText, LspRange range, string replacementText)
+        {
+            int startOffset = GetOffset(currentText, range.Start);
+            int endOffset = GetOffset(currentText, range.End);
+
+            if (startOffset > endOffset)
+            {
+                (startOffset, endOffset) = (endOffset, startOffset);
+            }
+
+            return currentText[..startOffset] + replacementText + currentText[endOffset..];
+        }
+
+        private static int GetOffset(string text, Position position)
+        {
+            int targetLine = Math.Max(position.Line, 0);
+            int targetCharacter = Math.Max(position.Character, 0);
+            int line = 0;
+            int character = 0;
+            int index = 0;
+
+            while (index < text.Length)
+            {
+                if (line == targetLine && character == targetCharacter)
+                {
+                    return index;
+                }
+
+                char current = text[index];
+                if (current == '\r')
+                {
+                    index++;
+                    if (index < text.Length && text[index] == '\n')
+                    {
+                        index++;
+                    }
+
+                    line++;
+                    character = 0;
+                    continue;
+                }
+
+                if (current == '\n')
+                {
+                    index++;
+                    line++;
+                    character = 0;
+                    continue;
+                }
+
+                index++;
+                character++;
+            }
+
+            return text.Length;
+        }
+
+        internal static string NormalizeFieldValue(string? fieldValue) => (fieldValue ?? string.Empty).Trim();
+
+    }
+
+    private sealed class ObjectDefinitionListener : NeobemParserBaseListener
+    {
+        private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions;
+
+        public ObjectDefinitionListener(Dictionary<string, List<ObjectDefinition>> objectDefinitions)
+        {
+            _objectDefinitions = objectDefinitions;
+        }
+
+        public override void EnterObject(NeobemParser.ObjectContext context)
+        {
+            string objectType = context.OBJECT_TYPE().GetText().Trim();
+            if (!LspReferableIdfObjectTypes.Values.Contains(objectType))
+            {
+                return;
+            }
+
+            ITerminalNode[] fields = context.FIELD();
+            if (fields.Length < 1)
+            {
+                return;
+            }
+
+            IToken nameToken = fields[0].Symbol;
+            string objectName = DocumentState.NormalizeFieldValue(nameToken.Text);
+            if (string.IsNullOrEmpty(objectName))
+            {
+                return;
+            }
+
+            int startLine = Math.Max(nameToken.Line - 1, 0);
+            int startCharacter = Math.Max(nameToken.Column, 0);
+            (int endLine, int endCharacter) = ComputeTokenEndPosition(nameToken, startLine, startCharacter);
+
+            if (!_objectDefinitions.TryGetValue(objectName, out List<ObjectDefinition>? definitions))
+            {
+                definitions = new List<ObjectDefinition>();
+                _objectDefinitions[objectName] = definitions;
+            }
+
+            definitions.Add(new ObjectDefinition(objectType, objectName, new LspRange
+            {
+                Start = new Position
+                {
+                    Line = startLine,
+                    Character = startCharacter
+                },
+                End = new Position
+                {
+                    Line = endLine,
+                    Character = endCharacter
+                }
+            }));
+        }
+    }
+
+    internal sealed record ObjectDefinition(string ObjectType, string Name, LspRange Range)
+    {
+        public Location ToLocation(Uri documentUri) => new()
+        {
+            Uri = documentUri,
+            Range = Range
+        };
     }
 
     private static Dictionary<string, BuiltInSymbol> CreateBuiltInSymbols()

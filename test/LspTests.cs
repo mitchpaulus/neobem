@@ -220,6 +220,35 @@ public class LspTests
     }
 
     [Test]
+    public void CompletionLookupReturnsKnownKeysForEmptyFieldWhenCursorIsAfterComma()
+    {
+        var document = new LanguageServer.DocumentState(CreateBuildingEmptyTerrainSample(), FileType.Idf);
+
+        var completions = document.FindCompletions(3, 3);
+
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Country");
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Ocean");
+        CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "MinimalShadowing");
+    }
+
+    [Test]
+    public void CompletionLookupPreservesFieldIndentationAndTrailingWhitespace()
+    {
+        var document = new LanguageServer.DocumentState(CreateBuildingCompletionSample(), FileType.Idf);
+
+        var oceanCompletion = document.FindCompletions(
+                3,
+                FindCharacter(document.Text, 3, "FullExterior"))
+            .Single(item => item.Label == "Ocean");
+
+        Assert.NotNull(oceanCompletion.TextEdit);
+        Assert.AreEqual(3, oceanCompletion.TextEdit.Range.Start.Line);
+        Assert.AreEqual(2, oceanCompletion.TextEdit.Range.Start.Character);
+        Assert.AreEqual(3, oceanCompletion.TextEdit.Range.End.Line);
+        Assert.AreEqual(14, oceanCompletion.TextEdit.Range.End.Character);
+    }
+
+    [Test]
     public void CompletionLookupRefreshesAfterIncrementalObjectTypeUpdate()
     {
         var document = new LanguageServer.DocumentState(CreateSimulationControlSample("No", "No"), FileType.Idf);
@@ -291,6 +320,19 @@ public class LspTests
         "  NONE,",
         "  0.0,",
         "  FullExterior,",
+        "  .04,",
+        "  .4,",
+        "  FullExterior,",
+        "  25,",
+        "  1;"
+    }) + "\n";
+
+    private static string CreateBuildingEmptyTerrainSample() => string.Join("\n", new[]
+    {
+        "Building,",
+        "  NONE,",
+        "  0.0,",
+        "  ,",
         "  .04,",
         "  .4,",
         "  FullExterior,",

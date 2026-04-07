@@ -812,6 +812,7 @@ internal sealed class LanguageServer
                 Label = key,
                 Kind = CompletionItemKind.EnumMember,
                 Detail = fieldDefinition.Label,
+                FilterText = key,
                 InsertText = key,
                 TextEdit = new TextEdit
                 {
@@ -840,11 +841,9 @@ internal sealed class LanguageServer
                 return false;
             }
 
-            // Some clients request completion at the comma token for an empty field.
+            // Some clients request completion from inside the current comma token for an empty field.
             // In that case the preceding FIELD_SEP owns the empty slot's replacement range.
-            if (token.Type == NeobemLexer.FIELD_SEP &&
-                zeroBasedLine == token.Line - 1 &&
-                zeroBasedCharacter == token.Column)
+            if (token.Type == NeobemLexer.FIELD_SEP)
             {
                 IToken? previousToken = FindPreviousDefaultToken(token.TokenIndex);
                 if (previousToken?.Type == NeobemLexer.FIELD_SEP &&
@@ -1240,7 +1239,7 @@ internal sealed class LanguageServer
                         ObjectFieldCompletionTarget completionTarget = new(
                             objectType,
                             fieldPosition,
-                            CreateTokenRange(token));
+                            CreateTrimmedFieldRange(token));
                         _completionTargetsByTokenIndex[currentFieldSeparator.TokenIndex] = completionTarget;
                         _completionTargetsByTokenIndex[token.TokenIndex] = completionTarget;
                         currentFieldSeparator = null;
@@ -1302,6 +1301,45 @@ internal sealed class LanguageServer
         {
             Start = position,
             End = position
+        };
+    }
+
+    private static LspRange CreateTrimmedFieldRange(IToken token)
+    {
+        string text = token.Text ?? string.Empty;
+        int leadingWhitespace = 0;
+        while (leadingWhitespace < text.Length && char.IsWhiteSpace(text[leadingWhitespace]))
+        {
+            leadingWhitespace++;
+        }
+
+        int trailingWhitespace = 0;
+        while (trailingWhitespace < text.Length - leadingWhitespace &&
+               char.IsWhiteSpace(text[text.Length - 1 - trailingWhitespace]))
+        {
+            trailingWhitespace++;
+        }
+
+        int startLine = Math.Max(token.Line - 1, 0);
+        int startCharacter = Math.Max(token.Column + leadingWhitespace, 0);
+        int endCharacter = Math.Max(startCharacter, token.Column + text.Length - trailingWhitespace);
+
+        Position start = new()
+        {
+            Line = startLine,
+            Character = startCharacter
+        };
+
+        Position end = new()
+        {
+            Line = startLine,
+            Character = endCharacter
+        };
+
+        return new LspRange
+        {
+            Start = start,
+            End = end
         };
     }
 

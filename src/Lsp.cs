@@ -652,6 +652,7 @@ internal sealed class LanguageServer
         private readonly NeobemParser _parser;
         private readonly List<IToken> _tokenCache = new();
         private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<int, VariableDefinition> _variableDefinitionsByUsageTokenIndex = new();
 
         public string Text { get; private set; }
         public NeobemParser.IdfContext? ParseTree { get; private set; }
@@ -714,7 +715,18 @@ internal sealed class LanguageServer
             }
 
             IToken? token = FindToken(zeroBasedLine, zeroBasedCharacter);
-            if (token is null || token.Type != NeobemLexer.FIELD)
+            if (token is null)
+            {
+                return Array.Empty<Location>();
+            }
+
+            if (token.Type == NeobemLexer.IDENTIFIER &&
+                _variableDefinitionsByUsageTokenIndex.TryGetValue(token.TokenIndex, out VariableDefinition? variableDefinition))
+            {
+                return new[] { variableDefinition.ToLocation(documentUri) };
+            }
+
+            if (token.Type != NeobemLexer.FIELD)
             {
                 return Array.Empty<Location>();
             }
@@ -839,6 +851,79 @@ internal sealed class LanguageServer
 
             ParseTreeWalker walker = new();
             walker.Walk(new ObjectDefinitionListener(_objectDefinitions), ParseTree);
+
+            RebuildVariableDefinitions();
+        }
+
+        private void RebuildVariableDefinitions()
+        {
+            _variableDefinitionsByUsageTokenIndex.Clear();
+
+            if (ParseTree is null)
+            {
+                return;
+            }
+
+            Dictionary<string, VariableDefinition> previousDefinitions = new(StringComparer.Ordinal);
+
+            foreach (NeobemParser.Base_idfContext statement in ParseTree.base_idf())
+            {
+                switch (statement)
+                {
+                    case NeobemParser.VariableDeclarationContext variableDeclarationContext:
+                    {
+                        NeobemParser.Variable_declarationContext declaration = variableDeclarationContext.variable_declaration();
+                        IndexExpressionIdentifiers(declaration.expression(), previousDefinitions);
+
+                        IToken identifierToken = declaration.IDENTIFIER().Symbol;
+                        previousDefinitions[identifierToken.Text] = new VariableDefinition(identifierToken.Text, CreateTokenRange(identifierToken));
+                        break;
+                    }
+                    case NeobemParser.PrintStatmentContext printStatmentContext:
+                        IndexExpressionIdentifiers(printStatmentContext.print_statment().expression(), previousDefinitions);
+                        break;
+                    case NeobemParser.LogStatementContext logStatementContext:
+                        IndexExpressionIdentifiers(logStatementContext.log_statement().expression(), previousDefinitions);
+                        break;
+                }
+            }
+        }
+
+        private void IndexExpressionIdentifiers(ParserRuleContext context, IReadOnlyDictionary<string, VariableDefinition> previousDefinitions)
+        {
+            foreach (IToken token in EnumerateIdentifierTokens(context))
+            {
+                if (previousDefinitions.TryGetValue(token.Text, out VariableDefinition? definition))
+                {
+                    _variableDefinitionsByUsageTokenIndex[token.TokenIndex] = definition;
+                }
+            }
+        }
+
+        private static IEnumerable<IToken> EnumerateIdentifierTokens(IParseTree? tree)
+        {
+            if (tree is null)
+            {
+                yield break;
+            }
+
+            if (tree is ITerminalNode terminalNode && terminalNode.Symbol.Type == NeobemLexer.IDENTIFIER)
+            {
+                if (terminalNode.Parent is not NeobemParser.Lambda_defContext &&
+                    terminalNode.Parent is not NeobemParser.Let_bindingContext)
+                {
+                    yield return terminalNode.Symbol;
+                }
+                yield break;
+            }
+
+            for (int i = 0; i < tree.ChildCount; i++)
+            {
+                foreach (IToken token in EnumerateIdentifierTokens(tree.GetChild(i)))
+                {
+                    yield return token;
+                }
+            }
         }
 
         private static string ApplyIncrementalChange(string currentText, LspRange range, string replacementText)
@@ -967,6 +1052,36 @@ internal sealed class LanguageServer
         };
     }
 
+    internal sealed record VariableDefinition(string Name, LspRange Range)
+    {
+        public Location ToLocation(Uri documentUri) => new()
+        {
+            Uri = documentUri,
+            Range = Range
+        };
+    }
+
+    private static LspRange CreateTokenRange(IToken token)
+    {
+        int startLine = Math.Max(token.Line - 1, 0);
+        int startCharacter = Math.Max(token.Column, 0);
+        (int endLine, int endCharacter) = ComputeTokenEndPosition(token, startLine, startCharacter);
+
+        return new LspRange
+        {
+            Start = new Position
+            {
+                Line = startLine,
+                Character = startCharacter
+            },
+            End = new Position
+            {
+                Line = endLine,
+                Character = endCharacter
+            }
+        };
+    }
+
     private static Dictionary<string, BuiltInSymbol> CreateBuiltInSymbols()
     {
         Dictionary<string, BuiltInSymbol> map = new(StringComparer.OrdinalIgnoreCase)
@@ -988,7 +1103,7 @@ internal sealed class LanguageServer
             ["mod"] = new("mod(dividend, divisor)", "Returns the remainder of dividing `dividend` by `divisor`."),
             ["type"] = new("type(value)", "Returns the Neobem type name of `value`."),
             ["guid"] = new("guid()", "Generates a random GUID string."),
-            ["exists"] = new("exists(path)", "Checks whether a file exists at `path`."),
+            ["exists"] = new("exists(path)", "Checks whether a definition exists. Most useful for checking for flags passed in on the CLI."),
             ["handle"] = new("handle(object, field)", "Returns a handle value for an object reference field."),
             ["contains"] = new("contains(listOrString, value)", "Returns true when `value` appears in the list or string."),
             ["lower"] = new("lower(text)", "Converts `text` to lowercase."),

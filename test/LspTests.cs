@@ -87,6 +87,101 @@ public class LspTests
         Assert.AreEqual(2, updatedDefinitions[0].Range.Start.Character);
     }
 
+    [Test]
+    public void VariableDefinitionLookupWorksInDeclarationPrintAndLogExpressions()
+    {
+        var document = new LanguageServer.DocumentState(CreateVariableDefinitionSample(), FileType.Idf);
+        Uri uri = new("file:///variable-definition-sample.nbem");
+
+        var declarationDefinitions = document.FindDefinitions(
+            uri,
+            1,
+            FindCharacter(document.Text, 1, "baseLoad"));
+        Assert.AreEqual(1, declarationDefinitions.Count);
+        Assert.AreEqual(0, declarationDefinitions[0].Range.Start.Line);
+        Assert.AreEqual(0, declarationDefinitions[0].Range.Start.Character);
+
+        var printDefinitions = document.FindDefinitions(
+            uri,
+            2,
+            FindCharacter(document.Text, 2, "adjustedLoad"));
+        Assert.AreEqual(1, printDefinitions.Count);
+        Assert.AreEqual(1, printDefinitions[0].Range.Start.Line);
+        Assert.AreEqual(0, printDefinitions[0].Range.Start.Character);
+
+        var logDefinitions = document.FindDefinitions(
+            uri,
+            3,
+            FindCharacter(document.Text, 3, "baseLoad"));
+        Assert.AreEqual(1, logDefinitions.Count);
+        Assert.AreEqual(0, logDefinitions[0].Range.Start.Line);
+        Assert.AreEqual(0, logDefinitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void VariableDefinitionLookupRefreshesAfterIncrementalRename()
+    {
+        var document = new LanguageServer.DocumentState(CreateVariableDefinitionSample(), FileType.Idf);
+        Uri uri = new("file:///variable-definition-sample.nbem");
+
+        document.ApplyContentChanges(new[]
+        {
+            new TextDocumentContentChangeEvent
+            {
+                Range = new LspRange
+                {
+                    Start = new Position { Line = 0, Character = 0 },
+                    End = new Position { Line = 0, Character = 8 }
+                },
+                Text = "peakLoad"
+            }
+        });
+
+        var staleDefinitions = document.FindDefinitions(
+            uri,
+            1,
+            FindCharacter(document.Text, 1, "baseLoad"));
+        Assert.AreEqual(0, staleDefinitions.Count);
+
+        document.ApplyContentChanges(new[]
+        {
+            new TextDocumentContentChangeEvent
+            {
+                Range = new LspRange
+                {
+                    Start = new Position { Line = 1, Character = 15 },
+                    End = new Position { Line = 1, Character = 23 }
+                },
+                Text = "peakLoad"
+            }
+        });
+
+        var updatedDefinitions = document.FindDefinitions(
+            uri,
+            1,
+            FindCharacter(document.Text, 1, "peakLoad"));
+        Assert.AreEqual(1, updatedDefinitions.Count);
+        Assert.AreEqual(0, updatedDefinitions[0].Range.Start.Line);
+        Assert.AreEqual(0, updatedDefinitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void VariableDefinitionLookupIgnoresForwardReferences()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "adjustedLoad = baseLoad + 2",
+            "baseLoad = 4"
+        }) + "\n", FileType.Idf);
+
+        var definitions = document.FindDefinitions(
+            new Uri("file:///forward-reference-sample.nbem"),
+            0,
+            FindCharacter(document.Text, 0, "baseLoad"));
+
+        Assert.AreEqual(0, definitions.Count);
+    }
+
     private static string CreateDefinitionSample() => string.Join("\n", new[]
     {
         "Schedule:Compact,",
@@ -96,6 +191,14 @@ public class LspTests
         "Lights,",
         "  My Lights,",
         "  Office Occupied;"
+    }) + "\n";
+
+    private static string CreateVariableDefinitionSample() => string.Join("\n", new[]
+    {
+        "baseLoad = 10",
+        "adjustedLoad = baseLoad + 2",
+        "print adjustedLoad",
+        "log baseLoad"
     }) + "\n";
 
     private static int FindCharacter(string text, int zeroBasedLine, string fragment)

@@ -836,14 +836,16 @@ internal sealed class LanguageServer
                 return false;
             }
 
-            if (token.Type != NeobemLexer.FIELD && token.Type != NeobemLexer.FIELD_SEP)
+            if (token.Type != NeobemLexer.FIELD &&
+                token.Type != NeobemLexer.FIELD_SEP &&
+                token.Type != NeobemLexer.OBJECT_TERMINATOR)
             {
                 return false;
             }
 
             // A cursor on the separator's own line still belongs to the field that just ended.
             // Positions on later lines within the same separator belong to the upcoming field.
-            if (token.Type == NeobemLexer.FIELD_SEP &&
+            if ((token.Type == NeobemLexer.FIELD_SEP || token.Type == NeobemLexer.OBJECT_TERMINATOR) &&
                 zeroBasedLine == token.Line - 1)
             {
                 IToken? previousToken = FindPreviousDefaultToken(token.TokenIndex);

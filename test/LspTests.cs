@@ -244,6 +244,18 @@ public class LspTests
     }
 
     [Test]
+    public void CompletionLookupReturnsKnownKeysForSingleLineEmptyFieldBeforeTerminator()
+    {
+        var document = new LanguageServer.DocumentState("Building,None,0.0,;\n", FileType.Idf);
+
+        var completions = document.FindCompletions(0, 18);
+
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Country");
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Ocean");
+        CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "MinimalShadowing");
+    }
+
+    [Test]
     public void CompletionLookupPreservesFieldIndentationAndTrailingWhitespace()
     {
         var document = new LanguageServer.DocumentState(CreateBuildingCompletionSample(), FileType.Idf);

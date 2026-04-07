@@ -841,12 +841,13 @@ internal sealed class LanguageServer
                 return false;
             }
 
-            // Some clients request completion from inside the current comma token for an empty field.
-            // In that case the preceding FIELD_SEP owns the empty slot's replacement range.
-            if (token.Type == NeobemLexer.FIELD_SEP)
+            // A cursor on the separator's own line still belongs to the field that just ended.
+            // Positions on later lines within the same separator belong to the upcoming field.
+            if (token.Type == NeobemLexer.FIELD_SEP &&
+                zeroBasedLine == token.Line - 1)
             {
                 IToken? previousToken = FindPreviousDefaultToken(token.TokenIndex);
-                if (previousToken?.Type == NeobemLexer.FIELD_SEP &&
+                if (previousToken is not null &&
                     _objectFieldCompletionTargetsByTokenIndex.TryGetValue(previousToken.TokenIndex, out completionTarget))
                 {
                     token = previousToken;
@@ -928,11 +929,27 @@ internal sealed class LanguageServer
         /// <returns></returns>
         public static int TokenRelativePosition(IToken token, int zeroBasedStartLine, int zeroBasedCharacter)
         {
-            if (zeroBasedStartLine < token.Line - 1) return -1;
-            if (zeroBasedStartLine > token.Line - 1) return 1;
-            if (zeroBasedCharacter < token.Column) return -1;
-            if (zeroBasedCharacter > token.Column + (token.StopIndex - token.StartIndex) + 1) return 1;
+            int tokenStartLine = Math.Max(token.Line - 1, 0);
+            int tokenStartCharacter = Math.Max(token.Column, 0);
+            (int tokenEndLine, int tokenEndCharacter) = ComputeTokenEndPosition(token, tokenStartLine, tokenStartCharacter);
+
+            if (ComparePosition(zeroBasedStartLine, zeroBasedCharacter, tokenStartLine, tokenStartCharacter) < 0)
+            {
+                return -1;
+            }
+
+            if (ComparePosition(zeroBasedStartLine, zeroBasedCharacter, tokenEndLine, tokenEndCharacter) >= 0)
+            {
+                return 1;
+            }
+
             return 0;
+        }
+
+        private static int ComparePosition(int leftLine, int leftCharacter, int rightLine, int rightCharacter)
+        {
+            int lineComparison = leftLine.CompareTo(rightLine);
+            return lineComparison != 0 ? lineComparison : leftCharacter.CompareTo(rightCharacter);
         }
 
         private void Parse()

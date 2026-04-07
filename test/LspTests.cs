@@ -220,6 +220,18 @@ public class LspTests
     }
 
     [Test]
+    public void CompletionLookupReturnsKnownKeysForPopulatedFieldWhenCursorIsBeforeComma()
+    {
+        var document = new LanguageServer.DocumentState(CreateBuildingTerrainPrefixSample(), FileType.Idf);
+
+        var completions = document.FindCompletions(3, 5);
+
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Ocean");
+        CollectionAssert.Contains(completions.Select(item => item.Label).ToArray(), "Country");
+        CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "MinimalShadowing");
+    }
+
+    [Test]
     public void CompletionLookupReturnsKnownKeysForEmptyFieldWhenCursorIsAfterComma()
     {
         var document = new LanguageServer.DocumentState(CreateBuildingEmptyTerrainSample(), FileType.Idf);
@@ -333,6 +345,19 @@ public class LspTests
         "  NONE,",
         "  0.0,",
         "  ,",
+        "  .04,",
+        "  .4,",
+        "  FullExterior,",
+        "  25,",
+        "  1;"
+    }) + "\n";
+
+    private static string CreateBuildingTerrainPrefixSample() => string.Join("\n", new[]
+    {
+        "Building,",
+        "  NONE,",
+        "  0.0,",
+        "  Oce,",
         "  .04,",
         "  .4,",
         "  FullExterior,",

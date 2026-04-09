@@ -1,5 +1,8 @@
 README.pdf
 
+src/25.2_Energy+.json
+src/energyplus-idd.schema.json
+
 # Redo files
 .redo/
 *.aux

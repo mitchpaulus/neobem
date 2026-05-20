@@ -88,6 +88,66 @@ public class LspTests
     }
 
     [Test]
+    public void ReferenceLookupReturnsAllUsagesIncludingDefinitionWhenRequested()
+    {
+        LspReferableIdfObjectTypes.Values.Add("Schedule:Compact");
+
+        var document = new LanguageServer.DocumentState(CreateDefinitionSample(), FileType.Idf);
+        Uri uri = new("file:///definition-sample.nbem");
+
+        var referencesWithDeclaration = document.FindReferences(
+            uri,
+            6,
+            FindCharacter(document.Text, 6, "Occupied"),
+            includeDeclaration: true);
+
+        Assert.AreEqual(2, referencesWithDeclaration.Count);
+        var orderedDecl = referencesWithDeclaration.OrderBy(loc => loc.Range.Start.Line).ToArray();
+        Assert.AreEqual(1, orderedDecl[0].Range.Start.Line);
+        Assert.AreEqual(2, orderedDecl[0].Range.Start.Character);
+        Assert.AreEqual(6, orderedDecl[1].Range.Start.Line);
+        Assert.AreEqual(2, orderedDecl[1].Range.Start.Character);
+    }
+
+    [Test]
+    public void ReferenceLookupExcludesDeclarationWhenNotRequested()
+    {
+        LspReferableIdfObjectTypes.Values.Add("Schedule:Compact");
+
+        var document = new LanguageServer.DocumentState(CreateDefinitionSample(), FileType.Idf);
+        Uri uri = new("file:///definition-sample.nbem");
+
+        var referencesWithoutDeclaration = document.FindReferences(
+            uri,
+            1,
+            FindCharacter(document.Text, 1, "Occupied"),
+            includeDeclaration: false);
+
+        Assert.AreEqual(1, referencesWithoutDeclaration.Count);
+        Assert.AreEqual(6, referencesWithoutDeclaration[0].Range.Start.Line);
+        Assert.AreEqual(2, referencesWithoutDeclaration[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void ReferenceLookupTrimsTrailingWhitespaceInRange()
+    {
+        LspReferableIdfObjectTypes.Values.Add("Schedule:Compact");
+
+        var document = new LanguageServer.DocumentState(CreateDefinitionSample(), FileType.Idf);
+        Uri uri = new("file:///definition-sample.nbem");
+
+        var references = document.FindReferences(
+            uri,
+            6,
+            FindCharacter(document.Text, 6, "Occupied"),
+            includeDeclaration: true);
+
+        var lights = references.Single(loc => loc.Range.Start.Line == 6);
+        Assert.AreEqual(6, lights.Range.End.Line);
+        Assert.AreEqual(2 + "Office Occupied".Length, lights.Range.End.Character);
+    }
+
+    [Test]
     public void VariableDefinitionLookupWorksInDeclarationPrintAndLogExpressions()
     {
         var document = new LanguageServer.DocumentState(CreateVariableDefinitionSample(), FileType.Idf);

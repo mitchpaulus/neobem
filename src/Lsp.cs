@@ -195,6 +195,9 @@ internal sealed class LanguageServer
             case "textDocument/definition":
                 HandleDefinition(message, idToken);
                 break;
+            case "textDocument/references":
+                HandleReferences(message, idToken);
+                break;
             case "textDocument/completion":
                 HandleCompletion(message, idToken);
                 break;
@@ -228,6 +231,7 @@ internal sealed class LanguageServer
                 },
                 HoverProvider = true,
                 DefinitionProvider = true,
+                ReferencesProvider = true,
                 CompletionProvider = new CompletionOptions
                 {
                     ResolveProvider = false,
@@ -409,6 +413,37 @@ internal sealed class LanguageServer
             parameters.Position.Character);
 
         SendResponse(idToken, definitions.Count == 0 ? null : definitions.ToArray());
+    }
+
+    private void HandleReferences(JObject message, JToken? idToken)
+    {
+        if (idToken is null)
+        {
+            return;
+        }
+
+        ReferenceParams? parameters = message["params"]?.ToObject<ReferenceParams>(_serializer);
+        if (parameters?.TextDocument?.Uri is null)
+        {
+            SendResponse(idToken, null);
+            return;
+        }
+
+        string key = parameters.TextDocument.Uri.ToString();
+        if (!_documents.TryGetValue(key, out DocumentState? document))
+        {
+            SendResponse(idToken, null);
+            return;
+        }
+
+        bool includeDeclaration = parameters.Context?.IncludeDeclaration ?? false;
+        IReadOnlyList<Location> references = document.FindReferences(
+            parameters.TextDocument.Uri,
+            parameters.Position.Line,
+            parameters.Position.Character,
+            includeDeclaration);
+
+        SendResponse(idToken, references.Count == 0 ? null : references.ToArray());
     }
 
     private void HandleCompletion(JObject message, JToken? idToken)
@@ -688,6 +723,7 @@ internal sealed class LanguageServer
         private readonly NeobemParser _parser;
         private readonly List<IToken> _tokenCache = new();
         private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions = new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<int> _referableNameTokenIndices = new();
         private readonly Dictionary<int, ObjectFieldCompletionTarget> _objectFieldCompletionTargetsByTokenIndex = new();
         private readonly Dictionary<int, VariableDefinition> _variableDefinitionsByUsageTokenIndex = new();
 
@@ -775,6 +811,59 @@ internal sealed class LanguageServer
             }
 
             return definitions.Select(definition => definition.ToLocation(documentUri)).ToArray();
+        }
+
+        public IReadOnlyList<Location> FindReferences(
+            Uri documentUri,
+            int zeroBasedLine,
+            int zeroBasedCharacter,
+            bool includeDeclaration)
+        {
+            if (_fileType != FileType.Idf)
+            {
+                return Array.Empty<Location>();
+            }
+
+            IToken? token = FindToken(zeroBasedLine, zeroBasedCharacter);
+            if (token is null || token.Type != NeobemLexer.FIELD)
+            {
+                return Array.Empty<Location>();
+            }
+
+            string targetName = NormalizeFieldValue(token.Text);
+            if (string.IsNullOrEmpty(targetName))
+            {
+                return Array.Empty<Location>();
+            }
+
+            List<Location> locations = new();
+            foreach (IToken candidate in _tokenCache)
+            {
+                if (candidate.Type != NeobemLexer.FIELD)
+                {
+                    continue;
+                }
+
+                string candidateName = NormalizeFieldValue(candidate.Text);
+                if (!string.Equals(candidateName, targetName, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                bool isDeclaration = _referableNameTokenIndices.Contains(candidate.TokenIndex);
+                if (!includeDeclaration && isDeclaration)
+                {
+                    continue;
+                }
+
+                locations.Add(new Location
+                {
+                    Uri = documentUri,
+                    Range = CreateTrimmedFieldRange(candidate)
+                });
+            }
+
+            return locations;
         }
 
         public IReadOnlyList<CompletionItem> FindCompletions(int zeroBasedLine, int zeroBasedCharacter)
@@ -1008,6 +1097,7 @@ internal sealed class LanguageServer
         private void RebuildObjectDefinitions()
         {
             _objectDefinitions.Clear();
+            _referableNameTokenIndices.Clear();
             _objectFieldCompletionTargetsByTokenIndex.Clear();
 
             if (_fileType != FileType.Idf || ParseTree is null)
@@ -1016,7 +1106,7 @@ internal sealed class LanguageServer
             }
 
             ParseTreeWalker walker = new();
-            walker.Walk(new ObjectDefinitionListener(_objectDefinitions), ParseTree);
+            walker.Walk(new ObjectDefinitionListener(_objectDefinitions, _referableNameTokenIndices), ParseTree);
             walker.Walk(new ObjectFieldCompletionListener(_tokenStream, _objectFieldCompletionTargetsByTokenIndex), ParseTree);
 
             RebuildVariableDefinitions();
@@ -1157,10 +1247,14 @@ internal sealed class LanguageServer
     private sealed class ObjectDefinitionListener : NeobemParserBaseListener
     {
         private readonly Dictionary<string, List<ObjectDefinition>> _objectDefinitions;
+        private readonly HashSet<int> _nameTokenIndices;
 
-        public ObjectDefinitionListener(Dictionary<string, List<ObjectDefinition>> objectDefinitions)
+        public ObjectDefinitionListener(
+            Dictionary<string, List<ObjectDefinition>> objectDefinitions,
+            HashSet<int> nameTokenIndices)
         {
             _objectDefinitions = objectDefinitions;
+            _nameTokenIndices = nameTokenIndices;
         }
 
         public override void EnterObject(NeobemParser.ObjectContext context)
@@ -1183,6 +1277,8 @@ internal sealed class LanguageServer
             {
                 return;
             }
+
+            _nameTokenIndices.Add(nameToken.TokenIndex);
 
             int startLine = Math.Max(nameToken.Line - 1, 0);
             int startCharacter = Math.Max(nameToken.Column, 0);

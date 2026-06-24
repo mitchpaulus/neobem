@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9
+        dotnet-version: 10
     - name: Setup Java
       uses: actions/setup-java@v5
       with:

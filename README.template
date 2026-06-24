@@ -48,7 +48,7 @@ you can follow the conventions laid out by Microsoft ([link](https://docs.micros
 
 Building from source requires the following dependencies:
 
-1. A .NET environment. Typically installed with [Visual Studio](https://visualstudio.microsoft.com/),
+1. The [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download). Typically installed with [Visual Studio](https://visualstudio.microsoft.com/),
    [Rider](https://www.jetbrains.com/rider/), or directly through the [SDK libraries](https://dotnet.microsoft.com/en-us/download).
 2. [ANTLR](https://www.antlr.org/) and Java. I typically use the open source version of Java at [jdk.java.net](https://jdk.java.net/).
 3. Optional: A `redo`. This is a `make` alternative (see original description from [Daniel J. Bernstein](https://cr.yp.to/redo.html)).
@@ -61,11 +61,11 @@ You can then follow along with the steps in the GitHub workflow that tests build
 The minimum steps after .NET and Java installation are:
 
 ```sh
-# Get ANTLR (version 4.9.3 in this example)
-curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
+# Get ANTLR (version 4.13.1 in this example)
+curl --output antlr-4.13.1-complete.jar https://www.antlr.org/download/antlr-4.13.1-complete.jar
 # Compile ANTLR grammars - environment variables ANTLR_JAR and CLASSPATH required.
-export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
-export CLASSPATH=.:"$(pwd)/antlr-4.9.3-complete.jar"
+export ANTLR_JAR="$(pwd)"/antlr-4.13.1-complete.jar
+export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
 ./do src/antlr/compiled
 ./do src/antlr/excelrange/compiled
 ./do src/antlr/idf/compiled

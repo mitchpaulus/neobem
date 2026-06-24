@@ -65,24 +65,36 @@ The latest release of Neobem is on GitHub, at
 zips containing a compiled executable for various operating systems and
 CPU architectures.
 
-1.  linux-arm64.zip
-2.  linux-arm.zip
-3.  linux-musl-x64.zip
-4.  linux-x64.zip
-5.  osx-x64.zip
-6.  win-arm64.zip
-7.  win-arm.zip
-8.  win-x64.zip
-9.  win-x86.zip
+Each release is published in two flavors:
+
+- **Self contained** (`<runtime>.zip`, e.g. `win-x64.zip`): bundles the
+  .NET runtime, so nothing else needs to be installed. This is the
+  easiest option and what most people should pick.
+- **Framework dependent** (`<runtime>-framework-dependent.zip`, e.g.
+  `win-x64-framework-dependent.zip`): a much smaller download that
+  requires a matching [.NET 10
+  runtime](https://dotnet.microsoft.com/en-us/download) to already be
+  installed on your machine.
+
+The supported runtimes are:
+
+1.  linux-arm64
+2.  linux-arm
+3.  linux-musl-x64
+4.  linux-x64
+5.  osx-x64
+6.  win-arm64
+7.  win-arm
+8.  win-x64
+9.  win-x86
 
 Download the zip file that matches your operating system and
 architecture.[^1] For most people, this will be `win-x64`, `linux-x64`,
 or `osx-x64`.
 
-The zip file will contain a single self contained executable. Extract
-that file from the zip file to a location that you will want the program
-to live. It doesn’t really matter where you put it, but recommended
-places would be:
+The zip file will contain a single executable. Extract that file from
+the zip file to a location that you will want the program to live. It
+doesn’t really matter where you put it, but recommended places would be:
 
 - `C:\Program Files\neobem\neobem.exe` on Windows
 - `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
@@ -198,15 +210,17 @@ mp@mp-computer:~$ nbem -h
 USAGE: nbem [options..] [input file]
 Compile Neobem file to EnergyPlus or DOE-2 input files.
 
-With no [input file], input is read from file named 'in.nbem' in the
-current directory. If the input file is '-', input is read from standard
-input rather than from a file.
+With no [input file], input is read from file named 'in.nbem' in the current directory.
+If the input file is '-', input is read from standard input rather than from a file.
 
 OPTIONS:
 
     --doe2              Parse input file in DOE-2 Building Description Language format
+    --deps <filename>   Print dependencies encountered in the input file to the specified file
 -h, --help              Show this help and exit
 -f, --fmt               Format file instead of compiling
+    --flags <flags>     Set flags for simulation. Multiple flags can be set, comma separated.
+    --objects           Print EnergyPlus objects in TSV format
 -o, --output <filename> Output file name. Output is printed to standard output by default.
     --tokens            Print lexed tokens for debugging
     --tree              Print parse tree in Lisp format for debugging
@@ -287,7 +301,8 @@ Microsoft
 
 Building from source requires the following dependencies:
 
-1.  A .NET environment. Typically installed with [Visual
+1.  The [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
+    Typically installed with [Visual
     Studio](https://visualstudio.microsoft.com/),
     [Rider](https://www.jetbrains.com/rider/), or directly through the
     [SDK libraries](https://dotnet.microsoft.com/en-us/download).
@@ -308,11 +323,11 @@ tests building commits
 The minimum steps after .NET and Java installation are:
 
 ``` sh
-# Get ANTLR (version 4.9.3 in this example)
-curl --output antlr-4.9.3-complete.jar https://www.antlr.org/download/antlr-4.9.3-complete.jar
+# Get ANTLR (version 4.13.1 in this example)
+curl --output antlr-4.13.1-complete.jar https://www.antlr.org/download/antlr-4.13.1-complete.jar
 # Compile ANTLR grammars - environment variables ANTLR_JAR and CLASSPATH required.
-export ANTLR_JAR="$(pwd)"/antlr-4.9.3-complete.jar
-export CLASSPATH=.:"$(pwd)/antlr-4.9.3-complete.jar"
+export ANTLR_JAR="$(pwd)"/antlr-4.13.1-complete.jar
+export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
 ./do src/antlr/compiled
 ./do src/antlr/excelrange/compiled
 ./do src/antlr/idf/compiled

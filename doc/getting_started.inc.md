@@ -17,15 +17,24 @@ The latest release of Neobem is on GitHub, at
 [https://github.com/mitchpaulus/neobem/releases](https://github.com/mitchpaulus/neobem/releases).
 There you will see zips containing a compiled executable for various operating systems and CPU architectures.
 
-1. linux-arm64.zip
-2. linux-arm.zip
-3. linux-musl-x64.zip
-4. linux-x64.zip
-5. osx-x64.zip
-6. win-arm64.zip
-7. win-arm.zip
-8. win-x64.zip
-9. win-x86.zip
+Each release is published in two flavors:
+
+- **Self contained** (`<runtime>.zip`, e.g. `win-x64.zip`): bundles the .NET runtime, so nothing else needs to be installed.
+  The downside is that these executables are, well... *hefty*.
+- **Framework dependent** (`<runtime>-framework-dependent.zip`, e.g. `win-x64-framework-dependent.zip`):
+  a much smaller download that requires a matching [.NET runtime](https://dotnet.microsoft.com/en-us/download) to already be installed on your machine.
+
+The supported runtimes are:
+
+1. linux-arm64
+2. linux-arm
+3. linux-musl-x64
+4. linux-x64
+5. osx-x64
+6. win-arm64
+7. win-arm
+8. win-x64
+9. win-x86
 
 Download the zip file that matches your operating system and architecture.[^WSL]
 For most people, this will be `win-x64`, `linux-x64`, or `osx-x64`.
@@ -33,16 +42,15 @@ For most people, this will be `win-x64`, `linux-x64`, or `osx-x64`.
 [^WSL]: If you are running the Windows Subsystem for Linux within Windows, I would
         recommend the Linux version, and installing like a Linux program
 
-The zip file will contain a single self contained executable.
-Extract that file from the zip file to a location that you will want the program to
-live. It doesn't really matter where you put it, but recommended places
-would be:
+The zip file will contain a single executable.
+Extract that file from the zip file to a location that you will want the program to live.
+It doesn't really matter where you put it, but recommended places would be:
 
 - `C:\Program Files\neobem\neobem.exe` on Windows
 - `/usr/local/bin/nbem` or `~/.local/bin/nbem` on Linux
 
-Neobem is a console or command line application. It is meant to be run
-from a shell environment, that could be anything like[^Shells]:
+Neobem is a console or command line application.
+It is meant to be run from a shell environment, that could be anything like[^Shells]:
 
 [^Shells]: If none of this makes sense, take a look at [this link](https://www.unixsheikh.com/articles/the-terminal-the-console-and-the-shell-what-are-they.html)
   or other web searches for 'terminal vs. shell'

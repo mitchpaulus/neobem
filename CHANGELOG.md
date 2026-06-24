@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.12.0 - 2026-06-24
+
+### Added
+
+- Added new LSP (Language Server Protocol). Used through the same CLI executable.
+- Added VS Code Extension (<https://marketplace.visualstudio.com/items?itemName=MitchellPaulus.neobem>).
+
+### Changed
+
+- Now targets .NET 10.
+
 ## 0.11.0 - 2025-03-31
 
 ### Added

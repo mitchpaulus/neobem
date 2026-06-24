@@ -519,7 +519,7 @@ To note here:
 
 ## Tutorial 6: Using the Building Component Library
 
-The [Building Component Library](https://bcl.nrel.gov/) (BCL) is a library of "components" and "measures" to be used in energy models.
+The [Building Component Library](https://bcl.nlr.gov/) (BCL) is a library of "components" and "measures" to be used in energy models.
 It is hosted by NREL in conjunction with other National Laboratories from the United States.
 The data is hosted in GitHub repositories, searchable through a straightforward API.
 
@@ -652,19 +652,19 @@ We are then getting the value for the key `idf`.
 That key is a long string with the with the value of a URL (Breaking it up onto several lines so as to not ruin the documentation layout).
 
 ```neobem
-'https://bcl.nrel.gov/api/file?' +
+'https://bcl.nlr.gov/api/file?' +
 'path=BuildingComponentLibrary-nrel-components/' +
 'v0.3/90.1-2007 Nonres 1A Door Swinging/files/' +
 '90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf'
 ```
 
 You can try out that endpoint directly in your browser by clicking the link
-[here](https://bcl.nrel.gov/api/file?path=BuildingComponentLibrary-nrel-components/v0.3/90.1-2007 Nonres 1A Door Swinging/files/90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf).
+[here](https://bcl.nlr.gov/api/file?path=BuildingComponentLibrary-nrel-components/v0.3/90.1-2007 Nonres 1A Door Swinging/files/90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf).
 
 You could have manually put this URL in the `import`{.neobem} statement like:
 
 ```neobem
-import 'https://bcl.nrel.gov/api/file?' +
+import 'https://bcl.nlr.gov/api/file?' +
        'path=BuildingComponentLibrary-nrel-components/' +
        'v0.3/90.1-2007 Nonres 1A Door Swinging/files/' +
        '90.1-2007 Nonres 1A Door Swinging_v7.1.0.idf'

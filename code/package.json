@@ -1,0 +1,107 @@
+{
+  "name": "neobem",
+  "displayName": "Neobem",
+  "description": "Syntax highlighting and language server support for Neobem, a DSL that generates EnergyPlus IDF files.",
+  "version": "0.1.0",
+  "publisher": "MitchellPaulus",
+  "license": "AGPL-3.0-or-later",
+  "author": {
+    "name": "Mitchell T. Paulus"
+  },
+  "homepage": "https://mitchellt.com/neobem.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitchpaulus/neobem.git",
+    "directory": "code"
+  },
+  "bugs": {
+    "url": "https://github.com/mitchpaulus/neobem/issues"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "neobem",
+    "energyplus",
+    "idf",
+    "building energy simulation"
+  ],
+  "icon": "icon.png",
+  "activationEvents": [
+    "onLanguage:neobem"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "neobem.restartServer",
+        "title": "Neobem: Restart Language Server"
+      }
+    ],
+    "languages": [
+      {
+        "id": "neobem",
+        "aliases": [
+          "Neobem",
+          "neobem"
+        ],
+        "extensions": [
+          ".bemp",
+          ".nbem"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "neobem",
+        "scopeName": "source.neobem",
+        "path": "./syntaxes/neobem.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Neobem",
+      "properties": {
+        "neobem.server.path": {
+          "type": "string",
+          "default": "nbem",
+          "description": "Path to the Neobem executable (`nbem`) used to run the language server. Defaults to `nbem` found on the system PATH."
+        },
+        "neobem.server.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the Neobem language server (hover, go to definition, find references, and completion). Disable to use syntax highlighting only."
+        },
+        "neobem.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Trace the communication between VS Code and the Neobem language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "generate-grammar": "python3 scripts/generate-grammar.py",
+    "vscode:prepublish": "npm run check-types && node esbuild.js --production",
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.75.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.4.0"
+  }
+}

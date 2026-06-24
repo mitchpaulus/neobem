@@ -1,0 +1,74 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6feb"/>
+      <stop offset="1" stop-color="#0d3b8c"/>
+    </linearGradient>
+    <linearGradient id="tower" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/>
+      <stop offset="1" stop-color="#cdd9ea"/>
+    </linearGradient>
+    <linearGradient id="annex" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dde6f3"/>
+      <stop offset="1" stop-color="#b3c4dd"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded background -->
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+
+  <!-- ground line -->
+  <rect x="14" y="104" width="100" height="6" rx="3" fill="#0a2c66"/>
+
+  <!-- low annex building -->
+  <rect x="20" y="64" width="34" height="42" rx="2" fill="url(#annex)"/>
+  <g fill="#3a5e96">
+    <rect x="26" y="72" width="8" height="8" rx="1"/>
+    <rect x="40" y="72" width="8" height="8" rx="1"/>
+    <rect x="26" y="86" width="8" height="8" rx="1"/>
+    <rect x="40" y="86" width="8" height="8" rx="1"/>
+  </g>
+
+  <!-- main tower -->
+  <rect x="52" y="28" width="52" height="78" rx="3" fill="url(#tower)"/>
+  <!-- roof cap -->
+  <rect x="60" y="20" width="36" height="10" rx="2" fill="#e8eef7"/>
+  <rect x="74" y="10" width="8" height="12" rx="2" fill="#cdd9ea"/>
+
+  <!-- tower window grid (4 cols x 4 rows) -->
+  <g fill="#2f6fd6">
+    <rect x="56" y="34" width="8" height="10" rx="1"/>
+    <rect x="68" y="34" width="8" height="10" rx="1"/>
+    <rect x="80" y="34" width="8" height="10" rx="1"/>
+    <rect x="92" y="34" width="8" height="10" rx="1"/>
+    <rect x="56" y="47" width="8" height="10" rx="1"/>
+    <rect x="68" y="47" width="8" height="10" rx="1"/>
+    <rect x="80" y="47" width="8" height="10" rx="1"/>
+    <rect x="92" y="47" width="8" height="10" rx="1"/>
+    <rect x="56" y="60" width="8" height="10" rx="1"/>
+    <rect x="68" y="60" width="8" height="10" rx="1"/>
+    <rect x="80" y="60" width="8" height="10" rx="1"/>
+    <rect x="92" y="60" width="8" height="10" rx="1"/>
+    <rect x="56" y="73" width="8" height="10" rx="1"/>
+    <rect x="68" y="73" width="8" height="10" rx="1"/>
+    <rect x="80" y="73" width="8" height="10" rx="1"/>
+    <rect x="92" y="73" width="8" height="10" rx="1"/>
+  </g>
+  <!-- lit windows spelling "N": left vertical + diagonal + right vertical -->
+  <g fill="#ffd34d">
+    <rect x="56" y="34" width="8" height="10" rx="1"/>
+    <rect x="56" y="47" width="8" height="10" rx="1"/>
+    <rect x="56" y="60" width="8" height="10" rx="1"/>
+    <rect x="56" y="73" width="8" height="10" rx="1"/>
+    <rect x="68" y="47" width="8" height="10" rx="1"/>
+    <rect x="80" y="60" width="8" height="10" rx="1"/>
+    <rect x="92" y="34" width="8" height="10" rx="1"/>
+    <rect x="92" y="47" width="8" height="10" rx="1"/>
+    <rect x="92" y="60" width="8" height="10" rx="1"/>
+    <rect x="92" y="73" width="8" height="10" rx="1"/>
+  </g>
+
+  <!-- entrance -->
+  <rect x="70" y="90" width="14" height="16" rx="1" fill="#274a82"/>
+  <line x1="77" y1="90" x2="77" y2="106" stroke="#1f6feb" stroke-width="1.5"/>
+</svg>

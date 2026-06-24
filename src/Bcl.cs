@@ -24,15 +24,15 @@ public class Bcl
     {
         var client = new HttpClient();
 
-        client.DefaultRequestHeaders.Host = "bcl.nrel.gov";
+        client.DefaultRequestHeaders.Host = "bcl.nlr.gov";
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         // The server expects the UUID to use lowercase letters.
-        HttpResponseMessage response = client.GetAsync("https://bcl.nrel.gov/api/search/?fq=uuid:" + uuid.ToLower(), HttpCompletionOption.ResponseContentRead).Result;
+        HttpResponseMessage response = client.GetAsync("https://bcl.nlr.gov/api/search/?fq=uuid:" + uuid.ToLower(), HttpCompletionOption.ResponseContentRead).Result;
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            string message = $"Did not receive an OK back from bcl.nrel.gov HTTP request. Response items:\nStatus Code: {response.StatusCode}\nReason: {response.ReasonPhrase}\nHeaders: {response.Headers}";
+            string message = $"Did not receive an OK back from bcl.nlr.gov HTTP request. Response items:\nStatus Code: {response.StatusCode}\nReason: {response.ReasonPhrase}\nHeaders: {response.Headers}";
             throw new HttpRequestException(message);
         }
 
@@ -69,7 +69,7 @@ public class Bcl
 
         JsonDataLoader loader = new();
 
-        // See https://bcl.nrel.gov/static/assets/json/component_schema.json for documented component schema
+        // See https://bcl.nlr.gov/static/assets/json/component_schema.json for documented component schema
         IdfPlusObjectExpression dictionary = (IdfPlusObjectExpression)loader.Load(result.GetRawText());
 
         foreach (Attribute property in bclComponent.Attributes.Attribute)

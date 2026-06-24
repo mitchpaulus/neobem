@@ -196,7 +196,7 @@ namespace src
                 // Many of the idf files in the BCL include a 'Version' object. This causes issues when
                 // more than a single import occurs. So we have this hardcoded check to remove that
                 // in the case it appears that we are loading an idf file from the BCL.
-                if (filePath.StartsWith("https://bcl.nrel.gov/api/file") && filePath.ToLower().EndsWith(".idf"))
+                if (filePath.StartsWith("https://bcl.nlr.gov/api/file") && filePath.ToLower().EndsWith(".idf"))
                 {
                     contents = Bcl.RemoveVersion(contents);
                 }

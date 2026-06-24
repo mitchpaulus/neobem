@@ -68,11 +68,11 @@ CPU architectures.
 Each release is published in two flavors:
 
 - **Self contained** (`<runtime>.zip`, e.g. `win-x64.zip`): bundles the
-  .NET runtime, so nothing else needs to be installed. This is the
-  easiest option and what most people should pick.
-- **Framework dependent** (`<runtime>-framework-dependent.zip`, e.g.
-  `win-x64-framework-dependent.zip`): a much smaller download that
-  requires a matching [.NET 10
+  .NET runtime, so nothing else needs to be installed. The downside is
+  that these executables are, well… *hefty*.
+- **Framework dependent** (`<runtime>-framework-dependent.zip`,
+  e.g. `win-x64-framework-dependent.zip`): a much smaller download that
+  requires a matching [.NET
   runtime](https://dotnet.microsoft.com/en-us/download) to already be
   installed on your machine.
 
@@ -223,6 +223,7 @@ OPTIONS:
     --objects           Print EnergyPlus objects in TSV format
 -o, --output <filename> Output file name. Output is printed to standard output by default.
     --tokens            Print lexed tokens for debugging
+    --lsp               Start the language server on standard input/output
     --tree              Print parse tree in Lisp format for debugging
 -v, --version           Print version number and exit
 ```
@@ -260,7 +261,7 @@ workflow from start to finish. This particular workflow example used
 `bash` as the shell and the files were edited with Neovim.
 
 <figure>
-<img src="img_neobem/demo.png" style="width:80.0%"
+<img src="doc/img_neobem/demo.png" style="width:80.0%"
 alt="Sample screenshot from demo at: asciinema.org." />
 <figcaption aria-hidden="true">Sample screenshot from demo at: <a
 href="https://asciinema.org/a/392845?size=big">asciinema.org</a>.</figcaption>

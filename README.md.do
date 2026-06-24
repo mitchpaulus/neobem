@@ -11,4 +11,4 @@ awk '
 {
     print
 }
-' README.template | sed 's!img/!doc/img/!' | pandoc --to gfm -
+' README.template | sed 's!img_neobem/demo.png!doc/img_neobem/demo.png!' | pandoc --to gfm -

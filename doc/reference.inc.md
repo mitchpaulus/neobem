@@ -417,6 +417,12 @@ load_options = {
 print map(load(load_options), my_template)
 ```
 
+Cell values are read using their underlying stored type: numbers come in as
+numeric values, text as strings, and `TRUE`{.nbem}/`FALSE`{.nbem} as booleans.
+Note that Excel stores dates and times as numbers, so a date cell will come in
+as its underlying numeric (float) serial value rather than as a formatted date
+string.
+
 ### Loading JSON
 
 To load JSON formatted data, you can use a dictionary with the following

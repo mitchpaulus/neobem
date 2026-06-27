@@ -434,7 +434,31 @@ namespace src
             _sheets = ReadSheetIndex(archive);
         }
 
-        public static XlsxWorkbook Open(string path) => new XlsxWorkbook(ZipFile.OpenRead(path));
+        public static XlsxWorkbook Open(string path)
+        {
+            ZipArchive archive;
+            try
+            {
+                archive = ZipFile.OpenRead(path);
+            }
+            catch (InvalidDataException e)
+            {
+                throw new ArgumentException(
+                    $"The file '{path}' could not be read as an .xlsx file (it is not a valid zip/OOXML package). " +
+                    "If it is a legacy .xls file, re-save it in the .xlsx format.", e);
+            }
+
+            // If parsing the package contents fails, make sure we don't leak the open archive.
+            try
+            {
+                return new XlsxWorkbook(archive);
+            }
+            catch
+            {
+                archive.Dispose();
+                throw;
+            }
+        }
 
         public IEnumerable<string> WorksheetNames => _sheets.Select(s => s.Name);
 
@@ -465,12 +489,34 @@ namespace src
             XElement sheetData = doc.Root?.Element(ns + "sheetData");
             if (sheetData != null)
             {
-                foreach (XElement cellElement in sheetData.Elements(ns + "row").Elements(ns + "c"))
+                // The 'r' attributes on rows and cells are almost always present, but the OOXML spec
+                // permits them to be omitted, in which case position is implied by document order.
+                // Track the running row/column so files from such writers still align correctly.
+                int previousRow = 0;
+                foreach (XElement rowElement in sheetData.Elements(ns + "row"))
                 {
-                    string reference = cellElement.Attribute("r")?.Value;
-                    if (reference == null) continue;
-                    (int row, int col) = ParseCellReference(reference);
-                    cells[(row, col)] = ReadCell(cellElement, ns);
+                    int currentRow = TryParseInt(rowElement.Attribute("r")?.Value, out int parsedRow)
+                        ? parsedRow
+                        : previousRow + 1;
+                    previousRow = currentRow;
+
+                    int previousCol = 0;
+                    foreach (XElement cellElement in rowElement.Elements(ns + "c"))
+                    {
+                        int row, col;
+                        if (TryParseCellReference(cellElement.Attribute("r")?.Value, out int refRow, out int refCol))
+                        {
+                            row = refRow;
+                            col = refCol;
+                        }
+                        else
+                        {
+                            row = currentRow;
+                            col = previousCol + 1;
+                        }
+                        previousCol = col;
+                        cells[(row, col)] = ReadCell(cellElement, ns);
+                    }
                 }
             }
 
@@ -487,10 +533,11 @@ namespace src
                 case "s":
                 {
                     string raw = cell.Element(ns + "v")?.Value;
-                    if (raw == null) return XlsxCell.OfString("");
-                    int index = int.Parse(raw, CultureInfo.InvariantCulture);
-                    string text = index >= 0 && index < _sharedStrings.Count ? _sharedStrings[index] : "";
-                    return XlsxCell.OfString(text);
+                    // A non-numeric or out-of-range index means a malformed table; treat as blank
+                    // rather than failing the whole load.
+                    if (!TryParseInt(raw, out int index) || index < 0 || index >= _sharedStrings.Count)
+                        return XlsxCell.OfString("");
+                    return XlsxCell.OfString(_sharedStrings[index]);
                 }
                 case "inlineStr":
                 {
@@ -500,6 +547,7 @@ namespace src
                 }
                 case "str": // result of a string-valued formula
                 case "e":   // error value, e.g. #DIV/0!
+                case "d":   // ISO-8601 date stored as text (written by some non-Excel generators)
                     return XlsxCell.OfString(cell.Element(ns + "v")?.Value ?? "");
                 case "b":
                     return XlsxCell.OfBoolean(cell.Element(ns + "v")?.Value == "1");
@@ -507,8 +555,11 @@ namespace src
                 {
                     string raw = cell.Element(ns + "v")?.Value;
                     if (string.IsNullOrEmpty(raw)) return XlsxCell.OfString("");
-                    double value = double.Parse(raw, CultureInfo.InvariantCulture);
-                    return XlsxCell.OfNumber(value, raw);
+                    // Keep an unparseable value as text instead of throwing on the whole load.
+                    return double.TryParse(raw, NumberStyles.Float | NumberStyles.AllowThousands,
+                        CultureInfo.InvariantCulture, out double value)
+                        ? XlsxCell.OfNumber(value, raw)
+                        : XlsxCell.OfString(raw);
                 }
             }
         }
@@ -592,13 +643,25 @@ namespace src
         private static string ConcatText(XElement element, XNamespace ns) =>
             string.Concat(element.Descendants(ns + "t").Select(t => t.Value));
 
-        private static (int Row, int Col) ParseCellReference(string reference)
+        private static bool TryParseInt(string value, out int result) =>
+            int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
+
+        // Parse an A1-style reference into 1-based (row, column). Returns false for a missing or
+        // malformed reference so the caller can fall back to positional ordering.
+        private static bool TryParseCellReference(string reference, out int row, out int col)
         {
+            row = 0;
+            col = 0;
+            if (string.IsNullOrEmpty(reference)) return false;
+
             int i = 0;
             while (i < reference.Length && char.IsLetter(reference[i])) i++;
-            int col = reference.Substring(0, i).ExcelColumnNameToInt();
-            int row = int.Parse(reference.Substring(i), CultureInfo.InvariantCulture);
-            return (row, col);
+            // Need at least one letter (column) followed by at least one digit (row).
+            if (i == 0 || i == reference.Length) return false;
+            if (!TryParseInt(reference.Substring(i), out row)) return false;
+
+            col = reference.Substring(0, i).ExcelColumnNameToInt();
+            return true;
         }
 
         private static XDocument LoadXml(ZipArchiveEntry entry)

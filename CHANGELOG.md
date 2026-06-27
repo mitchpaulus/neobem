@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Now targets .NET 10.
 
+### Breaking
+
+- Removed EPPlus as our library for managing Excel.
+  We now stay truer to the actual underlying values of the Excel spreadsheet,
+  which means that if you were previously relying on Excel dates (which was undefined behavior previously), you will now get the numeric value of the cell instead of a string representation.
+
 ## 0.11.0 - 2025-03-31
 
 ### Added

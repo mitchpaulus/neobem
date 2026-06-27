@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using Microsoft.Extensions.Primitives;
 
 namespace src
 {

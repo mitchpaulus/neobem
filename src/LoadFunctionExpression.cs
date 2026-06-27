@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Xml.Linq;
 using Antlr4.Runtime.Tree;
-using OfficeOpenXml;
 
 namespace src
 {
@@ -166,28 +168,25 @@ namespace src
     {
         public static ListExpression Load(string fullFilePath, string worksheet, ExcelRange range)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            FileInfo fileInfo = new FileInfo(fullFilePath);
+            if (!File.Exists(fullFilePath)) throw new FileNotFoundException($"Could not find the file {fullFilePath}.");
 
-            if (!fileInfo.Exists) throw new FileNotFoundException($"Could not find the file {fullFilePath}.");
+            using XlsxWorkbook workbook = XlsxWorkbook.Open(fullFilePath);
 
-            using ExcelPackage excelFile = new ExcelPackage(fileInfo);
-            ExcelWorksheet sheet;
+            XlsxWorksheet sheet;
             if (worksheet == null)
             {
-                sheet = excelFile.Workbook.Worksheets.First();
+                sheet = workbook.FirstWorksheet();
             }
             else
             {
-                sheet = excelFile.Workbook.Worksheets.FirstOrDefault(excelWorksheet =>
-                    excelWorksheet.Name == worksheet);
+                sheet = workbook.GetWorksheet(worksheet);
 
-                if (sheet != default) return range.ReadSheet(sheet);
+                if (sheet != null) return range.ReadSheet(sheet);
 
                 // Throw argument exception as the worksheet name is not found.
                 // Provide a list of all the worksheets in the file.
-                string message = $"The sheet '{worksheet}' was not found in file {fileInfo.FullName}.";
-                string allSheets = string.Join(", ", excelFile.Workbook.Worksheets.Select(ws => $"'{ws.Name}'"));
+                string message = $"The sheet '{worksheet}' was not found in file {fullFilePath}.";
+                string allSheets = string.Join(", ", workbook.WorksheetNames.Select(name => $"'{name}'"));
                 message += $" Available sheets are: {allSheets}";
                 throw new ArgumentException(message);
             }
@@ -198,7 +197,7 @@ namespace src
 
     public interface ExcelRange
     {
-        public ListExpression ReadSheet(ExcelWorksheet sheet);
+        public ListExpression ReadSheet(XlsxWorksheet sheet);
     }
 
 
@@ -217,7 +216,7 @@ namespace src
             _endCol = endCol;
         }
 
-        public ListExpression ReadSheet(ExcelWorksheet sheet)
+        public ListExpression ReadSheet(XlsxWorksheet sheet)
         {
             List<string> headers = new List<string>();
 
@@ -229,8 +228,7 @@ namespace src
                 {
                     for (var column = _startCol; column <= _endCol; column++)
                     {
-                        var cellValue = sheet.Cells[row, column].Text;
-                        headers.Add(cellValue);
+                        headers.Add(sheet.GetCell(row, column).Text);
                     }
                 }
                 else
@@ -239,9 +237,8 @@ namespace src
                     var index = 0;
                     for (var column = _startCol; column <= _endCol; column++)
                     {
-                        var cellValue = sheet.Cells[row, column].Text;
                         var header = headers[index];
-                        objectExpression.Members[header] = cellValue.CellTextToExpression();
+                        objectExpression.Members[header] = sheet.GetCell(row, column).Value;
 
                         index++;
                     }
@@ -264,7 +261,7 @@ namespace src
             _startCol = startCol;
         }
 
-        public ListExpression ReadSheet(ExcelWorksheet sheet)
+        public ListExpression ReadSheet(XlsxWorksheet sheet)
         {
             List<string> headers = new List<string>();
 
@@ -272,9 +269,9 @@ namespace src
 
             var row = _startRow;
             var col = _startCol;
-            while (!string.IsNullOrWhiteSpace(sheet.Cells[row, col].Text))
+            while (!string.IsNullOrWhiteSpace(sheet.GetCell(row, col).Text))
             {
-                headers.Add(sheet.Cells[row, col].Text);
+                headers.Add(sheet.GetCell(row, col).Text);
                 col++;
             }
 
@@ -286,9 +283,8 @@ namespace src
                 var index = 0;
                 for (var column = _startCol; column < _startCol + headers.Count(); column++)
                 {
-                    var cellValue = sheet.Cells[row, column].Text;
                     var header = headers[index];
-                    objectExpression.Members[header] = cellValue.CellTextToExpression();
+                    objectExpression.Members[header] = sheet.GetCell(row, column).Value;
 
                     index++;
                 }
@@ -299,12 +295,12 @@ namespace src
             return new ListExpression(objects);
         }
 
-        private List<string> RecordValues(int row, int startColumn, int endColumn, ExcelWorksheet sheet)
+        private List<string> RecordValues(int row, int startColumn, int endColumn, XlsxWorksheet sheet)
         {
             List<string> recordValues = new List<string>();
             for (int col = startColumn; col < endColumn; col++)
             {
-                recordValues.Add(sheet.Cells[row, col].Text);
+                recordValues.Add(sheet.GetCell(row, col).Text);
             }
 
             return recordValues;
@@ -314,12 +310,12 @@ namespace src
 
     public class SheetDimensionRange : ExcelRange
     {
-        public ListExpression ReadSheet(ExcelWorksheet sheet)
+        public ListExpression ReadSheet(XlsxWorksheet sheet)
         {
-            int startRow = sheet.Dimension.Start.Row;
-            int endRow = sheet.Dimension.End.Row;
-            int startColumn = sheet.Dimension.Start.Column;
-            int endColumn = sheet.Dimension.End.Column;
+            int startRow = sheet.StartRow;
+            int endRow = sheet.EndRow;
+            int startColumn = sheet.StartColumn;
+            int endColumn = sheet.EndColumn;
 
             FullRange fullRange = new FullRange(startRow, startColumn, endRow, endColumn);
             return fullRange.ReadSheet(sheet);
@@ -353,5 +349,264 @@ namespace src
         FullRange = 0,
         StartCell = 1,
         StartRowWithColumns = 2,
+    }
+
+    /// <summary>
+    /// A single cell read out of an xlsx worksheet. <see cref="Text"/> is the string form used for
+    /// header names and blank-cell detection, while <see cref="Value"/> carries the correctly typed
+    /// expression (numeric, boolean, or string) taken directly from the cell's stored value.
+    /// </summary>
+    public class XlsxCell
+    {
+        public string Text { get; }
+        public Expression Value { get; }
+
+        private XlsxCell(string text, Expression value)
+        {
+            Text = text;
+            Value = value;
+        }
+
+        public static XlsxCell OfString(string text) => new XlsxCell(text, new StringExpression(text));
+        public static XlsxCell OfNumber(double value, string text) => new XlsxCell(text, new NumericExpression(value));
+        public static XlsxCell OfBoolean(bool value) => new XlsxCell(value ? "TRUE" : "FALSE", new BooleanExpression(value));
+    }
+
+    /// <summary>
+    /// An in-memory representation of a single worksheet, built from the raw sheet XML. Cells are
+    /// stored sparsely by (row, column); the dimension properties describe the used range.
+    /// </summary>
+    public class XlsxWorksheet
+    {
+        private readonly Dictionary<(int Row, int Col), XlsxCell> _cells;
+
+        public string Name { get; }
+        public int StartRow { get; }
+        public int EndRow { get; }
+        public int StartColumn { get; }
+        public int EndColumn { get; }
+
+        public XlsxWorksheet(string name, Dictionary<(int Row, int Col), XlsxCell> cells)
+        {
+            Name = name;
+            _cells = cells;
+
+            if (cells.Count == 0)
+            {
+                // An empty range: loops over [StartRow, EndRow] / [StartColumn, EndColumn] do nothing.
+                StartRow = 1;
+                StartColumn = 1;
+                EndRow = 0;
+                EndColumn = 0;
+            }
+            else
+            {
+                StartRow = cells.Keys.Min(k => k.Row);
+                EndRow = cells.Keys.Max(k => k.Row);
+                StartColumn = cells.Keys.Min(k => k.Col);
+                EndColumn = cells.Keys.Max(k => k.Col);
+            }
+        }
+
+        public XlsxCell GetCell(int row, int col) =>
+            _cells.TryGetValue((row, col), out XlsxCell cell) ? cell : XlsxCell.OfString("");
+    }
+
+    /// <summary>
+    /// Reads an .xlsx file (an OOXML zip package) directly, without any third-party library. The
+    /// workbook, its relationships, the shared string table, and worksheet parts are all plain XML
+    /// inside the zip; here we open the archive and parse those parts on demand.
+    /// </summary>
+    public class XlsxWorkbook : IDisposable
+    {
+        private const string Main = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        private const string DocRel = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        private const string PackageRel = "http://schemas.openxmlformats.org/package/2006/relationships";
+
+        private readonly ZipArchive _archive;
+        private readonly List<string> _sharedStrings;
+        private readonly List<(string Name, string Path)> _sheets;
+
+        private XlsxWorkbook(ZipArchive archive)
+        {
+            _archive = archive;
+            _sharedStrings = ReadSharedStrings(archive);
+            _sheets = ReadSheetIndex(archive);
+        }
+
+        public static XlsxWorkbook Open(string path) => new XlsxWorkbook(ZipFile.OpenRead(path));
+
+        public IEnumerable<string> WorksheetNames => _sheets.Select(s => s.Name);
+
+        public XlsxWorksheet FirstWorksheet()
+        {
+            if (_sheets.Count == 0)
+                throw new ArgumentException("The workbook does not contain any worksheets.");
+            return ReadWorksheet(_sheets[0]);
+        }
+
+        public XlsxWorksheet GetWorksheet(string name)
+        {
+            foreach (var sheet in _sheets)
+                if (sheet.Name == name) return ReadWorksheet(sheet);
+            return null;
+        }
+
+        private XlsxWorksheet ReadWorksheet((string Name, string Path) sheet)
+        {
+            ZipArchiveEntry entry = _archive.GetEntry(sheet.Path);
+            if (entry == null)
+                throw new ArgumentException($"Could not find the worksheet part '{sheet.Path}' inside the workbook.");
+
+            XNamespace ns = Main;
+            XDocument doc = LoadXml(entry);
+
+            var cells = new Dictionary<(int Row, int Col), XlsxCell>();
+            XElement sheetData = doc.Root?.Element(ns + "sheetData");
+            if (sheetData != null)
+            {
+                foreach (XElement cellElement in sheetData.Elements(ns + "row").Elements(ns + "c"))
+                {
+                    string reference = cellElement.Attribute("r")?.Value;
+                    if (reference == null) continue;
+                    (int row, int col) = ParseCellReference(reference);
+                    cells[(row, col)] = ReadCell(cellElement, ns);
+                }
+            }
+
+            return new XlsxWorksheet(sheet.Name, cells);
+        }
+
+        private XlsxCell ReadCell(XElement cell, XNamespace ns)
+        {
+            // The 't' attribute gives the cell type; absent means a number. The stored value lives in
+            // <v>, except inline strings which sit in <is>.
+            string type = cell.Attribute("t")?.Value;
+            switch (type)
+            {
+                case "s":
+                {
+                    string raw = cell.Element(ns + "v")?.Value;
+                    if (raw == null) return XlsxCell.OfString("");
+                    int index = int.Parse(raw, CultureInfo.InvariantCulture);
+                    string text = index >= 0 && index < _sharedStrings.Count ? _sharedStrings[index] : "";
+                    return XlsxCell.OfString(text);
+                }
+                case "inlineStr":
+                {
+                    XElement inline = cell.Element(ns + "is");
+                    string text = inline == null ? "" : ConcatText(inline, ns);
+                    return XlsxCell.OfString(text);
+                }
+                case "str": // result of a string-valued formula
+                case "e":   // error value, e.g. #DIV/0!
+                    return XlsxCell.OfString(cell.Element(ns + "v")?.Value ?? "");
+                case "b":
+                    return XlsxCell.OfBoolean(cell.Element(ns + "v")?.Value == "1");
+                default: // number
+                {
+                    string raw = cell.Element(ns + "v")?.Value;
+                    if (string.IsNullOrEmpty(raw)) return XlsxCell.OfString("");
+                    double value = double.Parse(raw, CultureInfo.InvariantCulture);
+                    return XlsxCell.OfNumber(value, raw);
+                }
+            }
+        }
+
+        private static List<string> ReadSharedStrings(ZipArchive archive)
+        {
+            var strings = new List<string>();
+            ZipArchiveEntry entry = archive.GetEntry("xl/sharedStrings.xml");
+            if (entry == null) return strings;
+
+            XNamespace ns = Main;
+            XDocument doc = LoadXml(entry);
+            foreach (XElement si in doc.Root?.Elements(ns + "si") ?? Enumerable.Empty<XElement>())
+                strings.Add(ConcatText(si, ns));
+            return strings;
+        }
+
+        private static List<(string Name, string Path)> ReadSheetIndex(ZipArchive archive)
+        {
+            ZipArchiveEntry entry = archive.GetEntry("xl/workbook.xml");
+            if (entry == null)
+                throw new ArgumentException("The file does not appear to be a valid xlsx workbook (missing xl/workbook.xml).");
+
+            XNamespace ns = Main;
+            XNamespace r = DocRel;
+            Dictionary<string, string> rels = ReadWorkbookRelationships(archive);
+            XDocument doc = LoadXml(entry);
+
+            var sheets = new List<(string, string)>();
+            XElement sheetsElement = doc.Root?.Element(ns + "sheets");
+            if (sheetsElement == null) return sheets;
+
+            foreach (XElement sheet in sheetsElement.Elements(ns + "sheet"))
+            {
+                string name = sheet.Attribute("name")?.Value;
+                string relId = sheet.Attribute(r + "id")?.Value;
+                if (name == null || relId == null) continue;
+                if (rels.TryGetValue(relId, out string target))
+                    sheets.Add((name, target));
+            }
+            return sheets;
+        }
+
+        private static Dictionary<string, string> ReadWorkbookRelationships(ZipArchive archive)
+        {
+            var map = new Dictionary<string, string>();
+            ZipArchiveEntry entry = archive.GetEntry("xl/_rels/workbook.xml.rels");
+            if (entry == null) return map;
+
+            XNamespace pr = PackageRel;
+            XDocument doc = LoadXml(entry);
+            foreach (XElement relationship in doc.Root?.Elements(pr + "Relationship") ?? Enumerable.Empty<XElement>())
+            {
+                string id = relationship.Attribute("Id")?.Value;
+                string target = relationship.Attribute("Target")?.Value;
+                if (id == null || target == null) continue;
+                map[id] = ResolveTarget(target);
+            }
+            return map;
+        }
+
+        // Relationship targets are relative to the xl/ folder (or absolute from the package root).
+        private static string ResolveTarget(string target)
+        {
+            string combined = target.StartsWith("/") ? target.TrimStart('/') : "xl/" + target;
+            var parts = new List<string>();
+            foreach (string segment in combined.Split('/'))
+            {
+                if (segment == "" || segment == ".") continue;
+                if (segment == "..")
+                {
+                    if (parts.Count > 0) parts.RemoveAt(parts.Count - 1);
+                }
+                else parts.Add(segment);
+            }
+            return string.Join("/", parts);
+        }
+
+        // A string item (<si>) or inline string (<is>) holds its text in one or more <t> elements,
+        // split across runs (<r>) when the text is rich-formatted. Concatenate them all.
+        private static string ConcatText(XElement element, XNamespace ns) =>
+            string.Concat(element.Descendants(ns + "t").Select(t => t.Value));
+
+        private static (int Row, int Col) ParseCellReference(string reference)
+        {
+            int i = 0;
+            while (i < reference.Length && char.IsLetter(reference[i])) i++;
+            int col = reference.Substring(0, i).ExcelColumnNameToInt();
+            int row = int.Parse(reference.Substring(i), CultureInfo.InvariantCulture);
+            return (row, col);
+        }
+
+        private static XDocument LoadXml(ZipArchiveEntry entry)
+        {
+            using Stream stream = entry.Open();
+            return XDocument.Load(stream);
+        }
+
+        public void Dispose() => _archive?.Dispose();
     }
 }

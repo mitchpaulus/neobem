@@ -1,0 +1,31 @@
+# Exercises the Excel loader across the branches a real .xlsx can produce:
+#  - default first worksheet (no 'sheet')      -> FirstWorksheet
+#  - named worksheet + explicit 'A1:F3' range  -> GetWorksheet + FullRange
+#  - single-cell 'A1' range                    -> StartCell
+#  - the empty 'Empty' worksheet               -> empty dimension -> []
+# Cell types covered: shared string, number, boolean, string-formula, error,
+# and a date (which loads as its numeric serial value), plus a blank cell -> "".
+#
+# Note on error cells: the value loads as a plain string with IDF-special
+# characters removed, so '#DIV/0!' becomes '#DIV/0' and emits cleanly. The exact
+# loaded string values are asserted in LoadExcel2TypesAndErrorsTest.
+
+types_default = load({ 'type': 'Excel', 'path': 'load_test_2.xlsx' })
+types_range   = load({ 'type': 'Excel', 'path': 'load_test_2.xlsx', 'sheet': 'Types', 'range': 'A1:F3' })
+types_start   = load({ 'type': 'Excel', 'path': 'load_test_2.xlsx', 'range': 'A1' })
+empty_sheet   = load({ 'type': 'Excel', 'path': 'load_test_2.xlsx', 'sheet': 'Empty' })
+
+obj = λ x {
+TestObject,
+  <x.'name'>,
+  <x.'number'>,
+  <x.'flag'>,
+  <x.'calc'>,
+  <x.'err'>,
+  <x.'when'>;
+}
+
+print map(types_default, obj)
+print map(types_range, obj)
+print map(types_start, obj)
+print map(empty_sheet, obj)

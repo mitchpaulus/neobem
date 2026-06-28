@@ -423,6 +423,11 @@ Note that Excel stores dates and times as numbers, so a date cell will come in
 as its underlying numeric (float) serial value rather than as a formatted date
 string.
 
+An error cell (for example `#DIV/0!`{.nbem}) is loaded as a string of the error
+text, with the IDF-special characters (`!`, `,`, and `;`) removed so the value
+is safe to emit into an IDF file. For example, `#DIV/0!`{.nbem} is loaded as
+`#DIV/0`{.nbem}.
+
 ### Loading JSON
 
 To load JSON formatted data, you can use a dictionary with the following

@@ -49,18 +49,26 @@ def formatKeyListDeclaration ([any] -- str)
     $"    private static readonly string[] {@sharedName} = {@keyLiteral};"
 end
 
-def formatObjectEntry ([any] -- str)
-    2unpack keyListNameByLiteral!, object!
-    @object "name" getDefStr csharpEscape objectName!
+def formatObjectMethod ([any] -- str)
+    2unpack keyListNameByLiteral!, objectRecord!
+    @objectRecord 2unpack object!, objectIndex!
+    @objectIndex str objectIndex!
     @object "fields" getDefList fieldList!
     @fieldList enumerate (enumeratedFieldHasKeys) filter fieldHasCompletionKeys!
     @fieldHasCompletionKeys (@keyListNameByLiteral swap 2tuple formatFieldEntry) map ",\n" join fieldEntries!
     [
-        $"        [\"{@objectName}\"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>"
+        $"        private static EnergyPlusObjectFieldKeyMap Object{@objectIndex}() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>"
         "        {"
         @fieldEntries
-        "        })"
+        "        });"
     ] unlines
+end
+
+def formatObjectRegistration ([any] -- str)
+    2unpack object!, objectIndex!
+    @objectIndex str objectIndex!
+    @object "name" getDefStr csharpEscape objectName!
+    $"            d[\"{@objectName}\"] = Object{@objectIndex}();"
 end
 
 args args!
@@ -97,7 +105,9 @@ end
 @allKeyedFields ("keys" getDefList formatStringArrayLiteral) map uniq enumerate (buildKeyListRecord) map sharedKeyRecords!
 @sharedKeyRecords (:1:) (:0:) listToDict keyListNameByLiteral!
 @sharedKeyRecords (formatKeyListDeclaration) map unlines sharedKeyDeclarations!
-@objectsWithKeyedFields (@keyListNameByLiteral swap 2tuple formatObjectEntry) map ",\n" join objectEntries!
+@objectsWithKeyedFields enumerate enumeratedObjects!
+@enumeratedObjects (@keyListNameByLiteral swap 2tuple formatObjectMethod) map "\n\n" join objectMethods!
+@enumeratedObjects (formatObjectRegistration) map unlines objectRegistrations!
     "    public const string IddVersion = \"" iddVersionPrefix!
 @iddVersionPrefix @iddVersion + "\";" + iddVersionLine!
 [
@@ -117,10 +127,15 @@ end
     ""
     @sharedKeyDeclarations
     ""
-    "    public static readonly IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> Objects ="
-    "        new Dictionary<string, EnergyPlusObjectFieldKeyMap>(StringComparer.OrdinalIgnoreCase)"
-    "        {"
-    @objectEntries
-    "        };"
+    "    public static readonly IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> Objects = BuildObjects();"
+    ""
+    "    private static IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> BuildObjects()"
+    "    {"
+    "        var d = new Dictionary<string, EnergyPlusObjectFieldKeyMap>(StringComparer.OrdinalIgnoreCase);"
+    @objectRegistrations
+    "        return d;"
+    "    }"
+    ""
+    @objectMethods
     "}"
 ] unlines @outputPath writeFile

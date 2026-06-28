@@ -546,9 +546,12 @@ namespace src
                     return XlsxCell.OfString(text);
                 }
                 case "str": // result of a string-valued formula
-                case "e":   // error value, e.g. #DIV/0!
                 case "d":   // ISO-8601 date stored as text (written by some non-Excel generators)
                     return XlsxCell.OfString(cell.Element(ns + "v")?.Value ?? "");
+                case "e":   // error value, e.g. #DIV/0! — strip IDF-special characters so the
+                            // stored string is safe to emit into an IDF file (notably the '!'
+                            // comment character). #DIV/0! becomes #DIV/0; #N/A is unchanged.
+                    return XlsxCell.OfString(StripIdfSpecialCharacters(cell.Element(ns + "v")?.Value ?? ""));
                 case "b":
                     return XlsxCell.OfBoolean(cell.Element(ns + "v")?.Value == "1");
                 default: // number
@@ -642,6 +645,11 @@ namespace src
         // split across runs (<r>) when the text is rich-formatted. Concatenate them all.
         private static string ConcatText(XElement element, XNamespace ns) =>
             string.Concat(element.Descendants(ns + "t").Select(t => t.Value));
+
+        // Remove the characters that are significant in an IDF file ('!' comment, ',' field
+        // separator, ';' object terminator) so the value cannot corrupt generated output.
+        private static string StripIdfSpecialCharacters(string value) =>
+            new string(value.Where(c => c != '!' && c != ',' && c != ';').ToArray());
 
         private static bool TryParseInt(string value, out int result) =>
             int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);

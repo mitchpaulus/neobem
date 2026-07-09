@@ -1,0 +1,47 @@
+TestObject,
+  Alpha,
+  1.5,
+  True,
+  xy,
+  #DIV/0,
+  46037;
+
+TestObject,
+  Beta,
+  -2,
+  False,
+  ,
+  #N/A,
+  46073;
+
+TestObject,
+  Alpha,
+  1.5,
+  True,
+  xy,
+  #DIV/0,
+  46037;
+
+TestObject,
+  Beta,
+  -2,
+  False,
+  ,
+  #N/A,
+  46073;
+
+TestObject,
+  Alpha,
+  1.5,
+  True,
+  xy,
+  #DIV/0,
+  46037;
+
+TestObject,
+  Beta,
+  -2,
+  False,
+  ,
+  #N/A,
+  46073;

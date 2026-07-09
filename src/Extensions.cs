@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using Microsoft.Extensions.Primitives;
 
 namespace src
 {
@@ -42,17 +41,6 @@ namespace src
             return new ExcelRangeParser(tokens);
         }
 
-
-        public static Expression CellTextToExpression(this string cellValue)
-        {
-            if (double.TryParse(cellValue, out double numericValue))
-                return new NumericExpression(numericValue);
-            if (string.Equals(cellValue, "true", StringComparison.OrdinalIgnoreCase))
-                return new BooleanExpression(true);
-            if (string.Equals(cellValue, "false", StringComparison.OrdinalIgnoreCase))
-                return new BooleanExpression(false);
-            return new StringExpression(cellValue);
-        }
 
         public static int ExcelColumnNameToInt(this string columnName)
         {

@@ -704,10 +704,524 @@ internal static class EnergyPlusFieldKeyData
     private static readonly string[] SharedFieldKeys689 = new string[] { "Averaged", "Summed", "Metered" };
 
 
-    public static readonly IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> Objects =
-        new Dictionary<string, EnergyPlusObjectFieldKeyMap>(StringComparer.OrdinalIgnoreCase)
-        {
-        ["SimulationControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+    public static readonly IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> Objects = BuildObjects();
+
+    private static IReadOnlyDictionary<string, EnergyPlusObjectFieldKeyMap> BuildObjects()
+    {
+        var d = new Dictionary<string, EnergyPlusObjectFieldKeyMap>(StringComparer.OrdinalIgnoreCase);
+            d["SimulationControl"] = Object0();
+            d["PerformancePrecisionTradeoffs"] = Object1();
+            d["Building"] = Object2();
+            d["ShadowCalculation"] = Object3();
+            d["SurfaceConvectionAlgorithm:Inside"] = Object4();
+            d["SurfaceConvectionAlgorithm:Outside"] = Object5();
+            d["HeatBalanceAlgorithm"] = Object6();
+            d["HeatBalanceSettings:ConductionFiniteDifference"] = Object7();
+            d["ZoneAirHeatBalanceAlgorithm"] = Object8();
+            d["ZoneAirContaminantBalance"] = Object9();
+            d["ZoneAirMassFlowConservation"] = Object10();
+            d["HVACSystemRootFindingAlgorithm"] = Object11();
+            d["Site:Location"] = Object12();
+            d["SizingPeriod:DesignDay"] = Object13();
+            d["SizingPeriod:WeatherFileDays"] = Object14();
+            d["SizingPeriod:WeatherFileConditionType"] = Object15();
+            d["RunPeriod"] = Object16();
+            d["RunPeriodControl:SpecialDays"] = Object17();
+            d["WeatherProperty:SkyTemperature"] = Object18();
+            d["Site:GroundDomain:Slab"] = Object19();
+            d["Site:GroundDomain:Basement"] = Object20();
+            d["Site:WaterMainsTemperature"] = Object21();
+            d["Site:Precipitation"] = Object22();
+            d["RoofIrrigation"] = Object23();
+            d["Site:SolarAndVisibleSpectrum"] = Object24();
+            d["Site:SpectrumData"] = Object25();
+            d["ScheduleTypeLimits"] = Object26();
+            d["Schedule:Day:Interval"] = Object27();
+            d["Schedule:Day:List"] = Object28();
+            d["Schedule:Week:Compact"] = Object29();
+            d["Schedule:File"] = Object30();
+            d["Material"] = Object31();
+            d["Material:NoMass"] = Object32();
+            d["Material:RoofVegetation"] = Object33();
+            d["WindowMaterial:Glazing"] = Object34();
+            d["WindowMaterial:Glazing:RefractionExtinctionMethod"] = Object35();
+            d["WindowMaterial:Gas"] = Object36();
+            d["WindowMaterial:GasMixture"] = Object37();
+            d["WindowMaterial:ComplexShade"] = Object38();
+            d["WindowMaterial:Blind"] = Object39();
+            d["WindowMaterial:Screen"] = Object40();
+            d["WindowMaterial:Blind:EquivalentLayer"] = Object41();
+            d["WindowMaterial:Glazing:EquivalentLayer"] = Object42();
+            d["WindowMaterial:Gap:EquivalentLayer"] = Object43();
+            d["MaterialProperty:VariableAbsorptance"] = Object44();
+            d["Construction:AirBoundary"] = Object45();
+            d["WindowThermalModel:Params"] = Object46();
+            d["WindowsCalculationEngine"] = Object47();
+            d["Construction:ComplexFenestrationState"] = Object48();
+            d["GlobalGeometryRules"] = Object49();
+            d["GeometryTransform"] = Object50();
+            d["Zone"] = Object51();
+            d["BuildingSurface:Detailed"] = Object52();
+            d["Wall:Detailed"] = Object53();
+            d["RoofCeiling:Detailed"] = Object54();
+            d["Floor:Detailed"] = Object55();
+            d["FenestrationSurface:Detailed"] = Object56();
+            d["WindowShadingControl"] = Object57();
+            d["WindowProperty:FrameAndDivider"] = Object58();
+            d["WindowProperty:AirflowControl"] = Object59();
+            d["SurfaceProperty:HeatTransferAlgorithm"] = Object60();
+            d["SurfaceProperty:HeatTransferAlgorithm:MultipleSurface"] = Object61();
+            d["SurfaceProperty:HeatTransferAlgorithm:SurfaceList"] = Object62();
+            d["SurfaceProperty:HeatTransferAlgorithm:Construction"] = Object63();
+            d["SurfaceControl:MovableInsulation"] = Object64();
+            d["SurfaceProperty:OtherSideCoefficients"] = Object65();
+            d["SurfaceProperty:OtherSideConditionsModel"] = Object66();
+            d["Foundation:Kiva:Settings"] = Object67();
+            d["SurfaceProperty:ExposedFoundationPerimeter"] = Object68();
+            d["SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections"] = Object69();
+            d["SurfaceConvectionAlgorithm:Outside:AdaptiveModelSelections"] = Object70();
+            d["SurfaceConvectionAlgorithm:Inside:UserCurve"] = Object71();
+            d["SurfaceConvectionAlgorithm:Outside:UserCurve"] = Object72();
+            d["SurfaceProperty:ConvectionCoefficients"] = Object73();
+            d["SurfaceProperty:ConvectionCoefficients:MultipleSurface"] = Object74();
+            d["SurfaceProperties:VaporCoefficients"] = Object75();
+            d["SurfaceProperty:ExteriorNaturalVentedCavity"] = Object76();
+            d["GroundHeatTransfer:Control"] = Object77();
+            d["GroundHeatTransfer:Slab:BoundConds"] = Object78();
+            d["GroundHeatTransfer:Slab:Insulation"] = Object79();
+            d["GroundHeatTransfer:Basement:Insulation"] = Object80();
+            d["GroundHeatTransfer:Basement:SurfaceProps"] = Object81();
+            d["GroundHeatTransfer:Basement:Interior"] = Object82();
+            d["GroundHeatTransfer:Basement:EquivSlab"] = Object83();
+            d["RoomAirModelType"] = Object84();
+            d["RoomAir:TemperaturePattern:TwoGradient"] = Object85();
+            d["RoomAir:Node"] = Object86();
+            d["RoomAirSettings:CrossVentilation"] = Object87();
+            d["RoomAirSettings:UnderFloorAirDistributionInterior"] = Object88();
+            d["RoomAirSettings:UnderFloorAirDistributionExterior"] = Object89();
+            d["RoomAir:Node:AirflowNetwork:InternalGains"] = Object90();
+            d["RoomAir:Node:AirflowNetwork:HVACEquipment"] = Object91();
+            d["People"] = Object92();
+            d["Lights"] = Object93();
+            d["ElectricEquipment"] = Object94();
+            d["GasEquipment"] = Object95();
+            d["HotWaterEquipment"] = Object96();
+            d["SteamEquipment"] = Object97();
+            d["OtherEquipment"] = Object98();
+            d["IndoorLivingWall"] = Object99();
+            d["ElectricEquipment:ITE:AirCooled"] = Object100();
+            d["Daylighting:Controls"] = Object101();
+            d["Output:DaylightFactors"] = Object102();
+            d["OutputControl:IlluminanceMap:Style"] = Object103();
+            d["ZoneInfiltration:DesignFlowRate"] = Object104();
+            d["ZoneVentilation:DesignFlowRate"] = Object105();
+            d["ZoneAirBalance:OutdoorAir"] = Object106();
+            d["ZoneMixing"] = Object107();
+            d["ZoneCrossMixing"] = Object108();
+            d["ZoneRefrigerationDoorMixing"] = Object109();
+            d["ZoneEarthtube"] = Object110();
+            d["ZoneCoolTower:Shower"] = Object111();
+            d["AirflowNetwork:SimulationControl"] = Object112();
+            d["AirflowNetwork:MultiZone:Zone"] = Object113();
+            d["AirflowNetwork:MultiZone:Surface"] = Object114();
+            d["AirflowNetwork:MultiZone:SpecifiedFlowRate"] = Object115();
+            d["AirflowNetwork:MultiZone:Component:DetailedOpening"] = Object116();
+            d["AirflowNetwork:MultiZone:ExternalNode"] = Object117();
+            d["AirflowNetwork:ZoneControl:PressureController"] = Object118();
+            d["AirflowNetwork:Distribution:Node"] = Object119();
+            d["AirflowNetwork:Distribution:Component:Fan"] = Object120();
+            d["AirflowNetwork:Distribution:Component:Coil"] = Object121();
+            d["AirflowNetwork:Distribution:Component:HeatExchanger"] = Object122();
+            d["AirflowNetwork:Distribution:Component:TerminalUnit"] = Object123();
+            d["AirflowNetwork:Distribution:DuctSizing"] = Object124();
+            d["AirflowNetwork:OccupantVentilationControl"] = Object125();
+            d["Duct:Loss:Conduction"] = Object126();
+            d["Exterior:Lights"] = Object127();
+            d["Exterior:FuelEquipment"] = Object128();
+            d["Exterior:WaterEquipment"] = Object129();
+            d["HVACTemplate:Zone:IdealLoadsAirSystem"] = Object130();
+            d["HVACTemplate:Zone:BaseboardHeat"] = Object131();
+            d["HVACTemplate:Zone:FanCoil"] = Object132();
+            d["HVACTemplate:Zone:PTAC"] = Object133();
+            d["HVACTemplate:Zone:PTHP"] = Object134();
+            d["HVACTemplate:Zone:WaterToAirHeatPump"] = Object135();
+            d["HVACTemplate:Zone:VRF"] = Object136();
+            d["HVACTemplate:Zone:Unitary"] = Object137();
+            d["HVACTemplate:Zone:VAV"] = Object138();
+            d["HVACTemplate:Zone:VAV:FanPowered"] = Object139();
+            d["HVACTemplate:Zone:VAV:HeatAndCool"] = Object140();
+            d["HVACTemplate:Zone:ConstantVolume"] = Object141();
+            d["HVACTemplate:Zone:DualDuct"] = Object142();
+            d["HVACTemplate:System:VRF"] = Object143();
+            d["HVACTemplate:System:Unitary"] = Object144();
+            d["HVACTemplate:System:UnitaryHeatPump:AirToAir"] = Object145();
+            d["HVACTemplate:System:UnitarySystem"] = Object146();
+            d["HVACTemplate:System:VAV"] = Object147();
+            d["HVACTemplate:System:PackagedVAV"] = Object148();
+            d["HVACTemplate:System:ConstantVolume"] = Object149();
+            d["HVACTemplate:System:DualDuct"] = Object150();
+            d["HVACTemplate:System:DedicatedOutdoorAir"] = Object151();
+            d["HVACTemplate:Plant:ChilledWaterLoop"] = Object152();
+            d["HVACTemplate:Plant:Chiller"] = Object153();
+            d["HVACTemplate:Plant:Chiller:ObjectReference"] = Object154();
+            d["HVACTemplate:Plant:Tower"] = Object155();
+            d["HVACTemplate:Plant:Tower:ObjectReference"] = Object156();
+            d["HVACTemplate:Plant:HotWaterLoop"] = Object157();
+            d["HVACTemplate:Plant:Boiler"] = Object158();
+            d["HVACTemplate:Plant:Boiler:ObjectReference"] = Object159();
+            d["HVACTemplate:Plant:MixedWaterLoop"] = Object160();
+            d["DesignSpecification:OutdoorAir"] = Object161();
+            d["Sizing:Zone"] = Object162();
+            d["DesignSpecification:ZoneHVAC:Sizing"] = Object163();
+            d["Sizing:System"] = Object164();
+            d["Sizing:Plant"] = Object165();
+            d["OutputControl:Sizing:Style"] = Object166();
+            d["ZoneControl:Thermostat"] = Object167();
+            d["ZoneControl:Thermostat:OperativeTemperature"] = Object168();
+            d["ZoneControl:Thermostat:ThermalComfort"] = Object169();
+            d["ZoneControl:Thermostat:TemperatureAndHumidity"] = Object170();
+            d["ZoneHVAC:IdealLoadsAirSystem"] = Object171();
+            d["ZoneHVAC:FourPipeFanCoil"] = Object172();
+            d["ZoneHVAC:WindowAirConditioner"] = Object173();
+            d["ZoneHVAC:PackagedTerminalAirConditioner"] = Object174();
+            d["ZoneHVAC:PackagedTerminalHeatPump"] = Object175();
+            d["ZoneHVAC:WaterToAirHeatPump"] = Object176();
+            d["ZoneHVAC:EnergyRecoveryVentilator:Controller"] = Object177();
+            d["ZoneHVAC:UnitVentilator"] = Object178();
+            d["ZoneHVAC:UnitHeater"] = Object179();
+            d["ZoneHVAC:EvaporativeCoolerUnit"] = Object180();
+            d["ZoneHVAC:HybridUnitaryHVAC"] = Object181();
+            d["ZoneHVAC:OutdoorAirUnit"] = Object182();
+            d["ZoneHVAC:OutdoorAirUnit:EquipmentList"] = Object183();
+            d["ZoneHVAC:TerminalUnit:VariableRefrigerantFlow"] = Object184();
+            d["ZoneHVAC:Baseboard:RadiantConvective:Water:Design"] = Object185();
+            d["ZoneHVAC:Baseboard:RadiantConvective:Steam:Design"] = Object186();
+            d["ZoneHVAC:Baseboard:RadiantConvective:Electric"] = Object187();
+            d["ZoneHVAC:CoolingPanel:RadiantConvective:Water"] = Object188();
+            d["ZoneHVAC:Baseboard:Convective:Water"] = Object189();
+            d["ZoneHVAC:Baseboard:Convective:Electric"] = Object190();
+            d["ZoneHVAC:LowTemperatureRadiant:VariableFlow"] = Object191();
+            d["ZoneHVAC:LowTemperatureRadiant:VariableFlow:Design"] = Object192();
+            d["ZoneHVAC:LowTemperatureRadiant:ConstantFlow"] = Object193();
+            d["ZoneHVAC:LowTemperatureRadiant:ConstantFlow:Design"] = Object194();
+            d["ZoneHVAC:LowTemperatureRadiant:Electric"] = Object195();
+            d["ZoneHVAC:HighTemperatureRadiant"] = Object196();
+            d["ZoneHVAC:VentilatedSlab"] = Object197();
+            d["AirTerminal:SingleDuct:ConstantVolume:Reheat"] = Object198();
+            d["AirTerminal:SingleDuct:ConstantVolume:NoReheat"] = Object199();
+            d["AirTerminal:SingleDuct:VAV:NoReheat"] = Object200();
+            d["AirTerminal:SingleDuct:VAV:Reheat"] = Object201();
+            d["AirTerminal:SingleDuct:VAV:Reheat:VariableSpeedFan"] = Object202();
+            d["AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat"] = Object203();
+            d["AirTerminal:SingleDuct:SeriesPIU:Reheat"] = Object204();
+            d["AirTerminal:SingleDuct:ParallelPIU:Reheat"] = Object205();
+            d["AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction"] = Object206();
+            d["AirTerminal:SingleDuct:ConstantVolume:CooledBeam"] = Object207();
+            d["AirTerminal:SingleDuct:Mixer"] = Object208();
+            d["AirTerminal:DualDuct:VAV:OutdoorAir"] = Object209();
+            d["ZoneHVAC:AirDistributionUnit"] = Object210();
+            d["ZoneHVAC:ExhaustControl"] = Object211();
+            d["ZoneHVAC:EquipmentList"] = Object212();
+            d["SpaceHVAC:ZoneEquipmentSplitter"] = Object213();
+            d["SpaceHVAC:ZoneEquipmentMixer"] = Object214();
+            d["Fan:SystemModel"] = Object215();
+            d["Fan:VariableVolume"] = Object216();
+            d["Fan:ZoneExhaust"] = Object217();
+            d["Fan:ComponentModel"] = Object218();
+            d["Coil:Cooling:Water"] = Object219();
+            d["CoilSystem:Cooling:Water"] = Object220();
+            d["Coil:Cooling:DX:CurveFit:Performance"] = Object221();
+            d["Coil:Cooling:DX:CurveFit:OperatingMode"] = Object222();
+            d["Coil:DX:ASHRAE205:Performance"] = Object223();
+            d["Coil:Cooling:DX:SingleSpeed"] = Object224();
+            d["Coil:Cooling:DX:TwoSpeed"] = Object225();
+            d["Coil:Cooling:DX:MultiSpeed"] = Object226();
+            d["Coil:Cooling:DX:VariableSpeed"] = Object227();
+            d["Coil:Cooling:DX:TwoStageWithHumidityControlMode"] = Object228();
+            d["CoilPerformance:DX:Cooling"] = Object229();
+            d["Coil:Heating:Water"] = Object230();
+            d["Coil:Heating:Steam"] = Object231();
+            d["Coil:Heating:Fuel"] = Object232();
+            d["Coil:Heating:Desuperheater"] = Object233();
+            d["Coil:Heating:DX:SingleSpeed"] = Object234();
+            d["Coil:Heating:DX:MultiSpeed"] = Object235();
+            d["Coil:Heating:DX:VariableSpeed"] = Object236();
+            d["Coil:Cooling:WaterToAirHeatPump:ParameterEstimation"] = Object237();
+            d["Coil:Heating:WaterToAirHeatPump:ParameterEstimation"] = Object238();
+            d["Coil:WaterHeating:AirToWaterHeatPump:Pumped"] = Object239();
+            d["Coil:WaterHeating:AirToWaterHeatPump:Wrapped"] = Object240();
+            d["Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed"] = Object241();
+            d["Coil:WaterHeating:Desuperheater"] = Object242();
+            d["CoilSystem:Cooling:DX"] = Object243();
+            d["CoilSystem:Heating:DX"] = Object244();
+            d["CoilSystem:Cooling:Water:HeatExchangerAssisted"] = Object245();
+            d["CoilSystem:Cooling:DX:HeatExchangerAssisted"] = Object246();
+            d["Coil:Cooling:DX:SingleSpeed:ThermalStorage"] = Object247();
+            d["Humidifier:Steam:Gas"] = Object248();
+            d["Dehumidifier:Desiccant:NoFans"] = Object249();
+            d["Dehumidifier:Desiccant:System"] = Object250();
+            d["HeatExchanger:AirToAir:FlatPlate"] = Object251();
+            d["HeatExchanger:AirToAir:SensibleAndLatent"] = Object252();
+            d["HeatExchanger:Desiccant:BalancedFlow"] = Object253();
+            d["AirLoopHVAC:UnitarySystem"] = Object254();
+            d["UnitarySystemPerformance:Multispeed"] = Object255();
+            d["AirLoopHVAC:Unitary:Furnace:HeatOnly"] = Object256();
+            d["AirLoopHVAC:Unitary:Furnace:HeatCool"] = Object257();
+            d["AirLoopHVAC:UnitaryHeatOnly"] = Object258();
+            d["AirLoopHVAC:UnitaryHeatCool"] = Object259();
+            d["AirLoopHVAC:UnitaryHeatPump:AirToAir"] = Object260();
+            d["AirLoopHVAC:UnitaryHeatPump:WaterToAir"] = Object261();
+            d["AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass"] = Object262();
+            d["AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed"] = Object263();
+            d["AirConditioner:VariableRefrigerantFlow"] = Object264();
+            d["AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl"] = Object265();
+            d["AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR"] = Object266();
+            d["Controller:WaterCoil"] = Object267();
+            d["Controller:OutdoorAir"] = Object268();
+            d["Controller:MechanicalVentilation"] = Object269();
+            d["AirLoopHVAC:ControllerList"] = Object270();
+            d["AirLoopHVAC:SupplyPath"] = Object271();
+            d["AirLoopHVAC:ReturnPath"] = Object272();
+            d["AirLoopHVAC:ExhaustSystem"] = Object273();
+            d["ConnectorList"] = Object274();
+            d["OutdoorAir:Node"] = Object275();
+            d["Pipe:Indoor"] = Object276();
+            d["Pipe:Underground"] = Object277();
+            d["PipingSystem:Underground:Domain"] = Object278();
+            d["PipingSystem:Underground:PipeSegment"] = Object279();
+            d["Pump:VariableSpeed"] = Object280();
+            d["Pump:ConstantSpeed"] = Object281();
+            d["Pump:VariableSpeed:Condensate"] = Object282();
+            d["HeaderedPumps:ConstantSpeed"] = Object283();
+            d["HeaderedPumps:VariableSpeed"] = Object284();
+            d["LoadProfile:Plant"] = Object285();
+            d["SolarCollectorPerformance:FlatPlate"] = Object286();
+            d["SolarCollector:FlatPlate:PhotovoltaicThermal"] = Object287();
+            d["SolarCollectorPerformance:PhotovoltaicThermal:Simple"] = Object288();
+            d["SolarCollector:IntegralCollectorStorage"] = Object289();
+            d["SolarCollectorPerformance:IntegralCollectorStorage"] = Object290();
+            d["SolarCollector:UnglazedTranspired"] = Object291();
+            d["Boiler:HotWater"] = Object292();
+            d["Boiler:Steam"] = Object293();
+            d["Chiller:Electric:ASHRAE205"] = Object294();
+            d["Chiller:Electric:EIR"] = Object295();
+            d["Chiller:Electric:ReformulatedEIR"] = Object296();
+            d["Chiller:Electric"] = Object297();
+            d["Chiller:Absorption:Indirect"] = Object298();
+            d["Chiller:Absorption"] = Object299();
+            d["Chiller:ConstantCOP"] = Object300();
+            d["Chiller:EngineDriven"] = Object301();
+            d["Chiller:CombustionTurbine"] = Object302();
+            d["ChillerHeater:Absorption:DirectFired"] = Object303();
+            d["ChillerHeater:Absorption:DoubleEffect"] = Object304();
+            d["HeatPump:PlantLoop:EIR:Cooling"] = Object305();
+            d["HeatPump:PlantLoop:EIR:Heating"] = Object306();
+            d["HeatPump:AirToWater:FuelFired:Heating"] = Object307();
+            d["HeatPump:AirToWater:FuelFired:Cooling"] = Object308();
+            d["HeatPump:AirToWater"] = Object309();
+            d["PlantComponent:TemperatureSource"] = Object310();
+            d["CentralHeatPumpSystem"] = Object311();
+            d["ChillerHeaterPerformance:Electric:EIR"] = Object312();
+            d["CoolingTower:SingleSpeed"] = Object313();
+            d["CoolingTower:TwoSpeed"] = Object314();
+            d["CoolingTower:VariableSpeed:Merkel"] = Object315();
+            d["CoolingTower:VariableSpeed"] = Object316();
+            d["EvaporativeFluidCooler:SingleSpeed"] = Object317();
+            d["EvaporativeFluidCooler:TwoSpeed"] = Object318();
+            d["FluidCooler:SingleSpeed"] = Object319();
+            d["FluidCooler:TwoSpeed"] = Object320();
+            d["GroundHeatExchanger:System"] = Object321();
+            d["GroundHeatExchanger:Surface"] = Object322();
+            d["GroundHeatExchanger:HorizontalTrench"] = Object323();
+            d["GroundHeatExchanger:Slinky"] = Object324();
+            d["HeatExchanger:FluidToFluid"] = Object325();
+            d["WaterHeater:Mixed"] = Object326();
+            d["WaterHeater:Stratified"] = Object327();
+            d["WaterHeater:Sizing"] = Object328();
+            d["WaterHeater:HeatPump:PumpedCondenser"] = Object329();
+            d["WaterHeater:HeatPump:WrappedCondenser"] = Object330();
+            d["ThermalStorage:Ice:Simple"] = Object331();
+            d["ThermalStorage:Ice:Detailed"] = Object332();
+            d["ThermalStorage:ChilledWater:Mixed"] = Object333();
+            d["ThermalStorage:ChilledWater:Stratified"] = Object334();
+            d["ThermalStorage:HotWater:Stratified"] = Object335();
+            d["PlantLoop"] = Object336();
+            d["CondenserLoop"] = Object337();
+            d["PlantEquipmentOperation:ComponentSetpoint"] = Object338();
+            d["PlantEquipmentOperation:ThermalEnergyStorage"] = Object339();
+            d["PlantEquipmentOperationSchemes"] = Object340();
+            d["CondenserEquipmentOperationSchemes"] = Object341();
+            d["EnergyManagementSystem:ProgramCallingManager"] = Object342();
+            d["EnergyManagementSystem:OutputVariable"] = Object343();
+            d["EnergyManagementSystem:MeteredOutputVariable"] = Object344();
+            d["ExternalInterface"] = Object345();
+            d["Coil:UserDefined"] = Object346();
+            d["PlantComponent:UserDefined"] = Object347();
+            d["AvailabilityManager:OptimumStart"] = Object348();
+            d["AvailabilityManager:NightCycle"] = Object349();
+            d["AvailabilityManager:HybridVentilation"] = Object350();
+            d["AvailabilityManagerAssignmentList"] = Object351();
+            d["SetpointManager:Scheduled"] = Object352();
+            d["SetpointManager:Scheduled:DualSetpoint"] = Object353();
+            d["SetpointManager:OutdoorAirReset"] = Object354();
+            d["SetpointManager:SingleZone:Reheat"] = Object355();
+            d["SetpointManager:SingleZone:Heating"] = Object356();
+            d["SetpointManager:SingleZone:Cooling"] = Object357();
+            d["SetpointManager:MixedAir"] = Object358();
+            d["SetpointManager:OutdoorAirPretreat"] = Object359();
+            d["SetpointManager:Warmest"] = Object360();
+            d["SetpointManager:Coldest"] = Object361();
+            d["SetpointManager:ReturnAirBypassFlow"] = Object362();
+            d["SetpointManager:WarmestTemperatureFlow"] = Object363();
+            d["SetpointManager:FollowOutdoorAirTemperature"] = Object364();
+            d["SetpointManager:FollowSystemNodeTemperature"] = Object365();
+            d["SetpointManager:FollowGroundTemperature"] = Object366();
+            d["SetpointManager:CondenserEnteringReset"] = Object367();
+            d["SetpointManager:CondenserEnteringReset:Ideal"] = Object368();
+            d["SetpointManager:ReturnTemperature:ChilledWater"] = Object369();
+            d["SetpointManager:ReturnTemperature:HotWater"] = Object370();
+            d["SetpointManager:SystemNodeReset:Temperature"] = Object371();
+            d["SetpointManager:SystemNodeReset:Humidity"] = Object372();
+            d["Refrigeration:Case"] = Object373();
+            d["Refrigeration:CompressorRack"] = Object374();
+            d["Refrigeration:Condenser:AirCooled"] = Object375();
+            d["Refrigeration:Condenser:EvaporativeCooled"] = Object376();
+            d["Refrigeration:Condenser:WaterCooled"] = Object377();
+            d["Refrigeration:Condenser:Cascade"] = Object378();
+            d["Refrigeration:GasCooler:AirCooled"] = Object379();
+            d["Refrigeration:Subcooler"] = Object380();
+            d["Refrigeration:Compressor"] = Object381();
+            d["Refrigeration:System"] = Object382();
+            d["Refrigeration:TranscriticalSystem"] = Object383();
+            d["Refrigeration:SecondarySystem"] = Object384();
+            d["Refrigeration:WalkIn"] = Object385();
+            d["Refrigeration:AirChiller"] = Object386();
+            d["DemandManagerAssignmentList"] = Object387();
+            d["DemandManager:ExteriorLights"] = Object388();
+            d["DemandManager:Lights"] = Object389();
+            d["DemandManager:ElectricEquipment"] = Object390();
+            d["DemandManager:Thermostats"] = Object391();
+            d["DemandManager:Ventilation"] = Object392();
+            d["Generator:InternalCombustionEngine"] = Object393();
+            d["Generator:CombustionTurbine"] = Object394();
+            d["Generator:MicroTurbine"] = Object395();
+            d["Generator:Photovoltaic"] = Object396();
+            d["PhotovoltaicPerformance:Simple"] = Object397();
+            d["PhotovoltaicPerformance:EquivalentOne-Diode"] = Object398();
+            d["Generator:PVWatts"] = Object399();
+            d["Generator:FuelCell:PowerModule"] = Object400();
+            d["Generator:FuelCell:AirSupply"] = Object401();
+            d["Generator:FuelCell:WaterSupply"] = Object402();
+            d["Generator:FuelCell:AuxiliaryHeater"] = Object403();
+            d["Generator:FuelCell:ExhaustGasToWaterHeatExchanger"] = Object404();
+            d["Generator:FuelCell:ElectricalStorage"] = Object405();
+            d["Generator:FuelCell:Inverter"] = Object406();
+            d["Generator:MicroCHP:NonNormalizedParameters"] = Object407();
+            d["Generator:FuelSupply"] = Object408();
+            d["Generator:WindTurbine"] = Object409();
+            d["ElectricLoadCenter:Generators"] = Object410();
+            d["ElectricLoadCenter:Storage:Battery"] = Object411();
+            d["ElectricLoadCenter:Storage:LiIonNMCBattery"] = Object412();
+            d["ElectricLoadCenter:Transformer"] = Object413();
+            d["ElectricLoadCenter:Distribution"] = Object414();
+            d["ElectricLoadCenter:Storage:Converter"] = Object415();
+            d["WaterUse:Connections"] = Object416();
+            d["WaterUse:Storage"] = Object417();
+            d["WaterUse:Well"] = Object418();
+            d["WaterUse:RainCollector"] = Object419();
+            d["FaultModel:TemperatureSensorOffset:OutdoorAir"] = Object420();
+            d["FaultModel:HumiditySensorOffset:OutdoorAir"] = Object421();
+            d["FaultModel:EnthalpySensorOffset:OutdoorAir"] = Object422();
+            d["FaultModel:TemperatureSensorOffset:ReturnAir"] = Object423();
+            d["FaultModel:EnthalpySensorOffset:ReturnAir"] = Object424();
+            d["FaultModel:TemperatureSensorOffset:ChillerSupplyWater"] = Object425();
+            d["FaultModel:TemperatureSensorOffset:CoilSupplyAir"] = Object426();
+            d["FaultModel:TemperatureSensorOffset:CondenserSupplyWater"] = Object427();
+            d["FaultModel:HumidistatOffset"] = Object428();
+            d["FaultModel:Fouling:AirFilter"] = Object429();
+            d["FaultModel:Fouling:Boiler"] = Object430();
+            d["FaultModel:Fouling:EvaporativeCooler"] = Object431();
+            d["FaultModel:Fouling:Chiller"] = Object432();
+            d["FaultModel:Fouling:CoolingTower"] = Object433();
+            d["FaultModel:Fouling:Coil"] = Object434();
+            d["HybridModel:Zone"] = Object435();
+            d["Curve:Linear"] = Object436();
+            d["Curve:QuadLinear"] = Object437();
+            d["Curve:QuintLinear"] = Object438();
+            d["Curve:Quadratic"] = Object439();
+            d["Curve:Cubic"] = Object440();
+            d["Curve:Quartic"] = Object441();
+            d["Curve:Exponent"] = Object442();
+            d["Curve:Bicubic"] = Object443();
+            d["Curve:Biquadratic"] = Object444();
+            d["Curve:QuadraticLinear"] = Object445();
+            d["Curve:CubicLinear"] = Object446();
+            d["Curve:Triquadratic"] = Object447();
+            d["Curve:ExponentialSkewNormal"] = Object448();
+            d["Curve:Sigmoid"] = Object449();
+            d["Curve:RectangularHyperbola1"] = Object450();
+            d["Curve:RectangularHyperbola2"] = Object451();
+            d["Curve:ExponentialDecay"] = Object452();
+            d["Curve:DoubleExponentialDecay"] = Object453();
+            d["Curve:ChillerPartLoadWithLift"] = Object454();
+            d["Table:IndependentVariable"] = Object455();
+            d["Table:Lookup"] = Object456();
+            d["FluidProperties:Name"] = Object457();
+            d["FluidProperties:GlycolConcentration"] = Object458();
+            d["FluidProperties:Saturated"] = Object459();
+            d["FluidProperties:Superheated"] = Object460();
+            d["FluidProperties:Concentration"] = Object461();
+            d["CurrencyType"] = Object462();
+            d["ComponentCost:LineItem"] = Object463();
+            d["UtilityCost:Tariff"] = Object464();
+            d["UtilityCost:Qualify"] = Object465();
+            d["UtilityCost:Charge:Simple"] = Object466();
+            d["UtilityCost:Charge:Block"] = Object467();
+            d["UtilityCost:Ratchet"] = Object468();
+            d["UtilityCost:Variable"] = Object469();
+            d["LifeCycleCost:Parameters"] = Object470();
+            d["LifeCycleCost:RecurringCosts"] = Object471();
+            d["LifeCycleCost:NonrecurringCost"] = Object472();
+            d["LifeCycleCost:UsePriceEscalation"] = Object473();
+            d["LifeCycleCost:UseAdjustment"] = Object474();
+            d["Parametric:RunControl"] = Object475();
+            d["Output:VariableDictionary"] = Object476();
+            d["Output:Surfaces:List"] = Object477();
+            d["Output:Surfaces:Drawing"] = Object478();
+            d["Output:Schedules"] = Object479();
+            d["Output:Constructions"] = Object480();
+            d["Output:EnergyManagementSystem"] = Object481();
+            d["OutputControl:SurfaceColorScheme"] = Object482();
+            d["Output:Table:SummaryReports"] = Object483();
+            d["Output:Table:TimeBins"] = Object484();
+            d["Output:Table:Monthly"] = Object485();
+            d["Output:Table:Annual"] = Object486();
+            d["Output:Table:ReportPeriod"] = Object487();
+            d["OutputControl:Table:Style"] = Object488();
+            d["OutputControl:ResilienceSummaries"] = Object489();
+            d["Output:Variable"] = Object490();
+            d["Output:Meter"] = Object491();
+            d["Output:Meter:MeterFileOnly"] = Object492();
+            d["Output:Meter:Cumulative"] = Object493();
+            d["Output:Meter:Cumulative:MeterFileOnly"] = Object494();
+            d["Meter:Custom"] = Object495();
+            d["Meter:CustomDecrement"] = Object496();
+            d["OutputControl:Files"] = Object497();
+            d["OutputControl:Timestamp"] = Object498();
+            d["Output:JSON"] = Object499();
+            d["Output:SQLite"] = Object500();
+            d["Output:EnvironmentalImpactFactors"] = Object501();
+            d["FuelFactors"] = Object502();
+            d["Output:Diagnostics"] = Object503();
+            d["Output:DebuggingData"] = Object504();
+            d["Output:PreprocessorMessage"] = Object505();
+            d["PythonPlugin:SearchPaths"] = Object506();
+            d["PythonPlugin:Instance"] = Object507();
+            d["PythonPlugin:OutputVariable"] = Object508();
+        return d;
+    }
+
+        private static EnergyPlusObjectFieldKeyMap Object0() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Do Zone Sizing Calculation", SharedFieldKeys0),
                 [2] = new EnergyPlusFieldKeyDefinition("Do System Sizing Calculation", SharedFieldKeys0),
@@ -715,23 +1229,23 @@ internal static class EnergyPlusFieldKeyData
                 [4] = new EnergyPlusFieldKeyDefinition("Run Simulation for Sizing Periods", SharedFieldKeys0),
                 [5] = new EnergyPlusFieldKeyDefinition("Run Simulation for Weather File Run Periods", SharedFieldKeys0),
                 [6] = new EnergyPlusFieldKeyDefinition("Do HVAC Sizing Simulation for Sizing Periods", SharedFieldKeys0)
-        })
-,
-        ["PerformancePrecisionTradeoffs"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object1() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Use Coil Direct Solutions", SharedFieldKeys0),
                 [2] = new EnergyPlusFieldKeyDefinition("Zone Radiant Exchange Algorithm", SharedFieldKeys1),
                 [3] = new EnergyPlusFieldKeyDefinition("Override Mode", SharedFieldKeys2),
                 [6] = new EnergyPlusFieldKeyDefinition("Use Representative Surfaces for Calculations", SharedFieldKeys0)
-        })
-,
-        ["Building"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object2() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Terrain", SharedFieldKeys3),
                 [6] = new EnergyPlusFieldKeyDefinition("Solar Distribution", SharedFieldKeys4)
-        })
-,
-        ["ShadowCalculation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object3() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Shading Calculation Method", SharedFieldKeys5),
                 [2] = new EnergyPlusFieldKeyDefinition("Shading Calculation Update Frequency Method", SharedFieldKeys6),
@@ -740,59 +1254,59 @@ internal static class EnergyPlusFieldKeyData
                 [8] = new EnergyPlusFieldKeyDefinition("Output External Shading Calculation Results", SharedFieldKeys0),
                 [9] = new EnergyPlusFieldKeyDefinition("Disable Self-Shading Within Shading Zone Groups", SharedFieldKeys0),
                 [10] = new EnergyPlusFieldKeyDefinition("Disable Self-Shading From Shading Zone Groups to Other Zones", SharedFieldKeys0)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Inside"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object4() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys9)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Outside"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object5() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys10)
-        })
-,
-        ["HeatBalanceAlgorithm"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object6() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys11)
-        })
-,
-        ["HeatBalanceSettings:ConductionFiniteDifference"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object7() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Difference Scheme", SharedFieldKeys12)
-        })
-,
-        ["ZoneAirHeatBalanceAlgorithm"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object8() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys13),
                 [2] = new EnergyPlusFieldKeyDefinition("Do Space Heat Balance for Sizing", SharedFieldKeys14),
                 [3] = new EnergyPlusFieldKeyDefinition("Do Space Heat Balance for Simulation", SharedFieldKeys14)
-        })
-,
-        ["ZoneAirContaminantBalance"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object9() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Carbon Dioxide Concentration", SharedFieldKeys0),
                 [3] = new EnergyPlusFieldKeyDefinition("Generic Contaminant Concentration", SharedFieldKeys0)
-        })
-,
-        ["ZoneAirMassFlowConservation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object10() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Adjust Zone Mixing and Return For Air Mass Flow Balance", SharedFieldKeys15),
                 [2] = new EnergyPlusFieldKeyDefinition("Infiltration Balancing Method", SharedFieldKeys16),
                 [3] = new EnergyPlusFieldKeyDefinition("Infiltration Balancing Zones", SharedFieldKeys17)
-        })
-,
-        ["HVACSystemRootFindingAlgorithm"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object11() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys18)
-        })
-,
-        ["Site:Location"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object12() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Keep Site Location Information", SharedFieldKeys0)
-        })
-,
-        ["SizingPeriod:DesignDay"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object13() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Day Type", SharedFieldKeys19),
                 [7] = new EnergyPlusFieldKeyDefinition("Dry-Bulb Temperature Range Modifier Type", SharedFieldKeys20),
@@ -802,24 +1316,24 @@ internal static class EnergyPlusFieldKeyData
                 [20] = new EnergyPlusFieldKeyDefinition("Daylight Saving Time Indicator", SharedFieldKeys0),
                 [21] = new EnergyPlusFieldKeyDefinition("Solar Model Indicator", SharedFieldKeys22),
                 [28] = new EnergyPlusFieldKeyDefinition("Begin Environment Reset Mode", SharedFieldKeys23)
-        })
-,
-        ["SizingPeriod:WeatherFileDays"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object14() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Day of Week for Start Day", SharedFieldKeys24),
                 [7] = new EnergyPlusFieldKeyDefinition("Use Weather File Daylight Saving Period", SharedFieldKeys0),
                 [8] = new EnergyPlusFieldKeyDefinition("Use Weather File Rain and Snow Indicators", SharedFieldKeys0)
-        })
-,
-        ["SizingPeriod:WeatherFileConditionType"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object15() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Period Selection", SharedFieldKeys25),
                 [3] = new EnergyPlusFieldKeyDefinition("Day of Week for Start Day", SharedFieldKeys24),
                 [4] = new EnergyPlusFieldKeyDefinition("Use Weather File Daylight Saving Period", SharedFieldKeys0),
                 [5] = new EnergyPlusFieldKeyDefinition("Use Weather File Rain and Snow Indicators", SharedFieldKeys0)
-        })
-,
-        ["RunPeriod"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object16() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Day of Week for Start Day", SharedFieldKeys26),
                 [9] = new EnergyPlusFieldKeyDefinition("Use Weather File Holidays and Special Days", SharedFieldKeys0),
@@ -829,20 +1343,20 @@ internal static class EnergyPlusFieldKeyData
                 [13] = new EnergyPlusFieldKeyDefinition("Use Weather File Snow Indicators", SharedFieldKeys0),
                 [14] = new EnergyPlusFieldKeyDefinition("Treat Weather as Actual", SharedFieldKeys0),
                 [15] = new EnergyPlusFieldKeyDefinition("First Hour Interpolation Starting Values", SharedFieldKeys27)
-        })
-,
-        ["RunPeriodControl:SpecialDays"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object17() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Special Day Type", SharedFieldKeys28)
-        })
-,
-        ["WeatherProperty:SkyTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object18() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Calculation Type", SharedFieldKeys29),
                 [4] = new EnergyPlusFieldKeyDefinition("Use Weather File Horizontal IR", SharedFieldKeys0)
-        })
-,
-        ["Site:GroundDomain:Slab"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object19() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30),
                 [14] = new EnergyPlusFieldKeyDefinition("Slab Location", SharedFieldKeys31),
@@ -850,231 +1364,231 @@ internal static class EnergyPlusFieldKeyData
                 [18] = new EnergyPlusFieldKeyDefinition("Horizontal Insulation Extents", SharedFieldKeys32),
                 [20] = new EnergyPlusFieldKeyDefinition("Vertical Insulation", SharedFieldKeys0),
                 [23] = new EnergyPlusFieldKeyDefinition("Simulation Timestep", SharedFieldKeys33)
-        })
-,
-        ["Site:GroundDomain:Basement"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object20() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30),
                 [14] = new EnergyPlusFieldKeyDefinition("Horizontal Insulation", SharedFieldKeys0),
                 [16] = new EnergyPlusFieldKeyDefinition("Horizontal Insulation Extents", SharedFieldKeys34),
                 [20] = new EnergyPlusFieldKeyDefinition("Vertical Insulation", SharedFieldKeys0),
                 [23] = new EnergyPlusFieldKeyDefinition("Simulation Timestep", SharedFieldKeys33)
-        })
-,
-        ["Site:WaterMainsTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object21() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Calculation Method", SharedFieldKeys35)
-        })
-,
-        ["Site:Precipitation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object22() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Precipitation Model Type", SharedFieldKeys36)
-        })
-,
-        ["RoofIrrigation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object23() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Irrigation Model Type", SharedFieldKeys37)
-        })
-,
-        ["Site:SolarAndVisibleSpectrum"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object24() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Spectrum Data Method", SharedFieldKeys38)
-        })
-,
-        ["Site:SpectrumData"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object25() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Spectrum Data Type", SharedFieldKeys39)
-        })
-,
-        ["ScheduleTypeLimits"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object26() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Numeric Type", SharedFieldKeys40),
                 [5] = new EnergyPlusFieldKeyDefinition("Unit Type", SharedFieldKeys41)
-        })
-,
-        ["Schedule:Day:Interval"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object27() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Interpolate to Timestep", SharedFieldKeys42)
-        })
-,
-        ["Schedule:Day:List"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object28() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Interpolate to Timestep", SharedFieldKeys42)
-        })
-,
-        ["Schedule:Week:Compact"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object29() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("DayType List 1", SharedFieldKeys43),
                 [4] = new EnergyPlusFieldKeyDefinition("DayType List 2", SharedFieldKeys43),
                 [6] = new EnergyPlusFieldKeyDefinition("DayType List 3", SharedFieldKeys43),
                 [8] = new EnergyPlusFieldKeyDefinition("DayType List 4", SharedFieldKeys43),
                 [10] = new EnergyPlusFieldKeyDefinition("DayType List 5", SharedFieldKeys43)
-        })
-,
-        ["Schedule:File"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object30() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Column Separator", SharedFieldKeys44),
                 [8] = new EnergyPlusFieldKeyDefinition("Interpolate to Timestep", SharedFieldKeys0),
                 [10] = new EnergyPlusFieldKeyDefinition("Adjust Schedule for Daylight Savings", SharedFieldKeys0)
-        })
-,
-        ["Material"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object31() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Roughness", SharedFieldKeys45)
-        })
-,
-        ["Material:NoMass"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object32() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Roughness", SharedFieldKeys45)
-        })
-,
-        ["Material:RoofVegetation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object33() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Roughness", SharedFieldKeys46),
                 [19] = new EnergyPlusFieldKeyDefinition("Moisture Diffusion Calculation Method", SharedFieldKeys47)
-        })
-,
-        ["WindowMaterial:Glazing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object34() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Optical Data Type", SharedFieldKeys48),
                 [16] = new EnergyPlusFieldKeyDefinition("Solar Diffusing", SharedFieldKeys14)
-        })
-,
-        ["WindowMaterial:Glazing:RefractionExtinctionMethod"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object35() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Solar Diffusing", SharedFieldKeys14)
-        })
-,
-        ["WindowMaterial:Gas"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object36() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Gas Type", SharedFieldKeys49)
-        })
-,
-        ["WindowMaterial:GasMixture"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object37() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Gas 1 Type", SharedFieldKeys50),
                 [6] = new EnergyPlusFieldKeyDefinition("Gas 2 Type", SharedFieldKeys50),
                 [8] = new EnergyPlusFieldKeyDefinition("Gas 3 Type", SharedFieldKeys50),
                 [10] = new EnergyPlusFieldKeyDefinition("Gas 4 Type", SharedFieldKeys50)
-        })
-,
-        ["WindowMaterial:ComplexShade"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object38() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Layer Type", SharedFieldKeys51)
-        })
-,
-        ["WindowMaterial:Blind"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object39() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Slat Orientation", SharedFieldKeys52)
-        })
-,
-        ["WindowMaterial:Screen"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object40() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reflected Beam Transmittance Accounting Method", SharedFieldKeys53),
                 [14] = new EnergyPlusFieldKeyDefinition("Angle of Resolution for Screen Transmittance Output Map", SharedFieldKeys54)
-        })
-,
-        ["WindowMaterial:Blind:EquivalentLayer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object41() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Slat Orientation", SharedFieldKeys52),
                 [24] = new EnergyPlusFieldKeyDefinition("Slat Angle Control", SharedFieldKeys55)
-        })
-,
-        ["WindowMaterial:Glazing:EquivalentLayer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object42() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Optical Data Type", SharedFieldKeys56)
-        })
-,
-        ["WindowMaterial:Gap:EquivalentLayer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object43() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Gas Type", SharedFieldKeys57),
                 [4] = new EnergyPlusFieldKeyDefinition("Gap Vent Type", SharedFieldKeys58)
-        })
-,
-        ["MaterialProperty:VariableAbsorptance"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object44() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Control Signal", SharedFieldKeys59)
-        })
-,
-        ["Construction:AirBoundary"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object45() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Air Exchange Method", SharedFieldKeys60)
-        })
-,
-        ["WindowThermalModel:Params"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object46() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("standard", SharedFieldKeys61),
                 [3] = new EnergyPlusFieldKeyDefinition("Thermal Model", SharedFieldKeys62),
                 [5] = new EnergyPlusFieldKeyDefinition("Deflection Model", SharedFieldKeys63)
-        })
-,
-        ["WindowsCalculationEngine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object47() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Windows engine", SharedFieldKeys64)
-        })
-,
-        ["Construction:ComplexFenestrationState"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object48() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Basis Type", SharedFieldKeys65),
                 [3] = new EnergyPlusFieldKeyDefinition("Basis Symmetry Type", SharedFieldKeys66)
-        })
-,
-        ["GlobalGeometryRules"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object49() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Starting Vertex Position", SharedFieldKeys67),
                 [2] = new EnergyPlusFieldKeyDefinition("Vertex Entry Direction", SharedFieldKeys68),
                 [3] = new EnergyPlusFieldKeyDefinition("Coordinate System", SharedFieldKeys69),
                 [4] = new EnergyPlusFieldKeyDefinition("Daylighting Reference Point Coordinate System", SharedFieldKeys69),
                 [5] = new EnergyPlusFieldKeyDefinition("Rectangular Surface Coordinate System", SharedFieldKeys69)
-        })
-,
-        ["GeometryTransform"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object50() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Plane of Transform", SharedFieldKeys70)
-        })
-,
-        ["Zone"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object51() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Zone Inside Convection Algorithm", SharedFieldKeys71),
                 [12] = new EnergyPlusFieldKeyDefinition("Zone Outside Convection Algorithm", SharedFieldKeys72),
                 [13] = new EnergyPlusFieldKeyDefinition("Part of Total Floor Area", SharedFieldKeys0)
-        })
-,
-        ["BuildingSurface:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object52() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Surface Type", SharedFieldKeys73),
                 [6] = new EnergyPlusFieldKeyDefinition("Outside Boundary Condition", SharedFieldKeys74),
                 [8] = new EnergyPlusFieldKeyDefinition("Sun Exposure", SharedFieldKeys75),
                 [9] = new EnergyPlusFieldKeyDefinition("Wind Exposure", SharedFieldKeys76)
-        })
-,
-        ["Wall:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object53() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outside Boundary Condition", SharedFieldKeys74),
                 [7] = new EnergyPlusFieldKeyDefinition("Sun Exposure", SharedFieldKeys75),
                 [8] = new EnergyPlusFieldKeyDefinition("Wind Exposure", SharedFieldKeys76)
-        })
-,
-        ["RoofCeiling:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object54() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outside Boundary Condition", SharedFieldKeys77),
                 [7] = new EnergyPlusFieldKeyDefinition("Sun Exposure", SharedFieldKeys75),
                 [8] = new EnergyPlusFieldKeyDefinition("Wind Exposure", SharedFieldKeys76)
-        })
-,
-        ["Floor:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object55() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outside Boundary Condition", SharedFieldKeys74),
                 [7] = new EnergyPlusFieldKeyDefinition("Sun Exposure", SharedFieldKeys75),
                 [8] = new EnergyPlusFieldKeyDefinition("Wind Exposure", SharedFieldKeys76)
-        })
-,
-        ["FenestrationSurface:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object56() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Surface Type", SharedFieldKeys78)
-        })
-,
-        ["WindowShadingControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object57() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Shading Type", SharedFieldKeys79),
                 [6] = new EnergyPlusFieldKeyDefinition("Shading Control Type", SharedFieldKeys80),
@@ -1082,65 +1596,65 @@ internal static class EnergyPlusFieldKeyData
                 [10] = new EnergyPlusFieldKeyDefinition("Glare Control Is Active", SharedFieldKeys14),
                 [12] = new EnergyPlusFieldKeyDefinition("Type of Slat Angle Control for Blinds", SharedFieldKeys81),
                 [16] = new EnergyPlusFieldKeyDefinition("Multiple Surface Control Type", SharedFieldKeys82)
-        })
-,
-        ["WindowProperty:FrameAndDivider"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object58() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Divider Type", SharedFieldKeys83),
                 [26] = new EnergyPlusFieldKeyDefinition("NFRC Product Type for Assembly Calculations", SharedFieldKeys84)
-        })
-,
-        ["WindowProperty:AirflowControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object59() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Airflow Source", SharedFieldKeys85),
                 [3] = new EnergyPlusFieldKeyDefinition("Airflow Destination", SharedFieldKeys86),
                 [5] = new EnergyPlusFieldKeyDefinition("Airflow Control Type", SharedFieldKeys87),
                 [6] = new EnergyPlusFieldKeyDefinition("Airflow Is Scheduled", SharedFieldKeys0)
-        })
-,
-        ["SurfaceProperty:HeatTransferAlgorithm"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object60() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys11)
-        })
-,
-        ["SurfaceProperty:HeatTransferAlgorithm:MultipleSurface"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object61() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Surface Type", SharedFieldKeys88),
                 [3] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys11)
-        })
-,
-        ["SurfaceProperty:HeatTransferAlgorithm:SurfaceList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object62() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys11)
-        })
-,
-        ["SurfaceProperty:HeatTransferAlgorithm:Construction"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object63() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Algorithm", SharedFieldKeys11)
-        })
-,
-        ["SurfaceControl:MovableInsulation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object64() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Insulation Type", SharedFieldKeys89)
-        })
-,
-        ["SurfaceProperty:OtherSideCoefficients"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object65() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Sinusoidal Variation of Constant Temperature Coefficient", SharedFieldKeys0)
-        })
-,
-        ["SurfaceProperty:OtherSideConditionsModel"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object66() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Type of Modeling", SharedFieldKeys90)
-        })
-,
-        ["Foundation:Kiva:Settings"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object67() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Deep-Ground Boundary Condition", SharedFieldKeys91),
                 [12] = new EnergyPlusFieldKeyDefinition("Simulation Timestep", SharedFieldKeys92)
-        })
-,
-        ["SurfaceProperty:ExposedFoundationPerimeter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object68() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Exposed Perimeter Calculation Method", SharedFieldKeys93),
                 [5] = new EnergyPlusFieldKeyDefinition("Surface Segment 1 Exposed", SharedFieldKeys0),
@@ -1153,9 +1667,9 @@ internal static class EnergyPlusFieldKeyData
                 [12] = new EnergyPlusFieldKeyDefinition("Surface Segment 8 Exposed", SharedFieldKeys0),
                 [13] = new EnergyPlusFieldKeyDefinition("Surface Segment 9 Exposed", SharedFieldKeys0),
                 [14] = new EnergyPlusFieldKeyDefinition("Surface Segment 10 Exposed", SharedFieldKeys0)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object69() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Simple Buoyancy Vertical Wall Equation Source", SharedFieldKeys94),
                 [4] = new EnergyPlusFieldKeyDefinition("Simple Buoyancy Stable Horizontal Equation Source", SharedFieldKeys95),
@@ -1202,9 +1716,9 @@ internal static class EnergyPlusFieldKeyData
                 [86] = new EnergyPlusFieldKeyDefinition("Mixed Regime Stable Ceiling Equation Source", SharedFieldKeys122),
                 [88] = new EnergyPlusFieldKeyDefinition("Mixed Regime Unstable Ceiling Equation Source", SharedFieldKeys123),
                 [90] = new EnergyPlusFieldKeyDefinition("Mixed Regime Window Equation Source", SharedFieldKeys124)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Outside:AdaptiveModelSelections"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object70() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Wind Convection Windward Vertical Wall Equation Source", SharedFieldKeys125),
                 [4] = new EnergyPlusFieldKeyDefinition("Wind Convection Leeward Vertical Wall Equation Source", SharedFieldKeys126),
@@ -1212,129 +1726,129 @@ internal static class EnergyPlusFieldKeyData
                 [8] = new EnergyPlusFieldKeyDefinition("Natural Convection Vertical Wall Equation Source", SharedFieldKeys128),
                 [10] = new EnergyPlusFieldKeyDefinition("Natural Convection Stable Horizontal Equation Source", SharedFieldKeys129),
                 [12] = new EnergyPlusFieldKeyDefinition("Natural Convection Unstable Horizontal Equation Source", SharedFieldKeys130)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Inside:UserCurve"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object71() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reference Temperature for Convection Heat Transfer", SharedFieldKeys131)
-        })
-,
-        ["SurfaceConvectionAlgorithm:Outside:UserCurve"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object72() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Wind Speed Type for Curve", SharedFieldKeys132)
-        })
-,
-        ["SurfaceProperty:ConvectionCoefficients"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object73() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 1 Location", SharedFieldKeys89),
                 [3] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 1 Type", SharedFieldKeys133),
                 [7] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 2 Location", SharedFieldKeys89),
                 [8] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 2 Type", SharedFieldKeys133)
-        })
-,
-        ["SurfaceProperty:ConvectionCoefficients:MultipleSurface"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object74() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Surface Type", SharedFieldKeys134),
                 [2] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 1 Location", SharedFieldKeys89),
                 [3] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 1 Type", SharedFieldKeys135),
                 [7] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 2 Location", SharedFieldKeys89),
                 [8] = new EnergyPlusFieldKeyDefinition("Convection Coefficient 2 Type", SharedFieldKeys135)
-        })
-,
-        ["SurfaceProperties:VaporCoefficients"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object75() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Constant External Vapor Transfer Coefficient", SharedFieldKeys0),
                 [4] = new EnergyPlusFieldKeyDefinition("Constant Internal vapor Transfer Coefficient", SharedFieldKeys0)
-        })
-,
-        ["SurfaceProperty:ExteriorNaturalVentedCavity"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object76() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Roughness of Exterior Surface", SharedFieldKeys45)
-        })
-,
-        ["GroundHeatTransfer:Control"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object77() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Run Basement Preprocessor", SharedFieldKeys0),
                 [3] = new EnergyPlusFieldKeyDefinition("Run Slab Preprocessor", SharedFieldKeys0)
-        })
-,
-        ["GroundHeatTransfer:Slab:BoundConds"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object78() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("EVTR: Is surface evapotranspiration modeled", SharedFieldKeys136),
                 [2] = new EnergyPlusFieldKeyDefinition("FIXBC: is the lower boundary at a fixed temperature", SharedFieldKeys136),
                 [4] = new EnergyPlusFieldKeyDefinition("USRHflag: Is the ground surface h specified by the user?", SharedFieldKeys136)
-        })
-,
-        ["GroundHeatTransfer:Slab:Insulation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object79() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("IVINS: Flag: Is there vertical insulation", SharedFieldKeys137)
-        })
-,
-        ["GroundHeatTransfer:Basement:Insulation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object80() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("INSFULL: Flag: Is the wall fully insulated?", SharedFieldKeys136)
-        })
-,
-        ["GroundHeatTransfer:Basement:SurfaceProps"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object81() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("PET: Flag, Potential evapotranspiration on?", SharedFieldKeys136)
-        })
-,
-        ["GroundHeatTransfer:Basement:Interior"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object82() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("COND: Flag: Is the basement conditioned?", SharedFieldKeys136)
-        })
-,
-        ["GroundHeatTransfer:Basement:EquivSlab"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object83() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("EquivSizing: Flag", SharedFieldKeys136)
-        })
-,
-        ["RoomAirModelType"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object84() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Room-Air Modeling Type", SharedFieldKeys138),
                 [4] = new EnergyPlusFieldKeyDefinition("Air Temperature Coupling Strategy", SharedFieldKeys139)
-        })
-,
-        ["RoomAir:TemperaturePattern:TwoGradient"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object85() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Gradient Interpolation Mode", SharedFieldKeys140)
-        })
-,
-        ["RoomAir:Node"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object86() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Node Type", SharedFieldKeys141)
-        })
-,
-        ["RoomAirSettings:CrossVentilation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object87() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Airflow Region Used for Thermal Comfort Evaluation", SharedFieldKeys142)
-        })
-,
-        ["RoomAirSettings:UnderFloorAirDistributionInterior"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object88() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Floor Diffuser Type", SharedFieldKeys143)
-        })
-,
-        ["RoomAirSettings:UnderFloorAirDistributionExterior"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object89() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Floor Diffuser Type", SharedFieldKeys143)
-        })
-,
-        ["RoomAir:Node:AirflowNetwork:InternalGains"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object90() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Internal Gain Object 1 Type", SharedFieldKeys144),
                 [5] = new EnergyPlusFieldKeyDefinition("Internal Gain Object 2 Type", SharedFieldKeys144),
                 [8] = new EnergyPlusFieldKeyDefinition("Internal Gain Object 3 Type", SharedFieldKeys144)
-        })
-,
-        ["RoomAir:Node:AirflowNetwork:HVACEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object91() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("ZoneHVAC or Air Terminal Equipment Object Type 1", SharedFieldKeys145),
                 [6] = new EnergyPlusFieldKeyDefinition("ZoneHVAC or Air Terminal Equipment Object Type 2", SharedFieldKeys146)
-        })
-,
-        ["People"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object92() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Number of People Calculation Method", SharedFieldKeys147),
                 [12] = new EnergyPlusFieldKeyDefinition("Enable ASHRAE 55 Comfort Warnings", SharedFieldKeys0),
@@ -1347,116 +1861,116 @@ internal static class EnergyPlusFieldKeyData
                 [24] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Model 5 Type", SharedFieldKeys150),
                 [25] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Model 6 Type", SharedFieldKeys150),
                 [26] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Model 7 Type", SharedFieldKeys150)
-        })
-,
-        ["Lights"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object93() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys151),
                 [13] = new EnergyPlusFieldKeyDefinition("Return Air Fraction Calculated from Plenum Temperature", SharedFieldKeys0)
-        })
-,
-        ["ElectricEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object94() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys152)
-        })
-,
-        ["GasEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object95() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys153)
-        })
-,
-        ["HotWaterEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object96() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys153)
-        })
-,
-        ["SteamEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object97() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys153)
-        })
-,
-        ["OtherEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object98() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys154),
                 [5] = new EnergyPlusFieldKeyDefinition("Design Level Calculation Method", SharedFieldKeys153)
-        })
-,
-        ["IndoorLivingWall"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object99() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Evapotranspiration Calculation Method", SharedFieldKeys155),
                 [5] = new EnergyPlusFieldKeyDefinition("Lighting Method", SharedFieldKeys156)
-        })
-,
-        ["ElectricEquipment:ITE:AirCooled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object100() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Air Flow Calculation Method", SharedFieldKeys157),
                 [4] = new EnergyPlusFieldKeyDefinition("Design Power Input Calculation Method", SharedFieldKeys158),
                 [16] = new EnergyPlusFieldKeyDefinition("Environmental Class", SharedFieldKeys159),
                 [17] = new EnergyPlusFieldKeyDefinition("Air Inlet Connection Type", SharedFieldKeys160)
-        })
-,
-        ["Daylighting:Controls"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object101() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Daylighting Method", SharedFieldKeys161),
                 [5] = new EnergyPlusFieldKeyDefinition("Lighting Control Type", SharedFieldKeys162)
-        })
-,
-        ["Output:DaylightFactors"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object102() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Reporting Days", SharedFieldKeys163)
-        })
-,
-        ["OutputControl:IlluminanceMap:Style"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object103() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Column Separator", SharedFieldKeys164)
-        })
-,
-        ["ZoneInfiltration:DesignFlowRate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object104() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Flow Rate Calculation Method", SharedFieldKeys165),
                 [13] = new EnergyPlusFieldKeyDefinition("Density Basis", SharedFieldKeys166)
-        })
-,
-        ["ZoneVentilation:DesignFlowRate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object105() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Flow Rate Calculation Method", SharedFieldKeys167),
                 [9] = new EnergyPlusFieldKeyDefinition("Ventilation Type", SharedFieldKeys168),
                 [27] = new EnergyPlusFieldKeyDefinition("Density Basis", SharedFieldKeys166)
-        })
-,
-        ["ZoneAirBalance:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object106() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Air Balance Method", SharedFieldKeys169)
-        })
-,
-        ["ZoneMixing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object107() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Flow Rate Calculation Method", SharedFieldKeys167)
-        })
-,
-        ["ZoneCrossMixing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object108() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Design Flow Rate Calculation Method", SharedFieldKeys170)
-        })
-,
-        ["ZoneRefrigerationDoorMixing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object109() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Door Protection Type", SharedFieldKeys171)
-        })
-,
-        ["ZoneEarthtube"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object110() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Earthtube Type", SharedFieldKeys172),
                 [15] = new EnergyPlusFieldKeyDefinition("Soil Condition", SharedFieldKeys173),
                 [23] = new EnergyPlusFieldKeyDefinition("Earth Tube Model Type", SharedFieldKeys174)
-        })
-,
-        ["ZoneCoolTower:Shower"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object111() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Flow Control Type", SharedFieldKeys175)
-        })
-,
-        ["AirflowNetwork:SimulationControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object112() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("AirflowNetwork Control", SharedFieldKeys176),
                 [3] = new EnergyPlusFieldKeyDefinition("Wind Pressure Coefficient Type", SharedFieldKeys177),
@@ -1467,97 +1981,97 @@ internal static class EnergyPlusFieldKeyData
                 [14] = new EnergyPlusFieldKeyDefinition("Solver", SharedFieldKeys181),
                 [15] = new EnergyPlusFieldKeyDefinition("Allow Unsupported Zone Equipment", SharedFieldKeys0),
                 [16] = new EnergyPlusFieldKeyDefinition("Do Distribution Duct Sizing Calculation", SharedFieldKeys0)
-        })
-,
-        ["AirflowNetwork:MultiZone:Zone"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object113() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Ventilation Control Mode", SharedFieldKeys182),
                 [10] = new EnergyPlusFieldKeyDefinition("Single Sided Wind Pressure Coefficient Algorithm", SharedFieldKeys183)
-        })
-,
-        ["AirflowNetwork:MultiZone:Surface"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object114() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Ventilation Control Mode", SharedFieldKeys184),
                 [14] = new EnergyPlusFieldKeyDefinition("Equivalent Rectangle Method", SharedFieldKeys185)
-        })
-,
-        ["AirflowNetwork:MultiZone:SpecifiedFlowRate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object115() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Air Flow Units", SharedFieldKeys186)
-        })
-,
-        ["AirflowNetwork:MultiZone:Component:DetailedOpening"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object116() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Type of Rectangular Large Vertical Opening (LVO)", SharedFieldKeys187)
-        })
-,
-        ["AirflowNetwork:MultiZone:ExternalNode"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object117() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Symmetric Wind Pressure Coefficient Curve", SharedFieldKeys0),
                 [5] = new EnergyPlusFieldKeyDefinition("Wind Angle Type", SharedFieldKeys188)
-        })
-,
-        ["AirflowNetwork:ZoneControl:PressureController"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object118() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Control Object Type", SharedFieldKeys189)
-        })
-,
-        ["AirflowNetwork:Distribution:Node"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object119() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Component Object Type or Node Type", SharedFieldKeys190)
-        })
-,
-        ["AirflowNetwork:Distribution:Component:Fan"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object120() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Supply Fan Object Type", SharedFieldKeys191)
-        })
-,
-        ["AirflowNetwork:Distribution:Component:Coil"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object121() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Coil Object Type", SharedFieldKeys192)
-        })
-,
-        ["AirflowNetwork:Distribution:Component:HeatExchanger"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object122() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("HeatExchanger Object Type", SharedFieldKeys193)
-        })
-,
-        ["AirflowNetwork:Distribution:Component:TerminalUnit"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object123() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Terminal Unit Object Type", SharedFieldKeys194)
-        })
-,
-        ["AirflowNetwork:Distribution:DuctSizing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object124() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Duct Sizing Method", SharedFieldKeys195)
-        })
-,
-        ["AirflowNetwork:OccupantVentilationControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object125() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Occupancy Check", SharedFieldKeys0)
-        })
-,
-        ["Duct:Loss:Conduction"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object126() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Environment Type", SharedFieldKeys196)
-        })
-,
-        ["Exterior:Lights"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object127() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Control Option", SharedFieldKeys197)
-        })
-,
-        ["Exterior:FuelEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object128() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Use Type", SharedFieldKeys198)
-        })
-,
-        ["Exterior:WaterEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object129() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Use Type", SharedFieldKeys199)
-        })
-,
-        ["HVACTemplate:Zone:IdealLoadsAirSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object130() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Heating Limit", SharedFieldKeys200),
                 [11] = new EnergyPlusFieldKeyDefinition("Cooling Limit", SharedFieldKeys200),
@@ -1567,15 +2081,15 @@ internal static class EnergyPlusFieldKeyData
                 [26] = new EnergyPlusFieldKeyDefinition("Demand Controlled Ventilation Type", SharedFieldKeys204),
                 [27] = new EnergyPlusFieldKeyDefinition("Outdoor Air Economizer Type", SharedFieldKeys205),
                 [28] = new EnergyPlusFieldKeyDefinition("Heat Recovery Type", SharedFieldKeys206)
-        })
-,
-        ["HVACTemplate:Zone:BaseboardHeat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object131() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys207),
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208)
-        })
-,
-        ["HVACTemplate:Zone:FanCoil"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object132() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [15] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys209),
@@ -1584,9 +2098,9 @@ internal static class EnergyPlusFieldKeyData
                 [24] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [28] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys211),
                 [32] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212)
-        })
-,
-        ["HVACTemplate:Zone:PTAC"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object133() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [14] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
@@ -1596,9 +2110,9 @@ internal static class EnergyPlusFieldKeyData
                 [32] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [37] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [40] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys216)
-        })
-,
-        ["HVACTemplate:Zone:PTHP"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object134() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [14] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
@@ -1611,9 +2125,9 @@ internal static class EnergyPlusFieldKeyData
                 [42] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [47] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [50] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys216)
-        })
-,
-        ["HVACTemplate:Zone:WaterToAirHeatPump"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object135() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [14] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
@@ -1624,9 +2138,9 @@ internal static class EnergyPlusFieldKeyData
                 [35] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [38] = new EnergyPlusFieldKeyDefinition("Heat Pump Coil Water Flow Mode", SharedFieldKeys224),
                 [41] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212)
-        })
-,
-        ["HVACTemplate:Zone:VRF"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object136() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [22] = new EnergyPlusFieldKeyDefinition("Supply Air Fan placement", SharedFieldKeys213),
@@ -1635,17 +2149,17 @@ internal static class EnergyPlusFieldKeyData
                 [36] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [39] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [42] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212)
-        })
-,
-        ["HVACTemplate:Zone:Unitary"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object137() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [13] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [16] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [19] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys226)
-        })
-,
-        ["HVACTemplate:Zone:VAV"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object138() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Zone Minimum Air Flow Input Method", SharedFieldKeys227),
                 [11] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
@@ -1654,9 +2168,9 @@ internal static class EnergyPlusFieldKeyData
                 [24] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [27] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [30] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210)
-        })
-,
-        ["HVACTemplate:Zone:VAV:FanPowered"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object139() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Flow Type", SharedFieldKeys230),
                 [11] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
@@ -1664,35 +2178,35 @@ internal static class EnergyPlusFieldKeyData
                 [22] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [25] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [28] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210)
-        })
-,
-        ["HVACTemplate:Zone:VAV:HeatAndCool"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object140() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [14] = new EnergyPlusFieldKeyDefinition("Reheat Coil Type", SharedFieldKeys228),
                 [19] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [22] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [25] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210)
-        })
-,
-        ["HVACTemplate:Zone:ConstantVolume"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object141() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [13] = new EnergyPlusFieldKeyDefinition("Reheat Coil Type", SharedFieldKeys228),
                 [18] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [21] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [24] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210)
-        })
-,
-        ["HVACTemplate:Zone:DualDuct"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object142() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys208),
                 [18] = new EnergyPlusFieldKeyDefinition("Baseboard Heating Type", SharedFieldKeys212),
                 [21] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys226),
                 [24] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys226)
-        })
-,
-        ["HVACTemplate:System:VRF"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object143() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Master Thermostat Priority Control Type", SharedFieldKeys232),
                 [16] = new EnergyPlusFieldKeyDefinition("Heat Pump Waste Heat Recovery", SharedFieldKeys14),
@@ -1700,9 +2214,9 @@ internal static class EnergyPlusFieldKeyData
                 [25] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219),
                 [29] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys233),
                 [37] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys234)
-        })
-,
-        ["HVACTemplate:System:Unitary"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object144() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys235),
                 [16] = new EnergyPlusFieldKeyDefinition("Heating Coil Type", SharedFieldKeys220),
@@ -1714,9 +2228,9 @@ internal static class EnergyPlusFieldKeyData
                 [39] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys239),
                 [41] = new EnergyPlusFieldKeyDefinition("Humidifier Type", SharedFieldKeys240),
                 [47] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0)
-        })
-,
-        ["HVACTemplate:System:UnitaryHeatPump:AirToAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object145() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
                 [13] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys214),
@@ -1730,9 +2244,9 @@ internal static class EnergyPlusFieldKeyData
                 [48] = new EnergyPlusFieldKeyDefinition("Heat Recovery Type", SharedFieldKeys206),
                 [51] = new EnergyPlusFieldKeyDefinition("Humidifier Type", SharedFieldKeys240),
                 [57] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0)
-        })
-,
-        ["HVACTemplate:System:UnitarySystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object146() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys241),
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
@@ -1750,9 +2264,9 @@ internal static class EnergyPlusFieldKeyData
                 [59] = new EnergyPlusFieldKeyDefinition("Humidifier Type", SharedFieldKeys240),
                 [66] = new EnergyPlusFieldKeyDefinition("Sizing Option", SharedFieldKeys248),
                 [67] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0)
-        })
-,
-        ["HVACTemplate:System:VAV"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object147() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys249),
                 [13] = new EnergyPlusFieldKeyDefinition("Heating Coil Type", SharedFieldKeys228),
@@ -1771,9 +2285,9 @@ internal static class EnergyPlusFieldKeyData
                 [55] = new EnergyPlusFieldKeyDefinition("Sizing Option", SharedFieldKeys248),
                 [56] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0),
                 [61] = new EnergyPlusFieldKeyDefinition("Return Fan Part-Load Power Coefficients", SharedFieldKeys253)
-        })
-,
-        ["HVACTemplate:System:PackagedVAV"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object148() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys252),
                 [10] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys258),
@@ -1791,9 +2305,9 @@ internal static class EnergyPlusFieldKeyData
                 [53] = new EnergyPlusFieldKeyDefinition("Sizing Option", SharedFieldKeys248),
                 [54] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0),
                 [59] = new EnergyPlusFieldKeyDefinition("Return Fan Part-Load Power Coefficients", SharedFieldKeys253)
-        })
-,
-        ["HVACTemplate:System:ConstantVolume"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object149() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys252),
                 [9] = new EnergyPlusFieldKeyDefinition("Cooling Coil Type", SharedFieldKeys259),
@@ -1809,9 +2323,9 @@ internal static class EnergyPlusFieldKeyData
                 [55] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys257),
                 [59] = new EnergyPlusFieldKeyDefinition("Humidifier Type", SharedFieldKeys240),
                 [66] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0)
-        })
-,
-        ["HVACTemplate:System:DualDuct"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object150() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("System Configuration Type", SharedFieldKeys262),
                 [10] = new EnergyPlusFieldKeyDefinition("Main Supply Fan Part-Load Power Coefficients", SharedFieldKeys253),
@@ -1836,9 +2350,9 @@ internal static class EnergyPlusFieldKeyData
                 [85] = new EnergyPlusFieldKeyDefinition("Sizing Option", SharedFieldKeys248),
                 [86] = new EnergyPlusFieldKeyDefinition("Return Fan", SharedFieldKeys0),
                 [91] = new EnergyPlusFieldKeyDefinition("Return Fan Part-Load Power Coefficients", SharedFieldKeys253)
-        })
-,
-        ["HVACTemplate:System:DedicatedOutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object151() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Air Outlet Type", SharedFieldKeys266),
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys252),
@@ -1851,9 +2365,9 @@ internal static class EnergyPlusFieldKeyData
                 [37] = new EnergyPlusFieldKeyDefinition("Heat Recovery Frost Control Type", SharedFieldKeys246),
                 [38] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys269),
                 [40] = new EnergyPlusFieldKeyDefinition("Humidifier Type", SharedFieldKeys240)
-        })
-,
-        ["HVACTemplate:Plant:ChilledWaterLoop"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object152() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys270),
                 [4] = new EnergyPlusFieldKeyDefinition("Chiller Plant Operation Scheme Type", SharedFieldKeys38),
@@ -1871,32 +2385,32 @@ internal static class EnergyPlusFieldKeyData
                 [29] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys276),
                 [32] = new EnergyPlusFieldKeyDefinition("Chilled Water Load Distribution Scheme", SharedFieldKeys277),
                 [33] = new EnergyPlusFieldKeyDefinition("Condenser Water Load Distribution Scheme", SharedFieldKeys277)
-        })
-,
-        ["HVACTemplate:Plant:Chiller"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object153() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Chiller Type", SharedFieldKeys278),
                 [5] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279)
-        })
-,
-        ["HVACTemplate:Plant:Chiller:ObjectReference"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object154() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Chiller Object Type", SharedFieldKeys280)
-        })
-,
-        ["HVACTemplate:Plant:Tower"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object155() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Tower Type", SharedFieldKeys281),
                 [10] = new EnergyPlusFieldKeyDefinition("Template Plant Loop Type", SharedFieldKeys282)
-        })
-,
-        ["HVACTemplate:Plant:Tower:ObjectReference"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object156() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Cooling Tower Object Type", SharedFieldKeys283),
                 [5] = new EnergyPlusFieldKeyDefinition("Template Plant Loop Type", SharedFieldKeys282)
-        })
-,
-        ["HVACTemplate:Plant:HotWaterLoop"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object157() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys270),
                 [4] = new EnergyPlusFieldKeyDefinition("Hot Water Plant Operation Scheme Type", SharedFieldKeys38),
@@ -1907,22 +2421,22 @@ internal static class EnergyPlusFieldKeyData
                 [17] = new EnergyPlusFieldKeyDefinition("Demand Side Bypass Pipe", SharedFieldKeys0),
                 [18] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys276),
                 [21] = new EnergyPlusFieldKeyDefinition("Load Distribution Scheme", SharedFieldKeys277)
-        })
-,
-        ["HVACTemplate:Plant:Boiler"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object158() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Boiler Type", SharedFieldKeys286),
                 [5] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys287),
                 [12] = new EnergyPlusFieldKeyDefinition("Template Plant Loop Type", SharedFieldKeys288)
-        })
-,
-        ["HVACTemplate:Plant:Boiler:ObjectReference"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object159() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Boiler Object Type", SharedFieldKeys289),
                 [5] = new EnergyPlusFieldKeyDefinition("Template Plant Loop Type", SharedFieldKeys288)
-        })
-,
-        ["HVACTemplate:Plant:MixedWaterLoop"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object160() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys270),
                 [4] = new EnergyPlusFieldKeyDefinition("Operation Scheme Type", SharedFieldKeys38),
@@ -1932,14 +2446,14 @@ internal static class EnergyPlusFieldKeyData
                 [14] = new EnergyPlusFieldKeyDefinition("Demand Side Bypass Pipe", SharedFieldKeys0),
                 [15] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys276),
                 [17] = new EnergyPlusFieldKeyDefinition("Load Distribution Scheme", SharedFieldKeys277)
-        })
-,
-        ["DesignSpecification:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object161() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Outdoor Air Method", SharedFieldKeys291)
-        })
-,
-        ["Sizing:Zone"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object162() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Zone Cooling Design Supply Air Temperature Input Method", SharedFieldKeys210),
                 [5] = new EnergyPlusFieldKeyDefinition("Zone Heating Design Supply Air Temperature Input Method", SharedFieldKeys210),
@@ -1952,18 +2466,18 @@ internal static class EnergyPlusFieldKeyData
                 [32] = new EnergyPlusFieldKeyDefinition("Zone Latent Heating Design Supply Air Humidity Ratio Input Method", SharedFieldKeys295),
                 [37] = new EnergyPlusFieldKeyDefinition("Type of Space Sum to Use", SharedFieldKeys248),
                 [38] = new EnergyPlusFieldKeyDefinition("Heating Coil Sizing Method", SharedFieldKeys296)
-        })
-,
-        ["DesignSpecification:ZoneHVAC:Sizing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object163() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Cooling Supply Air Flow Rate Method", SharedFieldKeys297),
                 [7] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Method", SharedFieldKeys298),
                 [12] = new EnergyPlusFieldKeyDefinition("Heating Supply Air Flow Rate Method", SharedFieldKeys299),
                 [17] = new EnergyPlusFieldKeyDefinition("Cooling Design Capacity Method", SharedFieldKeys300),
                 [21] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys301)
-        })
-,
-        ["Sizing:System"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object164() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Type of Load to Size On", SharedFieldKeys302),
                 [11] = new EnergyPlusFieldKeyDefinition("Type of Zone Sum to Use", SharedFieldKeys248),
@@ -1976,50 +2490,50 @@ internal static class EnergyPlusFieldKeyData
                 [33] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys301),
                 [37] = new EnergyPlusFieldKeyDefinition("Central Cooling Capacity Control Method", SharedFieldKeys306),
                 [39] = new EnergyPlusFieldKeyDefinition("Heating Coil Sizing Method", SharedFieldKeys296)
-        })
-,
-        ["Sizing:Plant"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object165() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Loop Type", SharedFieldKeys307),
                 [5] = new EnergyPlusFieldKeyDefinition("Sizing Option", SharedFieldKeys248),
                 [7] = new EnergyPlusFieldKeyDefinition("Coincident Sizing Factor Mode", SharedFieldKeys308)
-        })
-,
-        ["OutputControl:Sizing:Style"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object166() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Column Separator", SharedFieldKeys164)
-        })
-,
-        ["ZoneControl:Thermostat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object167() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Control 1 Object Type", SharedFieldKeys309),
                 [6] = new EnergyPlusFieldKeyDefinition("Control 2 Object Type", SharedFieldKeys309),
                 [8] = new EnergyPlusFieldKeyDefinition("Control 3 Object Type", SharedFieldKeys309),
                 [10] = new EnergyPlusFieldKeyDefinition("Control 4 Object Type", SharedFieldKeys309)
-        })
-,
-        ["ZoneControl:Thermostat:OperativeTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object168() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Radiative Fraction Input Mode", SharedFieldKeys310),
                 [5] = new EnergyPlusFieldKeyDefinition("Adaptive Comfort Model Type", SharedFieldKeys311)
-        })
-,
-        ["ZoneControl:Thermostat:ThermalComfort"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object169() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Averaging Method", SharedFieldKeys312),
                 [8] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Control 1 Object Type", SharedFieldKeys313),
                 [10] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Control 2 Object Type", SharedFieldKeys313),
                 [12] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Control 3 Object Type", SharedFieldKeys313),
                 [14] = new EnergyPlusFieldKeyDefinition("Thermal Comfort Control 4 Object Type", SharedFieldKeys313)
-        })
-,
-        ["ZoneControl:Thermostat:TemperatureAndHumidity"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object170() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys314),
                 [4] = new EnergyPlusFieldKeyDefinition("Overcool Range Input Method", SharedFieldKeys310)
-        })
-,
-        ["ZoneHVAC:IdealLoadsAirSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object171() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Heating Limit", SharedFieldKeys200),
                 [13] = new EnergyPlusFieldKeyDefinition("Cooling Limit", SharedFieldKeys200),
@@ -2030,26 +2544,26 @@ internal static class EnergyPlusFieldKeyData
                 [25] = new EnergyPlusFieldKeyDefinition("Heat Recovery Type", SharedFieldKeys206),
                 [30] = new EnergyPlusFieldKeyDefinition("Heating Fuel Type", SharedFieldKeys315),
                 [32] = new EnergyPlusFieldKeyDefinition("Cooling Fuel Type", SharedFieldKeys315)
-        })
-,
-        ["ZoneHVAC:FourPipeFanCoil"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object172() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys211),
                 [11] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [13] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys191),
                 [15] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys317),
                 [20] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys318)
-        })
-,
-        ["ZoneHVAC:WindowAirConditioner"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object173() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys319),
                 [11] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys320),
                 [14] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213)
-        })
-,
-        ["ZoneHVAC:PackagedTerminalAirConditioner"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object174() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [10] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Control Set To Low Speed", SharedFieldKeys0),
@@ -2058,9 +2572,9 @@ internal static class EnergyPlusFieldKeyData
                 [18] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys322),
                 [20] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [24] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys216)
-        })
-,
-        ["ZoneHVAC:PackagedTerminalHeatPump"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object175() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [10] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Control Set To Low Speed", SharedFieldKeys0),
@@ -2070,9 +2584,9 @@ internal static class EnergyPlusFieldKeyData
                 [22] = new EnergyPlusFieldKeyDefinition("Supplemental Heating Coil Object Type", SharedFieldKeys321),
                 [26] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [30] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys216)
-        })
-,
-        ["ZoneHVAC:WaterToAirHeatPump"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object176() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [10] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Control Set To Low Speed", SharedFieldKeys0),
@@ -2083,42 +2597,42 @@ internal static class EnergyPlusFieldKeyData
                 [25] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [28] = new EnergyPlusFieldKeyDefinition("Heat Pump Coil Water Flow Mode", SharedFieldKeys224),
                 [30] = new EnergyPlusFieldKeyDefinition("Design Specification Multispeed Object Type", SharedFieldKeys327)
-        })
-,
-        ["ZoneHVAC:EnergyRecoveryVentilator:Controller"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object177() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Exhaust Air Temperature Limit", SharedFieldKeys328),
                 [8] = new EnergyPlusFieldKeyDefinition("Exhaust Air Enthalpy Limit", SharedFieldKeys329),
                 [10] = new EnergyPlusFieldKeyDefinition("High Humidity Control Flag", SharedFieldKeys0),
                 [13] = new EnergyPlusFieldKeyDefinition("Control High Indoor Humidity Based on Outdoor Humidity Ratio", SharedFieldKeys0)
-        })
-,
-        ["ZoneHVAC:UnitVentilator"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object178() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Outdoor Air Control Type", SharedFieldKeys330),
                 [14] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys191),
                 [16] = new EnergyPlusFieldKeyDefinition("Coil Option", SharedFieldKeys331),
                 [18] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys332),
                 [21] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys317)
-        })
-,
-        ["ZoneHVAC:UnitHeater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object179() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys191),
                 [8] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys332),
                 [11] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Operation During No Heating", SharedFieldKeys0)
-        })
-,
-        ["ZoneHVAC:EvaporativeCoolerUnit"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object180() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys333),
                 [10] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [11] = new EnergyPlusFieldKeyDefinition("Cooler Unit Control Method", SharedFieldKeys334),
                 [14] = new EnergyPlusFieldKeyDefinition("First Evaporative Cooler Object Type", SharedFieldKeys335),
                 [16] = new EnergyPlusFieldKeyDefinition("Second Evaporative Cooler Object Type", SharedFieldKeys335)
-        })
-,
-        ["ZoneHVAC:HybridUnitaryHVAC"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object181() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Method to Choose Controlled Inputs and Part Runtime Fraction", SharedFieldKeys336),
                 [15] = new EnergyPlusFieldKeyDefinition("Fan Heat Included in Lookup Tables", SharedFieldKeys14),
@@ -2127,15 +2641,15 @@ internal static class EnergyPlusFieldKeyData
                 [21] = new EnergyPlusFieldKeyDefinition("Second Fuel Type", SharedFieldKeys154),
                 [22] = new EnergyPlusFieldKeyDefinition("Third Fuel Type", SharedFieldKeys154),
                 [23] = new EnergyPlusFieldKeyDefinition("Objective Function to Minimize", SharedFieldKeys338)
-        })
-,
-        ["ZoneHVAC:OutdoorAirUnit"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object182() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Supply Fan Placement", SharedFieldKeys213),
                 [11] = new EnergyPlusFieldKeyDefinition("Unit Control Type", SharedFieldKeys339)
-        })
-,
-        ["ZoneHVAC:OutdoorAirUnit:EquipmentList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object183() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Component 1 Object Type", SharedFieldKeys340),
                 [4] = new EnergyPlusFieldKeyDefinition("Component 2 Object Type", SharedFieldKeys340),
@@ -2145,9 +2659,9 @@ internal static class EnergyPlusFieldKeyData
                 [12] = new EnergyPlusFieldKeyDefinition("Component 6 Object Type", SharedFieldKeys340),
                 [14] = new EnergyPlusFieldKeyDefinition("Component 7 Object Type", SharedFieldKeys340),
                 [16] = new EnergyPlusFieldKeyDefinition("Component 8 Object Type", SharedFieldKeys340)
-        })
-,
-        ["ZoneHVAC:TerminalUnit:VariableRefrigerantFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object184() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Placement", SharedFieldKeys213),
                 [14] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys319),
@@ -2156,46 +2670,46 @@ internal static class EnergyPlusFieldKeyData
                 [20] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys342),
                 [27] = new EnergyPlusFieldKeyDefinition("Supplemental Heating Coil Object Type", SharedFieldKeys321),
                 [32] = new EnergyPlusFieldKeyDefinition("Design Specification Multispeed Object Type", SharedFieldKeys327)
-        })
-,
-        ["ZoneHVAC:Baseboard:RadiantConvective:Water:Design"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object185() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343)
-        })
-,
-        ["ZoneHVAC:Baseboard:RadiantConvective:Steam:Design"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object186() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343)
-        })
-,
-        ["ZoneHVAC:Baseboard:RadiantConvective:Electric"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object187() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343)
-        })
-,
-        ["ZoneHVAC:CoolingPanel:RadiantConvective:Water"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object188() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Cooling Design Capacity Method", SharedFieldKeys300),
                 [13] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys344),
                 [16] = new EnergyPlusFieldKeyDefinition("Condensation Control Type", SharedFieldKeys345)
-        })
-,
-        ["ZoneHVAC:Baseboard:Convective:Water"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object189() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343)
-        })
-,
-        ["ZoneHVAC:Baseboard:Convective:Electric"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object190() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343)
-        })
-,
-        ["ZoneHVAC:LowTemperatureRadiant:VariableFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object191() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [15] = new EnergyPlusFieldKeyDefinition("Number of Circuits", SharedFieldKeys346)
-        })
-,
-        ["ZoneHVAC:LowTemperatureRadiant:VariableFlow:Design"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object192() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid to Radiant Surface Heat Transfer Model", SharedFieldKeys347),
                 [6] = new EnergyPlusFieldKeyDefinition("Temperature Control Type", SharedFieldKeys348),
@@ -2203,35 +2717,35 @@ internal static class EnergyPlusFieldKeyData
                 [8] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343),
                 [13] = new EnergyPlusFieldKeyDefinition("Cooling Design Capacity Method", SharedFieldKeys300),
                 [18] = new EnergyPlusFieldKeyDefinition("Condensation Control Type", SharedFieldKeys345)
-        })
-,
-        ["ZoneHVAC:LowTemperatureRadiant:ConstantFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object193() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [23] = new EnergyPlusFieldKeyDefinition("Number of Circuits", SharedFieldKeys346)
-        })
-,
-        ["ZoneHVAC:LowTemperatureRadiant:ConstantFlow:Design"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object194() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid to Radiant Surface Heat Transfer Model", SharedFieldKeys347),
                 [6] = new EnergyPlusFieldKeyDefinition("Temperature Control Type", SharedFieldKeys350),
                 [10] = new EnergyPlusFieldKeyDefinition("Condensation Control Type", SharedFieldKeys345)
-        })
-,
-        ["ZoneHVAC:LowTemperatureRadiant:Electric"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object195() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343),
                 [9] = new EnergyPlusFieldKeyDefinition("Temperature Control Type", SharedFieldKeys348),
                 [10] = new EnergyPlusFieldKeyDefinition("Setpoint Control Type", SharedFieldKeys349)
-        })
-,
-        ["ZoneHVAC:HighTemperatureRadiant"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object196() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Heating Design Capacity Method", SharedFieldKeys343),
                 [8] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys351),
                 [13] = new EnergyPlusFieldKeyDefinition("Temperature Control Type", SharedFieldKeys352)
-        })
-,
-        ["ZoneHVAC:VentilatedSlab"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object197() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Outdoor Air Control Type", SharedFieldKeys353),
                 [11] = new EnergyPlusFieldKeyDefinition("System Configuration Type", SharedFieldKeys354),
@@ -2239,89 +2753,89 @@ internal static class EnergyPlusFieldKeyData
                 [32] = new EnergyPlusFieldKeyDefinition("Coil Option Type", SharedFieldKeys331),
                 [33] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys332),
                 [36] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys317)
-        })
-,
-        ["AirTerminal:SingleDuct:ConstantVolume:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object198() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys332)
-        })
-,
-        ["AirTerminal:SingleDuct:ConstantVolume:NoReheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object199() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Per Person Ventilation Rate Mode", SharedFieldKeys356)
-        })
-,
-        ["AirTerminal:SingleDuct:VAV:NoReheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object200() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Zone Minimum Air Flow Input Method", SharedFieldKeys227)
-        })
-,
-        ["AirTerminal:SingleDuct:VAV:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object201() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Zone Minimum Air Flow Input Method", SharedFieldKeys227),
                 [10] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys332),
                 [16] = new EnergyPlusFieldKeyDefinition("Damper Heating Action", SharedFieldKeys357)
-        })
-,
-        ["AirTerminal:SingleDuct:VAV:Reheat:VariableSpeedFan"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object202() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Fan Object Type", SharedFieldKeys358),
                 [10] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys332)
-        })
-,
-        ["AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object203() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys332)
-        })
-,
-        ["AirTerminal:SingleDuct:SeriesPIU:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object204() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys332),
                 [17] = new EnergyPlusFieldKeyDefinition("Fan Control Type", SharedFieldKeys359),
                 [19] = new EnergyPlusFieldKeyDefinition("Heating Control Type", SharedFieldKeys360)
-        })
-,
-        ["AirTerminal:SingleDuct:ParallelPIU:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object205() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys332),
                 [18] = new EnergyPlusFieldKeyDefinition("Fan Control Type", SharedFieldKeys359),
                 [20] = new EnergyPlusFieldKeyDefinition("Heating Control Type", SharedFieldKeys360)
-        })
-,
-        ["AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object206() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys361),
                 [13] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys362)
-        })
-,
-        ["AirTerminal:SingleDuct:ConstantVolume:CooledBeam"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object207() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Cooled Beam Type", SharedFieldKeys363)
-        })
-,
-        ["AirTerminal:SingleDuct:Mixer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object208() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("ZoneHVAC Unit Object Type", SharedFieldKeys364),
                 [7] = new EnergyPlusFieldKeyDefinition("Mixer Connection Type", SharedFieldKeys365),
                 [9] = new EnergyPlusFieldKeyDefinition("Per Person Ventilation Rate Mode", SharedFieldKeys356)
-        })
-,
-        ["AirTerminal:DualDuct:VAV:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object209() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Per Person Ventilation Rate Mode", SharedFieldKeys356)
-        })
-,
-        ["ZoneHVAC:AirDistributionUnit"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object210() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Air Terminal Object Type", SharedFieldKeys366)
-        })
-,
-        ["ZoneHVAC:ExhaustControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object211() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Flow Control Type", SharedFieldKeys367)
-        })
-,
-        ["ZoneHVAC:EquipmentList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object212() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Load Distribution Scheme", SharedFieldKeys368),
                 [3] = new EnergyPlusFieldKeyDefinition("Zone Equipment 1 Object Type", SharedFieldKeys369),
@@ -2342,215 +2856,215 @@ internal static class EnergyPlusFieldKeyData
                 [93] = new EnergyPlusFieldKeyDefinition("Zone Equipment 16 Object Type", SharedFieldKeys369),
                 [99] = new EnergyPlusFieldKeyDefinition("Zone Equipment 17 Object Type", SharedFieldKeys369),
                 [105] = new EnergyPlusFieldKeyDefinition("Zone Equipment 18 Object Type", SharedFieldKeys369)
-        })
-,
-        ["SpaceHVAC:ZoneEquipmentSplitter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object213() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Zone Equipment Object Type", SharedFieldKeys370),
                 [6] = new EnergyPlusFieldKeyDefinition("Thermostat Control Method", SharedFieldKeys371),
                 [8] = new EnergyPlusFieldKeyDefinition("Space Fraction Method", SharedFieldKeys372)
-        })
-,
-        ["SpaceHVAC:ZoneEquipmentMixer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object214() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Space Fraction Method", SharedFieldKeys372)
-        })
-,
-        ["Fan:SystemModel"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object215() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Speed Control Method", SharedFieldKeys40),
                 [12] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys373)
-        })
-,
-        ["Fan:VariableVolume"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object216() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Fan Power Minimum Flow Rate Input Method", SharedFieldKeys374)
-        })
-,
-        ["Fan:ZoneExhaust"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object217() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("System Availability Manager Coupling Mode", SharedFieldKeys375)
-        })
-,
-        ["Fan:ComponentModel"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object218() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [21] = new EnergyPlusFieldKeyDefinition("VFD Efficiency Type", SharedFieldKeys376)
-        })
-,
-        ["Coil:Cooling:Water"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object219() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Type of Analysis", SharedFieldKeys377),
                 [15] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Configuration", SharedFieldKeys378)
-        })
-,
-        ["CoilSystem:Cooling:Water"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object220() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys317),
                 [7] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379),
                 [8] = new EnergyPlusFieldKeyDefinition("Run on Sensible Load", SharedFieldKeys0),
                 [9] = new EnergyPlusFieldKeyDefinition("Run on Latent Load", SharedFieldKeys0),
                 [11] = new EnergyPlusFieldKeyDefinition("Economizer Lockout", SharedFieldKeys0)
-        })
-,
-        ["Coil:Cooling:DX:CurveFit:Performance"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object221() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Capacity Control Method", SharedFieldKeys380),
                 [11] = new EnergyPlusFieldKeyDefinition("Compressor Fuel Type", SharedFieldKeys234)
-        })
-,
-        ["Coil:Cooling:DX:CurveFit:OperatingMode"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object222() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Apply Latent Degradation to Speeds Greater than 1", SharedFieldKeys0),
                 [10] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381)
-        })
-,
-        ["Coil:DX:ASHRAE205:Performance"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object223() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Performance Interpolation Method", SharedFieldKeys382)
-        })
-,
-        ["Coil:Cooling:DX:SingleSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object224() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [22] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381),
                 [36] = new EnergyPlusFieldKeyDefinition("Report ASHRAE Standard 127 Performance Ratings", SharedFieldKeys0)
-        })
-,
-        ["Coil:Cooling:DX:TwoSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object225() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [26] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381)
-        })
-,
-        ["Coil:Cooling:DX:MultiSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object226() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381),
                 [10] = new EnergyPlusFieldKeyDefinition("Apply Part Load Fraction to Speeds Greater than 1", SharedFieldKeys0),
                 [11] = new EnergyPlusFieldKeyDefinition("Apply Latent Degradation to Speeds Greater than 1", SharedFieldKeys0),
                 [18] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys234)
-        })
-,
-        ["Coil:Cooling:DX:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object227() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [16] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381)
-        })
-,
-        ["Coil:Cooling:DX:TwoStageWithHumidityControlMode"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object228() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Normal Mode Stage 1 Coil Performance Object Type", SharedFieldKeys383),
                 [12] = new EnergyPlusFieldKeyDefinition("Normal Mode Stage 1+2 Coil Performance Object Type", SharedFieldKeys383),
                 [14] = new EnergyPlusFieldKeyDefinition("Dehumidification Mode 1 Stage 1 Coil Performance Object Type", SharedFieldKeys383),
                 [16] = new EnergyPlusFieldKeyDefinition("Dehumidification Mode 1 Stage 1+2 Coil Performance Object Type", SharedFieldKeys383)
-        })
-,
-        ["CoilPerformance:DX:Cooling"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object229() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [17] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381)
-        })
-,
-        ["Coil:Heating:Water"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object230() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384)
-        })
-,
-        ["Coil:Heating:Steam"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object231() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Coil Control Type", SharedFieldKeys385)
-        })
-,
-        ["Coil:Heating:Fuel"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object232() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys386)
-        })
-,
-        ["Coil:Heating:Desuperheater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object233() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Heating Source Object Type", SharedFieldKeys387)
-        })
-,
-        ["Coil:Heating:DX:SingleSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object234() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [22] = new EnergyPlusFieldKeyDefinition("Defrost Strategy", SharedFieldKeys218),
                 [23] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219)
-        })
-,
-        ["Coil:Heating:DX:MultiSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object235() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Defrost Strategy", SharedFieldKeys218),
                 [13] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219),
                 [16] = new EnergyPlusFieldKeyDefinition("Apply Part Load Fraction to Speeds Greater than 1", SharedFieldKeys0),
                 [17] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys234)
-        })
-,
-        ["Coil:Heating:DX:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object236() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [17] = new EnergyPlusFieldKeyDefinition("Defrost Strategy", SharedFieldKeys218),
                 [18] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219)
-        })
-,
-        ["Coil:Cooling:WaterToAirHeatPump:ParameterEstimation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object237() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Compressor Type", SharedFieldKeys388)
-        })
-,
-        ["Coil:Heating:WaterToAirHeatPump:ParameterEstimation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object238() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Compressor Type", SharedFieldKeys388)
-        })
-,
-        ["Coil:WaterHeating:AirToWaterHeatPump:Pumped"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object239() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Evaporator Fan Power Included in Rated COP", SharedFieldKeys0),
                 [12] = new EnergyPlusFieldKeyDefinition("Condenser Pump Power Included in Rated COP", SharedFieldKeys0),
                 [13] = new EnergyPlusFieldKeyDefinition("Condenser Pump Heat Included in Rated Heating Capacity and Rated COP", SharedFieldKeys0),
                 [23] = new EnergyPlusFieldKeyDefinition("Evaporator Air Temperature Type for Curve Objects", SharedFieldKeys389)
-        })
-,
-        ["Coil:WaterHeating:AirToWaterHeatPump:Wrapped"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object240() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Evaporator Fan Power Included in Rated COP", SharedFieldKeys0),
                 [16] = new EnergyPlusFieldKeyDefinition("Evaporator Air Temperature Type for Curve Objects", SharedFieldKeys389)
-        })
-,
-        ["Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object241() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Evaporator Fan Power Included in Rated COP", SharedFieldKeys0),
                 [12] = new EnergyPlusFieldKeyDefinition("Condenser Pump Power Included in Rated COP", SharedFieldKeys0),
                 [13] = new EnergyPlusFieldKeyDefinition("Condenser Pump Heat Included in Rated Heating Capacity and Rated COP", SharedFieldKeys0),
                 [22] = new EnergyPlusFieldKeyDefinition("Evaporator Air Temperature Type for Curve Objects", SharedFieldKeys389)
-        })
-,
-        ["Coil:WaterHeating:Desuperheater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object242() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Tank Object Type", SharedFieldKeys390),
                 [14] = new EnergyPlusFieldKeyDefinition("Heating Source Object Type", SharedFieldKeys391)
-        })
-,
-        ["CoilSystem:Cooling:DX"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object243() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys392),
                 [8] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379),
                 [9] = new EnergyPlusFieldKeyDefinition("Run on Sensible Load", SharedFieldKeys0),
                 [10] = new EnergyPlusFieldKeyDefinition("Run on Latent Load", SharedFieldKeys0),
                 [11] = new EnergyPlusFieldKeyDefinition("Use Outdoor Air DX Cooling Coil", SharedFieldKeys0)
-        })
-,
-        ["CoilSystem:Heating:DX"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object244() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys323)
-        })
-,
-        ["CoilSystem:Cooling:Water:HeatExchangerAssisted"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object245() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Object Type", SharedFieldKeys393),
                 [4] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys362)
-        })
-,
-        ["CoilSystem:Cooling:DX:HeatExchangerAssisted"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object246() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Object Type", SharedFieldKeys193),
                 [4] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys394)
-        })
-,
-        ["Coil:Cooling:DX:SingleSpeed:ThermalStorage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object247() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Operating Mode Control Method", SharedFieldKeys395),
                 [5] = new EnergyPlusFieldKeyDefinition("Storage Type", SharedFieldKeys396),
@@ -2560,22 +3074,22 @@ internal static class EnergyPlusFieldKeyData
                 [68] = new EnergyPlusFieldKeyDefinition("Charge Only Mode Available", SharedFieldKeys0),
                 [74] = new EnergyPlusFieldKeyDefinition("Discharge Only Mode Available", SharedFieldKeys0),
                 [93] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys381)
-        })
-,
-        ["Humidifier:Steam:Gas"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object248() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Inlet Water Temperature Option", SharedFieldKeys397)
-        })
-,
-        ["Dehumidifier:Desiccant:NoFans"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object249() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys398),
                 [12] = new EnergyPlusFieldKeyDefinition("Regeneration Coil Object Type", SharedFieldKeys399),
                 [14] = new EnergyPlusFieldKeyDefinition("Regeneration Fan Object Type", SharedFieldKeys400),
                 [16] = new EnergyPlusFieldKeyDefinition("Performance Model Type", SharedFieldKeys401)
-        })
-,
-        ["Dehumidifier:Desiccant:System"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object250() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Desiccant Heat Exchanger Object Type", SharedFieldKeys402),
                 [6] = new EnergyPlusFieldKeyDefinition("Regeneration Air Fan Object Type", SharedFieldKeys319),
@@ -2584,29 +3098,29 @@ internal static class EnergyPlusFieldKeyData
                 [12] = new EnergyPlusFieldKeyDefinition("Companion Cooling Coil Object Type", SharedFieldKeys403),
                 [14] = new EnergyPlusFieldKeyDefinition("Companion Cooling Coil Upstream of Dehumidifier Process Inlet", SharedFieldKeys0),
                 [15] = new EnergyPlusFieldKeyDefinition("Companion Coil Regeneration Air Heating", SharedFieldKeys0)
-        })
-,
-        ["HeatExchanger:AirToAir:FlatPlate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object251() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Flow Arrangement Type", SharedFieldKeys404),
                 [4] = new EnergyPlusFieldKeyDefinition("Economizer Lockout", SharedFieldKeys0)
-        })
-,
-        ["HeatExchanger:AirToAir:SensibleAndLatent"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object252() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Supply Air Outlet Temperature Control", SharedFieldKeys14),
                 [14] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Type", SharedFieldKeys245),
                 [15] = new EnergyPlusFieldKeyDefinition("Frost Control Type", SharedFieldKeys246),
                 [19] = new EnergyPlusFieldKeyDefinition("Economizer Lockout", SharedFieldKeys0)
-        })
-,
-        ["HeatExchanger:Desiccant:BalancedFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object253() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Performance Object Type", SharedFieldKeys405),
                 [9] = new EnergyPlusFieldKeyDefinition("Economizer Lockout", SharedFieldKeys0)
-        })
-,
-        ["AirLoopHVAC:UnitarySystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object254() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys406),
                 [4] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379),
@@ -2622,21 +3136,21 @@ internal static class EnergyPlusFieldKeyData
                 [32] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Method", SharedFieldKeys414),
                 [39] = new EnergyPlusFieldKeyDefinition("No Load Supply Air Flow Rate Control Set To Low Speed", SharedFieldKeys0),
                 [49] = new EnergyPlusFieldKeyDefinition("Design Specification Multispeed Object Type", SharedFieldKeys327)
-        })
-,
-        ["UnitarySystemPerformance:Multispeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object255() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Single Mode Operation", SharedFieldKeys0)
-        })
-,
-        ["AirLoopHVAC:Unitary:Furnace:HeatOnly"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object256() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Fan Object Type", SharedFieldKeys415),
                 [11] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [12] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys321)
-        })
-,
-        ["AirLoopHVAC:Unitary:Furnace:HeatCool"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object257() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Supply Fan Object Type", SharedFieldKeys415),
                 [13] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
@@ -2644,16 +3158,16 @@ internal static class EnergyPlusFieldKeyData
                 [16] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys416),
                 [18] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379),
                 [19] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys417)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatOnly"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object258() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Fan Object Type", SharedFieldKeys415),
                 [11] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [12] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys321)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatCool"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object259() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Supply Fan Object Type", SharedFieldKeys415),
                 [13] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
@@ -2661,9 +3175,9 @@ internal static class EnergyPlusFieldKeyData
                 [16] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys416),
                 [18] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379),
                 [19] = new EnergyPlusFieldKeyDefinition("Reheat Coil Object Type", SharedFieldKeys417)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatPump:AirToAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object260() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys415),
                 [11] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys418),
@@ -2671,9 +3185,9 @@ internal static class EnergyPlusFieldKeyData
                 [15] = new EnergyPlusFieldKeyDefinition("Supplemental Heating Coil Object Type", SharedFieldKeys321),
                 [19] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [21] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatPump:WaterToAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object261() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys420),
                 [9] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys421),
@@ -2682,9 +3196,9 @@ internal static class EnergyPlusFieldKeyData
                 [20] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [22] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys257),
                 [23] = new EnergyPlusFieldKeyDefinition("Heat Pump Coil Water Flow Mode", SharedFieldKeys224)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object262() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Outdoor Air Mixer Object Type", SharedFieldKeys316),
                 [16] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys319),
@@ -2693,18 +3207,18 @@ internal static class EnergyPlusFieldKeyData
                 [22] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys424),
                 [24] = new EnergyPlusFieldKeyDefinition("Priority Control Mode", SharedFieldKeys425),
                 [27] = new EnergyPlusFieldKeyDefinition("Dehumidification Control Type", SharedFieldKeys379)
-        })
-,
-        ["AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object263() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Object Type", SharedFieldKeys415),
                 [8] = new EnergyPlusFieldKeyDefinition("Supply Air Fan Placement", SharedFieldKeys213),
                 [10] = new EnergyPlusFieldKeyDefinition("Heating Coil Object Type", SharedFieldKeys426),
                 [13] = new EnergyPlusFieldKeyDefinition("Cooling Coil Object Type", SharedFieldKeys427),
                 [15] = new EnergyPlusFieldKeyDefinition("Supplemental Heating Coil Object Type", SharedFieldKeys321)
-        })
-,
-        ["AirConditioner:VariableRefrigerantFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object264() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [28] = new EnergyPlusFieldKeyDefinition("Heating Performance Curve Outdoor Temperature Type", SharedFieldKeys389),
                 [35] = new EnergyPlusFieldKeyDefinition("Master Thermostat Priority Control Type", SharedFieldKeys232),
@@ -2713,30 +3227,30 @@ internal static class EnergyPlusFieldKeyData
                 [51] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219),
                 [56] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys233),
                 [67] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys234)
-        })
-,
-        ["AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object265() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Refrigerant Temperature Control Algorithm for Indoor Unit", SharedFieldKeys428),
                 [34] = new EnergyPlusFieldKeyDefinition("Defrost Strategy", SharedFieldKeys218),
                 [35] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219)
-        })
-,
-        ["AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object266() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Refrigerant Temperature Control Algorithm for Indoor Unit", SharedFieldKeys428),
                 [41] = new EnergyPlusFieldKeyDefinition("Defrost Strategy", SharedFieldKeys218),
                 [42] = new EnergyPlusFieldKeyDefinition("Defrost Control", SharedFieldKeys219)
-        })
-,
-        ["Controller:WaterCoil"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object267() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys429),
                 [3] = new EnergyPlusFieldKeyDefinition("Action", SharedFieldKeys229),
                 [4] = new EnergyPlusFieldKeyDefinition("Actuator Variable", SharedFieldKeys430)
-        })
-,
-        ["Controller:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object268() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Economizer Control Type", SharedFieldKeys236),
                 [9] = new EnergyPlusFieldKeyDefinition("Economizer Control Action Type", SharedFieldKeys431),
@@ -2746,15 +3260,15 @@ internal static class EnergyPlusFieldKeyData
                 [25] = new EnergyPlusFieldKeyDefinition("Control High Indoor Humidity Based on Outdoor Humidity Ratio", SharedFieldKeys0),
                 [26] = new EnergyPlusFieldKeyDefinition("Heat Recovery Bypass Control Type", SharedFieldKeys432),
                 [27] = new EnergyPlusFieldKeyDefinition("Economizer Operation Staging", SharedFieldKeys433)
-        })
-,
-        ["Controller:MechanicalVentilation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object269() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Demand Controlled Ventilation", SharedFieldKeys0),
                 [4] = new EnergyPlusFieldKeyDefinition("System Outdoor Air Method", SharedFieldKeys434)
-        })
-,
-        ["AirLoopHVAC:ControllerList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object270() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Controller 1 Object Type", SharedFieldKeys435),
                 [4] = new EnergyPlusFieldKeyDefinition("Controller 2 Object Type", SharedFieldKeys435),
@@ -2764,9 +3278,9 @@ internal static class EnergyPlusFieldKeyData
                 [12] = new EnergyPlusFieldKeyDefinition("Controller 6 Object Type", SharedFieldKeys435),
                 [14] = new EnergyPlusFieldKeyDefinition("Controller 7 Object Type", SharedFieldKeys435),
                 [16] = new EnergyPlusFieldKeyDefinition("Controller 8 Object Type", SharedFieldKeys435)
-        })
-,
-        ["AirLoopHVAC:SupplyPath"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object271() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Component 1 Object Type", SharedFieldKeys436),
                 [5] = new EnergyPlusFieldKeyDefinition("Component 2 Object Type", SharedFieldKeys436),
@@ -2793,9 +3307,9 @@ internal static class EnergyPlusFieldKeyData
                 [47] = new EnergyPlusFieldKeyDefinition("Component 23 Object Type", SharedFieldKeys436),
                 [49] = new EnergyPlusFieldKeyDefinition("Component 24 Object Type", SharedFieldKeys436),
                 [51] = new EnergyPlusFieldKeyDefinition("Component 25 Object Type", SharedFieldKeys436)
-        })
-,
-        ["AirLoopHVAC:ReturnPath"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object272() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Component 1 Object Type", SharedFieldKeys437),
                 [5] = new EnergyPlusFieldKeyDefinition("Component 2 Object Type", SharedFieldKeys437),
@@ -2822,37 +3336,37 @@ internal static class EnergyPlusFieldKeyData
                 [47] = new EnergyPlusFieldKeyDefinition("Component 23 Object Type", SharedFieldKeys437),
                 [49] = new EnergyPlusFieldKeyDefinition("Component 24 Object Type", SharedFieldKeys437),
                 [51] = new EnergyPlusFieldKeyDefinition("Component 25 Object Type", SharedFieldKeys437)
-        })
-,
-        ["AirLoopHVAC:ExhaustSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object273() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Fan Object Type", SharedFieldKeys438)
-        })
-,
-        ["ConnectorList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object274() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Connector 1 Object Type", SharedFieldKeys439),
                 [4] = new EnergyPlusFieldKeyDefinition("Connector 2 Object Type", SharedFieldKeys439)
-        })
-,
-        ["OutdoorAir:Node"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object275() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Symmetric Wind Pressure Coefficient Curve", SharedFieldKeys0),
                 [9] = new EnergyPlusFieldKeyDefinition("Wind Angle Type", SharedFieldKeys188)
-        })
-,
-        ["Pipe:Indoor"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object276() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Environment Type", SharedFieldKeys196)
-        })
-,
-        ["Pipe:Underground"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object277() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Sun Exposure", SharedFieldKeys75),
                 [9] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30)
-        })
-,
-        ["PipingSystem:Underground:Domain"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object278() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("X-Direction Mesh Type", SharedFieldKeys440),
                 [9] = new EnergyPlusFieldKeyDefinition("Y-Direction Mesh Type", SharedFieldKeys440),
@@ -2860,202 +3374,202 @@ internal static class EnergyPlusFieldKeyData
                 [19] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30),
                 [21] = new EnergyPlusFieldKeyDefinition("This Domain Includes Basement Surface Interaction", SharedFieldKeys0),
                 [24] = new EnergyPlusFieldKeyDefinition("Shift Pipe X Coordinates By Basement Width", SharedFieldKeys0)
-        })
-,
-        ["PipingSystem:Underground:PipeSegment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object279() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Flow Direction", SharedFieldKeys441)
-        })
-,
-        ["Pump:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object280() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys442),
                 [18] = new EnergyPlusFieldKeyDefinition("VFD Control Type", SharedFieldKeys443),
                 [26] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys444)
-        })
-,
-        ["Pump:ConstantSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object281() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys442),
                 [16] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys444)
-        })
-,
-        ["Pump:VariableSpeed:Condensate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object282() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [16] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys444)
-        })
-,
-        ["HeaderedPumps:ConstantSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object283() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Flow Sequencing Control Scheme", SharedFieldKeys445),
                 [11] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys442),
                 [15] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys444)
-        })
-,
-        ["HeaderedPumps:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object284() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Flow Sequencing Control Scheme", SharedFieldKeys445),
                 [16] = new EnergyPlusFieldKeyDefinition("Pump Control Type", SharedFieldKeys442),
                 [20] = new EnergyPlusFieldKeyDefinition("Design Power Sizing Method", SharedFieldKeys444)
-        })
-,
-        ["LoadProfile:Plant"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object285() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Plant Loop Fluid Type", SharedFieldKeys446)
-        })
-,
-        ["SolarCollectorPerformance:FlatPlate"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object286() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Test Fluid", SharedFieldKeys199),
                 [5] = new EnergyPlusFieldKeyDefinition("Test Correlation Type", SharedFieldKeys447)
-        })
-,
-        ["SolarCollector:FlatPlate:PhotovoltaicThermal"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object287() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Thermal Working Fluid Type", SharedFieldKeys448)
-        })
-,
-        ["SolarCollectorPerformance:PhotovoltaicThermal:Simple"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object288() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Thermal Conversion Efficiency Input Mode Type", SharedFieldKeys449)
-        })
-,
-        ["SolarCollector:IntegralCollectorStorage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object289() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Bottom Surface Boundary Conditions Type", SharedFieldKeys450)
-        })
-,
-        ["SolarCollectorPerformance:IntegralCollectorStorage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object290() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("ICS Collector Type", SharedFieldKeys451)
-        })
-,
-        ["SolarCollector:UnglazedTranspired"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object291() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [16] = new EnergyPlusFieldKeyDefinition("Hole Layout Pattern for Pitch", SharedFieldKeys452),
                 [17] = new EnergyPlusFieldKeyDefinition("Heat Exchange Effectiveness Correlation", SharedFieldKeys453),
                 [19] = new EnergyPlusFieldKeyDefinition("Roughness of Collector", SharedFieldKeys45)
-        })
-,
-        ["Boiler:HotWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object292() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys287),
                 [5] = new EnergyPlusFieldKeyDefinition("Efficiency Curve Temperature Evaluation Variable", SharedFieldKeys454),
                 [14] = new EnergyPlusFieldKeyDefinition("Boiler Flow Mode", SharedFieldKeys455)
-        })
-,
-        ["Boiler:Steam"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object293() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys287)
-        })
-,
-        ["Chiller:Electric:ASHRAE205"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object294() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Performance Interpolation Method", SharedFieldKeys382),
                 [6] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456),
                 [16] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455)
-        })
-,
-        ["Chiller:Electric:EIR"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object295() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [19] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279),
                 [23] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455),
                 [35] = new EnergyPlusFieldKeyDefinition("Condenser Flow Control", SharedFieldKeys457)
-        })
-,
-        ["Chiller:Electric:ReformulatedEIR"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object296() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Type", SharedFieldKeys458),
                 [22] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode Type", SharedFieldKeys455),
                 [31] = new EnergyPlusFieldKeyDefinition("Condenser Flow Control", SharedFieldKeys457)
-        })
-,
-        ["Chiller:Electric"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object297() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279),
                 [27] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455)
-        })
-,
-        ["Chiller:Absorption:Indirect"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object298() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [16] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455),
                 [26] = new EnergyPlusFieldKeyDefinition("Generator Heat Source Type", SharedFieldKeys459)
-        })
-,
-        ["Chiller:Absorption"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object299() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [23] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455),
                 [24] = new EnergyPlusFieldKeyDefinition("Generator Heat Source Type", SharedFieldKeys460)
-        })
-,
-        ["Chiller:ConstantCOP"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object300() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279),
                 [11] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455)
-        })
-,
-        ["Chiller:EngineDriven"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object301() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279),
                 [36] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys461),
                 [41] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455)
-        })
-,
-        ["Chiller:CombustionTurbine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object302() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys279),
                 [54] = new EnergyPlusFieldKeyDefinition("Chiller Flow Mode", SharedFieldKeys455),
                 [55] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys461)
-        })
-,
-        ["ChillerHeater:Absorption:DirectFired"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object303() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [29] = new EnergyPlusFieldKeyDefinition("Temperature Curve Input Variable", SharedFieldKeys462),
                 [30] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys463),
                 [33] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys461)
-        })
-,
-        ["ChillerHeater:Absorption:DoubleEffect"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object304() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [29] = new EnergyPlusFieldKeyDefinition("Temperature Curve Input Variable", SharedFieldKeys462),
                 [30] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys463),
                 [32] = new EnergyPlusFieldKeyDefinition("Exhaust Source Object Type", SharedFieldKeys464)
-        })
-,
-        ["HeatPump:PlantLoop:EIR:Cooling"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object305() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys465),
                 [19] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys466),
                 [20] = new EnergyPlusFieldKeyDefinition("Flow Mode", SharedFieldKeys467)
-        })
-,
-        ["HeatPump:PlantLoop:EIR:Heating"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object306() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys465),
                 [20] = new EnergyPlusFieldKeyDefinition("Heat Pump Sizing Method", SharedFieldKeys468),
                 [21] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys466),
                 [22] = new EnergyPlusFieldKeyDefinition("Flow Mode", SharedFieldKeys467),
                 [30] = new EnergyPlusFieldKeyDefinition("Heat Pump Defrost Control", SharedFieldKeys469)
-        })
-,
-        ["HeatPump:AirToWater:FuelFired:Heating"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object307() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys470),
                 [14] = new EnergyPlusFieldKeyDefinition("Flow Mode", SharedFieldKeys471),
                 [15] = new EnergyPlusFieldKeyDefinition("Outdoor Air Temperature Curve Input Variable", SharedFieldKeys472),
                 [16] = new EnergyPlusFieldKeyDefinition("Water Temperature Curve Input Variable", SharedFieldKeys473),
                 [22] = new EnergyPlusFieldKeyDefinition("Defrost Control Type", SharedFieldKeys219)
-        })
-,
-        ["HeatPump:AirToWater:FuelFired:Cooling"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object308() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys470),
                 [14] = new EnergyPlusFieldKeyDefinition("Flow Mode", SharedFieldKeys471),
                 [15] = new EnergyPlusFieldKeyDefinition("Outdoor Air Temperature Curve Input Variable", SharedFieldKeys472),
                 [16] = new EnergyPlusFieldKeyDefinition("Water Temperature Curve Input Variable", SharedFieldKeys474)
-        })
-,
-        ["HeatPump:AirToWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object309() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Operating Mode Control Method", SharedFieldKeys475),
                 [5] = new EnergyPlusFieldKeyDefinition("Operating Mode Control Option for Multiple Unit", SharedFieldKeys476),
@@ -3063,14 +3577,14 @@ internal static class EnergyPlusFieldKeyData
                 [38] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys477),
                 [68] = new EnergyPlusFieldKeyDefinition("Booster Mode On Heating", SharedFieldKeys0),
                 [100] = new EnergyPlusFieldKeyDefinition("Booster Mode On Cooling", SharedFieldKeys0)
-        })
-,
-        ["PlantComponent:TemperatureSource"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object310() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Temperature Specification Type", SharedFieldKeys310)
-        })
-,
-        ["CentralHeatPumpSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object311() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Method", SharedFieldKeys478),
                 [11] = new EnergyPlusFieldKeyDefinition("Chiller Heater Modules Performance Component Object Type 1", SharedFieldKeys479),
@@ -3093,106 +3607,106 @@ internal static class EnergyPlusFieldKeyData
                 [79] = new EnergyPlusFieldKeyDefinition("Chiller Heater Modules Performance Component Object Type 18", SharedFieldKeys479),
                 [83] = new EnergyPlusFieldKeyDefinition("Chiller Heater Modules Performance Component Object Type 19", SharedFieldKeys479),
                 [87] = new EnergyPlusFieldKeyDefinition("Chiller Heater Modules Performance Component Object Type 20", SharedFieldKeys479)
-        })
-,
-        ["ChillerHeaterPerformance:Electric:EIR"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object312() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Chilled Water Flow Mode Type", SharedFieldKeys480),
                 [18] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys463),
                 [19] = new EnergyPlusFieldKeyDefinition("Cooling Mode Temperature Curve Condenser Water Independent Variable", SharedFieldKeys473),
                 [24] = new EnergyPlusFieldKeyDefinition("Heating Mode Temperature Curve Condenser Water Independent Variable", SharedFieldKeys473)
-        })
-,
-        ["CoolingTower:SingleSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object313() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384),
                 [24] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [27] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482),
                 [32] = new EnergyPlusFieldKeyDefinition("Capacity Control", SharedFieldKeys483),
                 [34] = new EnergyPlusFieldKeyDefinition("Cell Control", SharedFieldKeys484)
-        })
-,
-        ["CoolingTower:TwoSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object314() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [18] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384),
                 [32] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [35] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482),
                 [41] = new EnergyPlusFieldKeyDefinition("Cell Control", SharedFieldKeys484)
-        })
-,
-        ["CoolingTower:VariableSpeed:Merkel"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object315() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384),
                 [32] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [35] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482),
                 [41] = new EnergyPlusFieldKeyDefinition("Cell Control", SharedFieldKeys484)
-        })
-,
-        ["CoolingTower:VariableSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object316() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Model Type", SharedFieldKeys485),
                 [18] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [21] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482),
                 [27] = new EnergyPlusFieldKeyDefinition("Cell Control", SharedFieldKeys484)
-        })
-,
-        ["EvaporativeFluidCooler:SingleSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object317() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys486),
                 [17] = new EnergyPlusFieldKeyDefinition("Capacity Control", SharedFieldKeys483),
                 [19] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [22] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482)
-        })
-,
-        ["EvaporativeFluidCooler:TwoSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object318() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys486),
                 [28] = new EnergyPlusFieldKeyDefinition("Evaporation Loss Mode", SharedFieldKeys481),
                 [31] = new EnergyPlusFieldKeyDefinition("Blowdown Calculation Mode", SharedFieldKeys482)
-        })
-,
-        ["FluidCooler:SingleSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object319() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384)
-        })
-,
-        ["FluidCooler:TwoSpeed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object320() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys384)
-        })
-,
-        ["GroundHeatExchanger:System"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object321() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30),
                 [10] = new EnergyPlusFieldKeyDefinition("g-Function Calculation Method", SharedFieldKeys487),
                 [11] = new EnergyPlusFieldKeyDefinition("GHE:Vertical:Sizing Object Type", SharedFieldKeys488)
-        })
-,
-        ["GroundHeatExchanger:Surface"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object322() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Lower Surface Environment", SharedFieldKeys489)
-        })
-,
-        ["GroundHeatExchanger:HorizontalTrench"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object323() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [19] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30)
-        })
-,
-        ["GroundHeatExchanger:Slinky"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object324() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [13] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Configuration", SharedFieldKeys490),
                 [20] = new EnergyPlusFieldKeyDefinition("Undisturbed Ground Temperature Model Type", SharedFieldKeys30)
-        })
-,
-        ["HeatExchanger:FluidToFluid"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object325() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Heat Exchange Model Type", SharedFieldKeys491),
                 [11] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys492),
                 [14] = new EnergyPlusFieldKeyDefinition("Heat Transfer Metering End Use Type", SharedFieldKeys493),
                 [17] = new EnergyPlusFieldKeyDefinition("Component Override Cooling Control Temperature Mode", SharedFieldKeys494)
-        })
-,
-        ["WaterHeater:Mixed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object326() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Heater Control Type", SharedFieldKeys495),
                 [11] = new EnergyPlusFieldKeyDefinition("Heater Fuel Type", SharedFieldKeys496),
@@ -3200,9 +3714,9 @@ internal static class EnergyPlusFieldKeyData
                 [18] = new EnergyPlusFieldKeyDefinition("On Cycle Parasitic Fuel Type", SharedFieldKeys496),
                 [20] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456),
                 [40] = new EnergyPlusFieldKeyDefinition("Source Side Flow Control Mode", SharedFieldKeys497)
-        })
-,
-        ["WaterHeater:Stratified"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object327() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Tank Shape", SharedFieldKeys498),
                 [8] = new EnergyPlusFieldKeyDefinition("Heater Priority Control", SharedFieldKeys499),
@@ -3212,14 +3726,14 @@ internal static class EnergyPlusFieldKeyData
                 [27] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456),
                 [48] = new EnergyPlusFieldKeyDefinition("Inlet Mode", SharedFieldKeys500),
                 [66] = new EnergyPlusFieldKeyDefinition("Source Side Flow Control Mode", SharedFieldKeys497)
-        })
-,
-        ["WaterHeater:Sizing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object328() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Design Mode", SharedFieldKeys501)
-        })
-,
-        ["WaterHeater:HeatPump:PumpedCondenser"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object329() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Inlet Air Configuration", SharedFieldKeys502),
                 [17] = new EnergyPlusFieldKeyDefinition("Tank Object Type", SharedFieldKeys390),
@@ -3229,9 +3743,9 @@ internal static class EnergyPlusFieldKeyData
                 [29] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [32] = new EnergyPlusFieldKeyDefinition("Parasitic Heat Rejection Location", SharedFieldKeys504),
                 [36] = new EnergyPlusFieldKeyDefinition("Tank Element Control Logic", SharedFieldKeys505)
-        })
-,
-        ["WaterHeater:HeatPump:WrappedCondenser"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object330() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Inlet Air Configuration", SharedFieldKeys502),
                 [16] = new EnergyPlusFieldKeyDefinition("Tank Object Type", SharedFieldKeys506),
@@ -3241,56 +3755,56 @@ internal static class EnergyPlusFieldKeyData
                 [28] = new EnergyPlusFieldKeyDefinition("Fan Placement", SharedFieldKeys213),
                 [31] = new EnergyPlusFieldKeyDefinition("Parasitic Heat Rejection Location", SharedFieldKeys504),
                 [35] = new EnergyPlusFieldKeyDefinition("Tank Element Control Logic", SharedFieldKeys505)
-        })
-,
-        ["ThermalStorage:Ice:Simple"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object331() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Ice Storage Type", SharedFieldKeys509)
-        })
-,
-        ["ThermalStorage:Ice:Detailed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object332() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Discharging Curve Variable Specifications", SharedFieldKeys510),
                 [8] = new EnergyPlusFieldKeyDefinition("Charging Curve Variable Specifications", SharedFieldKeys510),
                 [15] = new EnergyPlusFieldKeyDefinition("Thaw Process Indicator", SharedFieldKeys511)
-        })
-,
-        ["ThermalStorage:ChilledWater:Mixed"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object333() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456)
-        })
-,
-        ["ThermalStorage:ChilledWater:Stratified"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object334() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Tank Shape", SharedFieldKeys498),
                 [11] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456),
                 [31] = new EnergyPlusFieldKeyDefinition("Inlet Mode", SharedFieldKeys500)
-        })
-,
-        ["ThermalStorage:HotWater:Stratified"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object335() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Tank Shape", SharedFieldKeys498),
                 [13] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456),
                 [35] = new EnergyPlusFieldKeyDefinition("Inlet Mode", SharedFieldKeys500)
-        })
-,
-        ["PlantLoop"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object336() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys512),
                 [19] = new EnergyPlusFieldKeyDefinition("Load Distribution Scheme", SharedFieldKeys277),
                 [21] = new EnergyPlusFieldKeyDefinition("Plant Loop Demand Calculation Scheme", SharedFieldKeys513),
                 [22] = new EnergyPlusFieldKeyDefinition("Common Pipe Simulation", SharedFieldKeys514),
                 [23] = new EnergyPlusFieldKeyDefinition("Pressure Simulation Type", SharedFieldKeys515)
-        })
-,
-        ["CondenserLoop"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object337() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys516),
                 [19] = new EnergyPlusFieldKeyDefinition("Load Distribution Scheme", SharedFieldKeys277),
                 [20] = new EnergyPlusFieldKeyDefinition("Pressure Simulation Type", SharedFieldKeys515)
-        })
-,
-        ["PlantEquipmentOperation:ComponentSetpoint"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object338() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Operation 1 Type", SharedFieldKeys517),
                 [13] = new EnergyPlusFieldKeyDefinition("Operation 2 Type", SharedFieldKeys517),
@@ -3302,9 +3816,9 @@ internal static class EnergyPlusFieldKeyData
                 [49] = new EnergyPlusFieldKeyDefinition("Operation 8 Type", SharedFieldKeys517),
                 [55] = new EnergyPlusFieldKeyDefinition("Operation 9 Type", SharedFieldKeys517),
                 [61] = new EnergyPlusFieldKeyDefinition("Operation 10 Type", SharedFieldKeys517)
-        })
-,
-        ["PlantEquipmentOperation:ThermalEnergyStorage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object339() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Component 1 Object Type", SharedFieldKeys518),
                 [11] = new EnergyPlusFieldKeyDefinition("Component 1 Operation Type", SharedFieldKeys517),
@@ -3326,9 +3840,9 @@ internal static class EnergyPlusFieldKeyData
                 [59] = new EnergyPlusFieldKeyDefinition("Component 9 Operation Type", SharedFieldKeys517),
                 [60] = new EnergyPlusFieldKeyDefinition("Component 10 Object Type", SharedFieldKeys519),
                 [65] = new EnergyPlusFieldKeyDefinition("Component 10 Operation Type", SharedFieldKeys517)
-        })
-,
-        ["PlantEquipmentOperationSchemes"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object340() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Scheme 1 Object Type", SharedFieldKeys520),
                 [5] = new EnergyPlusFieldKeyDefinition("Control Scheme 2 Object Type", SharedFieldKeys520),
@@ -3338,9 +3852,9 @@ internal static class EnergyPlusFieldKeyData
                 [17] = new EnergyPlusFieldKeyDefinition("Control Scheme 6 Object Type", SharedFieldKeys520),
                 [20] = new EnergyPlusFieldKeyDefinition("Control Scheme 7 Object Type", SharedFieldKeys520),
                 [23] = new EnergyPlusFieldKeyDefinition("Control Scheme 8 Object Type", SharedFieldKeys520)
-        })
-,
-        ["CondenserEquipmentOperationSchemes"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object341() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Scheme 1 Object Type", SharedFieldKeys521),
                 [5] = new EnergyPlusFieldKeyDefinition("Control Scheme 2 Object Type", SharedFieldKeys521),
@@ -3350,38 +3864,38 @@ internal static class EnergyPlusFieldKeyData
                 [17] = new EnergyPlusFieldKeyDefinition("Control Scheme 6 Object Type", SharedFieldKeys521),
                 [20] = new EnergyPlusFieldKeyDefinition("Control Scheme 7 Object Type", SharedFieldKeys521),
                 [23] = new EnergyPlusFieldKeyDefinition("Control Scheme 8 Object Type", SharedFieldKeys521)
-        })
-,
-        ["EnergyManagementSystem:ProgramCallingManager"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object342() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("EnergyPlus Model Calling Point", SharedFieldKeys522)
-        })
-,
-        ["EnergyManagementSystem:OutputVariable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object343() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Type of Data in Variable", SharedFieldKeys523),
                 [4] = new EnergyPlusFieldKeyDefinition("Update Frequency", SharedFieldKeys524)
-        })
-,
-        ["EnergyManagementSystem:MeteredOutputVariable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object344() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Update Frequency", SharedFieldKeys524),
                 [5] = new EnergyPlusFieldKeyDefinition("Resource Type", SharedFieldKeys525),
                 [6] = new EnergyPlusFieldKeyDefinition("Group Type", SharedFieldKeys526),
                 [7] = new EnergyPlusFieldKeyDefinition("End-Use Category", SharedFieldKeys527)
-        })
-,
-        ["ExternalInterface"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object345() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Name of External Interface", SharedFieldKeys528)
-        })
-,
-        ["Coil:UserDefined"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object346() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Plant Connection is Used", SharedFieldKeys0)
-        })
-,
-        ["PlantComponent:UserDefined"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object347() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Plant Connection 1 Loading Mode", SharedFieldKeys529),
                 [7] = new EnergyPlusFieldKeyDefinition("Plant Connection 1 Loop Flow Request Mode", SharedFieldKeys530),
@@ -3391,26 +3905,26 @@ internal static class EnergyPlusFieldKeyData
                 [19] = new EnergyPlusFieldKeyDefinition("Plant Connection 3 Loop Flow Request Mode", SharedFieldKeys530),
                 [24] = new EnergyPlusFieldKeyDefinition("Plant Connection 4 Loading Mode", SharedFieldKeys531),
                 [25] = new EnergyPlusFieldKeyDefinition("Plant Connection 4 Loop Flow Request Mode", SharedFieldKeys530)
-        })
-,
-        ["AvailabilityManager:OptimumStart"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object348() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys532),
                 [8] = new EnergyPlusFieldKeyDefinition("Control Algorithm", SharedFieldKeys533)
-        })
-,
-        ["AvailabilityManager:NightCycle"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object349() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Control Type", SharedFieldKeys534),
                 [6] = new EnergyPlusFieldKeyDefinition("Cycling Run Time Control Type", SharedFieldKeys535)
-        })
-,
-        ["AvailabilityManager:HybridVentilation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object350() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Use Weather File Rain Indicators", SharedFieldKeys0)
-        })
-,
-        ["AvailabilityManagerAssignmentList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object351() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Availability Manager 1 Object Type", SharedFieldKeys536),
                 [4] = new EnergyPlusFieldKeyDefinition("Availability Manager 2 Object Type", SharedFieldKeys536),
@@ -3418,197 +3932,197 @@ internal static class EnergyPlusFieldKeyData
                 [8] = new EnergyPlusFieldKeyDefinition("Availability Manager 4 Object Type", SharedFieldKeys536),
                 [10] = new EnergyPlusFieldKeyDefinition("Availability Manager 5 Object Type", SharedFieldKeys536),
                 [12] = new EnergyPlusFieldKeyDefinition("Availability Manager 6 Object Type", SharedFieldKeys536)
-        })
-,
-        ["SetpointManager:Scheduled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object352() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys537)
-        })
-,
-        ["SetpointManager:Scheduled:DualSetpoint"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object353() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:OutdoorAirReset"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object354() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys539)
-        })
-,
-        ["SetpointManager:SingleZone:Reheat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object355() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:SingleZone:Heating"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object356() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:SingleZone:Cooling"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object357() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:MixedAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object358() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:OutdoorAirPretreat"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object359() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys540)
-        })
-,
-        ["SetpointManager:Warmest"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object360() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538),
                 [6] = new EnergyPlusFieldKeyDefinition("Strategy", SharedFieldKeys541)
-        })
-,
-        ["SetpointManager:Coldest"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object361() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538),
                 [6] = new EnergyPlusFieldKeyDefinition("Strategy", SharedFieldKeys542)
-        })
-,
-        ["SetpointManager:ReturnAirBypassFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object362() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys430)
-        })
-,
-        ["SetpointManager:WarmestTemperatureFlow"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object363() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538),
                 [6] = new EnergyPlusFieldKeyDefinition("Strategy", SharedFieldKeys543)
-        })
-,
-        ["SetpointManager:FollowOutdoorAirTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object364() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys544),
                 [3] = new EnergyPlusFieldKeyDefinition("Reference Temperature Type", SharedFieldKeys545)
-        })
-,
-        ["SetpointManager:FollowSystemNodeTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object365() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys544),
                 [4] = new EnergyPlusFieldKeyDefinition("Reference Temperature Type", SharedFieldKeys546)
-        })
-,
-        ["SetpointManager:FollowGroundTemperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object366() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys544),
                 [3] = new EnergyPlusFieldKeyDefinition("Reference Ground Temperature Object Type", SharedFieldKeys547)
-        })
-,
-        ["SetpointManager:CondenserEnteringReset"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object367() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:CondenserEnteringReset:Ideal"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object368() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys538)
-        })
-,
-        ["SetpointManager:ReturnTemperature:ChilledWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object369() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Return Temperature Setpoint Input Type", SharedFieldKeys548)
-        })
-,
-        ["SetpointManager:ReturnTemperature:HotWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object370() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Return Temperature Setpoint Input Type", SharedFieldKeys548)
-        })
-,
-        ["SetpointManager:SystemNodeReset:Temperature"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object371() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys539)
-        })
-,
-        ["SetpointManager:SystemNodeReset:Humidity"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object372() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Control Variable", SharedFieldKeys549)
-        })
-,
-        ["Refrigeration:Case"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object373() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Latent Case Credit Curve Type", SharedFieldKeys550),
                 [21] = new EnergyPlusFieldKeyDefinition("Anti-Sweat Heater Control Type", SharedFieldKeys551),
                 [26] = new EnergyPlusFieldKeyDefinition("Case Defrost Type", SharedFieldKeys552),
                 [29] = new EnergyPlusFieldKeyDefinition("Defrost Energy Correction Curve Type", SharedFieldKeys553)
-        })
-,
-        ["Refrigeration:CompressorRack"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object374() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Heat Rejection Location", SharedFieldKeys554),
                 [7] = new EnergyPlusFieldKeyDefinition("Condenser Type", SharedFieldKeys233),
                 [10] = new EnergyPlusFieldKeyDefinition("Water-Cooled Loop Flow Type", SharedFieldKeys284)
-        })
-,
-        ["Refrigeration:Condenser:AirCooled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object375() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Condenser Fan Speed Control Type", SharedFieldKeys555)
-        })
-,
-        ["Refrigeration:Condenser:EvaporativeCooled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object376() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Fan Speed Control Type", SharedFieldKeys555)
-        })
-,
-        ["Refrigeration:Condenser:WaterCooled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object377() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Water-Cooled Loop Flow Type", SharedFieldKeys284)
-        })
-,
-        ["Refrigeration:Condenser:Cascade"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object378() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Condensing Temperature Control Type", SharedFieldKeys556)
-        })
-,
-        ["Refrigeration:GasCooler:AirCooled"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object379() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Gas Cooler Fan Speed Control Type", SharedFieldKeys555)
-        })
-,
-        ["Refrigeration:Subcooler"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object380() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Subcooler Type", SharedFieldKeys557)
-        })
-,
-        ["Refrigeration:Compressor"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object381() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Mode of Operation", SharedFieldKeys558)
-        })
-,
-        ["Refrigeration:System"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object382() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Suction Temperature Control Type", SharedFieldKeys559),
                 [14] = new EnergyPlusFieldKeyDefinition("Number of Compressor Stages", SharedFieldKeys560),
                 [15] = new EnergyPlusFieldKeyDefinition("Intercooler Type", SharedFieldKeys561)
-        })
-,
-        ["Refrigeration:TranscriticalSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object383() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("System Type", SharedFieldKeys562)
-        })
-,
-        ["Refrigeration:SecondarySystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object384() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Circulating Fluid Type", SharedFieldKeys563),
                 [15] = new EnergyPlusFieldKeyDefinition("Pump Drive Type", SharedFieldKeys564)
-        })
-,
-        ["Refrigeration:WalkIn"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object385() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Defrost Type", SharedFieldKeys565),
                 [13] = new EnergyPlusFieldKeyDefinition("Defrost Control Type", SharedFieldKeys566),
                 [33] = new EnergyPlusFieldKeyDefinition("Stocking Door Opening Protection Type Facing Zone 1", SharedFieldKeys171),
                 [45] = new EnergyPlusFieldKeyDefinition("Stocking Door Opening Protection Type Facing Zone 2", SharedFieldKeys171),
                 [57] = new EnergyPlusFieldKeyDefinition("Stocking Door Opening Protection Type Facing Zone 3", SharedFieldKeys171)
-        })
-,
-        ["Refrigeration:AirChiller"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object386() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Capacity Rating Type", SharedFieldKeys567),
                 [12] = new EnergyPlusFieldKeyDefinition("Capacity Correction Curve Type", SharedFieldKeys568),
@@ -3616,9 +4130,9 @@ internal static class EnergyPlusFieldKeyData
                 [21] = new EnergyPlusFieldKeyDefinition("Defrost Type", SharedFieldKeys565),
                 [22] = new EnergyPlusFieldKeyDefinition("Defrost Control Type", SharedFieldKeys566),
                 [27] = new EnergyPlusFieldKeyDefinition("Vertical Location", SharedFieldKeys569)
-        })
-,
-        ["DemandManagerAssignmentList"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object387() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Demand Manager Priority", SharedFieldKeys570),
                 [9] = new EnergyPlusFieldKeyDefinition("DemandManager 1 Object Type", SharedFieldKeys571),
@@ -3631,85 +4145,85 @@ internal static class EnergyPlusFieldKeyData
                 [23] = new EnergyPlusFieldKeyDefinition("DemandManager 8 Object Type", SharedFieldKeys571),
                 [25] = new EnergyPlusFieldKeyDefinition("DemandManager 9 Object Type", SharedFieldKeys571),
                 [27] = new EnergyPlusFieldKeyDefinition("DemandManager 10 Object Type", SharedFieldKeys571)
-        })
-,
-        ["DemandManager:ExteriorLights"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object388() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Limit Control", SharedFieldKeys572),
                 [7] = new EnergyPlusFieldKeyDefinition("Selection Control", SharedFieldKeys573)
-        })
-,
-        ["DemandManager:Lights"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object389() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Limit Control", SharedFieldKeys572),
                 [7] = new EnergyPlusFieldKeyDefinition("Selection Control", SharedFieldKeys573)
-        })
-,
-        ["DemandManager:ElectricEquipment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object390() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Limit Control", SharedFieldKeys572),
                 [7] = new EnergyPlusFieldKeyDefinition("Selection Control", SharedFieldKeys573)
-        })
-,
-        ["DemandManager:Thermostats"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object391() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Reset Control", SharedFieldKeys572),
                 [8] = new EnergyPlusFieldKeyDefinition("Selection Control", SharedFieldKeys573)
-        })
-,
-        ["DemandManager:Ventilation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object392() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Limit Control", SharedFieldKeys574),
                 [8] = new EnergyPlusFieldKeyDefinition("Selection Control", SharedFieldKeys573)
-        })
-,
-        ["Generator:InternalCombustionEngine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object393() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [20] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys461)
-        })
-,
-        ["Generator:CombustionTurbine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object394() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [22] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys470)
-        })
-,
-        ["Generator:MicroTurbine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object395() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [12] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys470),
                 [22] = new EnergyPlusFieldKeyDefinition("Heat Recovery Water Flow Operating Mode", SharedFieldKeys575)
-        })
-,
-        ["Generator:Photovoltaic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object396() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Photovoltaic Performance Object Type", SharedFieldKeys576),
                 [5] = new EnergyPlusFieldKeyDefinition("Heat Transfer Integration Mode", SharedFieldKeys577)
-        })
-,
-        ["PhotovoltaicPerformance:Simple"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object397() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Conversion Efficiency Input Mode", SharedFieldKeys449)
-        })
-,
-        ["PhotovoltaicPerformance:EquivalentOne-Diode"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object398() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Cell type", SharedFieldKeys578)
-        })
-,
-        ["Generator:PVWatts"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object399() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("PVWatts Version", SharedFieldKeys579),
                 [4] = new EnergyPlusFieldKeyDefinition("Module Type", SharedFieldKeys580),
                 [5] = new EnergyPlusFieldKeyDefinition("Array Type", SharedFieldKeys581),
                 [7] = new EnergyPlusFieldKeyDefinition("Array Geometry Type", SharedFieldKeys582)
-        })
-,
-        ["Generator:FuelCell:PowerModule"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object400() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Efficiency Curve Mode", SharedFieldKeys583),
                 [22] = new EnergyPlusFieldKeyDefinition("Skin Loss Calculation Mode", SharedFieldKeys584)
-        })
-,
-        ["Generator:FuelCell:AirSupply"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object401() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Air Supply Rate Calculation Mode", SharedFieldKeys585),
                 [10] = new EnergyPlusFieldKeyDefinition("Air Intake Heat Recovery Mode", SharedFieldKeys586),
@@ -3719,42 +4233,42 @@ internal static class EnergyPlusFieldKeyData
                 [17] = new EnergyPlusFieldKeyDefinition("Constituent 3 Name", SharedFieldKeys588),
                 [19] = new EnergyPlusFieldKeyDefinition("Constituent 4 Name", SharedFieldKeys588),
                 [21] = new EnergyPlusFieldKeyDefinition("Constituent 5 Name", SharedFieldKeys588)
-        })
-,
-        ["Generator:FuelCell:WaterSupply"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object402() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Water Temperature Modeling Mode", SharedFieldKeys589)
-        })
-,
-        ["Generator:FuelCell:AuxiliaryHeater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object403() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Skin Loss Destination", SharedFieldKeys590),
                 [8] = new EnergyPlusFieldKeyDefinition("Heating Capacity Units", SharedFieldKeys591)
-        })
-,
-        ["Generator:FuelCell:ExhaustGasToWaterHeatExchanger"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object404() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [6] = new EnergyPlusFieldKeyDefinition("Heat Exchanger Calculation Method", SharedFieldKeys592)
-        })
-,
-        ["Generator:FuelCell:ElectricalStorage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object405() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Choice of Model", SharedFieldKeys593)
-        })
-,
-        ["Generator:FuelCell:Inverter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object406() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Inverter Efficiency Calculation Mode", SharedFieldKeys594)
-        })
-,
-        ["Generator:MicroCHP:NonNormalizedParameters"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object407() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Cooling Water Flow Rate Mode", SharedFieldKeys575),
                 [19] = new EnergyPlusFieldKeyDefinition("Warm Up Mode", SharedFieldKeys595),
                 [27] = new EnergyPlusFieldKeyDefinition("Restart Mode", SharedFieldKeys596)
-        })
-,
-        ["Generator:FuelSupply"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object408() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fuel Temperature Modeling Mode", SharedFieldKeys597),
                 [7] = new EnergyPlusFieldKeyDefinition("Fuel Type", SharedFieldKeys598),
@@ -3770,15 +4284,15 @@ internal static class EnergyPlusFieldKeyData
                 [31] = new EnergyPlusFieldKeyDefinition("Constituent 10 Name", SharedFieldKeys599),
                 [33] = new EnergyPlusFieldKeyDefinition("Constituent 11 Name", SharedFieldKeys599),
                 [35] = new EnergyPlusFieldKeyDefinition("Constituent 12 Name", SharedFieldKeys599)
-        })
-,
-        ["Generator:WindTurbine"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object409() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Rotor Type", SharedFieldKeys601),
                 [4] = new EnergyPlusFieldKeyDefinition("Power Control", SharedFieldKeys602)
-        })
-,
-        ["ElectricLoadCenter:Generators"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object410() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Generator 1 Object Type", SharedFieldKeys603),
                 [8] = new EnergyPlusFieldKeyDefinition("Generator 2 Object Type", SharedFieldKeys603),
@@ -3810,390 +4324,390 @@ internal static class EnergyPlusFieldKeyData
                 [138] = new EnergyPlusFieldKeyDefinition("Generator 28 Object Type", SharedFieldKeys603),
                 [143] = new EnergyPlusFieldKeyDefinition("Generator 29 Object Type", SharedFieldKeys603),
                 [148] = new EnergyPlusFieldKeyDefinition("Generator 30 Object Type", SharedFieldKeys603)
-        })
-,
-        ["ElectricLoadCenter:Storage:Battery"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object411() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [19] = new EnergyPlusFieldKeyDefinition("Battery Life Calculation", SharedFieldKeys0)
-        })
-,
-        ["ElectricLoadCenter:Storage:LiIonNMCBattery"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object412() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Lifetime Model", SharedFieldKeys604)
-        })
-,
-        ["ElectricLoadCenter:Transformer"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object413() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Transformer Usage", SharedFieldKeys605),
                 [7] = new EnergyPlusFieldKeyDefinition("Phase", SharedFieldKeys606),
                 [8] = new EnergyPlusFieldKeyDefinition("Conductor Material", SharedFieldKeys607),
                 [11] = new EnergyPlusFieldKeyDefinition("Performance Input Method", SharedFieldKeys608),
                 [18] = new EnergyPlusFieldKeyDefinition("Consider Transformer Loss for Utility Cost", SharedFieldKeys0)
-        })
-,
-        ["ElectricLoadCenter:Distribution"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object414() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Generator Operation Scheme Type", SharedFieldKeys609),
                 [7] = new EnergyPlusFieldKeyDefinition("Electrical Buss Type", SharedFieldKeys610),
                 [11] = new EnergyPlusFieldKeyDefinition("Storage Operation Scheme", SharedFieldKeys611)
-        })
-,
-        ["ElectricLoadCenter:Storage:Converter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object415() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Power Conversion Efficiency Method", SharedFieldKeys612)
-        })
-,
-        ["WaterUse:Connections"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object416() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Drain Water Heat Exchanger Type", SharedFieldKeys613),
                 [9] = new EnergyPlusFieldKeyDefinition("Drain Water Heat Exchanger Destination", SharedFieldKeys614)
-        })
-,
-        ["WaterUse:Storage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object417() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Type of Supply Controlled by Float Valve", SharedFieldKeys615),
                 [13] = new EnergyPlusFieldKeyDefinition("Water Thermal Mode", SharedFieldKeys616),
                 [15] = new EnergyPlusFieldKeyDefinition("Ambient Temperature Indicator", SharedFieldKeys456)
-        })
-,
-        ["WaterUse:Well"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object418() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Water Table Depth Mode", SharedFieldKeys310)
-        })
-,
-        ["WaterUse:RainCollector"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object419() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Loss Factor Mode", SharedFieldKeys310)
-        })
-,
-        ["FaultModel:TemperatureSensorOffset:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object420() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Controller Object Type", SharedFieldKeys617)
-        })
-,
-        ["FaultModel:HumiditySensorOffset:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object421() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Controller Object Type", SharedFieldKeys617)
-        })
-,
-        ["FaultModel:EnthalpySensorOffset:OutdoorAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object422() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Controller Object Type", SharedFieldKeys617)
-        })
-,
-        ["FaultModel:TemperatureSensorOffset:ReturnAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object423() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Controller Object Type", SharedFieldKeys617)
-        })
-,
-        ["FaultModel:EnthalpySensorOffset:ReturnAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object424() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Controller Object Type", SharedFieldKeys617)
-        })
-,
-        ["FaultModel:TemperatureSensorOffset:ChillerSupplyWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object425() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Chiller Object Type", SharedFieldKeys618)
-        })
-,
-        ["FaultModel:TemperatureSensorOffset:CoilSupplyAir"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object426() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Coil Object Type", SharedFieldKeys619)
-        })
-,
-        ["FaultModel:TemperatureSensorOffset:CondenserSupplyWater"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object427() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Cooling Tower Object Type", SharedFieldKeys620)
-        })
-,
-        ["FaultModel:HumidistatOffset"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object428() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Humidistat Offset Type", SharedFieldKeys621)
-        })
-,
-        ["FaultModel:Fouling:AirFilter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object429() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fan Object Type", SharedFieldKeys622)
-        })
-,
-        ["FaultModel:Fouling:Boiler"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object430() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Boiler Object Type", SharedFieldKeys289)
-        })
-,
-        ["FaultModel:Fouling:EvaporativeCooler"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object431() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Evaporative Cooler Object Type", SharedFieldKeys623)
-        })
-,
-        ["FaultModel:Fouling:Chiller"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object432() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Chiller Object Type", SharedFieldKeys624)
-        })
-,
-        ["FaultModel:Fouling:CoolingTower"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object433() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Cooling Tower Object Type", SharedFieldKeys625)
-        })
-,
-        ["FaultModel:Fouling:Coil"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object434() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Fouling Input Method", SharedFieldKeys626)
-        })
-,
-        ["HybridModel:Zone"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object435() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Calculate Zone Internal Thermal Mass", SharedFieldKeys14),
                 [4] = new EnergyPlusFieldKeyDefinition("Calculate Zone Air Infiltration Rate", SharedFieldKeys14),
                 [5] = new EnergyPlusFieldKeyDefinition("Calculate Zone People Count", SharedFieldKeys14)
-        })
-,
-        ["Curve:Linear"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object436() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [8] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys627),
                 [9] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:QuadLinear"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object437() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [17] = new EnergyPlusFieldKeyDefinition("Input Unit Type for w", SharedFieldKeys629),
                 [18] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys629),
                 [19] = new EnergyPlusFieldKeyDefinition("Input Unit Type for y", SharedFieldKeys629),
                 [20] = new EnergyPlusFieldKeyDefinition("Input Unit Type for z", SharedFieldKeys629)
-        })
-,
-        ["Curve:QuintLinear"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object438() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [20] = new EnergyPlusFieldKeyDefinition("Input Unit Type for v", SharedFieldKeys629),
                 [21] = new EnergyPlusFieldKeyDefinition("Input Unit Type for w", SharedFieldKeys629),
                 [22] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys629),
                 [23] = new EnergyPlusFieldKeyDefinition("Input Unit Type for y", SharedFieldKeys629),
                 [24] = new EnergyPlusFieldKeyDefinition("Input Unit Type for z", SharedFieldKeys629)
-        })
-,
-        ["Curve:Quadratic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object439() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [10] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:Cubic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object440() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [11] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:Quartic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object441() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [12] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:Exponent"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object442() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [10] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:Bicubic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object443() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [18] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [19] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Y", SharedFieldKeys630),
                 [20] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:Biquadratic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object444() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [15] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Y", SharedFieldKeys630),
                 [16] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:QuadraticLinear"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object445() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [15] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Y", SharedFieldKeys630),
                 [16] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:CubicLinear"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object446() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [14] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys631),
                 [15] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Y", SharedFieldKeys631),
                 [16] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:Triquadratic"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object447() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [37] = new EnergyPlusFieldKeyDefinition("Input Unit Type for X", SharedFieldKeys630),
                 [38] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Y", SharedFieldKeys630),
                 [39] = new EnergyPlusFieldKeyDefinition("Input Unit Type for Z", SharedFieldKeys630),
                 [40] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys628)
-        })
-,
-        ["Curve:ExponentialSkewNormal"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object448() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [10] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [11] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:Sigmoid"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object449() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [12] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:RectangularHyperbola1"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object450() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [10] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:RectangularHyperbola2"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object451() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [10] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:ExponentialDecay"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object452() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [9] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [10] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:DoubleExponentialDecay"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object453() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [11] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [12] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Curve:ChillerPartLoadWithLift"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object454() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [22] = new EnergyPlusFieldKeyDefinition("Input Unit Type for x", SharedFieldKeys632),
                 [23] = new EnergyPlusFieldKeyDefinition("Input Unit Type for y", SharedFieldKeys632),
                 [24] = new EnergyPlusFieldKeyDefinition("Input Unit Type for z", SharedFieldKeys632),
                 [25] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys632)
-        })
-,
-        ["Table:IndependentVariable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object455() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Interpolation Method", SharedFieldKeys382),
                 [3] = new EnergyPlusFieldKeyDefinition("Extrapolation Method", SharedFieldKeys633),
                 [7] = new EnergyPlusFieldKeyDefinition("Unit Type", SharedFieldKeys634)
-        })
-,
-        ["Table:Lookup"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object456() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Normalization Method", SharedFieldKeys635),
                 [7] = new EnergyPlusFieldKeyDefinition("Output Unit Type", SharedFieldKeys636)
-        })
-,
-        ["FluidProperties:Name"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object457() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Type", SharedFieldKeys637)
-        })
-,
-        ["FluidProperties:GlycolConcentration"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object458() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Glycol Type", SharedFieldKeys638)
-        })
-,
-        ["FluidProperties:Saturated"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object459() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Property Type", SharedFieldKeys639),
                 [3] = new EnergyPlusFieldKeyDefinition("Fluid Phase", SharedFieldKeys640)
-        })
-,
-        ["FluidProperties:Superheated"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object460() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Property Type", SharedFieldKeys641)
-        })
-,
-        ["FluidProperties:Concentration"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object461() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Fluid Property Type", SharedFieldKeys642)
-        })
-,
-        ["CurrencyType"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object462() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Monetary Unit", SharedFieldKeys643)
-        })
-,
-        ["ComponentCost:LineItem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object463() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Line Item Type", SharedFieldKeys644)
-        })
-,
-        ["UtilityCost:Tariff"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object464() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Conversion Factor Choice", SharedFieldKeys645),
                 [9] = new EnergyPlusFieldKeyDefinition("Demand Window Length", SharedFieldKeys646),
                 [15] = new EnergyPlusFieldKeyDefinition("Buy Or Sell", SharedFieldKeys647)
-        })
-,
-        ["UtilityCost:Qualify"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object465() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Qualify Type", SharedFieldKeys648),
                 [6] = new EnergyPlusFieldKeyDefinition("Season", SharedFieldKeys649),
                 [7] = new EnergyPlusFieldKeyDefinition("Threshold Test", SharedFieldKeys650)
-        })
-,
-        ["UtilityCost:Charge:Simple"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object466() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Season", SharedFieldKeys649),
                 [5] = new EnergyPlusFieldKeyDefinition("Category Variable Name", SharedFieldKeys651)
-        })
-,
-        ["UtilityCost:Charge:Block"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object467() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Season", SharedFieldKeys649),
                 [5] = new EnergyPlusFieldKeyDefinition("Category Variable Name", SharedFieldKeys651)
-        })
-,
-        ["UtilityCost:Ratchet"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object468() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Season From", SharedFieldKeys652),
                 [6] = new EnergyPlusFieldKeyDefinition("Season To", SharedFieldKeys649)
-        })
-,
-        ["UtilityCost:Variable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object469() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Variable Type", SharedFieldKeys653)
-        })
-,
-        ["LifeCycleCost:Parameters"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object470() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Discounting Convention", SharedFieldKeys654),
                 [3] = new EnergyPlusFieldKeyDefinition("Inflation Approach", SharedFieldKeys655),
                 [7] = new EnergyPlusFieldKeyDefinition("Base Date Month", SharedFieldKeys656),
                 [9] = new EnergyPlusFieldKeyDefinition("Service Date Month", SharedFieldKeys656),
                 [13] = new EnergyPlusFieldKeyDefinition("Depreciation Method", SharedFieldKeys657)
-        })
-,
-        ["LifeCycleCost:RecurringCosts"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object471() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Category", SharedFieldKeys658),
                 [4] = new EnergyPlusFieldKeyDefinition("Start of Costs", SharedFieldKeys659)
-        })
-,
-        ["LifeCycleCost:NonrecurringCost"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object472() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Category", SharedFieldKeys660),
                 [4] = new EnergyPlusFieldKeyDefinition("Start of Costs", SharedFieldKeys659)
-        })
-,
-        ["LifeCycleCost:UsePriceEscalation"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object473() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Resource", SharedFieldKeys661),
                 [4] = new EnergyPlusFieldKeyDefinition("Escalation Start Month", SharedFieldKeys656)
-        })
-,
-        ["LifeCycleCost:UseAdjustment"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object474() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Resource", SharedFieldKeys661)
-        })
-,
-        ["Parametric:RunControl"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object475() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Perform Run 1", SharedFieldKeys0),
                 [3] = new EnergyPlusFieldKeyDefinition("Perform Run 2", SharedFieldKeys0),
@@ -4295,45 +4809,45 @@ internal static class EnergyPlusFieldKeyData
                 [99] = new EnergyPlusFieldKeyDefinition("Perform Run 98", SharedFieldKeys0),
                 [100] = new EnergyPlusFieldKeyDefinition("Perform Run 99", SharedFieldKeys0),
                 [101] = new EnergyPlusFieldKeyDefinition("Perform Run 100", SharedFieldKeys0)
-        })
-,
-        ["Output:VariableDictionary"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object476() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Key Field", SharedFieldKeys662),
                 [2] = new EnergyPlusFieldKeyDefinition("Sort Option", SharedFieldKeys663)
-        })
-,
-        ["Output:Surfaces:List"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object477() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Report Type", SharedFieldKeys664),
                 [2] = new EnergyPlusFieldKeyDefinition("Report Specifications", SharedFieldKeys665)
-        })
-,
-        ["Output:Surfaces:Drawing"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object478() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Report Type", SharedFieldKeys666),
                 [2] = new EnergyPlusFieldKeyDefinition("Report Specifications 1", SharedFieldKeys667)
-        })
-,
-        ["Output:Schedules"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object479() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Key Field", SharedFieldKeys92)
-        })
-,
-        ["Output:Constructions"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object480() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Details Type 1", SharedFieldKeys668),
                 [2] = new EnergyPlusFieldKeyDefinition("Details Type 2", SharedFieldKeys668)
-        })
-,
-        ["Output:EnergyManagementSystem"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object481() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Actuator Availability Dictionary Reporting", SharedFieldKeys669),
                 [2] = new EnergyPlusFieldKeyDefinition("Internal Variable Availability Dictionary Reporting", SharedFieldKeys669),
                 [3] = new EnergyPlusFieldKeyDefinition("EMS Runtime Language Debug Output Level", SharedFieldKeys670)
-        })
-,
-        ["OutputControl:SurfaceColorScheme"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object482() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Drawing Element 1 Type", SharedFieldKeys671),
                 [4] = new EnergyPlusFieldKeyDefinition("Drawing Element 2 Type", SharedFieldKeys671),
@@ -4350,9 +4864,9 @@ internal static class EnergyPlusFieldKeyData
                 [26] = new EnergyPlusFieldKeyDefinition("Drawing Element 13 Type", SharedFieldKeys671),
                 [28] = new EnergyPlusFieldKeyDefinition("Drawing Element 14 Type", SharedFieldKeys671),
                 [30] = new EnergyPlusFieldKeyDefinition("Drawing Element 15 Type", SharedFieldKeys671)
-        })
-,
-        ["Output:Table:SummaryReports"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object483() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Report 1 Name", SharedFieldKeys672),
                 [2] = new EnergyPlusFieldKeyDefinition("Report 2 Name", SharedFieldKeys672),
@@ -4379,14 +4893,14 @@ internal static class EnergyPlusFieldKeyData
                 [23] = new EnergyPlusFieldKeyDefinition("Report 23 Name", SharedFieldKeys672),
                 [24] = new EnergyPlusFieldKeyDefinition("Report 24 Name", SharedFieldKeys672),
                 [25] = new EnergyPlusFieldKeyDefinition("Report 25 Name", SharedFieldKeys672)
-        })
-,
-        ["Output:Table:TimeBins"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object484() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [7] = new EnergyPlusFieldKeyDefinition("Variable Type", SharedFieldKeys673)
-        })
-,
-        ["Output:Table:Monthly"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object485() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [4] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 1", SharedFieldKeys674),
                 [6] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 2", SharedFieldKeys674),
@@ -4413,9 +4927,9 @@ internal static class EnergyPlusFieldKeyData
                 [48] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 23", SharedFieldKeys674),
                 [50] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 24", SharedFieldKeys674),
                 [52] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 25", SharedFieldKeys674)
-        })
-,
-        ["Output:Table:Annual"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object486() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [5] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 1", SharedFieldKeys675),
                 [8] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 2", SharedFieldKeys675),
@@ -4432,61 +4946,61 @@ internal static class EnergyPlusFieldKeyData
                 [41] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 13", SharedFieldKeys675),
                 [44] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 14", SharedFieldKeys675),
                 [47] = new EnergyPlusFieldKeyDefinition("Aggregation Type for Variable or Meter 15", SharedFieldKeys675)
-        })
-,
-        ["Output:Table:ReportPeriod"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object487() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Report Name", SharedFieldKeys676)
-        })
-,
-        ["OutputControl:Table:Style"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object488() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Column Separator", SharedFieldKeys677),
                 [2] = new EnergyPlusFieldKeyDefinition("Unit Conversion", SharedFieldKeys678),
                 [3] = new EnergyPlusFieldKeyDefinition("Format Numeric Values", SharedFieldKeys0)
-        })
-,
-        ["OutputControl:ResilienceSummaries"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object489() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Heat Index Algorithm", SharedFieldKeys679)
-        })
-,
-        ["Output:Variable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object490() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys680)
-        })
-,
-        ["Output:Meter"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object491() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys680)
-        })
-,
-        ["Output:Meter:MeterFileOnly"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object492() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys680)
-        })
-,
-        ["Output:Meter:Cumulative"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object493() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys680)
-        })
-,
-        ["Output:Meter:Cumulative:MeterFileOnly"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object494() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys680)
-        })
-,
-        ["Meter:Custom"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object495() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Resource Type", SharedFieldKeys681)
-        })
-,
-        ["Meter:CustomDecrement"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object496() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Resource Type", SharedFieldKeys681)
-        })
-,
-        ["OutputControl:Files"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object497() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Output CSV", SharedFieldKeys0),
                 [2] = new EnergyPlusFieldKeyDefinition("Output MTR", SharedFieldKeys0),
@@ -4521,15 +5035,15 @@ internal static class EnergyPlusFieldKeyData
                 [31] = new EnergyPlusFieldKeyDefinition("Output ExtShd", SharedFieldKeys0),
                 [32] = new EnergyPlusFieldKeyDefinition("Output Tarcog", SharedFieldKeys0),
                 [33] = new EnergyPlusFieldKeyDefinition("Output Plant Component Sizing", SharedFieldKeys0)
-        })
-,
-        ["OutputControl:Timestamp"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object498() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("ISO 8601 Format", SharedFieldKeys0),
                 [2] = new EnergyPlusFieldKeyDefinition("Timestamp at Beginning of Interval", SharedFieldKeys0)
-        })
-,
-        ["Output:JSON"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object499() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Option Type", SharedFieldKeys682),
                 [2] = new EnergyPlusFieldKeyDefinition("Output JSON", SharedFieldKeys0),
@@ -4537,65 +5051,63 @@ internal static class EnergyPlusFieldKeyData
                 [4] = new EnergyPlusFieldKeyDefinition("Output MessagePack", SharedFieldKeys0),
                 [5] = new EnergyPlusFieldKeyDefinition("Unit Conversion for Tabular Data", SharedFieldKeys683),
                 [6] = new EnergyPlusFieldKeyDefinition("Format Numeric Values for Tabular Data", SharedFieldKeys0)
-        })
-,
-        ["Output:SQLite"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object500() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Option Type", SharedFieldKeys684),
                 [2] = new EnergyPlusFieldKeyDefinition("Unit Conversion for Tabular Data", SharedFieldKeys683),
                 [3] = new EnergyPlusFieldKeyDefinition("Format Numeric Values for Tabular Data", SharedFieldKeys0)
-        })
-,
-        ["Output:EnvironmentalImpactFactors"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object501() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Reporting Frequency", SharedFieldKeys685)
-        })
-,
-        ["FuelFactors"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object502() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Existing Fuel Resource Name", SharedFieldKeys686)
-        })
-,
-        ["Output:Diagnostics"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object503() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Key 1", SharedFieldKeys687),
                 [2] = new EnergyPlusFieldKeyDefinition("Key 2", SharedFieldKeys687),
                 [3] = new EnergyPlusFieldKeyDefinition("Key 3", SharedFieldKeys687),
                 [4] = new EnergyPlusFieldKeyDefinition("Key 4", SharedFieldKeys687),
                 [5] = new EnergyPlusFieldKeyDefinition("Key 5", SharedFieldKeys687)
-        })
-,
-        ["Output:DebuggingData"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object504() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [1] = new EnergyPlusFieldKeyDefinition("Report Debugging Data", SharedFieldKeys0),
                 [2] = new EnergyPlusFieldKeyDefinition("Report During Warmup", SharedFieldKeys0)
-        })
-,
-        ["Output:PreprocessorMessage"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object505() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Error Severity", SharedFieldKeys688)
-        })
-,
-        ["PythonPlugin:SearchPaths"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object506() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Add Current Working Directory to Search Path", SharedFieldKeys0),
                 [3] = new EnergyPlusFieldKeyDefinition("Add Input File Directory to Search Path", SharedFieldKeys0),
                 [4] = new EnergyPlusFieldKeyDefinition("Add epin Environment Variable to Search Path", SharedFieldKeys0)
-        })
-,
-        ["PythonPlugin:Instance"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object507() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [2] = new EnergyPlusFieldKeyDefinition("Run During Warmup Days", SharedFieldKeys0)
-        })
-,
-        ["PythonPlugin:OutputVariable"] = new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
+        });
+
+        private static EnergyPlusObjectFieldKeyMap Object508() => new EnergyPlusObjectFieldKeyMap(new Dictionary<int, EnergyPlusFieldKeyDefinition>
         {
                 [3] = new EnergyPlusFieldKeyDefinition("Type of Data in Variable", SharedFieldKeys689),
                 [4] = new EnergyPlusFieldKeyDefinition("Update Frequency", SharedFieldKeys524),
                 [6] = new EnergyPlusFieldKeyDefinition("Resource Type", SharedFieldKeys525),
                 [7] = new EnergyPlusFieldKeyDefinition("Group Type", SharedFieldKeys526),
                 [8] = new EnergyPlusFieldKeyDefinition("End-Use Category", SharedFieldKeys527)
-        })
-
-        };
+        });
 }

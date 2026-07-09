@@ -47,6 +47,73 @@ namespace test
               Console.WriteLine(output);
         }
 
+        // End-to-end test through load + map for every branch a real .xlsx can produce:
+        // first-worksheet default, named worksheet, full ('A1:F3') and start-cell ('A1')
+        // ranges, the empty worksheet, and shared-string / number / boolean / string-formula
+        // / date (numeric serial) / blank cells. See load_test_2.nbem for the layout.
+        [Test]
+        public void LoadExcel2GoldenTest()
+        {
+            string expectedOutput = File.ReadAllText(Path.Combine(TestDir.Dir, "Excel", "load_test_2_expected.idf"));
+            IdfTester.TestIdfFile(Path.Combine(TestDir.Dir, "Excel", "load_test_2.nbem"), expectedOutput);
+        }
+
+        // Asserts the exact loaded types and values, including the error cell (whose '#DIV/0!'
+        // text cannot round-trip through IDF because of the '!' comment character).
+        [Test]
+        public void LoadExcel2TypesAndErrorsTest()
+        {
+            string xlsx = Path.Combine(TestDir.Dir, "Excel", "load_test_2.xlsx");
+
+            ListExpression data = ExcelDataLoader.Load(xlsx, null, new SheetDimensionRange());
+            Assert.AreEqual(2, data.Expressions.Count);
+
+            IdfPlusObjectExpression alpha = (IdfPlusObjectExpression) data.Expressions[0];
+            Assert.AreEqual("Alpha", ((StringExpression) alpha.Members["name"]).Text);
+            Assert.AreEqual(1.5, ((NumericExpression) alpha.Members["number"]).Value);
+            Assert.IsTrue(((BooleanExpression) alpha.Members["flag"]).Value);
+            Assert.AreEqual("xy", ((StringExpression) alpha.Members["calc"]).Text);
+            // Error cells are sanitized of IDF-special characters when loaded, so the '!' is gone.
+            Assert.AreEqual("#DIV/0", ((StringExpression) alpha.Members["err"]).Text);
+            // Dates load as their underlying numeric (serial) value, not a formatted string.
+            Assert.AreEqual(46037, ((NumericExpression) alpha.Members["when"]).Value);
+
+            IdfPlusObjectExpression beta = (IdfPlusObjectExpression) data.Expressions[1];
+            Assert.AreEqual(-2, ((NumericExpression) beta.Members["number"]).Value);
+            Assert.IsFalse(((BooleanExpression) beta.Members["flag"]).Value);
+            // D3 is blank in the sheet, so the cell comes through as an empty string.
+            Assert.AreEqual("", ((StringExpression) beta.Members["calc"]).Text);
+            Assert.AreEqual("#N/A", ((StringExpression) beta.Members["err"]).Text);
+            Assert.AreEqual(46073, ((NumericExpression) beta.Members["when"]).Value);
+        }
+
+        [Test]
+        public void LoadExcel2EmptySheetTest()
+        {
+            string xlsx = Path.Combine(TestDir.Dir, "Excel", "load_test_2.xlsx");
+            ListExpression empty = ExcelDataLoader.Load(xlsx, "Empty", new SheetDimensionRange());
+            Assert.IsEmpty(empty.Expressions);
+        }
+
+        [Test]
+        public void LoadExcel2MissingSheetTest()
+        {
+            string xlsx = Path.Combine(TestDir.Dir, "Excel", "load_test_2.xlsx");
+            ArgumentException ex = Assert.Throws<ArgumentException>(
+                () => ExcelDataLoader.Load(xlsx, "Nope", new SheetDimensionRange()));
+            Assert.That(ex.Message, Does.Contain("Types"));
+            Assert.That(ex.Message, Does.Contain("Empty"));
+        }
+
+        [Test]
+        public void LoadExcel2InvalidFileTest()
+        {
+            // A non-zip file (here, the .nbem itself) should surface a clear error rather than crash.
+            string notXlsx = Path.Combine(TestDir.Dir, "Excel", "load_test_2.nbem");
+            Assert.Throws<ArgumentException>(
+                () => ExcelDataLoader.Load(notXlsx, null, new SheetDimensionRange()));
+        }
+
         [Test]
         public void TestRangeSyntax()
         {

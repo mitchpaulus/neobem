@@ -181,8 +181,10 @@ namespace src
             IdfPlusVisitor visitor;
 
             // Set the contents and the visitor based on the type of URI.
-            // Right now we support http{s} or files.
-            if (filePath.StartsWith("http"))
+            // Right now we support http{s} or files. Match only a real URI scheme
+            // (http:// or https://) so a local file whose name merely begins with
+            // "http" is still treated as a file.
+            if (filePath.StartsWith("http://") || filePath.StartsWith("https://"))
             {
                 // Use HttpClient to get the contents of the file.
                 // I'm aware that the documentation states:
@@ -208,6 +210,11 @@ namespace src
             {
                 string fullFilePath = Path.GetFullPath(filePath, _baseDirectory);
                 FileInfo fileInfo = new FileInfo(fullFilePath);
+
+                // Register the dependency before attempting to read so that a failed
+                // import (e.g. the file does not exist) still shows up in the --deps output.
+                Dependencies.Set.Add(fileInfo.FullName);
+
                 try
                 {
                     contents = File.ReadAllText(fileInfo.FullName);
@@ -220,8 +227,6 @@ namespace src
                 {
                     throw new Exception( $"Could not read contents of {filePath} in import statement, line {context.Start.Line}.");
                 }
-
-                Dependencies.Set.Add(fileInfo.FullName);
 
                 // Read the imported file, with the current directory set to directory of the input file.
                 visitor = new IdfPlusVisitor(fileInfo.DirectoryName, _fileType, _flags);
@@ -306,6 +311,15 @@ namespace src
 
     public static class Dependencies
     {
-        public static HashSet<string> Set = new();
+        // File paths are compared using the case sensitivity of the host filesystem:
+        // case-insensitive on Windows and macOS, case-sensitive on Linux. This keeps a
+        // file imported via different casing (e.g. 'Lib.nbem' vs 'lib.nbem') from being
+        // reported as two separate dependencies on systems where they name the same file.
+        private static readonly StringComparer PathComparer =
+            OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
+                ? StringComparer.OrdinalIgnoreCase
+                : StringComparer.Ordinal;
+
+        public static HashSet<string> Set = new(PathComparer);
     }
 }

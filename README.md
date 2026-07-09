@@ -333,7 +333,7 @@ export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
 ./do src/antlr/excelrange/compiled
 ./do src/antlr/idf/compiled
 # Run redo targets
-./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+./do test/TestFileDirectory.cs
 # Build
 dotnet build src
 dotnet build test

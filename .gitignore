@@ -58,7 +58,6 @@ doc/formatting.tex
 *.headers
 
 kde-syntax/test
-src/Help.cs
 test/TestFileDirectory.cs
 
 # Deafult compiled file
@@ -69,7 +68,6 @@ zips/
 kde-syntax/test.pdf
 
 test/TestFileDirectory.cs
-src/Version.cs
 
 # Generated antlr files
 antlr/NeobemLexer.cs

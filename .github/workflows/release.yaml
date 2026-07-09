@@ -29,7 +29,7 @@ jobs:
         ./do src/antlr/idf/compiled
     - name: Run redo targets
       run: |
-        ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+        ./do test/TestFileDirectory.cs
     - name: Restore dependencies
       run: |
         dotnet restore src

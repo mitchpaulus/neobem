@@ -38,7 +38,7 @@ jobs:
         ./compile.sh
     - name: Run redo targets
       run: |
-        ./do src/Help.cs src/Version.cs test/TestFileDirectory.cs
+        ./do test/TestFileDirectory.cs
     - name: Build
       run: |
         dotnet build src

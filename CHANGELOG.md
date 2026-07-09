@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simple Windows GUI for compiling.
 
+## 0.13.0 - 2026-07-09
+
+### Breaking
+
+- EPPlus was removed as a dependency. If dates were being parsed from Excel, those will now come in as a serial number instead of a string.
+
+### Fixed
+
+- The dependency tracking (`--deps` CLI option) was made more robust as it relates to missing dependencies and failing compilations.
+
 ## 0.12.0 - 2026-06-24
 
 ### Added

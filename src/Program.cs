@@ -162,6 +162,42 @@ namespace src
                 return 1;
             }
 
+            // Writes the collected dependencies (if a --deps file was requested) and returns
+            // the given exit code, so that dependency output is produced on every exit path -
+            // including failures. Imports are dynamic, so the set contains everything that was
+            // successfully reached at runtime plus any import that failed, and (via the static
+            // scan below) every literal `import '...'` statement whether or not it was reached.
+            int FinishWithDeps(int exitCode)
+            {
+                if (string.IsNullOrEmpty(options.DependenciesFile)) return exitCode;
+
+                StringBuilder b = new();
+                foreach (var dep in Dependencies.Set.Order())
+                {
+                    b.Append(dep);
+                    b.Append('\n');
+                }
+
+                try
+                {
+                    File.WriteAllText(options.DependenciesFile, b.ToString());
+                }
+                catch (Exception)
+                {
+                    Console.Error.WriteLine($"Could not write dependencies output to {options.DependenciesFile}.");
+                    return exitCode == 0 ? 1 : exitCode;
+                }
+
+                return exitCode;
+            }
+
+            // Statically discover literal `import '...'` dependencies up front so they are
+            // recorded even if runtime evaluation fails before reaching them.
+            if (!string.IsNullOrEmpty(options.DependenciesFile))
+            {
+                StaticImportScanner.Scan(tree, baseDirectory, options.FileType);
+            }
+
             if (options.FormatFile)
             {
                 FormatVisitor formatVisitor = new(0, 0, commonTokenStream);
@@ -174,12 +210,12 @@ namespace src
                     // string output = listener.Rewriter.GetText();
                     string output = formatVisitor.Visit(tree);
                     Console.Write(output);
-                    return 0;
+                    return FinishWithDeps(0);
                 }
                 catch (Exception exception)
                 {
                     Console.Error.WriteLine(exception.Message);
-                    return 1;
+                    return FinishWithDeps(1);
                 }
             }
 
@@ -188,7 +224,7 @@ namespace src
                 EnergyPlusObjectListener listener = new();
                 ParseTreeWalker w = new();
                 w.Walk(listener, tree);
-                return 0;
+                return FinishWithDeps(0);
             }
 
             // Construct the main visitor for the initial file.
@@ -202,7 +238,7 @@ namespace src
             catch (Exception exception)
             {
                 Console.Error.WriteLine(exception.Message);
-                return 1;
+                return FinishWithDeps(1);
             }
             // If no output file was specified in the command line options, then dump results to standard output.
             if (string.IsNullOrWhiteSpace(options.OutputFile))
@@ -218,31 +254,11 @@ namespace src
                 catch (Exception)
                 {
                     Console.Error.WriteLine($"Could not write output to {options.OutputFile}.");
-                    return 1;
+                    return FinishWithDeps(1);
                 }
             }
 
-            if (!string.IsNullOrEmpty(options.DependenciesFile))
-            {
-                StringBuilder b = new();
-                foreach (var dep in Dependencies.Set.Order())
-                {
-                    b.Append(dep);
-                    b.Append('\n');
-                }
-
-                try
-                {
-                    File.WriteAllText(options.DependenciesFile, b.ToString());
-                }
-                catch (Exception)
-                {
-                    Console.Error.WriteLine($"Could not write dependencies output to {options.DependenciesFile}.");
-                    return 1;
-                }
-            }
-
-            return 0;
+            return FinishWithDeps(0);
         }
 
         // Until I get complaints otherwise, going to print using Unix newlines.

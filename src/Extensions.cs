@@ -42,17 +42,6 @@ namespace src
         }
 
 
-        public static Expression CellTextToExpression(this string cellValue)
-        {
-            if (double.TryParse(cellValue, out double numericValue))
-                return new NumericExpression(numericValue);
-            if (string.Equals(cellValue, "true", StringComparison.OrdinalIgnoreCase))
-                return new BooleanExpression(true);
-            if (string.Equals(cellValue, "false", StringComparison.OrdinalIgnoreCase))
-                return new BooleanExpression(false);
-            return new StringExpression(cellValue);
-        }
-
         public static int ExcelColumnNameToInt(this string columnName)
         {
             if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException(nameof(columnName));

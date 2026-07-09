@@ -1,0 +1,42 @@
+name: pack
+on:
+  push:
+    tags:
+      - "pack*"
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10
+    - name: Setup Java
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - name: Download ANTLR
+      run: curl --output antlr-4.13.1-complete.jar https://www.antlr.org/download/antlr-4.13.1-complete.jar
+    - name: Compile ANTLR grammars
+      run: |
+        export ANTLR_JAR="$(pwd)"/antlr-4.13.1-complete.jar
+        export CLASSPATH=.:"$(pwd)/antlr-4.13.1-complete.jar"
+        ./do src/antlr/compiled
+        ./do src/antlr/excelrange/compiled
+        ./do src/antlr/idf/compiled
+    - name: Pack
+      # The package version comes from the <Version> property in src/src.csproj.
+      run: dotnet pack src --configuration Release --output nupkg
+    - name: Smoke test tool install
+      run: |
+        dotnet tool install --global neobem --add-source "$(pwd)/nupkg" --prerelease
+        nbem --version
+    - name: Upload NuGet package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: neobem-nupkg
+        path: nupkg/*.nupkg
+        if-no-files-found: error

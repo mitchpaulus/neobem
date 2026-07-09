@@ -9,7 +9,32 @@
     <!-- https://github.com/dotnet/designs/blob/main/accepted/2020/single-file/design.md -->
     <PublishSingleFile>true</PublishSingleFile>
     <LangVersion>default</LangVersion>
+
+    <!-- Version reported by the nbem version flag -->
+    <Version>0.13.0</Version>
+    <!-- NuGet package version: usually matches Version, but can be bumped
+         independently (e.g. 0.13.0.1) to repackage, since nuget.org versions
+         are immutable once pushed. -->
+    <PackageVersion>0.13.0</PackageVersion>
+
+    <!-- .NET tool packaging ('dotnet tool install' support) -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>nbem</ToolCommandName>
+    <PackageId>neobem</PackageId>
+    <Authors>Mitchell T. Paulus</Authors>
+    <Description>Neobem: a domain specific language for generating EnergyPlus idf files.</Description>
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/mitchpaulus/neobem</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/mitchpaulus/neobem</PackageProjectUrl>
+    <PackageTags>energyplus;idf;dsl;building-energy-modeling</PackageTags>
+    <!-- Allow the tool to run on newer major runtimes than it was built for -->
+    <RollForward>latestMajor</RollForward>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />

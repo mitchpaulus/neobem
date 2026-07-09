@@ -24,6 +24,8 @@
     <Authors>Mitchell T. Paulus</Authors>
     <Description>Neobem: a domain specific language for generating EnergyPlus idf files.</Description>
     <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <Copyright>Copyright (c) Mitchell T. Paulus 2026</Copyright>
+    <PackageReleaseNotes>https://github.com/mitchpaulus/neobem/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/mitchpaulus/neobem</RepositoryUrl>
     <PackageProjectUrl>https://github.com/mitchpaulus/neobem</PackageProjectUrl>

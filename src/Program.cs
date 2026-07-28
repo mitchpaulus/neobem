@@ -10,7 +10,7 @@ namespace src
 {
     class Program
     {
-        static int Main(string[] args)
+        internal static int Main(string[] args)
         {
             BempOptions options = new BempOptions();
             for (var i = 0; i < args.Length; i++)
@@ -141,12 +141,6 @@ namespace src
                 }
             }
 
-            if (lexerErrorListener.Errors.Any())
-            {
-                foreach (AntlrError error in lexerErrorListener.Errors) Console.Error.Write(error.WriteError() + "\n");
-                return 1;
-            }
-
             NeobemParser parser = new(commonTokenStream);
             parser.RemoveErrorListeners();
             SimpleAntlrErrorListener parserErrorListener = new();
@@ -156,8 +150,12 @@ namespace src
 
             if (options.Tree) Console.Error.Write(tree.ToStringTree(parser).AddNewLines(1));
 
-            if (parserErrorListener.Errors.Any())
+            // Lexing is lazy, driven by the parse above, so the lexer listener can only be
+            // checked afterwards. Error recovery on both sides means both listeners can hold
+            // useful information - report everything before failing.
+            if (lexerErrorListener.Errors.Any() || parserErrorListener.Errors.Any())
             {
+                foreach (AntlrError error in lexerErrorListener.Errors) Console.Error.Write(error.WriteError() + "\n");
                 foreach (AntlrError error in parserErrorListener.Errors) Console.Error.Write(error.WriteError() + "\n");
                 return 1;
             }

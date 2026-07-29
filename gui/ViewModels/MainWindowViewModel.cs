@@ -17,11 +17,25 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] private SymbolNode? _selectedSymbol;
     [ObservableProperty] private string _statusText = "Open a .nbem file to begin.";
 
+    [ObservableProperty] private string _resultsTitle = "";
+    [ObservableProperty] private string _hoverMarkdown = "";
+    [ObservableProperty] private string _caretInfo = "";
+
     public ObservableCollection<SymbolNode> RootSymbols { get; } = new();
     public ObservableCollection<Diagnostic> Diagnostics { get; } = new();
     public bool HasDiagnostics => Diagnostics.Count > 0;
 
+    // Goto-definition / find-references hits and completion candidates for the
+    // current caret position. Only one of the two is populated at a time.
+    public ObservableCollection<LocationResult> Results { get; } = new();
+    public ObservableCollection<CompletionEntry> Completions { get; } = new();
+    public bool HasResults => Results.Count > 0;
+    public bool HasCompletions => Completions.Count > 0;
+    public bool HasResultsPane => HasResults || HasCompletions;
+    public bool HasHover => HoverMarkdown.Length > 0;
+
     private List<SymbolNode> _allSymbols = new();
+    private LanguageService? _language;
     private FileSystemWatcher? _watcher;
     private DispatcherTimer? _reloadDebounce;
 
@@ -40,6 +54,10 @@ public partial class MainWindowViewModel : ObservableObject
             NeobemDocument doc = NeobemDocument.ParseFile(FilePath);
             SourceText = doc.SourceText;
             _allSymbols = doc.Symbols;
+            _language = doc.Language;
+
+            // Offsets in the old text mean nothing after a reload.
+            ClearResults();
 
             Diagnostics.Clear();
             foreach (Diagnostic diagnostic in doc.Diagnostics) Diagnostics.Add(diagnostic);
@@ -57,6 +75,114 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     partial void OnFilterTextChanged(string value) => ApplyFilter();
+
+    // ---- Language features -------------------------------------------------
+    // All of these take a char offset into SourceText (the source pane's caret)
+    // and delegate to the same language service that backs `nbem --lsp`.
+
+    // Returns the span to navigate to when there is exactly one definition;
+    // with several, they land in the results pane for the user to pick.
+    public SourceSpan? GoToDefinition(int offset)
+    {
+        if (_language is null) return null;
+        ClearResults();
+
+        IReadOnlyList<LocationResult> definitions = _language.FindDefinitions(offset);
+        if (definitions.Count == 0)
+        {
+            StatusText = $"No definition found for {DescribeCaret(offset)}.";
+            return null;
+        }
+
+        if (definitions.Count == 1)
+        {
+            StatusText = $"Definition: line {definitions[0].Span.Line}.";
+            return definitions[0].Span;
+        }
+
+        ShowResults($"{definitions.Count} definitions", definitions);
+        return definitions[0].Span;
+    }
+
+    public void FindReferences(int offset)
+    {
+        if (_language is null) return;
+        ClearResults();
+
+        IReadOnlyList<LocationResult> references = _language.FindReferences(offset, includeDeclaration: true);
+        if (references.Count == 0)
+        {
+            StatusText = $"No references found for {DescribeCaret(offset)}.";
+            return;
+        }
+
+        ShowResults($"{references.Count} references", references);
+    }
+
+    // The source pane is read-only, so completions are shown as the set of
+    // values EnergyPlus accepts in the field under the caret rather than as an
+    // insertion popup.
+    public void ShowCompletions(int offset)
+    {
+        if (_language is null) return;
+        ClearResults();
+
+        IReadOnlyList<CompletionEntry> completions = _language.FindCompletions(offset);
+        if (completions.Count == 0)
+        {
+            StatusText = $"No completions available at {DescribeCaret(offset)}.";
+            return;
+        }
+
+        foreach (CompletionEntry entry in completions) Completions.Add(entry);
+        ResultsTitle = $"{completions.Count} valid values";
+        RaiseResultsChanged();
+        StatusText = ResultsTitle + " for the field under the caret.";
+    }
+
+    // Hover is driven by the caret rather than the mouse: the source pane is a
+    // plain TextBox with no character hit-testing.
+    public void UpdateCaret(int offset)
+    {
+        if (_language is null) return;
+
+        HoverInfo? hover = _language.FindHover(offset);
+        HoverMarkdown = hover?.Markdown ?? "";
+        OnPropertyChanged(nameof(HasHover));
+        CaretInfo = DescribeCaret(offset);
+    }
+
+    private string DescribeCaret(int offset)
+    {
+        if (_language is null) return "";
+        (int line, int character) = _language.ToPosition(offset);
+        Antlr4.Runtime.IToken? token = _language.FindToken(offset);
+        string where = $"line {line + 1}:{character + 1}";
+        return token is null ? where : $"{where} ({LanguageService.DescribeTokenType(token)} '{token.Text?.Trim()}')";
+    }
+
+    private void ShowResults(string title, IEnumerable<LocationResult> results)
+    {
+        foreach (LocationResult result in results) Results.Add(result);
+        ResultsTitle = title;
+        RaiseResultsChanged();
+        StatusText = title + ".";
+    }
+
+    public void ClearResults()
+    {
+        Results.Clear();
+        Completions.Clear();
+        ResultsTitle = "";
+        RaiseResultsChanged();
+    }
+
+    private void RaiseResultsChanged()
+    {
+        OnPropertyChanged(nameof(HasResults));
+        OnPropertyChanged(nameof(HasCompletions));
+        OnPropertyChanged(nameof(HasResultsPane));
+    }
 
     private void ApplyFilter()
     {

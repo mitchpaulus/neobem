@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Antlr4.Runtime;
 using src;
 
 namespace gui.Parsing;
@@ -21,6 +20,10 @@ public class NeobemDocument
     public List<Diagnostic> Diagnostics { get; } = new();
     public List<SymbolNode> Symbols { get; private set; } = new();
 
+    // Goto-definition, references, hover and completion, backed by the same
+    // code as `nbem --lsp`.
+    public LanguageService Language { get; }
+
     public static NeobemDocument ParseFile(string filePath) =>
         new(filePath, File.ReadAllText(filePath));
 
@@ -29,22 +32,30 @@ public class NeobemDocument
         FilePath = filePath;
         SourceText = sourceText;
 
-        var lexer = new NeobemLexer(new AntlrInputStream(sourceText)) { FileType = FileType.Idf };
-        lexer.RemoveErrorListeners();
-        var lexerErrors = new SimpleAntlrErrorListener();
-        lexer.AddErrorListener(lexerErrors);
+        // The LSP document state parses the file and builds the definition,
+        // reference and completion indexes in one pass, so the GUI parses once
+        // and gets both the structure tree and the language features from it.
+        LanguageServer.LoggingEnabled = false;
+        LanguageServer.DocumentState state = new(sourceText, DetermineFileType(filePath));
 
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new NeobemParser(tokens);
-        parser.RemoveErrorListeners();
-        var parserErrors = new SimpleAntlrErrorListener();
-        parser.AddErrorListener(parserErrors);
+        Diagnostics.AddRange(state.LexerErrors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "lexer")));
+        Diagnostics.AddRange(state.ParserErrors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "parser")));
+        if (state.LastParseException is not null)
+        {
+            Diagnostics.Add(new Diagnostic(1, 0, state.LastParseException.Message, "parser"));
+        }
 
-        NeobemParser.IdfContext tree = parser.idf();
-
-        Diagnostics.AddRange(lexerErrors.Errors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "lexer")));
-        Diagnostics.AddRange(parserErrors.Errors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "parser")));
-
-        Symbols = StructureWalker.Walk(tree);
+        Symbols = state.ParseTree is null ? new List<SymbolNode>() : StructureWalker.Walk(state.ParseTree);
+        Language = new LanguageService(state, sourceText, filePath);
     }
+
+    // Matches the language server's rule, so the GUI lexes a .inp/.bdl file the
+    // same way an editor would.
+    private static FileType DetermineFileType(string filePath) =>
+        Path.GetExtension(filePath).ToLowerInvariant() switch
+        {
+            ".bdl" => FileType.Doe2,
+            ".inp" => FileType.Doe2,
+            _ => FileType.Idf,
+        };
 }

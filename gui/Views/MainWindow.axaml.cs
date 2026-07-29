@@ -12,7 +12,17 @@ namespace gui.Views;
 
 public partial class MainWindow : Window
 {
-    public MainWindow() => InitializeComponent();
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        // Hover and the "at caret" pane follow the caret, since a plain TextBox
+        // gives us no way to hit-test a character under the mouse.
+        SourceBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == TextBox.CaretIndexProperty) ViewModel?.UpdateCaret(SourceBox.CaretIndex);
+        };
+    }
 
     private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
@@ -47,6 +57,55 @@ public partial class MainWindow : Window
         if ((sender as ListBox)?.SelectedItem is not Diagnostic diagnostic || ViewModel is null) return;
         int offset = OffsetOfLine(ViewModel.SourceText, diagnostic.Line) + diagnostic.Column;
         HighlightSpan(offset, offset);
+    }
+
+    // ---- Language features -------------------------------------------------
+
+    private void WindowKeyDown(object? sender, KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.F12 when e.KeyModifiers.HasFlag(KeyModifiers.Shift):
+                FindReferences();
+                break;
+            case Key.F12:
+                GoToDefinition();
+                break;
+            case Key.Space when e.KeyModifiers.HasFlag(KeyModifiers.Control):
+                ShowCompletions();
+                break;
+            case Key.Escape:
+                ViewModel?.ClearResults();
+                break;
+            default:
+                return;
+        }
+
+        e.Handled = true;
+    }
+
+    private void DefinitionClicked(object? sender, RoutedEventArgs e) => GoToDefinition();
+
+    private void ReferencesClicked(object? sender, RoutedEventArgs e) => FindReferences();
+
+    private void CompletionsClicked(object? sender, RoutedEventArgs e) => ShowCompletions();
+
+    private void CloseResultsClicked(object? sender, RoutedEventArgs e) => ViewModel?.ClearResults();
+
+    private void GoToDefinition()
+    {
+        SourceSpan? span = ViewModel?.GoToDefinition(SourceBox.CaretIndex);
+        if (span is not null) HighlightSpan(span.Start, span.End);
+    }
+
+    private void FindReferences() => ViewModel?.FindReferences(SourceBox.CaretIndex);
+
+    private void ShowCompletions() => ViewModel?.ShowCompletions(SourceBox.CaretIndex);
+
+    private void ResultSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if ((sender as ListBox)?.SelectedItem is not LocationResult result) return;
+        HighlightSpan(result.Span.Start, result.Span.End);
     }
 
     private void HighlightSpan(int start, int end)

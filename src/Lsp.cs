@@ -38,6 +38,11 @@ internal sealed class LanguageServer
     private int _exitCode;
 
     private static readonly Dictionary<string, BuiltInSymbol> BuiltInSymbols = CreateBuiltInSymbols();
+
+    // The stdio server logs every message to a temp file. In-process consumers
+    // (the GUI) run the same code on every keystroke and turn this off.
+    internal static bool LoggingEnabled { get; set; } = true;
+
     private static readonly object LogLock = new();
     private static readonly string LogFilePath = DetermineLogFilePath();
 
@@ -551,6 +556,11 @@ internal sealed class LanguageServer
 
     private static void Log(string message)
     {
+        if (!LoggingEnabled)
+        {
+            return;
+        }
+
         try
         {
             string logEntry = $"{DateTime.UtcNow:O} {message}{Environment.NewLine}";
@@ -567,6 +577,11 @@ internal sealed class LanguageServer
 
     private static void Log(string message, string filename)
     {
+        if (!LoggingEnabled)
+        {
+            return;
+        }
+
         try
         {
             string logEntry = $"{DateTime.UtcNow:O} {message}{Environment.NewLine}";
@@ -668,6 +683,13 @@ internal sealed class LanguageServer
             _ => FileType.Idf
         };
     }
+
+    // Hover content for a built-in identifier, for callers that want the text
+    // without speaking JSON-RPC. Null when the identifier is not a built-in.
+    public static string? TryGetBuiltInHoverMarkdown(string? identifier) =>
+        !string.IsNullOrEmpty(identifier) && BuiltInSymbols.TryGetValue(identifier, out BuiltInSymbol? symbol)
+            ? BuildHoverMarkdown(symbol)
+            : null;
 
     private static string BuildHoverMarkdown(BuiltInSymbol symbol)
     {

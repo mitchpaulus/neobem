@@ -17,6 +17,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] private SymbolNode? _selectedSymbol;
     [ObservableProperty] private string _statusText = "Open a .nbem file to begin.";
 
+    [ObservableProperty] private IReadOnlyList<SyntaxSpan> _syntaxSpans = Array.Empty<SyntaxSpan>();
     [ObservableProperty] private string _resultsTitle = "";
     [ObservableProperty] private string _hoverMarkdown = "";
     [ObservableProperty] private string _caretInfo = "";
@@ -52,6 +53,9 @@ public partial class MainWindowViewModel : ObservableObject
         try
         {
             NeobemDocument doc = NeobemDocument.ParseFile(FilePath);
+            // Spans first: the view repaints the editor when SourceText changes
+            // and reads the spans for the new text at that point.
+            SyntaxSpans = doc.SyntaxSpans;
             SourceText = doc.SourceText;
             _allSymbols = doc.Symbols;
             _language = doc.Language;

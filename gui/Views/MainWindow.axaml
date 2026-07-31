@@ -2,11 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:gui.ViewModels"
         xmlns:p="using:gui.Parsing"
+        xmlns:ae="using:AvaloniaEdit"
         x:Class="gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Neobem Explorer"
-        Width="1200" Height="800"
-        KeyDown="WindowKeyDown">
+        Width="1200" Height="800">
 
   <DockPanel>
 
@@ -101,13 +101,13 @@
 
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
 
-      <!-- Source view -->
-      <TextBox Grid.Column="2" x:Name="SourceBox"
-               Text="{Binding SourceText}"
-               IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
-               FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,Menlo,monospace" FontSize="13"
-               ScrollViewer.HorizontalScrollBarVisibility="Auto"
-               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      <!-- Source view. Colors come from NeobemColorizer, wired up in the
+           code-behind, so highlighting follows the real lexer. -->
+      <ae:TextEditor Grid.Column="2" x:Name="SourceBox"
+                     IsReadOnly="True" ShowLineNumbers="True" WordWrap="False"
+                     FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,Menlo,monospace" FontSize="13"
+                     HorizontalScrollBarVisibility="Auto"
+                     VerticalScrollBarVisibility="Auto" />
 
       <GridSplitter Grid.Column="3" ResizeDirection="Columns" Background="Transparent" />
 

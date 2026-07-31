@@ -24,6 +24,9 @@ public class NeobemDocument
     // code as `nbem --lsp`.
     public LanguageService Language { get; }
 
+    // Lexer-derived spans for syntax highlighting the source pane.
+    public IReadOnlyList<SyntaxSpan> SyntaxSpans { get; }
+
     public static NeobemDocument ParseFile(string filePath) =>
         new(filePath, File.ReadAllText(filePath));
 
@@ -36,7 +39,9 @@ public class NeobemDocument
         // reference and completion indexes in one pass, so the GUI parses once
         // and gets both the structure tree and the language features from it.
         LanguageServer.LoggingEnabled = false;
-        LanguageServer.DocumentState state = new(sourceText, DetermineFileType(filePath));
+        FileType fileType = DetermineFileType(filePath);
+        LanguageServer.DocumentState state = new(sourceText, fileType);
+        SyntaxSpans = NeobemTokenizer.Tokenize(sourceText, fileType);
 
         Diagnostics.AddRange(state.LexerErrors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "lexer")));
         Diagnostics.AddRange(state.ParserErrors.Select(e => new Diagnostic(e.Line, e.CharPositionInLine, e.Msg, "parser")));

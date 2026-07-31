@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using AvaloniaEdit.Document;
 using gui.Parsing;
 using gui.ViewModels;
 
@@ -12,19 +14,54 @@ namespace gui.Views;
 
 public partial class MainWindow : Window
 {
+    private readonly NeobemColorizer _colorizer = new();
+    private MainWindowViewModel? _observedViewModel;
+
     public MainWindow()
     {
         InitializeComponent();
 
-        // Hover and the "at caret" pane follow the caret, since a plain TextBox
-        // gives us no way to hit-test a character under the mouse.
-        SourceBox.PropertyChanged += (_, e) =>
-        {
-            if (e.Property == TextBox.CaretIndexProperty) ViewModel?.UpdateCaret(SourceBox.CaretIndex);
-        };
+        SourceBox.TextArea.TextView.LineTransformers.Add(_colorizer);
+
+        // Tunneling, so the editor cannot swallow the shortcuts before the
+        // window sees them.
+        AddHandler(KeyDownEvent, WindowKeyDown, RoutingStrategies.Tunnel);
+
+        // Hover and the "at caret" pane follow the caret rather than the mouse.
+        SourceBox.TextArea.Caret.PositionChanged += (_, _) => ViewModel?.UpdateCaret(SourceBox.CaretOffset);
+
+        DataContextChanged += (_, _) => ObserveViewModel();
+        ObserveViewModel();
     }
 
     private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
+
+    // The editor is not bound to SourceText: text and highlight spans have to
+    // land together, or one repaint runs with the other document's colors.
+    private void ObserveViewModel()
+    {
+        if (_observedViewModel is not null) _observedViewModel.PropertyChanged -= ViewModelPropertyChanged;
+
+        _observedViewModel = ViewModel;
+        if (_observedViewModel is null) return;
+
+        _observedViewModel.PropertyChanged += ViewModelPropertyChanged;
+        RefreshSource();
+    }
+
+    private void ViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MainWindowViewModel.SourceText)) RefreshSource();
+    }
+
+    private void RefreshSource()
+    {
+        if (ViewModel is null) return;
+
+        _colorizer.SetSpans(ViewModel.SyntaxSpans);
+        if (SourceBox.Text != ViewModel.SourceText) SourceBox.Text = ViewModel.SourceText;
+        SourceBox.TextArea.TextView.Redraw();
+    }
 
     private async void OpenClicked(object? sender, RoutedEventArgs e)
     {
@@ -55,7 +92,10 @@ public partial class MainWindow : Window
     private void DiagnosticDoubleTapped(object? sender, TappedEventArgs e)
     {
         if ((sender as ListBox)?.SelectedItem is not Diagnostic diagnostic || ViewModel is null) return;
-        int offset = OffsetOfLine(ViewModel.SourceText, diagnostic.Line) + diagnostic.Column;
+        if (diagnostic.Line < 1 || diagnostic.Line > SourceBox.Document.LineCount) return;
+
+        DocumentLine line = SourceBox.Document.GetLineByNumber(diagnostic.Line);
+        int offset = Math.Min(line.Offset + diagnostic.Column, line.EndOffset);
         HighlightSpan(offset, offset);
     }
 
@@ -94,13 +134,13 @@ public partial class MainWindow : Window
 
     private void GoToDefinition()
     {
-        SourceSpan? span = ViewModel?.GoToDefinition(SourceBox.CaretIndex);
+        SourceSpan? span = ViewModel?.GoToDefinition(SourceBox.CaretOffset);
         if (span is not null) HighlightSpan(span.Start, span.End);
     }
 
-    private void FindReferences() => ViewModel?.FindReferences(SourceBox.CaretIndex);
+    private void FindReferences() => ViewModel?.FindReferences(SourceBox.CaretOffset);
 
-    private void ShowCompletions() => ViewModel?.ShowCompletions(SourceBox.CaretIndex);
+    private void ShowCompletions() => ViewModel?.ShowCompletions(SourceBox.CaretOffset);
 
     private void ResultSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -110,27 +150,14 @@ public partial class MainWindow : Window
 
     private void HighlightSpan(int start, int end)
     {
-        string text = SourceBox.Text ?? "";
-        start = Math.Clamp(start, 0, text.Length);
-        end = Math.Clamp(end, start, text.Length);
+        int length = SourceBox.Document?.TextLength ?? 0;
+        start = Math.Clamp(start, 0, length);
+        end = Math.Clamp(end, start, length);
 
-        // Setting the caret scrolls it into view; the selection is applied
-        // after so the span stays highlighted.
-        SourceBox.CaretIndex = start;
-        SourceBox.SelectionStart = start;
-        SourceBox.SelectionEnd = end;
-    }
+        SourceBox.CaretOffset = start;
+        SourceBox.Select(start, end - start);
 
-    // Returns the 0-based char offset of the start of a 1-based line number.
-    private static int OffsetOfLine(string text, int line)
-    {
-        int offset = 0;
-        for (int current = 1; current < line; current++)
-        {
-            int next = text.IndexOf('\n', offset);
-            if (next < 0) return offset;
-            offset = next + 1;
-        }
-        return offset;
+        TextLocation location = SourceBox.Document!.GetLocation(start);
+        SourceBox.ScrollTo(location.Line, location.Column);
     }
 }

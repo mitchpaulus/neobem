@@ -7,3 +7,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: CLSCompliant(false)]
 [assembly: InternalsVisibleTo("test")]
+// The GUI drives the same language-service logic as the LSP server, but
+// in-process instead of over stdio.
+[assembly: InternalsVisibleTo("nbem-gui")]

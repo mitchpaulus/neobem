@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:gui.ViewModels"
+        xmlns:p="using:gui.Parsing"
+        xmlns:ae="using:AvaloniaEdit"
+        x:Class="gui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Neobem Explorer"
+        Width="1200" Height="800">
+
+  <DockPanel>
+
+    <!-- Toolbar -->
+    <Border DockPanel.Dock="Top" Padding="8,6" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1">
+      <DockPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6" DockPanel.Dock="Left">
+          <Button Content="Open…" Click="OpenClicked" />
+          <Button Content="Reload" Click="ReloadClicked" />
+          <TextBox Width="220" Watermark="Filter symbols…" Text="{Binding FilterText, Mode=TwoWay}" />
+          <Button Content="Definition (F12)" Click="DefinitionClicked" />
+          <Button Content="References (⇧F12)" Click="ReferencesClicked" />
+          <Button Content="Values (Ctrl+Space)" Click="CompletionsClicked" />
+        </StackPanel>
+        <TextBlock Text="{Binding FilePath}" VerticalAlignment="Center" Margin="12,0,0,0"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" TextTrimming="CharacterEllipsis" />
+      </DockPanel>
+    </Border>
+
+    <!-- Status bar -->
+    <Border DockPanel.Dock="Bottom" Padding="8,4" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0">
+      <TextBlock Text="{Binding StatusText}" FontSize="12"
+                 Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+    </Border>
+
+    <!-- Language feature results: definitions, references, or completions -->
+    <Border DockPanel.Dock="Bottom" MaxHeight="180" IsVisible="{Binding HasResultsPane}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0">
+      <DockPanel>
+        <Border DockPanel.Dock="Top" Padding="8,4">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="✕" Click="CloseResultsClicked" Padding="6,0" />
+            <TextBlock Text="{Binding ResultsTitle}" FontWeight="SemiBold" VerticalAlignment="Center" />
+          </DockPanel>
+        </Border>
+        <ListBox x:Name="ResultList" ItemsSource="{Binding Results}" IsVisible="{Binding HasResults}"
+                 SelectionChanged="ResultSelectionChanged" FontSize="12"
+                 FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,Menlo,monospace">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="p:LocationResult">
+              <TextBlock Text="{Binding Display}" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox ItemsSource="{Binding Completions}" IsVisible="{Binding HasCompletions}" FontSize="12">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="p:CompletionEntry">
+              <TextBlock Text="{Binding Display}" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+
+    <!-- Diagnostics -->
+    <Border DockPanel.Dock="Bottom" MaxHeight="140" IsVisible="{Binding HasDiagnostics}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,1,0,0">
+      <ListBox ItemsSource="{Binding Diagnostics}" DoubleTapped="DiagnosticDoubleTapped" FontSize="12">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="p:Diagnostic">
+            <TextBlock Text="{Binding Display}" Foreground="IndianRed" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
+
+    <!-- Main panes -->
+    <Grid ColumnDefinitions="300,4,*,4,260">
+
+      <!-- Structure tree -->
+      <TreeView Grid.Column="0" x:Name="SymbolTree"
+                ItemsSource="{Binding RootSymbols}"
+                SelectionChanged="SymbolTreeSelectionChanged">
+        <TreeView.Styles>
+          <Style Selector="TreeViewItem">
+            <Setter Property="IsExpanded" Value="True" />
+          </Style>
+        </TreeView.Styles>
+        <TreeView.ItemTemplate>
+          <TreeDataTemplate ItemsSource="{Binding Children}" x:DataType="p:SymbolNode">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" CornerRadius="3" Padding="4,0">
+                <TextBlock Text="{Binding Glyph}" FontSize="11" VerticalAlignment="Center" />
+              </Border>
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Detail}" FontSize="12" VerticalAlignment="Center"
+                         Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            </StackPanel>
+          </TreeDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
+
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
+
+      <!-- Source view. Colors come from NeobemColorizer, wired up in the
+           code-behind, so highlighting follows the real lexer. -->
+      <ae:TextEditor Grid.Column="2" x:Name="SourceBox"
+                     IsReadOnly="True" ShowLineNumbers="True" WordWrap="False"
+                     FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,Menlo,monospace" FontSize="13"
+                     HorizontalScrollBarVisibility="Auto"
+                     VerticalScrollBarVisibility="Auto" />
+
+      <GridSplitter Grid.Column="3" ResizeDirection="Columns" Background="Transparent" />
+
+      <!-- Detail pane -->
+      <StackPanel Grid.Column="4" Margin="10" Spacing="8">
+        <TextBlock Text="Selected symbol" FontWeight="Bold" />
+        <StackPanel IsVisible="{Binding SelectedSymbol, Converter={x:Static ObjectConverters.IsNotNull}}" Spacing="4">
+          <TextBlock Text="{Binding SelectedSymbol.Name, FallbackValue=''}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding SelectedSymbol.Kind, FallbackValue=''}" />
+          <TextBlock Text="{Binding SelectedSymbol.Detail, FallbackValue=''}" TextWrapping="Wrap"
+                     Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+          <TextBlock Text="{Binding SelectedSymbol.Line, StringFormat='Line {0}', FallbackValue=''}" FontSize="12" />
+        </StackPanel>
+        <TextBlock Text="Nothing selected." FontSize="12"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                   IsVisible="{Binding SelectedSymbol, Converter={x:Static ObjectConverters.IsNull}}" />
+
+        <!-- Hover / caret info for the source pane -->
+        <Separator Margin="0,4" />
+        <TextBlock Text="At caret" FontWeight="Bold" />
+        <TextBlock Text="{Binding CaretInfo}" FontSize="12" TextWrapping="Wrap"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        <Border IsVisible="{Binding HasHover}" Padding="8" CornerRadius="3"
+                Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+          <TextBlock Text="{Binding HoverMarkdown}" TextWrapping="Wrap" FontSize="12"
+                     FontFamily="Cascadia Mono,Consolas,DejaVu Sans Mono,Menlo,monospace" />
+        </Border>
+      </StackPanel>
+
+    </Grid>
+
+  </DockPanel>
+
+</Window>

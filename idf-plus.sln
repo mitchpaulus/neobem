@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src", "src\src.csproj", "{E0570992-E702-43B8-9ECE-ED171C9191D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gui", "gui\gui.csproj", "{B757E506-2A31-4B0A-8514-C5D1D7D1C793}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,26 @@ Global
 		{E0570992-E702-43B8-9ECE-ED171C9191D0}.Release|x64.Build.0 = Release|Any CPU
 		{E0570992-E702-43B8-9ECE-ED171C9191D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{E0570992-E702-43B8-9ECE-ED171C9191D0}.Release|x86.Build.0 = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|x64.Build.0 = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Debug|x86.Build.0 = Debug|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|ARM.Build.0 = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|ARM64.Build.0 = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|x64.ActiveCfg = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|x64.Build.0 = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|x86.ActiveCfg = Release|Any CPU
+		{B757E506-2A31-4B0A-8514-C5D1D7D1C793}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

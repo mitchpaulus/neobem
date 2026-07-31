@@ -852,21 +852,25 @@ internal sealed class LanguageServer
                 return Array.Empty<Location>();
             }
 
-            // Identifiers inside <..> replacements live within FIELD tokens; check the
-            // replacement index before falling back to the object-name lookup.
+            List<Location> locations = new();
+
+            // Identifiers inside <..> replacements live within FIELD tokens.
             ReplacementIdentifier? replacementIdentifier = FindReplacementIdentifierAt(zeroBasedLine, zeroBasedCharacter);
             if (replacementIdentifier?.Definition is not null)
             {
-                return new[] { replacementIdentifier.Definition.ToLocation(documentUri) };
+                locations.Add(replacementIdentifier.Definition.ToLocation(documentUri));
             }
 
+            // A field with a dynamic name like '<zone> Occupied' is still a reference to
+            // the object defined with the same complete raw name, so offer that object's
+            // definition too — even when the cursor sits inside the replacement.
             string lookupName = NormalizeFieldValue(token.Text);
-            if (string.IsNullOrEmpty(lookupName) || !_objectDefinitions.TryGetValue(lookupName, out List<ObjectDefinition>? definitions))
+            if (!string.IsNullOrEmpty(lookupName) && _objectDefinitions.TryGetValue(lookupName, out List<ObjectDefinition>? definitions))
             {
-                return Array.Empty<Location>();
+                locations.AddRange(definitions.Select(definition => definition.ToLocation(documentUri)));
             }
 
-            return definitions.Select(definition => definition.ToLocation(documentUri)).ToArray();
+            return locations;
         }
 
         public IReadOnlyList<Location> FindReferences(

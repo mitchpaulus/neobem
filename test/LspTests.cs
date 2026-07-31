@@ -518,6 +518,59 @@ public class LspTests
     }
 
     [Test]
+    public void DefinitionLookupMatchesDynamicObjectNameOutsideReplacement()
+    {
+        LspReferableIdfObjectTypes.Values.Add("Schedule:Compact");
+
+        var document = new LanguageServer.DocumentState(CreateDynamicScheduleTemplateSample(), FileType.Idf);
+
+        // Cursor on the static part of the referencing field, outside the <zone> replacement.
+        var definitions = document.FindDefinitions(
+            new Uri("file:///dynamic-name-sample.nbem"),
+            7,
+            FindCharacter(document.Text, 7, "Occupied"));
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(2, definitions[0].Range.Start.Line);
+        Assert.AreEqual(2, definitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void DefinitionInsideReplacementOfDynamicObjectNameReturnsVariableAndObject()
+    {
+        LspReferableIdfObjectTypes.Values.Add("Schedule:Compact");
+
+        var document = new LanguageServer.DocumentState(CreateDynamicScheduleTemplateSample(), FileType.Idf);
+
+        // Cursor on 'zone' inside the <zone> replacement of the referencing field:
+        // both the lambda parameter and the schedule defined with the complete
+        // dynamic name should be offered.
+        var definitions = document.FindDefinitions(
+            new Uri("file:///dynamic-name-sample.nbem"),
+            7,
+            FindCharacter(document.Text, 7, "zone"));
+
+        Assert.AreEqual(2, definitions.Count);
+        Assert.AreEqual(0, definitions[0].Range.Start.Line);
+        Assert.AreEqual(FindCharacter(document.Text, 0, "zone"), definitions[0].Range.Start.Character);
+        Assert.AreEqual(2, definitions[1].Range.Start.Line);
+        Assert.AreEqual(2, definitions[1].Range.Start.Character);
+    }
+
+    private static string CreateDynamicScheduleTemplateSample() => string.Join("\n", new[]
+    {
+        "template = \\ zone {",
+        "Schedule:Compact,",
+        "  <zone> Occupied,",
+        "  Through: 12/31;",
+        "",
+        "Lights,",
+        "  My Lights,",
+        "  <zone> Occupied;",
+        "}"
+    }) + "\n";
+
+    [Test]
     public void EscapedAngleBracketsAreNotTreatedAsReplacements()
     {
         var document = new LanguageServer.DocumentState(string.Join("\n", new[]

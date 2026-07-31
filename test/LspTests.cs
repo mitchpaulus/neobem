@@ -368,6 +368,170 @@ public class LspTests
         CollectionAssert.DoesNotContain(completions.Select(item => item.Label).ToArray(), "Yes");
     }
 
+    [Test]
+    public void DefinitionInsideReplacementResolvesTopLevelVariable()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "versionNum = '9.4'",
+            "Version,",
+            "  <versionNum>;"
+        }) + "\n", FileType.Idf);
+
+        var definitions = document.FindDefinitions(
+            new Uri("file:///replacement-sample.nbem"),
+            2,
+            FindCharacter(document.Text, 2, "versionNum"));
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(0, definitions[0].Range.Start.Line);
+        Assert.AreEqual(0, definitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void DefinitionInsideReplacementResolvesLambdaParameter()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "zone = \\ name {",
+            "Zone,",
+            "  <name>;",
+            "}"
+        }) + "\n", FileType.Idf);
+
+        var definitions = document.FindDefinitions(
+            new Uri("file:///lambda-replacement-sample.nbem"),
+            2,
+            FindCharacter(document.Text, 2, "name"));
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(0, definitions[0].Range.Start.Line);
+        Assert.AreEqual(FindCharacter(document.Text, 0, "name"), definitions[0].Range.Start.Character);
+        Assert.AreEqual(FindCharacter(document.Text, 0, "name") + "name".Length, definitions[0].Range.End.Character);
+    }
+
+    [Test]
+    public void DefinitionInsideReplacementResolvesFunctionLocalVariable()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "f = \\ x {",
+            "  scaled = x * 2",
+            "Zone,",
+            "  <scaled>;",
+            "}"
+        }) + "\n", FileType.Idf);
+
+        var definitions = document.FindDefinitions(
+            new Uri("file:///function-local-sample.nbem"),
+            3,
+            FindCharacter(document.Text, 3, "scaled"));
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(1, definitions[0].Range.Start.Line);
+        Assert.AreEqual(2, definitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void DefinitionInsideReplacementWorksAcrossFieldSeparators()
+    {
+        // The comma inside the replacement splits the surrounding FIELD token, so this
+        // exercises the object-text reconstruction across FIELD/FIELD_SEP boundaries.
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "first = 7",
+            "second = 3",
+            "Version,",
+            "  <mod(first, second)>;"
+        }) + "\n", FileType.Idf);
+
+        Uri uri = new("file:///multi-field-sample.nbem");
+
+        var firstDefinitions = document.FindDefinitions(
+            uri,
+            3,
+            FindCharacter(document.Text, 3, "first"));
+        Assert.AreEqual(1, firstDefinitions.Count);
+        Assert.AreEqual(0, firstDefinitions[0].Range.Start.Line);
+
+        var secondDefinitions = document.FindDefinitions(
+            uri,
+            3,
+            FindCharacter(document.Text, 3, "second"));
+        Assert.AreEqual(1, secondDefinitions.Count);
+        Assert.AreEqual(1, secondDefinitions[0].Range.Start.Line);
+    }
+
+    [Test]
+    public void DefinitionInsideLambdaBodyExpressionResolvesParameter()
+    {
+        var document = new LanguageServer.DocumentState("f = \\ x { return x }\n", FileType.Idf);
+
+        int usageCharacter = document.Text.Split('\n')[0].LastIndexOf('x');
+        var definitions = document.FindDefinitions(
+            new Uri("file:///lambda-body-sample.nbem"),
+            0,
+            usageCharacter);
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(0, definitions[0].Range.Start.Line);
+        Assert.AreEqual(document.Text.IndexOf('x', 0, usageCharacter), definitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void DefinitionInsideLetBindingBodyResolvesBoundName()
+    {
+        var document = new LanguageServer.DocumentState("y = let scale = 2 in scale + 1\n", FileType.Idf);
+
+        var definitions = document.FindDefinitions(
+            new Uri("file:///let-binding-sample.nbem"),
+            0,
+            FindCharacter(document.Text, 0, "scale + 1"));
+
+        Assert.AreEqual(1, definitions.Count);
+        Assert.AreEqual(0, definitions[0].Range.Start.Line);
+        Assert.AreEqual(FindCharacter(document.Text, 0, "scale"), definitions[0].Range.Start.Character);
+    }
+
+    [Test]
+    public void ReplacementIdentifierLookupSupportsBuiltInHover()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "nums = [1, 2, 3]",
+            "Version,",
+            "  <join(nums, ' ')>;"
+        }) + "\n", FileType.Idf);
+
+        var identifier = document.FindReplacementIdentifierAt(2, FindCharacter(document.Text, 2, "join"));
+
+        Assert.NotNull(identifier);
+        Assert.AreEqual("join", identifier!.Name);
+        Assert.IsNull(identifier.Definition);
+        Assert.NotNull(LanguageServer.TryGetBuiltInHoverMarkdown(identifier.Name));
+
+        var variableIdentifier = document.FindReplacementIdentifierAt(2, FindCharacter(document.Text, 2, "nums"));
+        Assert.NotNull(variableIdentifier);
+        Assert.NotNull(variableIdentifier!.Definition);
+        Assert.AreEqual(0, variableIdentifier.Definition!.Range.Start.Line);
+        Assert.AreEqual("nums = [1, 2, 3]", variableIdentifier.Definition.Detail);
+    }
+
+    [Test]
+    public void EscapedAngleBracketsAreNotTreatedAsReplacements()
+    {
+        var document = new LanguageServer.DocumentState(string.Join("\n", new[]
+        {
+            "note = 'hi'",
+            "Version,",
+            "  <<note>>;"
+        }) + "\n", FileType.Idf);
+
+        var identifier = document.FindReplacementIdentifierAt(2, FindCharacter(document.Text, 2, "note"));
+
+        Assert.IsNull(identifier);
+    }
+
     private static string CreateDefinitionSample() => string.Join("\n", new[]
     {
         "Schedule:Compact,",

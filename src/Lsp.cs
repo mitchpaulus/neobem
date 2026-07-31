@@ -350,33 +350,52 @@ internal sealed class LanguageServer
             return;
         }
 
-        string identifier = token.Text ?? string.Empty;
-        Log(identifier);
-        if (string.IsNullOrEmpty(identifier) || !BuiltInSymbols.TryGetValue(identifier, out var info))
+        string? identifier = null;
+        LspRange? range = null;
+        VariableDefinition? variableDefinition = null;
+
+        if (token.Type == NeobemLexer.IDENTIFIER)
+        {
+            identifier = token.Text;
+            range = CreateTokenRange(token);
+            variableDefinition = document.GetVariableDefinitionForUsage(token.TokenIndex);
+        }
+        else if (token.Type == NeobemLexer.FIELD)
+        {
+            // The cursor may sit on an identifier inside a <..> replacement, which is
+            // opaque FIELD text to the main parse but indexed separately.
+            ReplacementIdentifier? replacementIdentifier = document.FindReplacementIdentifierAt(
+                parameters.Position.Line,
+                parameters.Position.Character);
+            if (replacementIdentifier is not null)
+            {
+                identifier = replacementIdentifier.Name;
+                range = replacementIdentifier.Range;
+                variableDefinition = replacementIdentifier.Definition;
+            }
+        }
+
+        Log(identifier ?? string.Empty);
+
+        string? hoverBody = null;
+        if (!string.IsNullOrEmpty(identifier))
+        {
+            if (variableDefinition is not null)
+            {
+                hoverBody = BuildVariableHoverMarkdown(variableDefinition);
+            }
+            else if (BuiltInSymbols.TryGetValue(identifier, out BuiltInSymbol? info))
+            {
+                hoverBody = BuildHoverMarkdown(info);
+            }
+        }
+
+        if (hoverBody is null || range is null)
         {
             SendResponse(idToken, null);
             return;
         }
 
-        int startLine = Math.Max(token.Line - 1, 0);
-        int startCharacter = Math.Max(token.Column, 0);
-        (int endLine, int endCharacter) = ComputeTokenEndPosition(token, startLine, startCharacter);
-
-        LspRange range = new()
-        {
-            Start = new Position
-            {
-                Line = startLine,
-                Character = startCharacter
-            },
-            End = new Position
-            {
-                Line = endLine,
-                Character = endCharacter
-            }
-        };
-
-        string hoverBody = BuildHoverMarkdown(info);
         Hover hover = new()
         {
             Contents = new SumType<SumType<string, MarkedString>, SumType<string, MarkedString>[], MarkupContent>(
@@ -691,6 +710,12 @@ internal sealed class LanguageServer
             ? BuildHoverMarkdown(symbol)
             : null;
 
+    private static string BuildVariableHoverMarkdown(VariableDefinition definition)
+    {
+        string detail = string.IsNullOrEmpty(definition.Detail) ? definition.Name : definition.Detail;
+        return $"```neobem\n{detail}\n```";
+    }
+
     private static string BuildHoverMarkdown(BuiltInSymbol symbol)
     {
         StringBuilder builder = new();
@@ -748,6 +773,7 @@ internal sealed class LanguageServer
         private readonly HashSet<int> _referableNameTokenIndices = new();
         private readonly Dictionary<int, ObjectFieldCompletionTarget> _objectFieldCompletionTargetsByTokenIndex = new();
         private readonly Dictionary<int, VariableDefinition> _variableDefinitionsByUsageTokenIndex = new();
+        private readonly List<ReplacementIdentifier> _replacementIdentifiers = new();
 
         public string Text { get; private set; }
         public NeobemParser.IdfContext? ParseTree { get; private set; }
@@ -824,6 +850,14 @@ internal sealed class LanguageServer
             if (token.Type != NeobemLexer.FIELD)
             {
                 return Array.Empty<Location>();
+            }
+
+            // Identifiers inside <..> replacements live within FIELD tokens; check the
+            // replacement index before falling back to the object-name lookup.
+            ReplacementIdentifier? replacementIdentifier = FindReplacementIdentifierAt(zeroBasedLine, zeroBasedCharacter);
+            if (replacementIdentifier?.Definition is not null)
+            {
+                return new[] { replacementIdentifier.Definition.ToLocation(documentUri) };
             }
 
             string lookupName = NormalizeFieldValue(token.Text);
@@ -1121,6 +1155,8 @@ internal sealed class LanguageServer
             _objectDefinitions.Clear();
             _referableNameTokenIndices.Clear();
             _objectFieldCompletionTargetsByTokenIndex.Clear();
+            _variableDefinitionsByUsageTokenIndex.Clear();
+            _replacementIdentifiers.Clear();
 
             if (_fileType != FileType.Idf || ParseTree is null)
             {
@@ -1136,72 +1172,376 @@ internal sealed class LanguageServer
 
         private void RebuildVariableDefinitions()
         {
-            _variableDefinitionsByUsageTokenIndex.Clear();
-
             if (ParseTree is null)
             {
                 return;
             }
 
-            Dictionary<string, VariableDefinition> previousDefinitions = new(StringComparer.Ordinal);
+            new ScopedVariableIndexer(this).Index(ParseTree);
+        }
 
-            foreach (NeobemParser.Base_idfContext statement in ParseTree.base_idf())
+        public VariableDefinition? GetVariableDefinitionForUsage(int tokenIndex) =>
+            _variableDefinitionsByUsageTokenIndex.TryGetValue(tokenIndex, out VariableDefinition? definition)
+                ? definition
+                : null;
+
+        public ReplacementIdentifier? FindReplacementIdentifierAt(int zeroBasedLine, int zeroBasedCharacter)
+        {
+            foreach (ReplacementIdentifier identifier in _replacementIdentifiers)
+            {
+                LspRange range = identifier.Range;
+                if (ComparePosition(zeroBasedLine, zeroBasedCharacter, range.Start.Line, range.Start.Character) >= 0 &&
+                    ComparePosition(zeroBasedLine, zeroBasedCharacter, range.End.Line, range.End.Character) < 0)
+                {
+                    return identifier;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Walks the parse tree with lexical scoping (top level, lambda parameters and
+        /// bodies, let bindings) and records where each identifier usage resolves. For
+        /// objects it additionally sub-parses the &lt;..&gt; replacement expressions —
+        /// which the main grammar leaves as opaque FIELD text — and records those
+        /// identifiers with document-absolute positions.
+        /// </summary>
+        private sealed class ScopedVariableIndexer
+        {
+            private readonly DocumentState _document;
+            private readonly List<Dictionary<string, VariableDefinition>> _scopes = new();
+            private readonly string[] _lines;
+
+            public ScopedVariableIndexer(DocumentState document)
+            {
+                _document = document;
+                _lines = document.Text.Split('\n');
+            }
+
+            public void Index(NeobemParser.IdfContext tree)
+            {
+                _scopes.Add(new Dictionary<string, VariableDefinition>(StringComparer.Ordinal));
+
+                foreach (NeobemParser.Base_idfContext statement in tree.base_idf())
+                {
+                    switch (statement)
+                    {
+                        case NeobemParser.VariableDeclarationContext variableDeclaration:
+                            IndexVariableDeclaration(variableDeclaration.variable_declaration(), null);
+                            break;
+                        case NeobemParser.PrintStatmentContext printStatment:
+                            IndexExpressionTree(printStatment.print_statment().expression(), null);
+                            break;
+                        case NeobemParser.LogStatementContext logStatement:
+                            IndexExpressionTree(logStatement.log_statement().expression(), null);
+                            break;
+                        case NeobemParser.ObjectDeclarationContext objectDeclaration:
+                            IndexObjectReplacements(objectDeclaration.@object());
+                            break;
+                        case NeobemParser.ImportStatementContext importStatement:
+                            IndexImportStatement(importStatement.import_statement());
+                            break;
+                    }
+                }
+            }
+
+            private void IndexVariableDeclaration(NeobemParser.Variable_declarationContext declaration, SnippetPositionMap? snippet)
+            {
+                // Index the right-hand side first so self and forward references stay unresolved.
+                IndexExpressionTree(declaration.expression(), snippet);
+                Define(declaration.IDENTIFIER().Symbol, snippet);
+            }
+
+            private void IndexImportStatement(NeobemParser.Import_statementContext importStatement)
+            {
+                IndexExpressionTree(importStatement.expression(), null);
+
+                foreach (NeobemParser.Import_optionContext option in importStatement.import_option())
+                {
+                    switch (option)
+                    {
+                        case NeobemParser.AsOptionContext asOption:
+                            Define(asOption.IDENTIFIER().Symbol, null);
+                            break;
+                        case NeobemParser.OnlyOptionContext onlyOption:
+                            foreach (ITerminalNode name in onlyOption.IDENTIFIER())
+                            {
+                                Define(name.Symbol, null);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            private void IndexExpressionTree(IParseTree? tree, SnippetPositionMap? snippet)
+            {
+                switch (tree)
+                {
+                    case null:
+                        return;
+                    case NeobemParser.Lambda_defContext lambda:
+                        IndexLambda(lambda, snippet);
+                        return;
+                    case NeobemParser.Let_bindingContext letBinding:
+                        IndexLetBinding(letBinding, snippet);
+                        return;
+                    case ITerminalNode terminal:
+                        if (terminal.Symbol.Type == NeobemLexer.IDENTIFIER)
+                        {
+                            RecordUsage(terminal.Symbol, snippet);
+                        }
+                        return;
+                }
+
+                for (int i = 0; i < tree.ChildCount; i++)
+                {
+                    IndexExpressionTree(tree.GetChild(i), snippet);
+                }
+            }
+
+            private void IndexLambda(NeobemParser.Lambda_defContext lambda, SnippetPositionMap? snippet)
+            {
+                _scopes.Add(new Dictionary<string, VariableDefinition>(StringComparer.Ordinal));
+
+                foreach (ITerminalNode parameter in lambda.IDENTIFIER())
+                {
+                    Define(parameter.Symbol, snippet, $"(parameter) {parameter.Symbol.Text}");
+                }
+
+                IndexExpressionTree(lambda.expression(), snippet);
+
+                foreach (NeobemParser.Function_statementContext statement in lambda.function_statement())
+                {
+                    IndexFunctionStatement(statement, snippet);
+                }
+
+                _scopes.RemoveAt(_scopes.Count - 1);
+            }
+
+            private void IndexFunctionStatement(NeobemParser.Function_statementContext statement, SnippetPositionMap? snippet)
             {
                 switch (statement)
                 {
-                    case NeobemParser.VariableDeclarationContext variableDeclarationContext:
-                    {
-                        NeobemParser.Variable_declarationContext declaration = variableDeclarationContext.variable_declaration();
-                        IndexExpressionIdentifiers(declaration.expression(), previousDefinitions);
+                    case NeobemParser.FunctionVariableDeclarationContext variableDeclaration:
+                        IndexVariableDeclaration(variableDeclaration.variable_declaration(), snippet);
+                        break;
+                    case NeobemParser.FunctionObjectDeclarationContext objectDeclaration:
+                        // Objects parsed from a replacement snippet would need their own
+                        // token bookkeeping and nested replacements are unsupported anyway.
+                        if (snippet is null)
+                        {
+                            IndexObjectReplacements(objectDeclaration.@object());
+                        }
+                        break;
+                    case NeobemParser.FunctionPrintStatementContext printStatement:
+                        IndexExpressionTree(printStatement.print_statment().expression(), snippet);
+                        break;
+                    case NeobemParser.FunctionLogStatementContext logStatement:
+                        IndexExpressionTree(logStatement.log_statement().expression(), snippet);
+                        break;
+                    case NeobemParser.ReturnStatementContext returnStatement:
+                        IndexExpressionTree(returnStatement.return_statement().expression(), snippet);
+                        break;
+                }
+            }
 
-                        IToken identifierToken = declaration.IDENTIFIER().Symbol;
-                        previousDefinitions[identifierToken.Text] = new VariableDefinition(identifierToken.Text, CreateTokenRange(identifierToken));
+            private void IndexLetBinding(NeobemParser.Let_bindingContext letBinding, SnippetPositionMap? snippet)
+            {
+                _scopes.Add(new Dictionary<string, VariableDefinition>(StringComparer.Ordinal));
+
+                ITerminalNode[] names = letBinding.IDENTIFIER();
+                NeobemParser.ExpressionContext[] expressions = letBinding.expression();
+
+                for (int i = 0; i < names.Length && i < expressions.Length; i++)
+                {
+                    IndexExpressionTree(expressions[i], snippet);
+                    Define(names[i].Symbol, snippet);
+                }
+
+                IndexExpressionTree(letBinding.let_expression(), snippet);
+
+                _scopes.RemoveAt(_scopes.Count - 1);
+            }
+
+            private void IndexObjectReplacements(NeobemParser.ObjectContext objectContext)
+            {
+                // Reconstruct the same text runtime evaluation sees (context.GetText():
+                // default-channel token texts, skipped whitespace absent), remembering
+                // which token owns each character offset.
+                StringBuilder builder = new();
+                List<(int Offset, IToken Token)> segments = new();
+
+                for (int tokenIndex = objectContext.Start.TokenIndex; tokenIndex <= objectContext.Stop.TokenIndex; tokenIndex++)
+                {
+                    IToken token = _document._tokenStream.Get(tokenIndex);
+                    if (token.Channel != TokenConstants.DefaultChannel)
+                    {
+                        continue;
+                    }
+
+                    segments.Add((builder.Length, token));
+                    builder.Append(token.Text);
+                }
+
+                string objectText = builder.ToString();
+                (List<ReplacementSpan> spans, _) = ReplacementScanner.Scan(objectText);
+
+                foreach (ReplacementSpan span in spans)
+                {
+                    string expressionText = span.ExpressionText(objectText);
+                    if (string.IsNullOrWhiteSpace(expressionText))
+                    {
+                        continue;
+                    }
+
+                    NeobemLexer lexer = new(new AntlrInputStream(expressionText)) { FileType = FileType.Idf };
+                    lexer.RemoveErrorListeners();
+                    NeobemParser parser = new(new CommonTokenStream(lexer));
+                    parser.RemoveErrorListeners();
+
+                    try
+                    {
+                        NeobemParser.ExpressionContext expressionTree = parser.expression();
+                        IndexExpressionTree(expressionTree, new SnippetPositionMap(segments, span.ExpressionStart));
+                    }
+                    catch (Exception)
+                    {
+                        // A malformed replacement shouldn't take down indexing of the rest of the document.
+                    }
+                }
+            }
+
+            private void RecordUsage(IToken token, SnippetPositionMap? snippet)
+            {
+                VariableDefinition? definition = Resolve(token.Text);
+
+                if (snippet is null)
+                {
+                    if (definition is not null)
+                    {
+                        _document._variableDefinitionsByUsageTokenIndex[token.TokenIndex] = definition;
+                    }
+
+                    return;
+                }
+
+                // Record snippet identifiers even when unresolved so hover can still
+                // surface built-in function documentation.
+                _document._replacementIdentifiers.Add(new ReplacementIdentifier(token.Text, snippet.RangeOf(token), definition));
+            }
+
+            private VariableDefinition? Resolve(string name)
+            {
+                for (int i = _scopes.Count - 1; i >= 0; i--)
+                {
+                    if (_scopes[i].TryGetValue(name, out VariableDefinition? definition))
+                    {
+                        return definition;
+                    }
+                }
+
+                return null;
+            }
+
+            private void Define(IToken identifierToken, SnippetPositionMap? snippet, string? detailOverride = null)
+            {
+                LspRange range = snippet is null ? CreateTokenRange(identifierToken) : snippet.RangeOf(identifierToken);
+                string detail = detailOverride ?? LineTextAt(range.Start.Line);
+                _scopes[^1][identifierToken.Text] = new VariableDefinition(identifierToken.Text, range, detail);
+            }
+
+            private string LineTextAt(int line) =>
+                line >= 0 && line < _lines.Length ? _lines[line].TrimEnd('\r').Trim() : string.Empty;
+        }
+
+        /// <summary>
+        /// Maps token positions from a replacement expression sub-parse back to
+        /// document-absolute positions, via the object-text offset each main-tree
+        /// token contributed.
+        /// </summary>
+        private sealed class SnippetPositionMap
+        {
+            private readonly List<(int Offset, IToken Token)> _segments;
+            private readonly int _expressionStart;
+
+            public SnippetPositionMap(List<(int Offset, IToken Token)> segments, int expressionStart)
+            {
+                _segments = segments;
+                _expressionStart = expressionStart;
+            }
+
+            public LspRange RangeOf(IToken snippetToken)
+            {
+                (int startLine, int startCharacter) = MapOffset(_expressionStart + snippetToken.StartIndex);
+                (int endLine, int endCharacter) = MapOffset(_expressionStart + snippetToken.StopIndex + 1);
+
+                return new LspRange
+                {
+                    Start = new Position
+                    {
+                        Line = startLine,
+                        Character = startCharacter
+                    },
+                    End = new Position
+                    {
+                        Line = endLine,
+                        Character = endCharacter
+                    }
+                };
+            }
+
+            private (int Line, int Character) MapOffset(int objectTextOffset)
+            {
+                int index = 0;
+                for (int i = 0; i < _segments.Count; i++)
+                {
+                    if (_segments[i].Offset <= objectTextOffset)
+                    {
+                        index = i;
+                    }
+                    else
+                    {
                         break;
                     }
-                    case NeobemParser.PrintStatmentContext printStatmentContext:
-                        IndexExpressionIdentifiers(printStatmentContext.print_statment().expression(), previousDefinitions);
-                        break;
-                    case NeobemParser.LogStatementContext logStatementContext:
-                        IndexExpressionIdentifiers(logStatementContext.log_statement().expression(), previousDefinitions);
-                        break;
                 }
-            }
-        }
 
-        private void IndexExpressionIdentifiers(ParserRuleContext context, IReadOnlyDictionary<string, VariableDefinition> previousDefinitions)
-        {
-            foreach (IToken token in EnumerateIdentifierTokens(context))
+                (int segmentOffset, IToken token) = _segments[index];
+                return AdvanceWithinToken(token, objectTextOffset - segmentOffset);
+            }
+
+            private static (int Line, int Character) AdvanceWithinToken(IToken token, int characterOffset)
             {
-                if (previousDefinitions.TryGetValue(token.Text, out VariableDefinition? definition))
+                int line = Math.Max(token.Line - 1, 0);
+                int character = Math.Max(token.Column, 0);
+                string text = token.Text ?? string.Empty;
+                int limit = Math.Min(characterOffset, text.Length);
+
+                for (int i = 0; i < limit; i++)
                 {
-                    _variableDefinitionsByUsageTokenIndex[token.TokenIndex] = definition;
+                    char current = text[i];
+                    if (current == '\n')
+                    {
+                        line++;
+                        character = 0;
+                    }
+                    else if (current == '\r')
+                    {
+                        // Counts as a character of offset but the line advance happens
+                        // on the '\n' that follows, when present.
+                        if (i + 1 >= text.Length || text[i + 1] != '\n')
+                        {
+                            line++;
+                            character = 0;
+                        }
+                    }
+                    else
+                    {
+                        character++;
+                    }
                 }
-            }
-        }
 
-        private static IEnumerable<IToken> EnumerateIdentifierTokens(IParseTree? tree)
-        {
-            if (tree is null)
-            {
-                yield break;
-            }
-
-            if (tree is ITerminalNode terminalNode && terminalNode.Symbol.Type == NeobemLexer.IDENTIFIER)
-            {
-                if (terminalNode.Parent is not NeobemParser.Lambda_defContext &&
-                    terminalNode.Parent is not NeobemParser.Let_bindingContext)
-                {
-                    yield return terminalNode.Symbol;
-                }
-                yield break;
-            }
-
-            for (int i = 0; i < tree.ChildCount; i++)
-            {
-                foreach (IToken token in EnumerateIdentifierTokens(tree.GetChild(i)))
-                {
-                    yield return token;
-                }
+                return (line, character);
             }
         }
 
@@ -1414,7 +1754,7 @@ internal sealed class LanguageServer
 
     internal sealed record ObjectFieldCompletionTarget(string ObjectType, int FieldPosition, LspRange ReplacementRange);
 
-    internal sealed record VariableDefinition(string Name, LspRange Range)
+    internal sealed record VariableDefinition(string Name, LspRange Range, string? Detail = null)
     {
         public Location ToLocation(Uri documentUri) => new()
         {
@@ -1422,6 +1762,11 @@ internal sealed class LanguageServer
             Range = Range
         };
     }
+
+    // An identifier found by sub-parsing a <..> replacement expression inside an
+    // object. Range is document-absolute; Definition is null when the name did not
+    // resolve in the lexical scope at the object's position.
+    internal sealed record ReplacementIdentifier(string Name, LspRange Range, VariableDefinition? Definition);
 
     private static LspRange CreateEmptyRangeAtTokenEnd(IToken token)
     {
